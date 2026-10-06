@@ -1,0 +1,93 @@
+{
+  "case": "config_xdom_dc",
+  "operational_case": "cross-domain provisioning (no shared standard)",
+  "seed": "hand-authored bespoke cross-domain case: Lattice DC-fabric OSS vs Vertex overlay SDN controller, adjacent data-centre domains overlapping only at the underlay binding seam",
+  "note": "Gold standard DERIVED from model ref bindings by derive_gold.py; do not hand-edit.",
+  "correspondences": [
+    {
+      "a": "x.gw",
+      "b": "y.gw",
+      "ref": "default-gateway"
+    },
+    {
+      "a": "x.leaf",
+      "b": "y.vtep",
+      "ref": "edge-device"
+    },
+    {
+      "a": "x.mtu",
+      "b": "y.mtu",
+      "ref": "mtu"
+    },
+    {
+      "a": "x.vlan",
+      "b": "y.vni",
+      "ref": "segment-id"
+    },
+    {
+      "a": "x.bind",
+      "b": "y.bind",
+      "ref": "underlay-binding"
+    }
+  ],
+  "false_cognates": [
+    {
+      "a": "x.az",
+      "b": "y.seczone",
+      "why": "both are called a 'zone' but denote unrelated things: an availability zone is a physical fault domain of the fabric (power/pod boundary); a security zone is a policy grouping of workloads in the overlay. They share no reference category and must not be corresponded - the cross-domain false cognate the ad-hoc reference is built to pre-empt."
+    }
+  ],
+  "residual": {
+    "a_only": [
+      {
+        "id": "x.spine",
+        "ref": "fabric-spine",
+        "reason": "native gap (self-extend)"
+      },
+      {
+        "id": "x.az",
+        "ref": "avail-zone",
+        "reason": "native gap (self-extend)"
+      },
+      {
+        "id": "x.vendor",
+        "ref": null,
+        "reason": "opaque (no public meaning)"
+      }
+    ],
+    "b_only": [
+      {
+        "id": "y.microseg",
+        "ref": "microseg",
+        "reason": "native gap (self-extend)"
+      },
+      {
+        "id": "y.seczone",
+        "ref": "sec-zone",
+        "reason": "native gap (self-extend)"
+      },
+      {
+        "id": "y.vendor",
+        "ref": null,
+        "reason": "opaque (no public meaning)"
+      }
+    ]
+  },
+  "residual_by_placement": {
+    "both_cognitive": 0,
+    "one_inert": 2,
+    "both_inert": 4
+  },
+  "invariants": [
+    "endpoint-identity (the underlay binding)",
+    "segment-mapping (VLAN carries the VNI on the leaf)",
+    "fabric-mtu (no fragmentation of encapsulated frames)",
+    "default-gateway-consistency",
+    "underlay-binding"
+  ],
+  "verification_by_placement": {
+    "both_cognitive": "worked provisioning and read-back: bind one overlay segment through the exchange and read the leaf back to confirm the VLAN, MTU and gateway are honoured",
+    "one_inert": "provisioning read-back on the live side; pinned-requirement evidence on the inert side",
+    "both_inert": "external adjudication or a downstream provisioning test"
+  }
+}

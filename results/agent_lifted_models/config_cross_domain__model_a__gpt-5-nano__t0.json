@@ -1,0 +1,151 @@
+{
+  "system": "Agent X — Meridian",
+  "dialect": "Meridian (bespoke transport OSS)",
+  "modules": [
+    "meridian-circuits",
+    "meridian-bearers"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-nano from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_cross_domain, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_cross_domain/model_a*.json.",
+  "concepts": [
+    {
+      "id": "m.circuit",
+      "label": "circuit",
+      "synonyms": [
+        "bearer circuit"
+      ],
+      "kind": "transport-circuit",
+      "gloss": "The transport-circuit is the end-to-end bearer path instance that connects network endpoints, presented at a demarcation hand-off and carried on a bearer medium.",
+      "example": "CIR-7 (NY-FRA)",
+      "ref": "transport-underlay",
+      "relations": [
+        {
+          "rel": "presents-at",
+          "target": "m.handoff"
+        },
+        {
+          "rel": "carried-on",
+          "target": "m.bearer"
+        }
+      ],
+      "instances": [
+        "CIR-7 (NY-FRA)"
+      ]
+    },
+    {
+      "id": "m.handoff",
+      "label": "hand-off",
+      "synonyms": [
+        "circuit hand-off"
+      ],
+      "kind": "demarcation-point",
+      "gloss": "The hand-off is the demarcation-point boundary where a circuit is handed from one network segment to another, linked to its circuit.",
+      "example": "ho-NY-CIR7",
+      "ref": "demarcation",
+      "relations": [
+        {
+          "rel": "on-circuit",
+          "target": "m.circuit"
+        }
+      ],
+      "instances": [
+        "ho-NY-CIR7",
+        "ho-FRA-CIR7"
+      ]
+    },
+    {
+      "id": "m.rate",
+      "label": "rate",
+      "synonyms": [],
+      "kind": "rate",
+      "gloss": "The rate denotes the circuit’s committed bandwidth or capacity, defined as a bandwidth value associated with the circuit.",
+      "example": "5 Gbit/s committed",
+      "ref": "service-rate",
+      "relations": [
+        {
+          "rel": "of-circuit",
+          "target": "m.circuit"
+        }
+      ],
+      "instances": [
+        "5 Gbit/s committed"
+      ]
+    },
+    {
+      "id": "m.latency",
+      "label": "latency",
+      "synonyms": [],
+      "kind": "latency",
+      "gloss": "The latency is the propagation delay of the circuit, measured along its primary path.",
+      "example": "7.2 ms (primary path)",
+      "ref": "latency-bound",
+      "relations": [
+        {
+          "rel": "of-circuit",
+          "target": "m.circuit"
+        }
+      ],
+      "instances": [
+        "7.2 ms (primary path)"
+      ]
+    },
+    {
+      "id": "m.protection",
+      "label": "protection",
+      "synonyms": [],
+      "kind": "protection",
+      "gloss": "The protection describes the redundancy scheme for the circuit, such as 1+1 path protection, to maintain service during failures.",
+      "example": "1+1 path protection",
+      "ref": "protection-requirement",
+      "relations": [
+        {
+          "rel": "of-circuit",
+          "target": "m.circuit"
+        }
+      ],
+      "instances": [
+        "1+1 path protection"
+      ]
+    },
+    {
+      "id": "m.grade",
+      "label": "grade",
+      "synonyms": [],
+      "kind": "transport-grade",
+      "gloss": "The transport-grade is the service tier for the circuit, indicating levels such as platinum, gold, or best-effort.",
+      "example": "platinum",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of-circuit",
+          "target": "m.circuit"
+        }
+      ],
+      "instances": [
+        "platinum",
+        "gold",
+        "best-effort"
+      ]
+    },
+    {
+      "id": "m.bearer",
+      "label": "bearer",
+      "synonyms": [
+        "wavelength",
+        "lambda"
+      ],
+      "kind": "bearer",
+      "gloss": "The bearer is the underlying medium or wavelength that carries the circuit (for example, a wavelength labeled lambda at 193.1 THz between NY and FRA).",
+      "example": "lambda 193.1THz NY-FRA",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "carries",
+          "target": "m.circuit"
+        }
+      ],
+      "instances": [
+        "lambda 193.1THz NY-FRA"
+      ]
+    }
+  ]
+}

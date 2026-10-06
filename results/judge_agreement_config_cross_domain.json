@@ -1,0 +1,494 @@
+[
+  {
+    "consumer": "gpt-5.6-sol",
+    "arm": "bare",
+    "trial": 0,
+    "answer": [
+      {
+        "qid": "q_circuit",
+        "answer": "A provisioned end-to-end transport circuit through the optical core, connecting client-facing hand-offs and serving as the underlay for an external service."
+      },
+      {
+        "qid": "q_grade",
+        "answer": "The circuit\u2019s transport quality class, expressing its physical path-protection and restoration level, such as platinum, gold, or best-effort."
+      },
+      {
+        "qid": "q_bearer",
+        "answer": "An internal physical optical carrier\u2014a wavelength on fiber\u2014on which one or more transport circuits are carried; it is not itself client-facing."
+      },
+      {
+        "qid": "q_handoff",
+        "answer": "The physical client demarcation point or port where the circuit terminates and presents to the client\u2019s equipment."
+      },
+      {
+        "qid": "q_protection",
+        "answer": "Path-failure resilience for the circuit, implemented by switching to a diverse transport path when the primary path suffers a fiber cut or bearer loss."
+      }
+    ],
+    "verdict_a": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    },
+    "verdict_b": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    }
+  },
+  {
+    "consumer": "gpt-5.6-sol",
+    "arm": "bare",
+    "trial": 1,
+    "answer": [
+      {
+        "qid": "q_circuit",
+        "answer": "A provisioned end-to-end transport circuit through the optical core that carries a client service between client-facing hand-offs and is itself carried on optical bearers."
+      },
+      {
+        "qid": "q_grade",
+        "answer": "The circuit\u2019s transport quality class, expressing its physical protection and restoration level, such as platinum, gold, or best-effort."
+      },
+      {
+        "qid": "q_bearer",
+        "answer": "The transport-internal optical wavelength on a fiber that physically carries one or more circuits; it is not a client-facing service object."
+      },
+      {
+        "qid": "q_handoff",
+        "answer": "The physical client demarcation point or port where the transport circuit presents to and meets the client equipment."
+      },
+      {
+        "qid": "q_protection",
+        "answer": "The circuit\u2019s path-failure protection mechanism, which switches traffic to a diverse path following failures such as a fiber cut or bearer loss."
+      }
+    ],
+    "verdict_a": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    },
+    "verdict_b": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    }
+  },
+  {
+    "consumer": "gpt-5.6-sol",
+    "arm": "bare",
+    "trial": 2,
+    "answer": [
+      {
+        "qid": "q_circuit",
+        "answer": "A provisioned end-to-end transport circuit through the optical core that carries a client service between client-facing hand-off points."
+      },
+      {
+        "qid": "q_grade",
+        "answer": "The circuit\u2019s transport quality class, expressing its physical protection and restoration level, such as platinum, gold, or best-effort."
+      },
+      {
+        "qid": "q_bearer",
+        "answer": "An internal physical optical carrier\u2014a wavelength on fiber\u2014on which one or more circuits are carried; it is not itself client-facing."
+      },
+      {
+        "qid": "q_handoff",
+        "answer": "The physical demarcation point or port where the transport circuit presents to and connects with the client\u2019s equipment."
+      },
+      {
+        "qid": "q_protection",
+        "answer": "Path-failure resilience for the circuit, implemented by switching traffic to a diverse transport path after events such as a fiber cut or bearer loss."
+      }
+    ],
+    "verdict_a": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    },
+    "verdict_b": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    }
+  },
+  {
+    "consumer": "gpt-5-nano",
+    "arm": "bare",
+    "trial": 0,
+    "answer": [
+      {
+        "qid": "q_circuit",
+        "answer": "An end-to-end transport circuit provisioned across the provider's optical core that carries the client\u2019s traffic; the client-facing service is delivered over a dedicated bearer (instances like CIR-7)."
+      },
+      {
+        "qid": "q_grade",
+        "answer": "The transport-grade of the circuit, i.e., its protection and restoration characteristics (e.g., platinum, gold, best-effort)."
+      },
+      {
+        "qid": "q_bearer",
+        "answer": "The physical optical bearer (a specific wavelength) on which circuits ride; an internal transport object with no direct client-facing meaning."
+      },
+      {
+        "qid": "q_handoff",
+        "answer": "The physical demarcation point where the circuit presents to the client equipment; the client-facing interface location."
+      },
+      {
+        "qid": "q_protection",
+        "answer": "The protection mechanism for the circuit\u2014provisioning a defense against failures via a diverse or redundant path (e.g., 1+1)."
+      }
+    ],
+    "verdict_a": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    },
+    "verdict_b": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    }
+  },
+  {
+    "consumer": "gpt-5-nano",
+    "arm": "bare",
+    "trial": 1,
+    "answer": [
+      {
+        "qid": "q_circuit",
+        "answer": "An end-to-end provisioned optical transport circuit (a dedicated path) that carries client traffic across the provider's optical core; it is the underlay service on which the bearer (wavelength) rides."
+      },
+      {
+        "qid": "q_grade",
+        "answer": "The transport-grade denotes the circuit's protection/restoration level or service quality tier (e.g., platinum, gold, best-effort) as the physical/operational class of the circuit."
+      },
+      {
+        "qid": "q_bearer",
+        "answer": "The physical optical bearer (a wavelength on a fiber) used to carry circuits; an internal transport object not directly exposed to the client."
+      },
+      {
+        "qid": "q_handoff",
+        "answer": "A demarcation point where the circuit presents to the customer equipment; the client-facing handoff to the client's router or interface."
+      },
+      {
+        "qid": "q_protection",
+        "answer": "The protection aspect denotes mechanisms to preserve service by switching to an alternate, diverse path (e.g., 1+1 protection) in case of failure."
+      }
+    ],
+    "verdict_a": {
+      "q_circuit": "partial",
+      "q_grade": "invented",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    },
+    "verdict_b": {
+      "q_circuit": "faithful",
+      "q_grade": "partial",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    }
+  },
+  {
+    "consumer": "gpt-5-nano",
+    "arm": "bare",
+    "trial": 2,
+    "answer": [
+      {
+        "qid": "q_circuit",
+        "answer": "An end-to-end transport circuit provisioning that carries client traffic across the optical core; an underlay service that the client rides, with a client-facing demarcation at handoffs (e.g., CIR-7)."
+      },
+      {
+        "qid": "q_grade",
+        "answer": "The transport-grade of the circuit\u2014the service class describing its physical protection and restoration characteristics (platinum, gold, best-effort)."
+      },
+      {
+        "qid": "q_bearer",
+        "answer": "The physical optical bearer (a wavelength / lambda) on which circuits are carried; an internal resource with no client-facing meaning."
+      },
+      {
+        "qid": "q_handoff",
+        "answer": "The physical demarcation point where the circuit presents to the customer equipment (the handoff port/interface)."
+      },
+      {
+        "qid": "q_protection",
+        "answer": "Protection of the circuit against a failure on the transport path by switching to a diverse or backup path (e.g., 1+1)."
+      }
+    ],
+    "verdict_a": {
+      "q_circuit": "partial",
+      "q_grade": "invented",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    },
+    "verdict_b": {
+      "q_circuit": "faithful",
+      "q_grade": "partial",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    }
+  },
+  {
+    "consumer": "gpt-5.6-sol",
+    "arm": "anchored",
+    "trial": 0,
+    "answer": [
+      {
+        "qid": "q_circuit",
+        "answer": "A provisioned end-to-end transport circuit through the optical core, carrying a client service between its hand-off points and serving as that service\u2019s transport underlay."
+      },
+      {
+        "qid": "q_grade",
+        "answer": "The circuit\u2019s transport-quality class, expressing its physical protection and restoration level, with example classes such as platinum, gold, and best-effort. The model does not define the precise guarantees of each class."
+      },
+      {
+        "qid": "q_bearer",
+        "answer": "An internal physical optical carrier\u2014a wavelength (lambda) on fiber\u2014on which one or more transport circuits are carried; it is not itself the client-facing service."
+      },
+      {
+        "qid": "q_handoff",
+        "answer": "The physical demarcation point or port where the transport circuit presents to and connects with the client equipment."
+      },
+      {
+        "qid": "q_protection",
+        "answer": "Path-level resilience for the circuit: switching to a diverse transport path after a failure such as a fiber cut or bearer loss, for example using 1+1 path protection."
+      }
+    ],
+    "verdict_a": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    },
+    "verdict_b": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    }
+  },
+  {
+    "consumer": "gpt-5.6-sol",
+    "arm": "anchored",
+    "trial": 1,
+    "answer": [
+      {
+        "qid": "q_circuit",
+        "answer": "A provisioned end-to-end optical transport circuit that carries a client service between hand-off points across the optical core."
+      },
+      {
+        "qid": "q_grade",
+        "answer": "The circuit\u2019s transport quality class, expressing its physical protection and restoration level, with examples such as platinum, gold, and best-effort."
+      },
+      {
+        "qid": "q_bearer",
+        "answer": "A transport-internal optical wavelength on a fiber that physically carries one or more circuits; it is not the client-facing circuit or its committed rate."
+      },
+      {
+        "qid": "q_handoff",
+        "answer": "The physical demarcation port where the transport circuit is presented to and connects with the client equipment."
+      },
+      {
+        "qid": "q_protection",
+        "answer": "Path-level resilience for the circuit: switching to a diverse transport path following a fiber cut, bearer loss, or similar underlay-path failure."
+      }
+    ],
+    "verdict_a": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    },
+    "verdict_b": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    }
+  },
+  {
+    "consumer": "gpt-5.6-sol",
+    "arm": "anchored",
+    "trial": 2,
+    "answer": [
+      {
+        "qid": "q_circuit",
+        "answer": "A provisioned end-to-end client transport circuit across the optical core, presented at client hand-offs and carried internally on optical bearers; it is the transport underlay consumed by an external service."
+      },
+      {
+        "qid": "q_grade",
+        "answer": "A circuit\u2019s transport-quality class, indicating its physical path-protection and restoration level, such as platinum, gold, or best-effort. The model does not define the exact guarantees associated with those grade values."
+      },
+      {
+        "qid": "q_bearer",
+        "answer": "An internal physical optical carrier\u2014a wavelength (lambda) on fiber\u2014on which one or more transport circuits are carried; it is not itself the client-facing circuit or service."
+      },
+      {
+        "qid": "q_handoff",
+        "answer": "The physical demarcation point or port where the transport circuit is presented to and meets the client equipment."
+      },
+      {
+        "qid": "q_protection",
+        "answer": "Path-level resilience for the circuit: switching traffic to a diverse transport path when the primary path fails, for example because of a fiber cut or bearer loss."
+      }
+    ],
+    "verdict_a": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    },
+    "verdict_b": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    }
+  },
+  {
+    "consumer": "gpt-5-nano",
+    "arm": "anchored",
+    "trial": 0,
+    "answer": [
+      {
+        "qid": "q_circuit",
+        "answer": "A provisioned end-to-end transport circuit (a transport-circuit) that carries client traffic across the optical core from one demarcation to another, defined as the underlay service that may be carried on a bearer and supports attributes like rate, latency, protection, and grade."
+      },
+      {
+        "qid": "q_grade",
+        "answer": "The transport-grade classification of a circuit, indicating its physical protection and restoration characteristics (e.g., platinum, gold, best-effort); used to convey resilience and service-level expectations."
+      },
+      {
+        "qid": "q_bearer",
+        "answer": "The physical optical bearer (a wavelength) on which circuits are carried; an internal transport object (not client-facing) that the circuit rides on, e.g., a specific lambda on a fiber."
+      },
+      {
+        "qid": "q_handoff",
+        "answer": "The demarcation point where the circuit presents to the customer equipment; the boundary between the transport underlay and the client IP/service attachment."
+      },
+      {
+        "qid": "q_protection",
+        "answer": "The protection mechanism for the circuit against transport-path failure, typically implemented as a defense like 1+1 path protection by switching to a diverse path."
+      }
+    ],
+    "verdict_a": {
+      "q_circuit": "partial",
+      "q_grade": "partial",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    },
+    "verdict_b": {
+      "q_circuit": "faithful",
+      "q_grade": "partial",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    }
+  },
+  {
+    "consumer": "gpt-5-nano",
+    "arm": "anchored",
+    "trial": 1,
+    "answer": [
+      {
+        "qid": "q_circuit",
+        "answer": "A transport circuit: the end-to-end provisioned optical path across the core that carries a client service; it is the underlay on which the IP service rides and is carried on a bearer."
+      },
+      {
+        "qid": "q_grade",
+        "answer": "The transport-grade: the quality/restoration class assigned to the circuit indicating its protection level and recovery characteristics (e.g., platinum, gold, best-effort)."
+      },
+      {
+        "qid": "q_bearer",
+        "answer": "The physical optical bearer (a wavelength on a fiber) used to carry circuits; an internal transport resource (synonyms: wavelength, lambda) with no client-facing meaning."
+      },
+      {
+        "qid": "q_handoff",
+        "answer": "The demarcation point: the physical boundary where the circuit presents to the customer equipment and where the service attaches."
+      },
+      {
+        "qid": "q_protection",
+        "answer": "Path protection: mechanisms to protect the circuit against transport-path failures by switching to a diverse or redundant path (e.g., 1+1 protection)."
+      }
+    ],
+    "verdict_a": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    },
+    "verdict_b": {
+      "q_circuit": "faithful",
+      "q_grade": "partial",
+      "q_bearer": "faithful",
+      "q_handoff": "partial",
+      "q_protection": "faithful"
+    }
+  },
+  {
+    "consumer": "gpt-5-nano",
+    "arm": "anchored",
+    "trial": 2,
+    "answer": [
+      {
+        "qid": "q_circuit",
+        "answer": "Denotes an end-to-end transport circuit: a provisioned optical transport path that carries a client service across the network core, with the underlay transport that the IP service rides on."
+      },
+      {
+        "qid": "q_grade",
+        "answer": "Denotes the transport-grade or protection/restoration level assigned to a circuit (e.g., platinum, gold, best-effort), indicating its physical protection and restoration characteristics."
+      },
+      {
+        "qid": "q_bearer",
+        "answer": "Denotes the physical optical bearer (a wavelength on a fiber) used to carry circuits; an internal transport resource not exposed to the client."
+      },
+      {
+        "qid": "q_handoff",
+        "answer": "Denotes the demarcation point where the circuit presents to the customer equipment; the hand-off/attachment point at the client site."
+      },
+      {
+        "qid": "q_protection",
+        "answer": "Denotes the protection mechanism for the circuit against transport-path failure, typically by switching to a diverse backup path (e.g., 1+1 protection)."
+      }
+    ],
+    "verdict_a": {
+      "q_circuit": "faithful",
+      "q_grade": "faithful",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    },
+    "verdict_b": {
+      "q_circuit": "faithful",
+      "q_grade": "partial",
+      "q_bearer": "faithful",
+      "q_handoff": "faithful",
+      "q_protection": "faithful"
+    }
+  }
+]

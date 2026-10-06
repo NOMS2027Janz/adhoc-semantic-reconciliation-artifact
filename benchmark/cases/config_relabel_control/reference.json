@@ -1,0 +1,124 @@
+{
+  "id": "ref.transport.thin.v1",
+  "kind": "lexical",
+  "note": "A thin, identity-only lexical reference for the optical-transport configuration case. One entry per concept: a stable id, a preferred label, synonyms, a shallow class, a disambiguating definition, and a single canonical example. Deliberately small and not a model of the domain.",
+  "entries": [
+    {
+      "id": "r01",
+      "label": "forwarding vertex",
+      "synonyms": [
+        "vertex"
+      ],
+      "class": "node",
+      "definition": "A device that forwards traffic and terminates links in the fabric.",
+      "example": "ROADM R1"
+    },
+    {
+      "id": "r02",
+      "label": "span cap",
+      "synonyms": [
+        "edge point",
+        "cap point"
+      ],
+      "class": "termination",
+      "definition": "The point on a vertex where a topological span terminates.",
+      "example": "the R1 end of the R1-R2 span"
+    },
+    {
+      "id": "r03",
+      "label": "tier bridging",
+      "synonyms": [
+        "bridging",
+        "backing relationship"
+      ],
+      "class": "adaptation",
+      "definition": "A relationship in which one tier is carried over, or adapts to, another.",
+      "example": "grd2 adapted into an crr4 server tier at R1"
+    },
+    {
+      "id": "r04",
+      "label": "run cap",
+      "synonyms": [
+        "conduit head",
+        "run end"
+      ],
+      "class": "termination",
+      "definition": "The origination or cap of a run or conduit, i.e. the head of an end-to-end path.",
+      "example": "the head of the A1-A3 grd2 conduit at A1"
+    },
+    {
+      "id": "r05",
+      "label": "client offer access",
+      "synonyms": [
+        "offer gateway",
+        "access point"
+      ],
+      "class": "access",
+      "definition": "The point at which an external client offer accesses the network.",
+      "example": "the grd2 client hand-off at access vertex A1"
+    },
+    {
+      "id": "r06",
+      "label": "circuit offer",
+      "synonyms": [
+        "offer",
+        "conduit"
+      ],
+      "class": "service",
+      "definition": "An end-to-end carriage offer realised across the network.",
+      "example": "the A1-A3 grd2 offer"
+    },
+    {
+      "id": "r07",
+      "label": "multiplex structure",
+      "synonyms": [
+        "tier qualifier",
+        "label structure"
+      ],
+      "class": "multiplex",
+      "definition": "The structure by which a signal is multiplexed into a server tier.",
+      "example": "grd2 mapped into carrier slots of an crr4"
+    },
+    {
+      "id": "r08",
+      "label": "switching constraint",
+      "synonyms": [
+        "gate set",
+        "carriage grid"
+      ],
+      "class": "switching",
+      "definition": "A constraint on which ports or signals may be switched to which within a vertex.",
+      "example": "the permitted cross-switchs on R2"
+    },
+    {
+      "id": "r09",
+      "label": "topological span",
+      "synonyms": [
+        "span"
+      ],
+      "class": "link",
+      "definition": "A span between two nodes in the fabric.",
+      "example": "the R1-R2 span"
+    },
+    {
+      "id": "r10",
+      "label": "fabric",
+      "synonyms": [
+        "network"
+      ],
+      "class": "topology",
+      "definition": "The graph of nodes and links that describes the network.",
+      "example": "the zeta-over-optical realm"
+    },
+    {
+      "id": "r11",
+      "label": "circuit endpoint",
+      "synonyms": [
+        "circuit end point"
+      ],
+      "class": "endpoint",
+      "definition": "An endpoint of a circuit within a vertex, bound to a offer.",
+      "example": "the circuit endpoint for the A1-A3 offer on R1"
+    }
+  ]
+}

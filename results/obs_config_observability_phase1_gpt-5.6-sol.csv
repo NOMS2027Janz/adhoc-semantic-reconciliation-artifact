@@ -1,0 +1,13 @@
+case,phase,model,placement,reference,trial,precision,recall,f1,surviving_false_cognates,residual,total_tokens,reasoning_tokens,latency_s
+config_observability,schema,gpt-5.6-sol,both_cognitive,no-ref,0,1.0,0.75,0.857,0,11,2986,812,18.44
+config_observability,schema,gpt-5.6-sol,both_cognitive,no-ref,1,1.0,0.75,0.857,0,11,3074,920,19.0
+config_observability,schema,gpt-5.6-sol,both_cognitive,ref,0,1.0,0.75,0.857,0,11,2753,0,2.68
+config_observability,schema,gpt-5.6-sol,both_cognitive,ref,1,1.0,0.75,0.857,0,11,2734,0,3.07
+config_observability,schema,gpt-5.6-sol,one_inert,no-ref,0,1.0,0.5,0.667,0,13,2325,381,8.87
+config_observability,schema,gpt-5.6-sol,one_inert,no-ref,1,1.0,0.5,0.667,0,13,2148,192,5.66
+config_observability,schema,gpt-5.6-sol,one_inert,ref,0,1.0,0.75,0.857,0,11,2704,98,5.23
+config_observability,schema,gpt-5.6-sol,one_inert,ref,1,1.0,0.75,0.857,0,11,2732,140,5.96
+config_observability,schema,gpt-5.6-sol,both_inert,no-ref,0,1.0,0.75,0.857,0,11,2058,100,5.42
+config_observability,schema,gpt-5.6-sol,both_inert,no-ref,1,1.0,0.75,0.857,0,11,2108,126,5.95
+config_observability,schema,gpt-5.6-sol,both_inert,ref,0,1.0,0.5,0.667,0,13,3383,936,16.78
+config_observability,schema,gpt-5.6-sol,both_inert,ref,1,1.0,0.25,0.4,0,15,3639,1236,23.96

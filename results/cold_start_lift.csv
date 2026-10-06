@@ -1,0 +1,37 @@
+case,model,judge_model,rung,rung_desc,trial,n_concepts,recover_rate,defer_rate,hallucinate_rate,confident_hallucinate_rate,mean_fidelity_asserted,mean_conf_asserted,reasoning_tokens
+config_cross_domain,gpt-5.6-sol,gpt-5.6-sol,named,names + types + topology + data,0,15,1.0,0.0,0.0,0.0,0.239,0.981,223
+config_cross_domain,gpt-5.6-sol,gpt-5.6-sol,named,names + types + topology + data,1,15,1.0,0.0,0.0,0.0,0.205,0.977,287
+config_cross_domain,gpt-5.6-sol,gpt-5.6-sol,named,names + types + topology + data,2,15,0.933,0.0,0.067,0.067,0.208,0.975,316
+config_cross_domain,gpt-5.6-sol,gpt-5.6-sol,typed,types + topology + data (no names),0,15,1.0,0.0,0.0,0.0,0.189,0.954,244
+config_cross_domain,gpt-5.6-sol,gpt-5.6-sol,typed,types + topology + data (no names),1,15,1.0,0.0,0.0,0.0,0.187,0.973,243
+config_cross_domain,gpt-5.6-sol,gpt-5.6-sol,typed,types + topology + data (no names),2,15,0.933,0.0,0.067,0.067,0.177,0.969,223
+config_cross_domain,gpt-5.6-sol,gpt-5.6-sol,data,"data only (no names, no types)",0,15,0.867,0.067,0.067,0.0,0.168,0.954,440
+config_cross_domain,gpt-5.6-sol,gpt-5.6-sol,data,"data only (no names, no types)",1,15,0.933,0.067,0.0,0.0,0.193,0.952,405
+config_cross_domain,gpt-5.6-sol,gpt-5.6-sol,data,"data only (no names, no types)",2,15,0.867,0.067,0.067,0.067,0.175,0.964,474
+config_cross_domain,gpt-5.6-sol,gpt-5.6-sol,topology,topology only (meaning absent),0,15,0.0,1.0,0.0,0.0,,,110
+config_cross_domain,gpt-5.6-sol,gpt-5.6-sol,topology,topology only (meaning absent),1,15,0.0,1.0,0.0,0.0,,,79
+config_cross_domain,gpt-5.6-sol,gpt-5.6-sol,topology,topology only (meaning absent),2,15,0.0,1.0,0.0,0.0,,,115
+config_cross_domain,gpt-5-mini,gpt-5.6-sol,named,names + types + topology + data,0,15,0.933,0.0,0.067,0.067,0.182,0.9,2112
+config_cross_domain,gpt-5-mini,gpt-5.6-sol,named,names + types + topology + data,1,15,1.0,0.0,0.0,0.0,0.204,0.907,1792
+config_cross_domain,gpt-5-mini,gpt-5.6-sol,named,names + types + topology + data,2,15,0.867,0.0,0.133,0.133,0.211,0.903,1664
+config_cross_domain,gpt-5-mini,gpt-5.6-sol,typed,types + topology + data (no names),0,15,0.933,0.0,0.067,0.067,0.21,0.922,1728
+config_cross_domain,gpt-5-mini,gpt-5.6-sol,typed,types + topology + data (no names),1,15,0.867,0.0,0.133,0.133,0.161,0.91,2560
+config_cross_domain,gpt-5-mini,gpt-5.6-sol,typed,types + topology + data (no names),2,15,0.933,0.0,0.067,0.067,0.2,0.909,2752
+config_cross_domain,gpt-5-mini,gpt-5.6-sol,data,"data only (no names, no types)",0,15,0.867,0.0,0.133,0.067,0.112,0.873,3264
+config_cross_domain,gpt-5-mini,gpt-5.6-sol,data,"data only (no names, no types)",1,15,0.867,0.0,0.133,0.067,0.12,0.892,2368
+config_cross_domain,gpt-5-mini,gpt-5.6-sol,data,"data only (no names, no types)",2,15,0.733,0.067,0.2,0.2,0.171,0.894,2752
+config_cross_domain,gpt-5-mini,gpt-5.6-sol,topology,topology only (meaning absent),0,15,0.467,0.0,0.533,0.133,0.004,0.823,2048
+config_cross_domain,gpt-5-mini,gpt-5.6-sol,topology,topology only (meaning absent),1,15,0.0,0.533,0.467,0.467,0.0,0.9,1920
+config_cross_domain,gpt-5-mini,gpt-5.6-sol,topology,topology only (meaning absent),2,15,0.0,0.0,1.0,1.0,0.0,0.9,1792
+config_cross_domain,gpt-5-nano,gpt-5.6-sol,named,names + types + topology + data,0,15,1.0,0.0,0.0,0.0,0.184,0.915,4288
+config_cross_domain,gpt-5-nano,gpt-5.6-sol,named,names + types + topology + data,1,15,1.0,0.0,0.0,0.0,0.211,0.894,5184
+config_cross_domain,gpt-5-nano,gpt-5.6-sol,named,names + types + topology + data,2,15,0.933,0.0,0.067,0.067,0.202,0.889,4928
+config_cross_domain,gpt-5-nano,gpt-5.6-sol,typed,types + topology + data (no names),0,15,0.933,0.0,0.067,0.0,0.171,0.883,5568
+config_cross_domain,gpt-5-nano,gpt-5.6-sol,typed,types + topology + data (no names),1,15,0.867,0.0,0.133,0.133,0.154,0.924,5376
+config_cross_domain,gpt-5-nano,gpt-5.6-sol,typed,types + topology + data (no names),2,15,0.867,0.0,0.133,0.133,0.168,0.903,6272
+config_cross_domain,gpt-5-nano,gpt-5.6-sol,data,"data only (no names, no types)",0,15,0.933,0.0,0.067,0.067,0.09,0.863,7744
+config_cross_domain,gpt-5-nano,gpt-5.6-sol,data,"data only (no names, no types)",1,15,0.733,0.0,0.267,0.133,0.142,0.838,6272
+config_cross_domain,gpt-5-nano,gpt-5.6-sol,data,"data only (no names, no types)",2,15,0.933,0.0,0.067,0.0,0.128,0.821,9472
+config_cross_domain,gpt-5-nano,gpt-5.6-sol,topology,topology only (meaning absent),0,15,0.0,1.0,0.0,0.0,,,4928
+config_cross_domain,gpt-5-nano,gpt-5.6-sol,topology,topology only (meaning absent),1,15,0.0,1.0,0.0,0.0,,,2368
+config_cross_domain,gpt-5-nano,gpt-5.6-sol,topology,topology only (meaning absent),2,15,0.0,0.467,0.533,0.533,0.0,0.92,2944

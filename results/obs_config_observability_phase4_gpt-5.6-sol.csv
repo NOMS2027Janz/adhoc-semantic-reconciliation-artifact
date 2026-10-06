@@ -1,0 +1,13 @@
+case,phase,model,pragmatics,scenario,trial,n_incidents_gold,n_incidents_agent,partition_exact,cause_correct,cause_accuracy,reasoning_tokens,latency_s
+config_observability,correlation,gpt-5.6-sol,on,S1,0,2,2,True,2,1.0,0,2.71
+config_observability,correlation,gpt-5.6-sol,on,S1,1,2,2,True,2,1.0,0,1.51
+config_observability,correlation,gpt-5.6-sol,on,S2,0,2,2,True,2,1.0,24,1.61
+config_observability,correlation,gpt-5.6-sol,on,S2,1,2,2,True,2,1.0,17,1.53
+config_observability,correlation,gpt-5.6-sol,on,S3,0,1,1,True,1,1.0,0,1.43
+config_observability,correlation,gpt-5.6-sol,on,S3,1,1,1,True,1,1.0,0,1.33
+config_observability,correlation,gpt-5.6-sol,off,S1,0,2,0,False,0,0.0,0,5.02
+config_observability,correlation,gpt-5.6-sol,off,S1,1,2,3,False,1,0.5,0,4.2
+config_observability,correlation,gpt-5.6-sol,off,S2,0,2,2,True,2,1.0,0,1.35
+config_observability,correlation,gpt-5.6-sol,off,S2,1,2,2,True,2,1.0,0,0.99
+config_observability,correlation,gpt-5.6-sol,off,S3,0,1,0,False,0,0.0,0,3.18
+config_observability,correlation,gpt-5.6-sol,off,S3,1,1,3,False,0,0.0,0,1.43

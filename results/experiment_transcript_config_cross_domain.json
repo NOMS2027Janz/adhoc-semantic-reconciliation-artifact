@@ -1,0 +1,271 @@
+{
+  "case": "config_cross_domain",
+  "model": "gpt-5.6-sol",
+  "reference": false,
+  "with_experiment": true,
+  "precision": 1.0,
+  "resolved_fraction": 0.2,
+  "surviving_false_cognates": 0,
+  "confirmed": [
+    [
+      "c.underlay",
+      "m.circuit"
+    ]
+  ],
+  "residual_a": [
+    "m.handoff",
+    "m.rate",
+    "m.latency",
+    "m.protection",
+    "m.grade",
+    "m.bearer"
+  ],
+  "residual_b": [
+    "c.attachment",
+    "c.rate",
+    "c.latency",
+    "c.protection",
+    "c.grade",
+    "c.vlan",
+    "c.service"
+  ],
+  "experiments_spent": 0,
+  "experiment_log": [],
+  "work": {
+    "candidates": 1,
+    "turns": 4,
+    "bilateral_checks": 1,
+    "experiments": 0
+  },
+  "effort": {
+    "total_tokens": 16748,
+    "reasoning_tokens": 528,
+    "latency_s": 58.23,
+    "model": "gpt-5.6-sol"
+  },
+  "transcript": [
+    {
+      "from": "A",
+      "answers": [],
+      "questions": [
+        {
+          "their_id": "c.underlay",
+          "ask": "What entity does this denote: the transport circuit itself, a binding/reference from an IP service to that circuit, or something else? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "c.attachment",
+          "ask": "Is this a physical transport demarcation/hand-off, a logical service endpoint, or both? Please give a gloss, example, and relations, including its layer and endpoint identity."
+        },
+        {
+          "their_id": "c.rate",
+          "ask": "Does this denote committed end-to-end client payload rate, physical bearer line rate, or an IP-service bandwidth attribute? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "c.latency",
+          "ask": "Does this denote measured one-way propagation delay of the transport circuit, or an IP-service SLA metric? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "c.protection",
+          "ask": "Does this denote physical transport path protection against fiber/bearer failure, or logical service resilience? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "c.grade",
+          "ask": "What dimensions determine this service class? In particular, is it a transport protection/restoration grade or an IP-service commercial/QoS class? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "c.vlan",
+          "ask": "Please give this concept's gloss, example, and relations, especially whether it is client/service encapsulation or transport-internal framing."
+        },
+        {
+          "their_id": "c.service",
+          "ask": "Please give this concept's gloss, example, and relations, including how it uses an underlay and connects to attachments."
+        }
+      ],
+      "proposals": [],
+      "ratifications": [],
+      "experiments": [],
+      "no_counterpart": [],
+      "done": false
+    },
+    {
+      "from": "B",
+      "answers": [
+        {
+          "my_id": "c.underlay",
+          "gloss": "The transport circuit itself insofar as an IP service is bound to and rides it; it is owned by the transport domain and referenced/consumed by the service domain, not a separate physical bearer.",
+          "example": "IP service SVC-42 rides transport underlay circuit U-7.",
+          "relations": "It carries c.service; conversely c.service rides it. Its identity is the transport circuit's identity, although represented here as the service's underlay binding/reference."
+        },
+        {
+          "my_id": "c.attachment",
+          "gloss": "A logical IP-service endpoint where the service attaches to a customer site/router. It is not, by definition, the physical transport demarcation or hand-off, though deployment may colocate them.",
+          "example": "att-NY-SVC42 is the New York logical attachment of SVC-42 to the customer router.",
+          "relations": "It is of c.service and bears c.vlan. Its endpoint identity is service-specific and belongs to the customer-facing IP/Ethernet service layer."
+        },
+        {
+          "my_id": "c.rate",
+          "gloss": "The committed information rate guaranteed for customer traffic as an IP-service bandwidth attribute, not the physical bearer line rate.",
+          "example": "SVC-42 has a CIR of 5 Gbit/s even if its transport bearer has a higher line rate.",
+          "relations": "It is an attribute of c.service and specifies committed client-traffic capacity."
+        },
+        {
+          "my_id": "c.latency",
+          "gloss": "An IP-service SLA latency commitment expressed as a named tier, rather than the raw measured propagation delay of a transport circuit.",
+          "example": "SVC-42 uses tier T2, committing to latency of at most 8 ms.",
+          "relations": "It is an SLA attribute of c.service; transport delay may support the commitment but is not this concept's identity."
+        },
+        {
+          "my_id": "c.protection",
+          "gloss": "The logical service-resilience requirement that service connectivity survive failure in its transport path. It states the service outcome, not a particular physical protection mechanism.",
+          "example": "SVC-42 must remain connected after one underlay-path failure.",
+          "relations": "It is an attribute of c.service and constrains how its underlay connectivity must be engineered."
+        },
+        {
+          "my_id": "c.grade",
+          "gloss": "The IP class of service applied by routers, determining scheduling and drop priority; it is not a transport protection or restoration grade.",
+          "example": "Gold traffic for SVC-42 enters a low-latency queue, while silver and bronze receive different treatment.",
+          "relations": "It is a QoS/class attribute of c.service and governs packet treatment in the IP layer."
+        },
+        {
+          "my_id": "c.vlan",
+          "gloss": "The customer VLAN tag that identifies service traffic on an attachment; it is client/service Ethernet encapsulation, not transport-internal framing.",
+          "example": "C-VLAN 100 identifies SVC-42 traffic at its New York attachment.",
+          "relations": "It is carried on c.attachment and belongs to the customer-facing IP/Ethernet service layer."
+        },
+        {
+          "my_id": "c.service",
+          "gloss": "The end-to-end IP/VPN service delivered to the customer. It rides a transport underlay but remains a distinct higher-layer entity that the transport domain does not identify as the service.",
+          "example": "SVC-42 is a point-to-point IP service joining New York and Frankfurt over transport circuit U-7.",
+          "relations": "It rides c.underlay and attaches at one or more c.attachment endpoints; its CIR, latency tier, resilience requirement, and IP QoS class are represented by c.rate, c.latency, c.protection, and c.grade."
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "m.circuit",
+          "ask": "Does this denote the transport circuit itself, and can a higher-layer IP service bind to it as an underlay? Please give gloss, example, endpoint identity, capacity, and relations to bearers and hand-offs."
+        },
+        {
+          "their_id": "m.handoff",
+          "ask": "Is this a physical transport demarcation, a logical circuit endpoint, or a higher-layer service attachment? Please give gloss, example, layer, endpoint identity, and relations."
+        },
+        {
+          "their_id": "m.rate",
+          "ask": "Is this physical circuit/bearer line capacity, committed payload capacity, or another rate? Please give gloss, example, and relations."
+        },
+        {
+          "their_id": "m.latency",
+          "ask": "Is this raw/measured transport-circuit delay or a named end-customer service SLA commitment? Please give gloss, representation, example, and relations."
+        },
+        {
+          "their_id": "m.protection",
+          "ask": "Does this denote a transport protection mechanism/path property or an outcome-level logical service resilience requirement? Please give gloss, example, and relations."
+        },
+        {
+          "their_id": "m.grade",
+          "ask": "Which dimensions determine this transport grade\u2014such as protection/restoration behavior, physical quality, or packet scheduling/drop priority? Please give gloss, example, and relations."
+        },
+        {
+          "their_id": "m.bearer",
+          "ask": "What transport entity does bearer denote, and how does it differ from m.circuit? Please give gloss, example, layer, capacity, connectivity, and relations."
+        }
+      ],
+      "proposals": [],
+      "ratifications": [],
+      "experiments": [],
+      "no_counterpart": [],
+      "done": false
+    },
+    {
+      "from": "A",
+      "answers": [
+        {
+          "my_id": "m.circuit",
+          "gloss": "The provisioned end-to-end transport circuit itself. A higher-layer IP service may bind to and ride it as its underlay, but the circuit remains a transport-domain entity distinct from that service.",
+          "example": "CIR-7 connects the New York and Frankfurt transport hand-offs and may carry IP service SVC-42.",
+          "relations": "It presents at physical m.handoff endpoints and is carried on physical optical m.bearer resources. Its endpoint identity is the pair of transport hand-offs; its capacity is the committed client payload rate represented by m.rate, not the bearer wavelength's line rate."
+        },
+        {
+          "my_id": "m.handoff",
+          "gloss": "The physical transport demarcation where a circuit presents to client equipment; it is not a service-specific logical IP attachment.",
+          "example": "ho-NY-CIR7 is the physical port where CIR-7 meets the customer router in New York.",
+          "relations": "It is a transport-layer endpoint on m.circuit. Its identity belongs to the circuit/physical demarcation and can be colocated with, but is not identical to, a higher-layer service attachment."
+        },
+        {
+          "my_id": "m.rate",
+          "gloss": "The committed client payload capacity guaranteed end to end by a transport circuit, rather than the optical bearer's physical line rate.",
+          "example": "CIR-7 guarantees 5 Gbit/s of client payload even if its carrying wavelength operates at a higher line rate.",
+          "relations": "It is an attribute of m.circuit and describes circuit capacity. It is not an attribute of a distinct higher-layer IP service."
+        },
+        {
+          "my_id": "m.latency",
+          "gloss": "The raw measured one-way propagation delay of a transport circuit, represented numerically in units such as milliseconds; it is not a named end-customer SLA tier.",
+          "example": "CIR-7's primary path has a measured one-way delay of 7.2 ms.",
+          "relations": "It is a path-length-dependent attribute of m.circuit. A higher-layer service may use this measurement to support an SLA, but the SLA commitment is a different concept."
+        },
+        {
+          "my_id": "m.protection",
+          "gloss": "A transport protection mechanism/property that switches a circuit to a diverse transport path after fiber, bearer, or path failure.",
+          "example": "CIR-7 uses 1+1 path protection so a primary fiber cut triggers use of the diverse path.",
+          "relations": "It is an attribute of m.circuit and concerns concrete physical transport-path protection, rather than merely specifying a higher-layer service-connectivity outcome."
+        },
+        {
+          "my_id": "m.grade",
+          "gloss": "The transport quality grade of a circuit, determined by its physical protection and restoration class, not by packet scheduling or drop priority.",
+          "example": "CIR-7 is platinum grade because it is dual-path protected; other grades include gold and best-effort.",
+          "relations": "It classifies m.circuit according to transport protection/restoration behavior and has no IP QoS queueing semantics."
+        },
+        {
+          "my_id": "m.bearer",
+          "gloss": "A physical optical transport resource\u2014typically a wavelength on fiber\u2014on which one or more circuits are carried. It is lower-layer and transport-internal, unlike the provisioned client-facing circuit.",
+          "example": "The 193.1 THz wavelength on the NY\u2013FRA span carries CIR-7.",
+          "relations": "It carries m.circuit. Its connectivity follows optical fiber spans, and its physical line capacity may exceed a carried circuit's committed m.rate; it has no client-facing service endpoint identity."
+        }
+      ],
+      "questions": [],
+      "proposals": [
+        {
+          "my_id": "m.circuit",
+          "their_id": "c.underlay",
+          "confidence": 0.96,
+          "rationale": "B states that c.underlay has the transport circuit's own identity and is the transport-domain circuit consumed by a higher-layer service, not a separate bearer. That denotes m.circuit viewed through the service's underlay reference."
+        }
+      ],
+      "ratifications": [],
+      "experiments": [],
+      "no_counterpart": [
+        "m.handoff",
+        "m.rate",
+        "m.latency",
+        "m.protection",
+        "m.grade",
+        "m.bearer"
+      ],
+      "done": true
+    },
+    {
+      "from": "B",
+      "answers": [],
+      "questions": [],
+      "proposals": [],
+      "ratifications": [
+        {
+          "their_id": "m.circuit",
+          "my_id": "c.underlay",
+          "accept": true,
+          "reason": "Both denote the same provisioned transport-domain circuit, with transport endpoint identity, that the higher-layer IP service references and rides as its underlay. c.underlay is not a separate bearer or merely an abstract binding object."
+        }
+      ],
+      "experiments": [],
+      "no_counterpart": [
+        "c.attachment",
+        "c.rate",
+        "c.latency",
+        "c.protection",
+        "c.grade",
+        "c.vlan",
+        "c.service"
+      ],
+      "done": true
+    }
+  ]
+}

@@ -1,0 +1,250 @@
+{
+  "system": "Agent T",
+  "dialect": "ONF TAPI (populated)",
+  "individuals": [
+    {
+      "id": "a.r1",
+      "type": "forwarding-node",
+      "name": "R1",
+      "key": "k01",
+      "attrs": {
+        "role": "core",
+        "model": "MX9"
+      },
+      "rels": [
+        {
+          "rel": "adjacent",
+          "target": "a.r2"
+        },
+        {
+          "rel": "adjacent",
+          "target": "a.r3"
+        },
+        {
+          "rel": "adjacent",
+          "target": "a.r4"
+        }
+      ],
+      "_truth": "e1"
+    },
+    {
+      "id": "a.r4",
+      "type": "forwarding-node",
+      "name": "R4",
+      "key": "k04",
+      "attrs": {
+        "role": "spur-agg",
+        "model": "MX7"
+      },
+      "rels": [
+        {
+          "rel": "adjacent",
+          "target": "a.r1"
+        },
+        {
+          "rel": "adjacent",
+          "target": "a.r2"
+        },
+        {
+          "rel": "adjacent",
+          "target": "a.r3"
+        },
+        {
+          "rel": "adjacent",
+          "target": "a.a3"
+        }
+      ],
+      "_truth": "e4"
+    },
+    {
+      "id": "a.a1",
+      "type": "client-svc-access",
+      "name": "A1",
+      "key": "k05",
+      "attrs": {
+        "tier": "access"
+      },
+      "rels": [
+        {
+          "rel": "homed-on",
+          "target": "a.r1"
+        }
+      ],
+      "_truth": "e5"
+    },
+    {
+      "id": "a.a2",
+      "type": "client-svc-access",
+      "name": "A2",
+      "key": "k06",
+      "attrs": {
+        "tier": "access"
+      },
+      "rels": [
+        {
+          "rel": "homed-on",
+          "target": "a.r4"
+        }
+      ],
+      "_truth": "e6"
+    },
+    {
+      "id": "a.a3",
+      "type": "client-svc-access",
+      "name": "A3",
+      "key": "k07",
+      "attrs": {
+        "tier": "access"
+      },
+      "rels": [
+        {
+          "rel": "homed-on",
+          "target": "a.r4"
+        }
+      ],
+      "_truth": "e7"
+    },
+    {
+      "id": "a.r2",
+      "type": "forwarding-node",
+      "name": "R2",
+      "key": null,
+      "attrs": {
+        "role": "core",
+        "model": "MX7"
+      },
+      "rels": [
+        {
+          "rel": "adjacent",
+          "target": "a.r1"
+        },
+        {
+          "rel": "adjacent",
+          "target": "a.r4"
+        }
+      ],
+      "_truth": "e2"
+    },
+    {
+      "id": "a.r3",
+      "type": "forwarding-node",
+      "name": "R3",
+      "key": null,
+      "attrs": {
+        "role": "core",
+        "model": "MX7"
+      },
+      "rels": [
+        {
+          "rel": "adjacent",
+          "target": "a.r1"
+        },
+        {
+          "rel": "adjacent",
+          "target": "a.r4"
+        }
+      ],
+      "_truth": "e3"
+    },
+    {
+      "id": "a.cs_odu2",
+      "type": "connection-service",
+      "name": "cs-a1a3-odu2",
+      "key": "k08",
+      "attrs": {
+        "rate": "ODU2"
+      },
+      "rels": [
+        {
+          "rel": "from",
+          "target": "a.a1"
+        },
+        {
+          "rel": "to",
+          "target": "a.a3"
+        }
+      ],
+      "_truth": "e8"
+    },
+    {
+      "id": "a.cs_odu0",
+      "type": "connection-service",
+      "name": "cs-a2a3-odu0",
+      "key": "k09",
+      "attrs": {
+        "rate": "ODU0"
+      },
+      "rels": [
+        {
+          "rel": "from",
+          "target": "a.a2"
+        },
+        {
+          "rel": "to",
+          "target": "a.a3"
+        }
+      ],
+      "_truth": "e9"
+    },
+    {
+      "id": "a.omsx",
+      "type": "optical-mux-section",
+      "name": "oms-x",
+      "key": null,
+      "attrs": {
+        "span": "short"
+      },
+      "rels": [
+        {
+          "rel": "between",
+          "target": "a.r1"
+        },
+        {
+          "rel": "between",
+          "target": "a.r4"
+        }
+      ],
+      "_truth": "e13"
+    },
+    {
+      "id": "a.omsy",
+      "type": "optical-mux-section",
+      "name": "oms-y",
+      "key": null,
+      "attrs": {
+        "span": "short"
+      },
+      "rels": [
+        {
+          "rel": "between",
+          "target": "a.r1"
+        },
+        {
+          "rel": "between",
+          "target": "a.r4"
+        }
+      ],
+      "_truth": "e14"
+    },
+    {
+      "id": "a.svc100",
+      "type": "connection-service",
+      "name": "svc-100",
+      "key": null,
+      "attrs": {
+        "rate": "ODU1"
+      },
+      "rels": [
+        {
+          "rel": "from",
+          "target": "a.a1"
+        },
+        {
+          "rel": "to",
+          "target": "a.a2"
+        }
+      ],
+      "_truth": "e10"
+    }
+  ]
+}

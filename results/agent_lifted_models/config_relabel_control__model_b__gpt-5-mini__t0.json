@@ -1,0 +1,251 @@
+{
+  "system": "Agent I",
+  "dialect": "Rowan-TM",
+  "modules": [
+    "rowan-flux-fabric (RFC 8795 on RFC 8345)",
+    "rowan-zeta-fabric",
+    "rowan-layer1-types"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-mini from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case config_relabel_control, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_relabel_control/model_b*.json.",
+  "concepts": [
+    {
+      "id": "b01",
+      "label": "flux-vertex",
+      "synonyms": [
+        "vertex"
+      ],
+      "kind": "node",
+      "gloss": "A flux-vertex is a network node or site within a particular flux-fabric tier where spans terminate, switching fabric and terminations are colocated and which is a constituent part of the overall flux-fabric topology.",
+      "example": "R1 is a flux-vertex in the zeta tier network that hosts terminations such as cp-A1-R1 and participates in spans like fluxspan-R1-R2 and fluxspan-A1-R1.",
+      "ref": "r01",
+      "relations": [
+        {
+          "rel": "part-of",
+          "target": "b09"
+        }
+      ],
+      "instances": [
+        "R1",
+        "R2",
+        "R3",
+        "A1",
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "id": "b02",
+      "label": "cap-point",
+      "synonyms": [
+        "flux-cp",
+        "span-cap-point"
+      ],
+      "kind": "termination",
+      "gloss": "A cap-point is a termination point located on a flux-vertex that serves as the endpoint of a flux-span and provides the attachment or 'cap' where a span is terminated at that vertex.",
+      "example": "cp-R1-R2 is a cap-point on vertex R1 that terminates the link fluxspan-R1-R2 and provides the local attachment for that span at R1.",
+      "ref": "r02",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "b01"
+        },
+        {
+          "rel": "terminates",
+          "target": "b08"
+        }
+      ],
+      "instances": [
+        "cp-R1-R2",
+        "cp-R2-R3",
+        "cp-A1-R1"
+      ]
+    },
+    {
+      "id": "b03",
+      "label": "backing-cp",
+      "synonyms": [
+        "backing cap"
+      ],
+      "kind": "adaptation",
+      "gloss": "A backing-cp is an adaptation or supporting termination that implements or underpins a higher-layer cap-point (e.g., mapping a logical zeta-layer cap to an underlying optical termination) at a vertex.",
+      "example": "\"zeta cp over optical cp at R1\" is a backing-cp that indicates the zeta-layer cap-point at R1 is supported by an underlying optical termination on the same vertex.",
+      "ref": "r03",
+      "relations": [
+        {
+          "rel": "supports",
+          "target": "b02"
+        }
+      ],
+      "instances": [
+        "zeta cp over optical cp at R1"
+      ]
+    },
+    {
+      "id": "b04",
+      "label": "conduit-cap-point",
+      "synonyms": [
+        "ccp"
+      ],
+      "kind": "termination",
+      "gloss": "A conduit-cap-point (ccp) is the conduit-side termination located on a flux-vertex that serves as the origin or head for a flux-conduit service running over the fabric.",
+      "example": "ccp-A1 (conduit head) is a conduit-cap-point at vertex A1 from which the conduit service conduit-a1a3-grd2 originates.",
+      "ref": "r04",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "b01"
+        },
+        {
+          "rel": "originates",
+          "target": "b05"
+        }
+      ],
+      "instances": [
+        "ccp-A1 (conduit head)",
+        "ccp-A3 (conduit head)"
+      ]
+    },
+    {
+      "id": "b05",
+      "label": "flux-conduit",
+      "synonyms": [
+        "conduit"
+      ],
+      "kind": "service",
+      "gloss": "A flux-conduit is a service-level conduit or reserved channel that runs over the flux-fabric between conduit-cap-points and represents an allocated path for carriage over the topology.",
+      "example": "conduit-a1a3-grd2 (grd2, A1 to A3) is a flux-conduit that runs from ccp-A1 to ccp-A3 over the zeta tier network.",
+      "ref": "r06",
+      "relations": [
+        {
+          "rel": "from",
+          "target": "b04"
+        },
+        {
+          "rel": "over",
+          "target": "b09"
+        }
+      ],
+      "instances": [
+        "conduit-a1a3-grd2 (grd2, A1 to A3)"
+      ]
+    },
+    {
+      "id": "b06",
+      "label": "zeta-label",
+      "synonyms": [
+        "carrier-slot",
+        "xs/xpn"
+      ],
+      "kind": "multiplex",
+      "gloss": "A zeta-label is a multiplexing label or carrier-slot identifier that names a specific sub-channel or slot (e.g., an xs/xpn) assigned to and labelling a flux-conduit within the carriage fabric.",
+      "example": "\"xs/xpn for grd2 in crr4\" is a zeta-label that identifies the carrier slot used by the conduit-a1a3-grd2 within carriage-grid crr4.",
+      "ref": "r07",
+      "relations": [
+        {
+          "rel": "labels",
+          "target": "b05"
+        }
+      ],
+      "instances": [
+        "xs/xpn for grd2 in crr4"
+      ]
+    },
+    {
+      "id": "b07",
+      "label": "carriage-grid",
+      "synonyms": [
+        "ckt grid"
+      ],
+      "kind": "switching",
+      "gloss": "A carriage-grid is the switching or cross-connect fabric located at a flux-vertex that provides mapping and switching of labelled carrier slots and conduit endpoints on that vertex.",
+      "example": "R2 carriage grid is the switching matrix at vertex R2 that performs cross-connections for zeta-labels and conduit endpoints present at R2.",
+      "ref": "r08",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "b01"
+        }
+      ],
+      "instances": [
+        "R2 carriage grid"
+      ]
+    },
+    {
+      "id": "b08",
+      "label": "flux-span",
+      "synonyms": [
+        "span"
+      ],
+      "kind": "link",
+      "gloss": "A flux-span is a point-to-point link between two flux-vertices within the fabric that can carry conduits and is terminated at each end by cap-points on those vertices.",
+      "example": "fluxspan-R1-R2 is a flux-span connecting vertices R1 and R2 and is terminated at R1 by cp-R1-R2 and at the far end by the corresponding cap-point on R2.",
+      "ref": "r09",
+      "relations": [
+        {
+          "rel": "between",
+          "target": "b01"
+        },
+        {
+          "rel": "terminated-by",
+          "target": "b02"
+        }
+      ],
+      "instances": [
+        "fluxspan-R1-R2",
+        "fluxspan-R2-R3",
+        "fluxspan-R1-R3",
+        "fluxspan-A1-R1"
+      ]
+    },
+    {
+      "id": "b09",
+      "label": "flux-fabric",
+      "synonyms": [
+        "network",
+        "per-tier network"
+      ],
+      "kind": "topology",
+      "gloss": "A flux-fabric is the per-tier network topology that contains the set of flux-vertices and flux-spans (the physical and logical links) over which conduits, labels and switching operate.",
+      "example": "the zeta tier network is a flux-fabric that contains vertices R1, R2, R3 and spans such as fluxspan-R1-R2 and fluxspan-R2-R3 used by conduits like conduit-a1a3-grd2.",
+      "ref": "r10",
+      "relations": [
+        {
+          "rel": "contains",
+          "target": "b01"
+        },
+        {
+          "rel": "contains",
+          "target": "b08"
+        }
+      ],
+      "instances": [
+        "the zeta tier network"
+      ]
+    },
+    {
+      "id": "b10",
+      "label": "conduit-circuit-endpoint",
+      "synonyms": [
+        "circuit endpoint"
+      ],
+      "kind": "endpoint",
+      "gloss": "A conduit-circuit-endpoint is the circuit-level endpoint representation at a flux-vertex that is part of a flux-conduit service and represents where a circuit carried in the conduit terminates on that vertex.",
+      "example": "ccx-a1a3-R1 is a conduit-circuit-endpoint at vertex R1 that is part of the conduit-a1a3-grd2 service, representing the circuit termination used by equipment at R1.",
+      "ref": "r11",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "b01"
+        },
+        {
+          "rel": "part-of",
+          "target": "b05"
+        }
+      ],
+      "instances": [
+        "ccx-a1a3-R1",
+        "ccx-a1a3-R3"
+      ]
+    }
+  ]
+}

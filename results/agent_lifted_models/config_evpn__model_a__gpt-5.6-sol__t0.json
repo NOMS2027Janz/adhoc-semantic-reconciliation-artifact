@@ -1,0 +1,224 @@
+{
+  "system": "Agent M",
+  "dialect": "MEF carrier-Ethernet service model",
+  "modules": [
+    "mef-services",
+    "mef-uni",
+    "mef-bwp"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5.6-sol from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_evpn, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_evpn/model_a*.json.",
+  "concepts": [
+    {
+      "id": "m.ethsvc",
+      "label": "ethernet-service",
+      "synonyms": [
+        "EVC",
+        "E-LAN",
+        "ethernet virtual connection"
+      ],
+      "kind": "service",
+      "gloss": "A provider-delivered logical Layer 2 Ethernet connectivity service that associates two or more UNIs and transports customer Ethernet traffic between them according to a defined connectivity pattern.",
+      "example": "ACME-ELAN is a multipoint Ethernet service connecting UNI-HQ, UNI-DC, and UNI-Branch with any-to-any forwarding.",
+      "ref": "eth-vpn",
+      "relations": [
+        {
+          "rel": "connects",
+          "target": "m.uni"
+        }
+      ],
+      "instances": [
+        "ACME-ELAN (3 UNIs, any-to-any)"
+      ]
+    },
+    {
+      "id": "m.uni",
+      "label": "UNI",
+      "synonyms": [
+        "user-network-interface"
+      ],
+      "kind": "access",
+      "gloss": "A User Network Interface is the service access and demarcation interface at which a customer network attaches to a specific Ethernet service.",
+      "example": "UNI-HQ is the ACME-ELAN access interface through which the headquarters customer equipment sends and receives service traffic.",
+      "ref": "uni",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "m.ethsvc"
+        }
+      ],
+      "instances": [
+        "UNI-HQ",
+        "UNI-DC",
+        "UNI-Branch"
+      ]
+    },
+    {
+      "id": "m.ep",
+      "label": "EVC-endpoint",
+      "synonyms": [
+        "service-endpoint",
+        "EP"
+      ],
+      "kind": "endpoint",
+      "gloss": "An EVC endpoint is the logical termination of an Ethernet service at a particular UNI, distinct from the physical or logical access interface itself.",
+      "example": "EP-HQ represents ACME-ELAN's service termination at UNI-HQ, while EP-DC and EP-Branch represent its terminations at the other UNIs.",
+      "ref": "svc-endpoint",
+      "relations": [
+        {
+          "rel": "at",
+          "target": "m.uni"
+        }
+      ],
+      "instances": [
+        "EP-HQ",
+        "EP-DC",
+        "EP-Branch"
+      ]
+    },
+    {
+      "id": "m.seg",
+      "label": "network-segment",
+      "synonyms": [
+        "vlan-segment",
+        "broadcast segment"
+      ],
+      "kind": "l2-domain",
+      "gloss": "A network segment is a customer-visible Layer 2 broadcast domain, commonly identified by a VLAN, whose Ethernet frames are transported by the Ethernet service.",
+      "example": "CE-VLAN 200 is carried across ACME-ELAN so devices attached through its three UNIs participate in the same customer broadcast segment.",
+      "ref": "vlan",
+      "relations": [
+        {
+          "rel": "carried-by",
+          "target": "m.ethsvc"
+        }
+      ],
+      "instances": [
+        "CE-VLAN 200"
+      ]
+    },
+    {
+      "id": "m.bwp",
+      "label": "bandwidth-profile",
+      "synonyms": [
+        "rate-profile",
+        "BWP"
+      ],
+      "kind": "rate",
+      "gloss": "A bandwidth profile is a set of traffic-rate limits and associated metering behavior applied to Ethernet traffic at a UNI.",
+      "example": "BWP-200/50 applied at UNI-HQ meters traffic there using its configured 200/50 rate parameters, whereas BWP-100/0 represents a different rate allocation.",
+      "ref": "bw-profile",
+      "relations": [
+        {
+          "rel": "at",
+          "target": "m.uni"
+        }
+      ],
+      "instances": [
+        "BWP-200/50",
+        "BWP-100/0"
+      ]
+    },
+    {
+      "id": "m.cos",
+      "label": "class-of-service",
+      "synonyms": [
+        "CoS",
+        "service class"
+      ],
+      "kind": "cos",
+      "gloss": "A class of service is a named traffic category on an Ethernet service that selects a distinct forwarding priority or performance treatment.",
+      "example": "On ACME-ELAN, delay-sensitive traffic is assigned to CoS-H for real-time treatment, while ordinary traffic is assigned to best-effort CoS-L.",
+      "ref": "cos",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "m.ethsvc"
+        }
+      ],
+      "instances": [
+        "CoS-H (real-time)",
+        "CoS-L (best-effort)"
+      ]
+    },
+    {
+      "id": "m.maclearn",
+      "label": "MAC-learning",
+      "synonyms": [
+        "source-MAC learning"
+      ],
+      "kind": "l2-control",
+      "gloss": "MAC learning is the Layer 2 control behavior at a UNI that learns source MAC addresses from ingress frames and associates them with that attachment for subsequent forwarding decisions.",
+      "example": "With dynamic learning enabled at UNI-HQ, a frame arriving from a headquarters device causes its source MAC address to be learned against UNI-HQ.",
+      "ref": "mac-learning",
+      "relations": [
+        {
+          "rel": "at",
+          "target": "m.uni"
+        }
+      ],
+      "instances": [
+        "dynamic learning @UNI-HQ"
+      ]
+    },
+    {
+      "id": "m.mtu",
+      "label": "service-mtu",
+      "synonyms": [
+        "MTU"
+      ],
+      "kind": "framing",
+      "gloss": "The service MTU is the maximum Ethernet frame size that the Ethernet service is specified to accept and carry without exceeding its framing limit.",
+      "example": "An MTU of 9100 means ACME-ELAN is provisioned to carry Ethernet frames up to 9,100 bytes under the model's frame-size convention.",
+      "ref": "mtu",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "m.ethsvc"
+        }
+      ],
+      "instances": [
+        "MTU 9100"
+      ]
+    },
+    {
+      "id": "m.sla",
+      "label": "service-availability",
+      "synonyms": [
+        "availability objective"
+      ],
+      "kind": "assurance",
+      "gloss": "Service availability is the assurance objective specifying the proportion of an observation period during which the Ethernet service is expected to be operational and usable.",
+      "example": "A 99.99% availability objective requires ACME-ELAN to meet that uptime percentage over the SLA's defined measurement period.",
+      "ref": "svc-availability",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "m.ethsvc"
+        }
+      ],
+      "instances": [
+        "99.99% objective"
+      ]
+    },
+    {
+      "id": "m.vendor",
+      "label": "x-mef-attr-5",
+      "synonyms": [
+        "proprietary attr 5"
+      ],
+      "kind": "opaque",
+      "gloss": "x-mef-attr-5 is an opaque proprietary UNI-scoped configuration attribute whose operational meaning is vendor-defined rather than specified by the standard service model.",
+      "example": "At UNI-HQ, x-mef-attr-5 is set to hexadecimal value 0x3, which must be interpreted using the supplying vendor's documentation.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "at",
+          "target": "m.uni"
+        }
+      ],
+      "instances": [
+        "x-mef-attr-5=0x3 at UNI-HQ"
+      ]
+    }
+  ]
+}

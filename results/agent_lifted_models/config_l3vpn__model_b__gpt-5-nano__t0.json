@@ -1,0 +1,298 @@
+{
+  "system": "Agent D",
+  "dialect": "Device VRF/BGP config (vendor YANG)",
+  "modules": [
+    "vendor-routing-instance",
+    "vendor-bgp",
+    "vendor-qos"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-nano from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case config_l3vpn, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_l3vpn/model_b*.json.",
+  "concepts": [
+    {
+      "id": "d.ipvpn",
+      "label": "ip-vpn",
+      "synonyms": [
+        "l3vpn",
+        "vpn"
+      ],
+      "kind": "service",
+      "gloss": "A logical IP VPN service realized on the device by instantiating a VRF to isolate customer routes.",
+      "example": "vpn ACME",
+      "ref": "l3vpn-instance",
+      "relations": [
+        {
+          "rel": "instantiated-as",
+          "target": "d.vrf"
+        }
+      ],
+      "instances": [
+        "vpn ACME"
+      ]
+    },
+    {
+      "id": "d.vrf",
+      "label": "routing-instance",
+      "synonyms": [
+        "vrf",
+        "vpn routing table"
+      ],
+      "kind": "instance",
+      "gloss": "A routing instance (VRF) on a device providing a separate routing table and address space for VPNs.",
+      "example": "vrf ACME@R-PE1",
+      "ref": "vrf",
+      "relations": [
+        {
+          "rel": "on-device",
+          "target": "d.dev"
+        }
+      ],
+      "instances": [
+        "vrf ACME@R-PE1",
+        "vrf ACME@R-PE2",
+        "vrf ACME@R-PE3"
+      ]
+    },
+    {
+      "id": "d.ac",
+      "label": "attachment-circuit",
+      "synonyms": [
+        "sub-interface",
+        "ac"
+      ],
+      "kind": "access",
+      "gloss": "An attachment circuit (sub-interface) that binds into a VRF to carry customer traffic.",
+      "example": "ge-0/0/1.101",
+      "ref": "network-access",
+      "relations": [
+        {
+          "rel": "binds-into",
+          "target": "d.vrf"
+        }
+      ],
+      "instances": [
+        "ge-0/0/1.101",
+        "ge-0/0/2.102",
+        "ge-0/0/3.103"
+      ]
+    },
+    {
+      "id": "d.ce",
+      "label": "ce-device",
+      "synonyms": [
+        "ce-neighbor",
+        "customer router"
+      ],
+      "kind": "peer",
+      "gloss": "A customer-edge device that peers with the provider network across an attachment circuit.",
+      "example": "CE-A router",
+      "ref": "customer-edge",
+      "relations": [
+        {
+          "rel": "across",
+          "target": "d.ac"
+        }
+      ],
+      "instances": [
+        "CE-A router",
+        "CE-B router",
+        "CE-C router"
+      ]
+    },
+    {
+      "id": "d.rd",
+      "label": "rd",
+      "synonyms": [
+        "route-distinguisher-value"
+      ],
+      "kind": "identifier",
+      "gloss": "A route-distinguisher value that scopes routes within a VRF to ensure uniqueness.",
+      "example": "65000:101",
+      "ref": "route-distinguisher",
+      "relations": [
+        {
+          "rel": "under",
+          "target": "d.vrf"
+        }
+      ],
+      "instances": [
+        "65000:101",
+        "65000:102",
+        "65000:103"
+      ]
+    },
+    {
+      "id": "d.rt",
+      "label": "route-target",
+      "synonyms": [
+        "target community"
+      ],
+      "kind": "policy-value",
+      "gloss": "A route-target policy value under a VRF used to control route import/export.",
+      "example": "target 65000:1 (hub)",
+      "ref": "route-target",
+      "relations": [
+        {
+          "rel": "under",
+          "target": "d.vrf"
+        }
+      ],
+      "instances": [
+        "target 65000:1 (hub)",
+        "target 65000:2 (spoke)"
+      ]
+    },
+    {
+      "id": "d.ipaddr",
+      "label": "interface-address",
+      "synonyms": [
+        "ip address"
+      ],
+      "kind": "addressing",
+      "gloss": "An interface address assigned to an attachment circuit.",
+      "example": "10.0.1.1/30",
+      "ref": "ip-addressing",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "d.ac"
+        }
+      ],
+      "instances": [
+        "10.0.1.1/30",
+        "10.0.2.1/30",
+        "10.0.3.1/30"
+      ]
+    },
+    {
+      "id": "d.qospolicy",
+      "label": "service-policy",
+      "synonyms": [
+        "qos policy",
+        "policy-map"
+      ],
+      "kind": "qos",
+      "gloss": "A QoS policy (service-policy) attached to an attachment circuit to shape traffic.",
+      "example": "policy-map gold-200M",
+      "ref": "qos-profile",
+      "relations": [
+        {
+          "rel": "attached-to",
+          "target": "d.ac"
+        }
+      ],
+      "instances": [
+        "policy-map gold-200M",
+        "policy-map silver-50M"
+      ]
+    },
+    {
+      "id": "d.dev",
+      "label": "device",
+      "synonyms": [
+        "router",
+        "provider edge"
+      ],
+      "kind": "node",
+      "gloss": "A network device (node) such as a provider edge router that carries VRFs.",
+      "example": "R-PE2",
+      "ref": "pe-device",
+      "relations": [
+        {
+          "rel": "carries",
+          "target": "d.vrf"
+        }
+      ],
+      "instances": [
+        "R-PE1",
+        "R-PE2",
+        "R-PE3"
+      ]
+    },
+    {
+      "id": "d.protocol",
+      "label": "ce-protocol",
+      "synonyms": [
+        "pe-ce protocol"
+      ],
+      "kind": "protocol",
+      "gloss": "The CE-facing protocol used on the attachment circuit, such as eBGP to CE-A, OSPF to CE-B, or static to CE-C.",
+      "example": "eBGP to CE-A",
+      "ref": "ce-pe-protocol",
+      "relations": [
+        {
+          "rel": "under",
+          "target": "d.ac"
+        }
+      ],
+      "instances": [
+        "eBGP to CE-A",
+        "ospf to CE-B",
+        "static to CE-C"
+      ]
+    },
+    {
+      "id": "d.routepolicy",
+      "label": "route-map",
+      "synonyms": [
+        "routing-policy",
+        "policy-statement"
+      ],
+      "kind": "policy",
+      "gloss": "A route-map style policy applied under a VRF to influence routing.",
+      "example": "route-map ACME-in",
+      "ref": "route-policy",
+      "relations": [
+        {
+          "rel": "applied-under",
+          "target": "d.vrf"
+        }
+      ],
+      "instances": [
+        "route-map ACME-in",
+        "route-map ACME-out"
+      ]
+    },
+    {
+      "id": "d.ibgp",
+      "label": "bgp-neighbor",
+      "synonyms": [
+        "bgp-peer",
+        "neighbor"
+      ],
+      "kind": "session",
+      "gloss": "A BGP session (neighbor) established on the device for internal BGP with other routers.",
+      "example": "ibgp to R-PE3",
+      "ref": "ibgp-session",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "d.dev"
+        }
+      ],
+      "instances": [
+        "ibgp to R-PE2",
+        "ibgp to R-PE3"
+      ]
+    },
+    {
+      "id": "d.vendor",
+      "label": "vrf-tag-0x7",
+      "synonyms": [
+        "proprietary vrf tag"
+      ],
+      "kind": "opaque",
+      "gloss": "An opaque vendor-specific VRF tag associated with a VRF for proprietary tagging.",
+      "example": "vrf-tag-0x7 on vrf ACME@R-PE1",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "under",
+          "target": "d.vrf"
+        }
+      ],
+      "instances": [
+        "vrf-tag-0x7 on vrf ACME@R-PE1"
+      ]
+    }
+  ]
+}

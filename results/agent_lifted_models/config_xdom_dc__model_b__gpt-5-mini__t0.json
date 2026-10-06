@@ -1,0 +1,182 @@
+{
+  "system": "Agent Y — Vertex",
+  "dialect": "Vertex (bespoke overlay SDN controller)",
+  "modules": [
+    "vertex-overlay",
+    "vertex-policy"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-mini from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case config_xdom_dc, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_xdom_dc/model_b*.json.",
+  "concepts": [
+    {
+      "id": "y.bind",
+      "label": "vtep-binding",
+      "synonyms": [
+        "vni-to-vlan binding",
+        "encap binding"
+      ],
+      "kind": "attachment",
+      "gloss": "A vtep-binding is the attachment record that realizes an overlay segment by mapping a specific VNI (overlay-segment) onto a particular VTEP node so that that VTEP will encapsulate/decapsulate traffic for that VNI.",
+      "example": "bind-vtep3-50201: the binding that maps vni-50201 (tenant-blue) onto the VTEP node vtep-leaf3, i.e., vtep-leaf3 will advertise and terminate tunnels for VNI 50201.",
+      "ref": "underlay-binding",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "y.vtep"
+        },
+        {
+          "rel": "maps",
+          "target": "y.vni"
+        }
+      ],
+      "instances": [
+        "bind-vtep3-50201"
+      ]
+    },
+    {
+      "id": "y.vni",
+      "label": "overlay-segment",
+      "synonyms": [
+        "VNI",
+        "virtual network"
+      ],
+      "kind": "l2-domain",
+      "gloss": "An overlay-segment is a logical Layer‑2 domain identified by a VNI that carries a tenant's L2 traffic across the overlay and is realized on the fabric by one or more vtep-bindings.",
+      "example": "vni-50201 (tenant-blue): a tenant-blue Layer‑2 network identified by VNI 50201 that is realized when one or more bindings (e.g., bind-vtep3-50201) are present on VTEPs.",
+      "ref": "segment-id",
+      "relations": [
+        {
+          "rel": "realized-by",
+          "target": "y.bind"
+        }
+      ],
+      "instances": [
+        "vni-50201 (tenant-blue)"
+      ]
+    },
+    {
+      "id": "y.vtep",
+      "label": "vtep-node",
+      "synonyms": [
+        "VTEP",
+        "tunnel endpoint"
+      ],
+      "kind": "node",
+      "gloss": "A vtep-node is a physical or virtual switch/router that hosts VTEP bindings and terminates/initiates overlay tunnels (it 'hosts' vtep-binding attachments for VNIs).",
+      "example": "vtep-leaf3: a leaf switch acting as a VTEP which hosts the binding bind-vtep3-50201 so that it encapsulates/decapsulates traffic for vni-50201.",
+      "ref": "edge-device",
+      "relations": [
+        {
+          "rel": "hosts",
+          "target": "y.bind"
+        }
+      ],
+      "instances": [
+        "vtep-leaf3",
+        "vtep-leaf4"
+      ]
+    },
+    {
+      "id": "y.mtu",
+      "label": "overlay-mtu",
+      "synonyms": [
+        "tenant mtu"
+      ],
+      "kind": "framing",
+      "gloss": "An overlay-mtu is the framing constraint (MTU) applied to an overlay segment that defines the maximum payload size allowed inside the encapsulated tunnels for that VNI.",
+      "example": "MTU 9216 required: vni-50201 is configured with a required MTU of 9216 to ensure host-to-host packets fit inside VXLAN/GPE encapsulation without fragmentation.",
+      "ref": "mtu",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "y.vni"
+        }
+      ],
+      "instances": [
+        "MTU 9216 required"
+      ]
+    },
+    {
+      "id": "y.gw",
+      "label": "anycast-gateway",
+      "synonyms": [
+        "distributed gateway"
+      ],
+      "kind": "l3-gateway",
+      "gloss": "An anycast-gateway is a distributed Layer‑3 gateway address configured for an overlay-segment so that multiple VTEPs present the same default-gateway IP locally for hosts in that VNI.",
+      "example": "anycast-gw 10.20.1.1: the IP 10.20.1.1 is programmed on all VTEPs serving vni-50201 so hosts use the same local gateway while routing is distributed.",
+      "ref": "default-gateway",
+      "relations": [
+        {
+          "rel": "for",
+          "target": "y.vni"
+        }
+      ],
+      "instances": [
+        "anycast-gw 10.20.1.1"
+      ]
+    },
+    {
+      "id": "y.microseg",
+      "label": "microseg-policy",
+      "synonyms": [
+        "micro-segmentation",
+        "group policy"
+      ],
+      "kind": "policy",
+      "gloss": "A microseg-policy is a micro‑segmentation policy that defines groups, selectors and enforcement rules (ACLs/filters) applied to an overlay-segment to control east‑west traffic between endpoints in that VNI.",
+      "example": "policy-blue-web-app: a policy applied to vni-50201 that permits HTTP/HTTPS between web-tier endpoints and denies other lateral access according to the microsegmentation rules.",
+      "ref": "microseg",
+      "relations": [
+        {
+          "rel": "applies-to",
+          "target": "y.vni"
+        }
+      ],
+      "instances": [
+        "policy-blue-web-app"
+      ]
+    },
+    {
+      "id": "y.seczone",
+      "label": "security-zone",
+      "synonyms": [
+        "zone",
+        "policy zone"
+      ],
+      "kind": "policy-group",
+      "gloss": "A security-zone is a named policy-group or zone used to collect endpoints or segments under the same security semantics; zones are grouped by microseg-policies to apply common rules to those collections.",
+      "example": "zone-dmz: a security zone containing public-facing servers in vni-50201 that is associated with policy-blue-web-app to enforce DMZ access controls.",
+      "ref": "sec-zone",
+      "relations": [
+        {
+          "rel": "grouped-by",
+          "target": "y.microseg"
+        }
+      ],
+      "instances": [
+        "zone-dmz",
+        "zone-internal"
+      ]
+    },
+    {
+      "id": "y.vendor",
+      "label": "vertex-tag-6",
+      "synonyms": [
+        "proprietary attr 6"
+      ],
+      "kind": "opaque",
+      "gloss": "Vertex-tag-6 is a vendor‑specific opaque attribute attached to an overlay-segment (VNI) used for proprietary metadata, special forwarding or feature flags that the controller and devices interpret internally.",
+      "example": "vertex-tag-6=0x1 on vni-50201: the proprietary tag value 0x1 applied to vni-50201 indicating a vendor-specific handling mode (e.g., enhanced telemetry or special forwarding) on all VTEPs serving that VNI.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on",
+          "target": "y.vni"
+        }
+      ],
+      "instances": [
+        "vertex-tag-6=0x1 on vni-50201"
+      ]
+    }
+  ]
+}

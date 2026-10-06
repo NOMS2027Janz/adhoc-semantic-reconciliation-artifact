@@ -1,0 +1,49 @@
+case,setting,stack,model,uses_reference,trial,precision,resolved_fraction,surviving_false_cognates,residual,turns,total_tokens,reasoning_tokens,latency_s
+config_tapi_teas,1 · configuration (flagship),two-agent,gpt-5.6-sol,False,0,1.0,0.444,0,12,4,22262,1615,104.88
+config_tapi_teas,1 · configuration (flagship),two-agent,gpt-5.6-sol,False,1,1.0,0.333,0,14,4,22546,1544,94.0
+config_tapi_teas,1 · configuration (flagship),two-agent,gpt-5.6-terra,False,0,1.0,0.556,0,10,6,37640,1488,82.45
+config_tapi_teas,1 · configuration (flagship),two-agent,gpt-5.6-terra,False,1,1.0,0.889,0,4,6,34066,1313,78.51
+config_tapi_teas,1 · configuration (flagship),two-agent,gpt-5.6-luna,False,0,1.0,0.778,0,6,4,22454,1625,61.97
+config_tapi_teas,1 · configuration (flagship),two-agent,gpt-5.6-luna,False,1,1.0,0.556,0,10,4,24195,2764,73.11
+config_tapi_teas,1 · configuration (flagship),two-agent,gpt-5.4,False,0,1.0,0.556,0,10,6,33822,0,39.72
+config_tapi_teas,1 · configuration (flagship),two-agent,gpt-5.4,False,1,1.0,0.889,0,4,6,35285,0,39.73
+config_tapi_teas,1 · configuration (flagship),two-agent,gpt-5.4-mini,False,0,1.0,0.778,0,6,4,20925,0,24.57
+config_tapi_teas,1 · configuration (flagship),two-agent,gpt-5.4-mini,False,1,1.0,0.778,0,6,12,101767,0,60.28
+config_tapi_teas,1 · configuration (flagship),two-agent,gpt-5.4-nano,False,0,0.857,0.667,0,7,12,184061,0,152.29
+config_tapi_teas,1 · configuration (flagship),two-agent,gpt-5.4-nano,False,1,1.0,0.444,0,12,12,159806,0,124.45
+config_big_hard,1 · configuration (hard),two-agent,gpt-5.6-sol,False,0,1.0,0.75,0,13,4,27058,2135,87.14
+config_big_hard,1 · configuration (hard),two-agent,gpt-5.6-sol,False,1,1.0,0.833,0,11,4,26905,2025,100.08
+config_big_hard,1 · configuration (hard),two-agent,gpt-5.6-terra,False,0,0.917,0.917,0,7,4,25566,860,57.03
+config_big_hard,1 · configuration (hard),two-agent,gpt-5.6-terra,False,1,1.0,0.833,0,11,6,46473,1479,79.31
+config_big_hard,1 · configuration (hard),two-agent,gpt-5.6-luna,False,0,1.0,0.75,0,13,6,47629,2646,105.97
+config_big_hard,1 · configuration (hard),two-agent,gpt-5.6-luna,False,1,1.0,0.583,0,17,4,30501,2709,102.37
+config_big_hard,1 · configuration (hard),two-agent,gpt-5.4,False,0,0.923,1.0,0,5,6,42544,0,38.32
+config_big_hard,1 · configuration (hard),two-agent,gpt-5.4,False,1,0.917,0.917,0,7,4,25307,0,33.68
+config_big_hard,1 · configuration (hard),two-agent,gpt-5.4-mini,False,0,0.9,0.75,0,11,6,48030,0,25.6
+config_big_hard,1 · configuration (hard),two-agent,gpt-5.4-mini,False,1,0.889,0.667,0,13,8,76015,0,33.08
+config_big_hard,1 · configuration (hard),two-agent,gpt-5.4-nano,False,0,0.875,0.583,1,15,12,225500,0,138.55
+config_big_hard,1 · configuration (hard),two-agent,gpt-5.4-nano,False,1,0.786,0.917,1,3,12,255186,0,164.96
+config_cross_domain,3 · cross-domain,two-agent,gpt-5.6-sol,False,0,1.0,0.2,0,13,4,16355,889,54.49
+config_cross_domain,3 · cross-domain,two-agent,gpt-5.6-sol,False,1,1.0,0.2,0,13,4,16506,728,65.95
+config_cross_domain,3 · cross-domain,two-agent,gpt-5.6-terra,False,0,0.0,0.0,0,15,4,16324,557,40.79
+config_cross_domain,3 · cross-domain,two-agent,gpt-5.6-terra,False,1,1.0,0.4,0,11,4,17853,933,52.45
+config_cross_domain,3 · cross-domain,two-agent,gpt-5.6-luna,False,0,1.0,0.4,0,11,4,16398,1375,46.75
+config_cross_domain,3 · cross-domain,two-agent,gpt-5.6-luna,False,1,1.0,0.4,0,11,4,17158,1404,50.46
+config_cross_domain,3 · cross-domain,two-agent,gpt-5.4,False,0,1.0,0.4,0,11,4,17089,0,32.38
+config_cross_domain,3 · cross-domain,two-agent,gpt-5.4,False,1,1.0,0.6,0,9,6,26669,0,29.79
+config_cross_domain,3 · cross-domain,two-agent,gpt-5.4-mini,False,0,1.0,0.8,0,7,10,59472,0,27.63
+config_cross_domain,3 · cross-domain,two-agent,gpt-5.4-mini,False,1,1.0,0.6,0,9,6,25696,0,14.46
+config_cross_domain,3 · cross-domain,two-agent,gpt-5.4-nano,False,0,1.0,0.8,0,7,12,162595,0,119.07
+config_cross_domain,3 · cross-domain,two-agent,gpt-5.4-nano,False,1,1.0,0.4,0,11,12,145589,0,101.26
+config_observability,4 · observability,two-agent,gpt-5.6-sol,False,0,1.0,0.25,0,15,4,17037,795,71.53
+config_observability,4 · observability,two-agent,gpt-5.6-sol,False,1,1.0,0.25,0,15,6,28419,1776,99.01
+config_observability,4 · observability,two-agent,gpt-5.6-terra,False,0,1.0,0.5,0,13,4,17894,928,51.45
+config_observability,4 · observability,two-agent,gpt-5.6-terra,False,1,1.0,0.5,0,13,4,16743,770,43.84
+config_observability,4 · observability,two-agent,gpt-5.6-luna,False,0,1.0,0.25,0,15,4,18978,1418,67.03
+config_observability,4 · observability,two-agent,gpt-5.6-luna,False,1,1.0,0.5,0,13,4,18400,1327,53.34
+config_observability,4 · observability,two-agent,gpt-5.4,False,0,1.0,0.5,0,13,4,16852,0,26.73
+config_observability,4 · observability,two-agent,gpt-5.4,False,1,1.0,0.5,0,13,4,16497,0,31.08
+config_observability,4 · observability,two-agent,gpt-5.4-mini,False,0,0.667,0.5,0,12,12,88777,0,50.87
+config_observability,4 · observability,two-agent,gpt-5.4-mini,False,1,1.0,0.75,0,11,12,90315,0,42.28
+config_observability,4 · observability,two-agent,gpt-5.4-nano,False,0,1.0,0.75,0,11,12,145531,0,117.72
+config_observability,4 · observability,two-agent,gpt-5.4-nano,False,1,1.0,0.5,0,13,12,126734,0,87.14

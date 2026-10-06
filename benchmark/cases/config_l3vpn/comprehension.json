@@ -1,0 +1,32 @@
+{
+  "model": "a",
+  "meaning_questions": [
+    {"id": "q_vpnsvc", "concept_id": "n.vpnsvc",
+     "question": "What does this concept denote, in terms a domain engineer would recognise?",
+     "answer_key": "The managed end-to-end L3VPN, treated as one network service.",
+     "must_not_confuse_with": []},
+    {"id": "q_rd", "concept_id": "n.rd",
+     "question": "What does 'route-distinguisher' denote here?",
+     "answer_key": "The value prepended to a route to make each VRF's routes globally unique. It is NOT a route-target: it ensures uniqueness, it does not control import/export.",
+     "must_not_confuse_with": ["d.rt"]},
+    {"id": "q_rt", "concept_id": "n.rt",
+     "question": "What does 'vpn-target' denote here?",
+     "answer_key": "The route-target extended-community value that controls which VRFs import and export a route (the membership control), distinct from the route-distinguisher.",
+     "must_not_confuse_with": []},
+    {"id": "q_rtpolicy", "concept_id": "n.rtpolicy",
+     "question": "What does 'routing-policy' denote here?",
+     "answer_key": "The policy that filters and manipulates routes on import and export. It is a routing/route-control policy, NOT a QoS policy.",
+     "must_not_confuse_with": ["d.qospolicy"]},
+    {"id": "q_vendor", "concept_id": "n.vendor",
+     "question": "What does 'x-op-tag-91' denote here?",
+     "answer_key": "Its meaning cannot be determined from this model: an opaque vendor/proprietary tag with no description and no shared-reference binding. A faithful consumer should say it cannot be determined rather than guess.",
+     "must_not_confuse_with": []}
+  ],
+  "use_task": {
+    "goal": "You must stand up an L3VPN instance with a per-site access and correct route import/export control. Using ONLY this model, list the concepts directly relevant and say in one phrase how each is used.",
+    "relevant_ids": ["n.vpnsvc", "n.vpnnode", "n.access", "n.rd", "n.rt", "n.rtpolicy", "n.pe"],
+    "irrelevant_ids": ["n.vendor"],
+    "answer_key": "n.vpnsvc = the VPN service; n.vpnnode = its per-PE VRF instance; n.access = the site attachment; n.rd = route uniqueness; n.rt = import/export membership control; n.rtpolicy = route filtering/manipulation; n.pe = the hosting provider-edge. n.vendor is opaque and cannot be used."
+  },
+  "ambiguous_ids": ["n.vendor", "n.rd", "n.rtpolicy"]
+}

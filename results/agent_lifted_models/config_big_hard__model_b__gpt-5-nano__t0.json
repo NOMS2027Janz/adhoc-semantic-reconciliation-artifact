@@ -1,0 +1,396 @@
+{
+  "system": "Agent I",
+  "dialect": "IETF TEAS",
+  "modules": [
+    "ietf-te-topology (RFC 8795 on RFC 8345)",
+    "ietf-otn-topology",
+    "ietf-wson-topology",
+    "ietf-layer1-types"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-nano from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case config_big_hard, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_big_hard/model_b*.json.",
+  "concepts": [
+    {
+      "id": "i.tenode",
+      "label": "te-node",
+      "synonyms": [
+        "node"
+      ],
+      "kind": "node",
+      "gloss": "A transport-engineering (TE) node that hosts termination points and links within a TE topology.",
+      "example": "R1",
+      "ref": "forwarding-node",
+      "relations": [
+        {
+          "rel": "part-of",
+          "target": "i.tetopo"
+        }
+      ],
+      "instances": [
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "A1",
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "id": "i.tp",
+      "label": "termination-point",
+      "synonyms": [
+        "te-tp",
+        "link-termination-point"
+      ],
+      "kind": "termination",
+      "gloss": "A termination point on a TE node where connections terminate and that is terminated by a TE link.",
+      "example": "tp-R1-R2",
+      "ref": "link-termination",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "i.tenode"
+        },
+        {
+          "rel": "terminates",
+          "target": "i.telink"
+        }
+      ],
+      "instances": [
+        "tp-R1-R2",
+        "tp-R2-R3",
+        "tp-A1-R1"
+      ]
+    },
+    {
+      "id": "i.stp",
+      "label": "supporting-tp",
+      "synonyms": [
+        "supporting termination"
+      ],
+      "kind": "adaptation",
+      "gloss": "A supporting termination that provides adaptation services for a termination point, i.e., it 'supports' a tp.",
+      "example": "OTN tp over optical tp at R1",
+      "ref": "layer-adaptation",
+      "relations": [
+        {
+          "rel": "supports",
+          "target": "i.tp"
+        }
+      ],
+      "instances": [
+        "OTN tp over optical tp at R1",
+        "ODU tp over OTU tp at R2"
+      ]
+    },
+    {
+      "id": "i.ttp",
+      "label": "tunnel-termination-point",
+      "synonyms": [
+        "ttp"
+      ],
+      "kind": "termination",
+      "gloss": "A tunnel termination point on a TE node that originates a TE tunnel.",
+      "example": "ttp-A1 (tunnel head)",
+      "ref": "trail-termination",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "i.tenode"
+        },
+        {
+          "rel": "originates",
+          "target": "i.tunnel"
+        }
+      ],
+      "instances": [
+        "ttp-A1 (tunnel head)",
+        "ttp-A3 (tunnel head)"
+      ]
+    },
+    {
+      "id": "i.tunnel",
+      "label": "te-tunnel",
+      "synonyms": [
+        "tunnel"
+      ],
+      "kind": "service",
+      "gloss": "A TE tunnel service that carries traffic between tunnel termination points across a topology and may be protected by a protection group.",
+      "example": "tunnel-a1a3-odu2 (ODU2, A1-A3, protected)",
+      "ref": "connection-service",
+      "relations": [
+        {
+          "rel": "from",
+          "target": "i.ttp"
+        },
+        {
+          "rel": "over",
+          "target": "i.tetopo"
+        },
+        {
+          "rel": "protected-by",
+          "target": "i.pgroup"
+        }
+      ],
+      "instances": [
+        "tunnel-a1a3-odu2 (ODU2, A1-A3, protected)",
+        "tunnel-a2a3-odu0 (ODU0, A2-A3)"
+      ]
+    },
+    {
+      "id": "i.otnlabel",
+      "label": "otn-label",
+      "synonyms": [
+        "tributary-slot",
+        "TS/TPN"
+      ],
+      "kind": "multiplex",
+      "gloss": "A multiplex label (TS/TPN) used to identify tributary slots within an OTU for a tunnel.",
+      "example": "TS/TPN for ODU2 in OTU4",
+      "ref": "multiplex-structure",
+      "relations": [
+        {
+          "rel": "labels",
+          "target": "i.tunnel"
+        }
+      ],
+      "instances": [
+        "TS/TPN for ODU2 in OTU4",
+        "TS for ODU0 in ODU2"
+      ]
+    },
+    {
+      "id": "i.cmatrix",
+      "label": "connectivity-matrix",
+      "synonyms": [
+        "conn matrix"
+      ],
+      "kind": "switching",
+      "gloss": "A connectivity matrix used on a TE node to describe port-to-port switching decisions.",
+      "example": "R2 connectivity matrix",
+      "ref": "switching-constraint",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "i.tenode"
+        }
+      ],
+      "instances": [
+        "R2 connectivity matrix",
+        "R3 connectivity matrix"
+      ]
+    },
+    {
+      "id": "i.telink",
+      "label": "te-link",
+      "synonyms": [
+        "link"
+      ],
+      "kind": "link",
+      "gloss": "A TE link between two TE nodes, terminated by termination points.",
+      "example": "telink-R1-R2",
+      "ref": "topo-link",
+      "relations": [
+        {
+          "rel": "between",
+          "target": "i.tenode"
+        },
+        {
+          "rel": "terminated-by",
+          "target": "i.tp"
+        }
+      ],
+      "instances": [
+        "telink-R1-R2",
+        "telink-R2-R3",
+        "telink-R3-R4",
+        "telink-R1-R4"
+      ]
+    },
+    {
+      "id": "i.tetopo",
+      "label": "te-topology",
+      "synonyms": [
+        "network",
+        "per-layer network"
+      ],
+      "kind": "topology",
+      "gloss": "A TE topology that contains TE nodes and TE links, representing the per-layer network.",
+      "example": "the OTN layer network",
+      "ref": "topology",
+      "relations": [
+        {
+          "rel": "contains",
+          "target": "i.tenode"
+        },
+        {
+          "rel": "contains",
+          "target": "i.telink"
+        }
+      ],
+      "instances": [
+        "the OTN layer network",
+        "the optical (WSON) layer network"
+      ]
+    },
+    {
+      "id": "i.tcep",
+      "label": "tunnel-connection-endpoint",
+      "synonyms": [
+        "connection endpoint"
+      ],
+      "kind": "endpoint",
+      "gloss": "A tunnel connection endpoint on a TE node that is part of a tunnel connection.",
+      "example": "tcep-a1a3-R1",
+      "ref": "conn-endpoint",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "i.tenode"
+        },
+        {
+          "rel": "part-of",
+          "target": "i.tunnel"
+        }
+      ],
+      "instances": [
+        "tcep-a1a3-R1",
+        "tcep-a1a3-R3"
+      ]
+    },
+    {
+      "id": "i.och",
+      "label": "wson-optical-channel",
+      "synonyms": [
+        "och",
+        "optical channel"
+      ],
+      "kind": "optical",
+      "gloss": "A WSON optical channel that runs over an optical multiplex section.",
+      "example": "och-lambda1-R1-R3",
+      "ref": "optical-channel",
+      "relations": [
+        {
+          "rel": "over",
+          "target": "i.oms"
+        }
+      ],
+      "instances": [
+        "och-lambda1-R1-R3",
+        "och-lambda2-R2-R4"
+      ]
+    },
+    {
+      "id": "i.oms",
+      "label": "optical-multiplex-section",
+      "synonyms": [
+        "OMS"
+      ],
+      "kind": "optical",
+      "gloss": "An optical multiplex section between TE nodes that aggregates optical channels.",
+      "example": "oms-R1-R2",
+      "ref": "optical-mux-section",
+      "relations": [
+        {
+          "rel": "between",
+          "target": "i.tenode"
+        },
+        {
+          "rel": "aggregates",
+          "target": "i.och"
+        }
+      ],
+      "instances": [
+        "oms-R1-R2",
+        "oms-R2-R3"
+      ]
+    },
+    {
+      "id": "i.sclass",
+      "label": "service-grade",
+      "synonyms": [
+        "service class",
+        "service tier"
+      ],
+      "kind": "class",
+      "gloss": "A service-grade (class) assigned to a tunnel, e.g., gold or silver.",
+      "example": "gold for tunnel-a1a3-odu2",
+      "ref": "service-class",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "i.tunnel"
+        }
+      ],
+      "instances": [
+        "gold for tunnel-a1a3-odu2",
+        "silver for tunnel-a2a3-odu0"
+      ]
+    },
+    {
+      "id": "i.pgroup",
+      "label": "protection-group",
+      "synonyms": [
+        "1+1 group"
+      ],
+      "kind": "protection",
+      "gloss": "A protection-group (1+1) that protects a TE tunnel and contains protection roles.",
+      "example": "pgroup-a1a3 (1+1)",
+      "ref": "protection-group",
+      "relations": [
+        {
+          "rel": "protects",
+          "target": "i.tunnel"
+        },
+        {
+          "rel": "has",
+          "target": "i.prole"
+        }
+      ],
+      "instances": [
+        "pgroup-a1a3 (1+1)"
+      ]
+    },
+    {
+      "id": "i.prole",
+      "label": "protection-role",
+      "synonyms": [
+        "working/protect role"
+      ],
+      "kind": "role",
+      "gloss": "A protection-role within a protection group, indicating working or protect roles.",
+      "example": "working = R1-R3",
+      "ref": "protection-role",
+      "relations": [
+        {
+          "rel": "within",
+          "target": "i.pgroup"
+        }
+      ],
+      "instances": [
+        "working = R1-R3",
+        "protect = R1-R4-R3"
+      ]
+    },
+    {
+      "id": "i.exttlv",
+      "label": "ext-tlv-42",
+      "synonyms": [
+        "opaque extension 42"
+      ],
+      "kind": "opaque",
+      "gloss": "An opaque extension TLV (tag 42) carried on a TE node.",
+      "example": "ext-tlv-42=0x77 on R2",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "i.tenode"
+        }
+      ],
+      "instances": [
+        "ext-tlv-42=0x77 on R2"
+      ]
+    }
+  ]
+}

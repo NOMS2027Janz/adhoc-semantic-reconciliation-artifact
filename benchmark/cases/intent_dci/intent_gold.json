@@ -1,0 +1,240 @@
+{
+  "case": "intent_dci",
+  "operational_case": "intent (declarative demand -> concrete realisation, by refinement)",
+  "seed": "hand-authored breadth case: data-centre-interconnect intents x a priced DCI catalogue",
+  "note": "DERIVED by derive_intent_gold.py from the domain predicates and hidden truth; do not hand-edit.",
+  "refine": {
+    "DI1": {
+      "pair": "D1",
+      "satisfiable": true,
+      "actual_satisfiers": [
+        "d1a",
+        "d1b"
+      ],
+      "advertised_satisfiers": [
+        "d1a",
+        "d1b"
+      ],
+      "experiment_only": false,
+      "correct_satisfies": true
+    },
+    "DI2": {
+      "pair": "D2",
+      "satisfiable": true,
+      "actual_satisfiers": [
+        "d2b",
+        "d2c"
+      ],
+      "advertised_satisfiers": [
+        "d2b",
+        "d2c"
+      ],
+      "experiment_only": false,
+      "correct_satisfies": true
+    },
+    "DI3": {
+      "pair": "D2",
+      "satisfiable": false,
+      "actual_satisfiers": [],
+      "advertised_satisfiers": [],
+      "experiment_only": false,
+      "correct_satisfies": false
+    },
+    "DI4": {
+      "pair": "D1",
+      "satisfiable": false,
+      "actual_satisfiers": [],
+      "advertised_satisfiers": [],
+      "experiment_only": false,
+      "correct_satisfies": false
+    },
+    "DI5": {
+      "pair": "D3",
+      "satisfiable": true,
+      "actual_satisfiers": [
+        "d3a"
+      ],
+      "advertised_satisfiers": [],
+      "experiment_only": true,
+      "correct_satisfies": true
+    },
+    "DI6": {
+      "pair": "D4",
+      "satisfiable": false,
+      "actual_satisfiers": [],
+      "advertised_satisfiers": [
+        "d4b"
+      ],
+      "experiment_only": true,
+      "correct_satisfies": false
+    }
+  },
+  "negotiation_intents": [
+    "DI3",
+    "DI4",
+    "DI6"
+  ],
+  "negotiation": {
+    "DI3": {
+      "premium": {
+        "best_offer": "d2b",
+        "decision": "reject",
+        "offer_violated": [
+          "latency"
+        ],
+        "offer_cost": 190
+      },
+      "assured": {
+        "best_offer": "d2b",
+        "decision": "accept",
+        "offer_violated": [
+          "latency"
+        ],
+        "offer_cost": 190
+      },
+      "economy": {
+        "best_offer": "d2b",
+        "decision": "reject",
+        "offer_violated": [
+          "latency"
+        ],
+        "offer_cost": 190
+      }
+    },
+    "DI4": {
+      "premium": {
+        "best_offer": "d1a",
+        "decision": "reject",
+        "offer_violated": [
+          "availability",
+          "protection"
+        ],
+        "offer_cost": 200
+      },
+      "assured": {
+        "best_offer": "d1b",
+        "decision": "accept",
+        "offer_violated": [
+          "latency"
+        ],
+        "offer_cost": 320
+      },
+      "economy": {
+        "best_offer": "d1a",
+        "decision": "reject",
+        "offer_violated": [
+          "availability",
+          "protection"
+        ],
+        "offer_cost": 200
+      }
+    },
+    "DI6": {
+      "premium": {
+        "best_offer": "d4b",
+        "decision": "reject",
+        "offer_violated": [
+          "availability"
+        ],
+        "offer_cost": 150
+      },
+      "assured": {
+        "best_offer": "d4b",
+        "decision": "reject",
+        "offer_violated": [
+          "availability"
+        ],
+        "offer_cost": 150
+      },
+      "economy": {
+        "best_offer": "d4b",
+        "decision": "reject",
+        "offer_violated": [
+          "availability"
+        ],
+        "offer_cost": 150
+      }
+    }
+  },
+  "lifecycle": {
+    "TD1": {
+      "intent_id": "DI1",
+      "policy_id": "premium",
+      "setpiece": true,
+      "hops": [
+        {
+          "hop_id": "h0",
+          "origin": "provider",
+          "kind": "assess",
+          "fulfilment": "met",
+          "decision": "hold",
+          "new_realisation": "d1a",
+          "remediation_class": null,
+          "in_service_before": "d1a"
+        },
+        {
+          "hop_id": "h1",
+          "origin": "provider",
+          "kind": "assess",
+          "fulfilment": "breach",
+          "decision": "accept",
+          "new_realisation": "d1b",
+          "remediation_class": "self_remediable",
+          "in_service_before": "d1a"
+        },
+        {
+          "hop_id": "h2",
+          "origin": "consumer",
+          "kind": "demand",
+          "fulfilment": "breach",
+          "decision": "refer",
+          "new_realisation": "d1b",
+          "remediation_class": "needs_consumer",
+          "in_service_before": "d1b"
+        },
+        {
+          "hop_id": "h3",
+          "origin": "provider",
+          "kind": "restore",
+          "fulfilment": "at_risk",
+          "decision": "accept",
+          "new_realisation": "d1a",
+          "remediation_class": "self_remediable",
+          "in_service_before": "d1b"
+        }
+      ]
+    },
+    "TD2": {
+      "intent_id": "DI2",
+      "policy_id": "assured",
+      "setpiece": false,
+      "hops": [
+        {
+          "hop_id": "h0",
+          "origin": "provider",
+          "kind": "assess",
+          "fulfilment": "at_risk",
+          "decision": "hold",
+          "new_realisation": "d2b",
+          "remediation_class": null,
+          "in_service_before": "d2b"
+        },
+        {
+          "hop_id": "h1",
+          "origin": "provider",
+          "kind": "assess",
+          "fulfilment": "breach",
+          "decision": "accept",
+          "new_realisation": "d2c",
+          "remediation_class": "self_remediable",
+          "in_service_before": "d2b"
+        }
+      ]
+    }
+  },
+  "setpiece": "TD1",
+  "experiment_only": [
+    "DI5",
+    "DI6"
+  ]
+}

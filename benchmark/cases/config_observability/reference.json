@@ -1,0 +1,79 @@
+{
+  "id": "ref.observability.adhoc.v1",
+  "kind": "lexical",
+  "reference_type": "ad_hoc_by_example",
+  "note": "An ad-hoc reference the two agents construct, ANCHORED TO THE RFC 9940 term ladder \u2014 the standard that separates what legacy conflates. One entry per shared category the exchange needs, each fixed by a canonical example. It deliberately does not cover the NMOP concepts legacy has no equivalent for (anomaly-vs-alarm aside, which it pins precisely because that is the dangerous cognate).",
+  "entries": [
+    {
+      "id": "node",
+      "label": "resource",
+      "synonyms": [
+        "managed object",
+        "network element"
+      ],
+      "class": "resource",
+      "definition": "A managed network element whose characteristics are observed.",
+      "example": "wavelength lambda1"
+    },
+    {
+      "id": "event",
+      "label": "event",
+      "synonyms": [
+        "value variation"
+      ],
+      "class": "event",
+      "definition": "The variation in the value of a characteristic of a resource at a distinct moment (RFC 9940 Event).",
+      "example": "a pre-FEC BER sample at t0"
+    },
+    {
+      "id": "alarm-state",
+      "label": "alarm",
+      "synonyms": [
+        "alarm state"
+      ],
+      "class": "state",
+      "definition": "An undesirable STATE in a resource requiring corrective action \u2014 a state in its own right (RFC 9940 Alarm).",
+      "example": "the signal-degrade alarm state on lambda1"
+    },
+    {
+      "id": "fault",
+      "label": "fault",
+      "synonyms": [
+        "defect"
+      ],
+      "class": "occurrence",
+      "definition": "An occurrence (event or change) that is not desired/required (RFC 9940 Fault).",
+      "example": "the fibre degradation underlying the alarm"
+    },
+    {
+      "id": "anomaly",
+      "label": "anomaly",
+      "synonyms": [
+        "deviation"
+      ],
+      "class": "deviation",
+      "definition": "An unusual or unexpected event or pattern that DEVIATES from normal expected behaviour (RFC 9940 Anomaly) \u2014 a deviation, NOT by definition undesirable, and therefore NOT the same as an alarm (which is a declared undesirable state).",
+      "example": "a rising BER trend that may be benign in a maintenance window"
+    },
+    {
+      "id": "concern",
+      "label": "concern score",
+      "synonyms": [
+        "significance"
+      ],
+      "class": "annotation",
+      "definition": "A dynamic concern score (0-100) computed from current context (anomaly-semantics) \u2014 NOT a fixed severity label assigned at emission.",
+      "example": "concern 78 now, lower during a maintenance window"
+    },
+    {
+      "id": "cause",
+      "label": "cause",
+      "synonyms": [
+        "root cause"
+      ],
+      "class": "derived",
+      "definition": "The events, established by CORRELATION, that gave rise to a fault or problem (RFC 9940 Cause) \u2014 NOT a static probable-cause code fixed at emission.",
+      "example": "the optical BER symptom found to be the root of the IP loss"
+    }
+  ]
+}

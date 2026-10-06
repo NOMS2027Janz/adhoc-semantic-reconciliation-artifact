@@ -1,0 +1,11 @@
+case,arm,model,uses_reference,trial,precision,resolved_fraction,surviving_false_cognates,residual,turns,total_tokens,reasoning_tokens,latency_s
+config_tapi_teas,plain,gpt-5.6-sol,False,0,1.0,0.333,0,14,4,22954,2524,87.07
+config_tapi_teas,plan,gpt-5.6-sol,False,0,1.0,0.667,0,8,6,46147,1917,110.16
+config_tapi_teas,plain,gpt-5.6-sol,False,1,1.0,0.667,0,8,4,21357,1341,66.46
+config_tapi_teas,plan,gpt-5.6-sol,False,1,1.0,0.444,0,12,6,42719,1539,90.31
+config_tapi_teas,plain,gpt-5.6-sol,False,2,1.0,0.556,0,10,4,21656,2113,75.85
+config_tapi_teas,plan,gpt-5.6-sol,False,2,1.0,0.111,0,18,6,44286,2485,109.95
+config_tapi_teas,plain,gpt-5.6-sol,False,3,1.0,0.667,0,8,4,22623,2639,86.28
+config_tapi_teas,plan,gpt-5.6-sol,False,3,1.0,0.556,0,10,6,45584,2112,108.03
+config_tapi_teas,plain,gpt-5.6-sol,False,4,1.0,0.333,0,14,6,35998,2204,85.38
+config_tapi_teas,plan,gpt-5.6-sol,False,4,1.0,0.444,0,12,6,46644,1633,103.74

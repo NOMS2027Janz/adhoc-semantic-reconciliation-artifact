@@ -1,0 +1,243 @@
+{
+  "system": "Agent E",
+  "dialect": "IETF EVPN (RFC 7432 / RFC 8365)",
+  "modules": [
+    "ietf-evpn",
+    "ietf-bgp-l2vpn-evpn"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5.6-sol from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case config_evpn, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_evpn/model_b*.json.",
+  "concepts": [
+    {
+      "id": "e.evi",
+      "label": "evpn-instance",
+      "synonyms": [
+        "EVI",
+        "MAC-VRF"
+      ],
+      "kind": "service",
+      "gloss": "An EVPN instance is a provider-edge Layer-2 VPN service context that associates one or more attachment circuits and bridge domains with a common MAC-VRF and EVPN control-plane state.",
+      "example": "EVI-5000 (MAC-VRF ACME) binds AC-PE1, AC-PE2, and AC-PE3 into the same EVPN service and carries bd-vlan-200.",
+      "ref": "eth-vpn",
+      "relations": [
+        {
+          "rel": "realized-on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "EVI-5000 (MAC-VRF ACME)"
+      ]
+    },
+    {
+      "id": "e.ac",
+      "label": "attachment-circuit",
+      "synonyms": [
+        "AC",
+        "access-interface"
+      ],
+      "kind": "access",
+      "gloss": "An attachment circuit is the physical or logical provider-edge access connection through which a customer site or device enters a particular EVPN instance.",
+      "example": "AC-PE1 is an access interface assigned to EVI-5000, allowing locally received customer Ethernet frames to enter the ACME MAC-VRF.",
+      "ref": "uni",
+      "relations": [
+        {
+          "rel": "into",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "AC-PE1",
+        "AC-PE2",
+        "AC-PE3"
+      ]
+    },
+    {
+      "id": "e.access",
+      "label": "vpn-network-access",
+      "synonyms": [
+        "endpoint",
+        "access-endpoint"
+      ],
+      "kind": "endpoint",
+      "gloss": "A VPN network access is the service-facing endpoint representing customer connectivity at a specific attachment circuit.",
+      "example": "ep-PE1 represents the customer access endpoint located at AC-PE1, while ep-PE2 and ep-PE3 represent corresponding endpoints on the other attachment circuits.",
+      "ref": "svc-endpoint",
+      "relations": [
+        {
+          "rel": "at",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "ep-PE1",
+        "ep-PE2",
+        "ep-PE3"
+      ]
+    },
+    {
+      "id": "e.vlan",
+      "label": "bridge-domain",
+      "synonyms": [
+        "bridge-vlan",
+        "vlan"
+      ],
+      "kind": "l2-domain",
+      "gloss": "A bridge domain is an Ethernet broadcast and MAC-forwarding domain, commonly associated with a VLAN, that operates within an EVPN instance.",
+      "example": "bd-vlan-200 is the VLAN 200 bridge domain in EVI-5000, within which Ethernet frames are bridged according to learned MAC destinations.",
+      "ref": "vlan",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "bd-vlan-200"
+      ]
+    },
+    {
+      "id": "e.policer",
+      "label": "ingress-policer",
+      "synonyms": [
+        "rate-limiter"
+      ],
+      "kind": "rate",
+      "gloss": "An ingress policer is a rate-enforcement policy attached to an attachment circuit that meters arriving traffic and applies the configured conformance actions when its rate profile is exceeded.",
+      "example": "policer-200/50 is applied on AC-PE1 so traffic entering EVI-5000 through that circuit is measured against the 200/50 rate profile.",
+      "ref": "bw-profile",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "policer-200/50",
+        "policer-100/0"
+      ]
+    },
+    {
+      "id": "e.tc",
+      "label": "traffic-class",
+      "synonyms": [
+        "forwarding-class",
+        "class"
+      ],
+      "kind": "cos",
+      "gloss": "A traffic class is a class-of-service category within an EVPN instance that groups packets or frames for a defined forwarding, queuing, or drop treatment.",
+      "example": "In EVI-5000, traffic classified as EF-class receives the expedited-forwarding treatment, while traffic classified as BE-class receives best-effort treatment.",
+      "ref": "cos",
+      "relations": [
+        {
+          "rel": "in",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "EF-class",
+        "BE-class"
+      ]
+    },
+    {
+      "id": "e.maclearn",
+      "label": "mac-vrf-learning",
+      "synonyms": [
+        "local MAC learning"
+      ],
+      "kind": "l2-control",
+      "gloss": "MAC-VRF learning is the local Layer-2 control function that learns source MAC addresses from frames received on an attachment circuit and installs their reachability in the associated MAC-VRF.",
+      "example": "When a frame sourced by MAC 00:11:22:33:44:55 arrives on AC-PE1, local learning records that MAC as reachable through AC-PE1 in EVI-5000.",
+      "ref": "mac-learning",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "local learning @AC-PE1"
+      ]
+    },
+    {
+      "id": "e.mtu",
+      "label": "interface-mtu",
+      "synonyms": [
+        "MTU"
+      ],
+      "kind": "framing",
+      "gloss": "An interface MTU is the maximum frame size configured for transmission or reception on an attachment circuit.",
+      "example": "MTU 9100 on AC-PE1 permits Ethernet frames up to the configured 9,100-byte limit on that circuit and treats larger frames according to the interface's oversize-frame behavior.",
+      "ref": "mtu",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "MTU 9100"
+      ]
+    },
+    {
+      "id": "e.esi",
+      "label": "ethernet-segment",
+      "synonyms": [
+        "ESI",
+        "segment"
+      ],
+      "kind": "multihoming",
+      "gloss": "An Ethernet segment is a customer Ethernet connection, identified by an Ethernet Segment Identifier, that can span attachment circuits on multiple provider edges for EVPN multihoming.",
+      "example": "ESI-0011 identifies a dual-homed customer segment spanning AC-PE1 and AC-PE2, allowing EVPN procedures to coordinate forwarding and redundancy across both attachments.",
+      "ref": "ethernet-segment",
+      "relations": [
+        {
+          "rel": "spans",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "ESI-0011 (dual-homed)"
+      ]
+    },
+    {
+      "id": "e.macmob",
+      "label": "MAC-mobility",
+      "synonyms": [
+        "MAC-move"
+      ],
+      "kind": "l2-control",
+      "gloss": "MAC mobility is the EVPN control-plane mechanism that tracks a MAC address moving between attachment locations by advertising updated reachability with an increasing mobility sequence number.",
+      "example": "After a MAC previously reachable through AC-PE1 appears behind AC-PE3, EVI-5000 advertises its new location with mobility sequence 3 so the newer route supersedes older reachability.",
+      "ref": "mac-mobility",
+      "relations": [
+        {
+          "rel": "in",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "mobility seq=3 for a moved MAC"
+      ]
+    },
+    {
+      "id": "e.vendor",
+      "label": "vendor-evi-tag",
+      "synonyms": [
+        "proprietary evi tag"
+      ],
+      "kind": "opaque",
+      "gloss": "A vendor EVI tag is opaque, implementation-specific metadata attached to an EVPN instance whose interpretation is defined by the vendor rather than by standard EVPN semantics.",
+      "example": "EVI-5000 carries a vendor-evi-tag that the vendor's management or forwarding software consumes, while standards-based peers treat it as having no portable EVPN meaning.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "vendor-evi-tag on EVI-5000"
+      ]
+    }
+  ]
+}

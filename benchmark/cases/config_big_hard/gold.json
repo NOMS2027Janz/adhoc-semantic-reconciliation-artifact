@@ -1,0 +1,146 @@
+{
+  "case": "config_big_hard",
+  "operational_case": "configuration",
+  "seed": "hand-authored (bigger, harder)",
+  "note": "Gold standard DERIVED from model ref bindings by derive_gold.py; do not hand-edit.",
+  "correspondences": [
+    {
+      "a": "t.cep",
+      "b": "i.tcep",
+      "ref": "conn-endpoint"
+    },
+    {
+      "a": "t.cs",
+      "b": "i.tunnel",
+      "ref": "connection-service"
+    },
+    {
+      "a": "t.node",
+      "b": "i.tenode",
+      "ref": "forwarding-node"
+    },
+    {
+      "a": "t.adapt",
+      "b": "i.stp",
+      "ref": "layer-adaptation"
+    },
+    {
+      "a": "t.ltp",
+      "b": "i.tp",
+      "ref": "link-termination"
+    },
+    {
+      "a": "t.lpq",
+      "b": "i.otnlabel",
+      "ref": "multiplex-structure"
+    },
+    {
+      "a": "t.och",
+      "b": "i.och",
+      "ref": "optical-channel"
+    },
+    {
+      "a": "t.oms",
+      "b": "i.oms",
+      "ref": "optical-mux-section"
+    },
+    {
+      "a": "t.pgroup",
+      "b": "i.pgroup",
+      "ref": "protection-group"
+    },
+    {
+      "a": "t.nrg",
+      "b": "i.cmatrix",
+      "ref": "switching-constraint"
+    },
+    {
+      "a": "t.link",
+      "b": "i.telink",
+      "ref": "topo-link"
+    },
+    {
+      "a": "t.topo",
+      "b": "i.tetopo",
+      "ref": "topology"
+    }
+  ],
+  "false_cognates": [
+    {
+      "a": "t.ltp",
+      "b": "i.ttp",
+      "why": "link-termination-point vs tunnel-termination-point: same '-termination-point' shape, but a link end vs a trail head; different reference entries."
+    },
+    {
+      "a": "t.sgrade",
+      "b": "i.sclass",
+      "why": "signal-grade vs service-grade: both carry 'grade', but an optical signal quality vs a commercial service class; both are in fact residual."
+    },
+    {
+      "a": "t.pgroup",
+      "b": "i.prole",
+      "why": "protection-group vs protection-role: both carry 'protection', but a 1+1 group vs a working/protect role; t.pgroup's true partner is i.pgroup."
+    }
+  ],
+  "residual": {
+    "a_only": [
+      {
+        "id": "t.sip",
+        "ref": "client-svc-access",
+        "reason": "native gap (self-extend)"
+      },
+      {
+        "id": "t.sgrade",
+        "ref": "signal-quality",
+        "reason": "native gap (self-extend)"
+      },
+      {
+        "id": "t.vendor",
+        "ref": null,
+        "reason": "opaque (no public meaning)"
+      }
+    ],
+    "b_only": [
+      {
+        "id": "i.ttp",
+        "ref": "trail-termination",
+        "reason": "native gap (self-extend)"
+      },
+      {
+        "id": "i.sclass",
+        "ref": "service-class",
+        "reason": "native gap (self-extend)"
+      },
+      {
+        "id": "i.prole",
+        "ref": "protection-role",
+        "reason": "native gap (self-extend)"
+      },
+      {
+        "id": "i.exttlv",
+        "ref": null,
+        "reason": "opaque (no public meaning)"
+      }
+    ]
+  },
+  "residual_by_placement": {
+    "both_cognitive": 2,
+    "one_inert": 3,
+    "both_inert": 4
+  },
+  "invariants": [
+    "endpoint-identity",
+    "connectivity",
+    "capacity",
+    "layer-relationships",
+    "switching-constraints",
+    "odu-multiplexing",
+    "optical-channel-continuity",
+    "protection-integrity"
+  ],
+  "verification_by_placement": {
+    "both_cognitive": "closed-loop worked exchange, self-certifying",
+    "one_inert": "evidence and round-trip on invariants",
+    "both_inert": "external adjudication or downstream test"
+  }
+}

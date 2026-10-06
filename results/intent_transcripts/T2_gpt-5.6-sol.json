@@ -1,0 +1,178 @@
+{
+  "model": "gpt-5.6-sol",
+  "trajectory": "T2",
+  "policy": "resil",
+  "setpiece": false,
+  "row": {
+    "case": "intent_hard",
+    "phase": "assure",
+    "model": "gpt-5.6-sol",
+    "trajectory": "T2",
+    "policy": "resil",
+    "placement": "both_cognitive",
+    "trial": 0,
+    "setpiece": false,
+    "submitted": true,
+    "telemetry_calls": 2,
+    "best_calls": 1,
+    "policy_calls": 1,
+    "turns": 6,
+    "total_tokens": 14301,
+    "reasoning_tokens": 359,
+    "latency_s": 17.88,
+    "n_hops": 2,
+    "fulfilment_correct": 2,
+    "decision_correct": 2,
+    "migration_correct": 2,
+    "hop_accuracy": 1.0
+  },
+  "transcript": [
+    {
+      "step": "prompt",
+      "phase": "assure",
+      "placement": "both_cognitive",
+      "reference_variant": "none",
+      "policy_id": "resil",
+      "trajectory_id": "T2"
+    },
+    {
+      "step": "read_operational",
+      "args": {
+        "hop_id": "h0"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "realisation": "r4b",
+          "reading": {
+            "bw_gbps": 40.0,
+            "latency_ms": 12,
+            "availability": 0.99995,
+            "protection": "1+1",
+            "cost": 95
+          }
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "read_operational",
+      "args": {
+        "hop_id": "h1"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "realisation": "r4b",
+          "reading": {
+            "bw_gbps": 40.0,
+            "latency_ms": 14,
+            "availability": 0.99995,
+            "protection": "1+1",
+            "cost": 95
+          }
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "best_achievable",
+      "args": {
+        "intent_id": "I3"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "offer": "r4b",
+          "attrs": {
+            "bw_gbps": 40.0,
+            "latency_ms": 12,
+            "availability": 0.99995,
+            "protection": "1+1",
+            "cost": 95
+          },
+          "violated_bounds": [
+            "latency"
+          ],
+          "satisfies_all": false,
+          "priority_used": [
+            "availability",
+            "protection",
+            "latency",
+            "bandwidth"
+          ]
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "check_feasibility",
+      "args": {
+        "intent_id": "I3",
+        "realisation_id": "r4a"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "realisation": "r4a",
+          "satisfies_all": false,
+          "violated_bounds": [
+            "availability",
+            "protection"
+          ],
+          "attrs": {
+            "bw_gbps": 40.0,
+            "latency_ms": 8,
+            "availability": 0.999,
+            "protection": "none",
+            "cost": 60
+          }
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "consult_policy",
+      "args": {
+        "intent_id": "I3",
+        "realisation_id": "r4a"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "realisation": "r4a",
+          "decision": "reject",
+          "hard_bounds": [
+            "availability",
+            "protection"
+          ],
+          "affordability_floor": 100,
+          "violated_bounds": [
+            "availability",
+            "protection"
+          ]
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "submit",
+      "args": {
+        "hops": [
+          {
+            "hop_id": "h0",
+            "fulfilment": "at_risk",
+            "decision": "hold",
+            "new_realisation": "r4b"
+          },
+          {
+            "hop_id": "h1",
+            "fulfilment": "breach",
+            "decision": "refer",
+            "new_realisation": "r4b"
+          }
+        ]
+      }
+    }
+  ]
+}

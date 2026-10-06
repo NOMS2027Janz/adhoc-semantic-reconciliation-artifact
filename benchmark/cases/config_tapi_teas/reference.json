@@ -1,0 +1,18 @@
+{
+  "id": "ref.transport.thin.v1",
+  "kind": "lexical",
+  "note": "A thin, identity-only lexical reference for the optical-transport configuration case. One entry per concept: a stable id, a preferred label, synonyms, a shallow class, a disambiguating definition, and a single canonical example. Deliberately small and not a model of the domain.",
+  "entries": [
+    {"id": "forwarding-node", "label": "forwarding node", "synonyms": ["node"], "class": "node", "definition": "A device that forwards traffic and terminates links in the topology.", "example": "ROADM R1"},
+    {"id": "link-termination", "label": "link termination", "synonyms": ["edge point", "termination point"], "class": "termination", "definition": "The point on a node where a topological link terminates.", "example": "the R1 end of the R1-R2 link"},
+    {"id": "layer-adaptation", "label": "layer adaptation", "synonyms": ["adaptation", "supporting relationship"], "class": "adaptation", "definition": "A relationship in which one layer is carried over, or adapts to, another.", "example": "ODU2 adapted into an OTU4 server layer at R1"},
+    {"id": "trail-termination", "label": "trail termination", "synonyms": ["tunnel head", "trail end"], "class": "termination", "definition": "The origination or termination of a trail or tunnel, i.e. the head of an end-to-end path.", "example": "the head of the A1-A3 ODU2 tunnel at A1"},
+    {"id": "client-svc-access", "label": "client service access", "synonyms": ["service interface", "access point"], "class": "access", "definition": "The point at which an external client service accesses the network.", "example": "the ODU2 client hand-off at access node A1"},
+    {"id": "connection-service", "label": "connection service", "synonyms": ["service", "tunnel"], "class": "service", "definition": "An end-to-end connectivity service realised across the network.", "example": "the A1-A3 ODU2 service"},
+    {"id": "multiplex-structure", "label": "multiplex structure", "synonyms": ["layer qualifier", "label structure"], "class": "multiplex", "definition": "The structure by which a signal is multiplexed into a server layer.", "example": "ODU2 mapped into tributary slots of an OTU4"},
+    {"id": "switching-constraint", "label": "switching constraint", "synonyms": ["rule group", "connectivity matrix"], "class": "switching", "definition": "A constraint on which ports or signals may be switched to which within a node.", "example": "the permitted cross-connects on R2"},
+    {"id": "topo-link", "label": "topological link", "synonyms": ["link"], "class": "link", "definition": "A link between two nodes in the topology.", "example": "the R1-R2 link"},
+    {"id": "topology", "label": "topology", "synonyms": ["network"], "class": "topology", "definition": "The graph of nodes and links that describes the network.", "example": "the OTN-over-optical domain"},
+    {"id": "conn-endpoint", "label": "connection endpoint", "synonyms": ["connection end point"], "class": "endpoint", "definition": "An endpoint of a connection within a node, bound to a service.", "example": "the connection endpoint for the A1-A3 service on R1"}
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "system": "Agent O",
+  "dialect": "TM Forum intent (TMF921 / IG 1253)",
+  "intents": [
+    {
+      "id": "I1",
+      "pair": "P1",
+      "flow_class": "order-execution",
+      "bounds": {
+        "bandwidth_min": 8,
+        "latency_max": 5,
+        "availability_min": 0.9999,
+        "protection_required": false
+      },
+      "note": "fully satisfiable on the direct 10G path"
+    },
+    {
+      "id": "I2",
+      "pair": "P1",
+      "flow_class": "order-execution",
+      "bounds": {
+        "bandwidth_min": 8,
+        "latency_max": 3.5,
+        "availability_min": 0.99999,
+        "protection_required": true
+      },
+      "note": "infeasible: no P1 realisation meets sub-3.5ms AND five-nines AND protection"
+    },
+    {
+      "id": "I3",
+      "pair": "P4",
+      "flow_class": "market-data",
+      "bounds": {
+        "bandwidth_min": 40,
+        "latency_max": 10,
+        "availability_min": 0.9999,
+        "protection_required": true
+      },
+      "note": "infeasible; the accept/reject FLIPS with the policy (latency- vs resilience-first)"
+    },
+    {
+      "id": "I4",
+      "pair": "P2",
+      "flow_class": "bulk",
+      "bounds": {
+        "bandwidth_min": 2,
+        "latency_max": 8,
+        "availability_min": 0.999,
+        "protection_required": false
+      },
+      "note": "fully satisfiable on the protected ODU1 path"
+    },
+    {
+      "id": "I5",
+      "pair": "P3",
+      "flow_class": "order-execution",
+      "bounds": {
+        "bandwidth_min": 2,
+        "latency_max": 5,
+        "availability_min": 0.999,
+        "protection_required": false
+      },
+      "note": "fully satisfiable on the direct ODU1 path"
+    },
+    {
+      "id": "I6",
+      "pair": "P5",
+      "flow_class": "order-execution",
+      "bounds": {
+        "bandwidth_min": 8,
+        "latency_max": 8,
+        "availability_min": 0.999,
+        "protection_required": false
+      },
+      "note": "EXPERIMENT-ONLY: advertised latency (9ms) says infeasible; the live path is 7ms and actually satisfies \u2014 only a feasibility probe reveals it",
+      "experiment_only": true
+    },
+    {
+      "id": "I7",
+      "pair": "P2",
+      "flow_class": "order-execution",
+      "bounds": {
+        "bandwidth_min": 2,
+        "latency_max": 8,
+        "availability_min": 0.9999,
+        "protection_required": false
+      },
+      "note": "EXPERIMENT-ONLY: advertised availability (.9999) says satisfiable; the live availability is .9995 and actually breaches \u2014 a probe catches the false refine",
+      "experiment_only": true
+    }
+  ]
+}

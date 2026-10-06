@@ -1,0 +1,251 @@
+{
+  "system": "Agent I",
+  "dialect": "IETF TEAS",
+  "modules": [
+    "ietf-te-topology (RFC 8795 on RFC 8345)",
+    "ietf-otn-topology",
+    "ietf-layer1-types"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-mini from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case config_tapi_teas, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_tapi_teas/model_b*.json.",
+  "concepts": [
+    {
+      "id": "i.tenode",
+      "label": "te-node",
+      "synonyms": [
+        "node"
+      ],
+      "kind": "node",
+      "gloss": "A TE node is a per-layer network element that hosts termination points, switching resources and other node-local TE objects and participates as an endpoint of TE links inside a TE topology.",
+      "example": "R1 is a te-node in the OTN layer network that hosts termination points (e.g., tp-A1-R1), contains a connectivity matrix and is an endpoint of links such as telink-A1-R1 and telink-R1-R2.",
+      "ref": "forwarding-node",
+      "relations": [
+        {
+          "rel": "part-of",
+          "target": "i.tetopo"
+        }
+      ],
+      "instances": [
+        "R1",
+        "R2",
+        "R3",
+        "A1",
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "id": "i.tp",
+      "label": "termination-point",
+      "synonyms": [
+        "te-tp",
+        "link-termination-point"
+      ],
+      "kind": "termination",
+      "gloss": "A termination-point is a node-local interface or port object that represents the attachment point where a TE link terminates and where higher-layer or client sessions are mapped.",
+      "example": "tp-R1-R2 is a termination-point on node R1 that terminates the TE link telink-R1-R2 and can be mapped to lower-layer supporting terminations.",
+      "ref": "link-termination",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "i.tenode"
+        },
+        {
+          "rel": "terminates",
+          "target": "i.telink"
+        }
+      ],
+      "instances": [
+        "tp-R1-R2",
+        "tp-R2-R3",
+        "tp-A1-R1"
+      ]
+    },
+    {
+      "id": "i.stp",
+      "label": "supporting-tp",
+      "synonyms": [
+        "supporting termination"
+      ],
+      "kind": "adaptation",
+      "gloss": "A supporting termination (supporting-tp) is a concrete lower‑layer or adaptation interface that realizes or underpins a TE termination-point at a node (i.e., the actual physical or lower-layer resource used by the TP).",
+      "example": "The instance 'OTN tp over optical tp at R1' exemplifies a supporting-tp showing that an OTN-layer termination-point on R1 is realized by an underlying optical termination point on the same device.",
+      "ref": "layer-adaptation",
+      "relations": [
+        {
+          "rel": "supports",
+          "target": "i.tp"
+        }
+      ],
+      "instances": [
+        "OTN tp over optical tp at R1"
+      ]
+    },
+    {
+      "id": "i.ttp",
+      "label": "tunnel-termination-point",
+      "synonyms": [
+        "ttp"
+      ],
+      "kind": "termination",
+      "gloss": "A tunnel-termination-point is a node-local termination that marks the origin (head) or destination of an explicitly modeled TE tunnel and is the endpoint object from which a tunnel is originated or to which it terminates.",
+      "example": "ttp-A1 (tunnel head) is a tunnel-termination-point on node A1 that originates the tunnel 'tunnel-a1a3-odu2' toward the remote head on A3.",
+      "ref": "trail-termination",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "i.tenode"
+        },
+        {
+          "rel": "originates",
+          "target": "i.tunnel"
+        }
+      ],
+      "instances": [
+        "ttp-A1 (tunnel head)",
+        "ttp-A3 (tunnel head)"
+      ]
+    },
+    {
+      "id": "i.tunnel",
+      "label": "te-tunnel",
+      "synonyms": [
+        "tunnel"
+      ],
+      "kind": "service",
+      "gloss": "A TE tunnel is an end-to-end TE service object that runs from one tunnel-termination-point to another over a specified TE topology and carries a particular client/adaptation format (e.g., ODU2).",
+      "example": "'tunnel-a1a3-odu2 (ODU2, A1 to A3)' is a TE tunnel originating at ttp-A1 and terminating at ttp-A3 and routed over the OTN layer network.",
+      "ref": "connection-service",
+      "relations": [
+        {
+          "rel": "from",
+          "target": "i.ttp"
+        },
+        {
+          "rel": "over",
+          "target": "i.tetopo"
+        }
+      ],
+      "instances": [
+        "tunnel-a1a3-odu2 (ODU2, A1 to A3)"
+      ]
+    },
+    {
+      "id": "i.otnlabel",
+      "label": "otn-label",
+      "synonyms": [
+        "tributary-slot",
+        "TS/TPN"
+      ],
+      "kind": "multiplex",
+      "gloss": "An OTN label (tributary-slot / TS/TPN) is the multiplexing identifier that selects a particular tributary slot inside a higher‑rate OTN container to carry a tunnel's client signal.",
+      "example": "'TS/TPN for ODU2 in OTU4' designates the specific tributary slot assigned to the ODU2 tunnel inside an OTU4 channel so that that tunnel's payload is uniquely addressed.",
+      "ref": "multiplex-structure",
+      "relations": [
+        {
+          "rel": "labels",
+          "target": "i.tunnel"
+        }
+      ],
+      "instances": [
+        "TS/TPN for ODU2 in OTU4"
+      ]
+    },
+    {
+      "id": "i.cmatrix",
+      "label": "connectivity-matrix",
+      "synonyms": [
+        "conn matrix"
+      ],
+      "kind": "switching",
+      "gloss": "A connectivity-matrix is the per-node switching or grooming configuration that defines how ingress termination-points are mapped to egress termination-points within a TE node for forwarding and service stitching.",
+      "example": "'R2 connectivity matrix' is the switching table on node R2 that specifies how traffic arriving on tp-R1-R2 is forwarded to tp-R2-R3 (or to local clients) for the purposes of the TE service.",
+      "ref": "switching-constraint",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "i.tenode"
+        }
+      ],
+      "instances": [
+        "R2 connectivity matrix"
+      ]
+    },
+    {
+      "id": "i.telink",
+      "label": "te-link",
+      "synonyms": [
+        "link"
+      ],
+      "kind": "link",
+      "gloss": "A TE link is an adjacency between two TE nodes, represented by termination-points at each end and carrying capacity and attribute information used by TE routing and path computation.",
+      "example": "telink-R1-R2 is a TE link between nodes R1 and R2 that is terminated by termination-points such as tp-R1-R2 and tp-R2-R1 and is part of the OTN layer network.",
+      "ref": "topo-link",
+      "relations": [
+        {
+          "rel": "between",
+          "target": "i.tenode"
+        },
+        {
+          "rel": "terminated-by",
+          "target": "i.tp"
+        }
+      ],
+      "instances": [
+        "telink-R1-R2",
+        "telink-R2-R3",
+        "telink-R1-R3",
+        "telink-A1-R1"
+      ]
+    },
+    {
+      "id": "i.tetopo",
+      "label": "te-topology",
+      "synonyms": [
+        "network",
+        "per-layer network"
+      ],
+      "kind": "topology",
+      "gloss": "A TE topology is the per-layer network model that contains the set of TE nodes, TE links and their termination-points and provides the structural scope over which tunnels and TE services are defined and routed.",
+      "example": "The OTN layer network is a te-topology that contains nodes R1,R2,R3,A1,A2,A3 and links such as telink-R1-R2 and telink-A1-R1 used by tunnels like 'tunnel-a1a3-odu2'.",
+      "ref": "topology",
+      "relations": [
+        {
+          "rel": "contains",
+          "target": "i.tenode"
+        },
+        {
+          "rel": "contains",
+          "target": "i.telink"
+        }
+      ],
+      "instances": [
+        "the OTN layer network"
+      ]
+    },
+    {
+      "id": "i.tcep",
+      "label": "tunnel-connection-endpoint",
+      "synonyms": [
+        "connection endpoint"
+      ],
+      "kind": "endpoint",
+      "gloss": "A tunnel-connection-endpoint is the per-node endpoint record that represents one end of a specific tunnel on a node (linking the tunnel to a particular node-local attachment point for reservation and identification).",
+      "example": "tcep-a1a3-R1 is a tunnel-connection-endpoint on node R1 associated with the tunnel 'tunnel-a1a3-odu2', indicating the tunnel's local attachment/connection point at R1.",
+      "ref": "conn-endpoint",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "i.tenode"
+        },
+        {
+          "rel": "part-of",
+          "target": "i.tunnel"
+        }
+      ],
+      "instances": [
+        "tcep-a1a3-R1",
+        "tcep-a1a3-R3"
+      ]
+    }
+  ]
+}

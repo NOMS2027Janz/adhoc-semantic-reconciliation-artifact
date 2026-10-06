@@ -1,0 +1,80 @@
+{
+  "system": "Agent O",
+  "dialect": "TM Forum intent (TMF921 / IG 1253)",
+  "intents": [
+    {
+      "id": "DI1",
+      "pair": "D1",
+      "flow_class": "vm-migration",
+      "bounds": {
+        "bandwidth_min": 50,
+        "latency_max": 25,
+        "availability_min": 0.9999,
+        "protection_required": false
+      },
+      "note": "fully satisfiable on the direct 100G path"
+    },
+    {
+      "id": "DI2",
+      "pair": "D2",
+      "flow_class": "storage-sync",
+      "bounds": {
+        "bandwidth_min": 40,
+        "latency_max": 14,
+        "availability_min": 0.99999,
+        "protection_required": true
+      },
+      "note": "fully satisfiable on the protected 40G path"
+    },
+    {
+      "id": "DI3",
+      "pair": "D2",
+      "flow_class": "storage-sync",
+      "bounds": {
+        "bandwidth_min": 40,
+        "latency_max": 9,
+        "availability_min": 0.99999,
+        "protection_required": true
+      },
+      "note": "infeasible; the accept/reject FLIPS with the policy (premium holds latency and refers; assured degrades latency and accepts)"
+    },
+    {
+      "id": "DI4",
+      "pair": "D1",
+      "flow_class": "vm-migration",
+      "bounds": {
+        "bandwidth_min": 50,
+        "latency_max": 20,
+        "availability_min": 0.99999,
+        "protection_required": true
+      },
+      "note": "infeasible; only a slower protected path exists, so the decision flips with the policy"
+    },
+    {
+      "id": "DI5",
+      "pair": "D3",
+      "flow_class": "backup",
+      "bounds": {
+        "bandwidth_min": 10,
+        "latency_max": 8,
+        "availability_min": 0.999,
+        "protection_required": false
+      },
+      "note": "EXPERIMENT-ONLY: advertised latency (9ms) says infeasible; the live path is 6ms and actually satisfies",
+      "experiment_only": true
+    },
+    {
+      "id": "DI6",
+      "pair": "D4",
+      "flow_class": "vm-migration",
+      "bounds": {
+        "bandwidth_min": 25,
+        "latency_max": 40,
+        "availability_min": 0.9999,
+        "protection_required": true
+      },
+      "note": "EXPERIMENT-ONLY: advertised availability (.9999) says satisfiable; the live availability is .9994 and actually breaches",
+      "experiment_only": true
+    }
+  ]
+}

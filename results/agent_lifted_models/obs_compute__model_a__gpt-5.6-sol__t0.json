@@ -1,0 +1,145 @@
+{
+  "system": "Agent F - legacy fault manager",
+  "dialect": "RFC 8632 / syslog / SNMP / X.733 (compute)",
+  "modules": [
+    "x733-probable-cause",
+    "rfc8632-alarms"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5.6-sol from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case obs_compute, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/obs_compute/model_a*.json.",
+  "concepts": [
+    {
+      "id": "f.node",
+      "label": "managed-object",
+      "synonyms": [
+        "resource",
+        "server",
+        "container"
+      ],
+      "kind": "resource",
+      "gloss": "A managed compute-domain object, such as a physical server or hosted container, whose operational state is monitored and against which events and alarms are raised.",
+      "example": "node-14 is a monitored server, while ctr-app-node14 is a monitored application container hosted on that server.",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "node-14",
+        "ctr-app-node14"
+      ]
+    },
+    {
+      "id": "f.event",
+      "label": "event",
+      "synonyms": [
+        "syslog",
+        "trap"
+      ],
+      "kind": "event",
+      "gloss": "A discrete syslog message or SNMP trap reporting an occurrence on a managed object, which may serve as an input to fault detection without itself necessarily representing an active alarm condition.",
+      "example": "trap-cpu-node14-t0 is an SNMP trap emitted for node-14 when a CPU-related occurrence is detected.",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        }
+      ],
+      "instances": [
+        "trap-cpu-node14-t0"
+      ]
+    },
+    {
+      "id": "f.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "fault alarm",
+        "alarm condition"
+      ],
+      "kind": "alarm",
+      "gloss": "A fault-management record representing an active or reportable abnormal condition on a managed object and carrying both a perceived severity and an X.733-style probable-cause code.",
+      "example": "alarm-node14-overtemp represents an overheating condition on node-14, with severity critical and probable cause thermalTrip.",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        },
+        {
+          "rel": "carries",
+          "target": "f.severity"
+        },
+        {
+          "rel": "carries",
+          "target": "f.probable_cause"
+        }
+      ],
+      "instances": [
+        "alarm-node14-overtemp"
+      ]
+    },
+    {
+      "id": "f.severity",
+      "label": "severity",
+      "synonyms": [
+        "perceived severity",
+        "alarm level"
+      ],
+      "kind": "severity",
+      "gloss": "The perceived operational impact or urgency assigned to an alarm, expressed as an ordered alarm level such as critical, major, minor, or warning.",
+      "example": "The severity of alarm-node14-overtemp is critical, indicating the highest listed level of operational urgency.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "critical",
+        "major",
+        "minor",
+        "warning"
+      ]
+    },
+    {
+      "id": "f.probable_cause",
+      "label": "probable-cause",
+      "synonyms": [
+        "X.733 cause",
+        "cause code"
+      ],
+      "kind": "cause-code",
+      "gloss": "An X.733-style categorical cause code attached to an alarm that identifies the fault type believed most likely to explain the reported condition.",
+      "example": "alarm-node14-overtemp carries thermalTrip as its probable cause; a cooling-hardware alarm could instead carry fanFailure.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "thermalTrip",
+        "fanFailure"
+      ]
+    },
+    {
+      "id": "f.clear",
+      "label": "clear",
+      "synonyms": [
+        "alarm clear"
+      ],
+      "kind": "clear",
+      "gloss": "A fault-management notification or state-transition record that terminates a specified previously raised alarm because its abnormal condition is no longer active.",
+      "example": "clear-alarm-node14-overtemp clears alarm-node14-overtemp after node-14 returns to an acceptable temperature.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "clears",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "clear-alarm-node14-overtemp"
+      ]
+    }
+  ]
+}

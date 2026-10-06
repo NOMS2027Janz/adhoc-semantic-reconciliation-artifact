@@ -1,0 +1,226 @@
+{
+  "system": "Agent G \u2014 IETF NMOP agent",
+  "dialect": "RFC 9940 + anomaly-semantics + incident-yang",
+  "modules": [
+    "rfc9940-terminology",
+    "nmop-anomaly-semantics",
+    "nmop-network-incident-yang"
+  ],
+  "note": "Lifted NMOP model. RFC 9940 separates what legacy conflates: event, anomaly, symptom, fault, alarm (a State), problem (a State), cause, incident; plus the anomaly-semantics annotations (concern, confidence). Many concepts have no legacy equivalent (the legacy alarm swallows them). Same field conventions as the legacy model.",
+  "concepts": [
+    {
+      "id": "g.node",
+      "label": "resource",
+      "synonyms": [
+        "managed resource",
+        "node"
+      ],
+      "kind": "resource",
+      "gloss": "a resource whose characteristics are observed",
+      "example": "wavelength lambda1",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "R1",
+        "lambda1"
+      ]
+    },
+    {
+      "id": "g.event",
+      "label": "event",
+      "synonyms": [
+        "value variation"
+      ],
+      "kind": "event",
+      "gloss": "the variation in the value of a characteristic of a resource at a distinct moment in time (RFC 9940)",
+      "example": "a pre-FEC BER sample at t0",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "ber-sample-lambda1-t0"
+      ]
+    },
+    {
+      "id": "g.anomaly",
+      "label": "anomaly",
+      "synonyms": [
+        "deviation",
+        "outlier"
+      ],
+      "kind": "anomaly",
+      "gloss": "an unusual or unexpected event or pattern that DEVIATES from normal, expected behaviour (RFC 9940) \u2014 a deviation, NOT by definition undesirable; it may be perfectly benign",
+      "example": "a rising pre-FEC BER trend on lambda1 that may be benign during maintenance",
+      "ref": "anomaly",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "anom-ber-lambda1"
+      ]
+    },
+    {
+      "id": "g.symptom",
+      "label": "symptom",
+      "synonyms": [
+        "indication"
+      ],
+      "kind": "symptom",
+      "gloss": "an observable value/state/event considered an indication of a problem or potential problem (RFC 9940)",
+      "example": "the BER anomaly taken as a symptom of degradation",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "indicates",
+          "target": "g.problem"
+        }
+      ],
+      "instances": [
+        "sym-ber-lambda1"
+      ]
+    },
+    {
+      "id": "g.fault",
+      "label": "fault",
+      "synonyms": [
+        "defect"
+      ],
+      "kind": "fault",
+      "gloss": "an occurrence (event or change) that is not desired/required, as it may indicate a current or future undesired state (RFC 9940)",
+      "example": "the fibre degradation itself",
+      "ref": "fault",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "fault-lambda1-degrade"
+      ]
+    },
+    {
+      "id": "g.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "alarm state"
+      ],
+      "kind": "alarm",
+      "gloss": "an undesirable STATE in a resource that requires corrective action \u2014 a state in its own right (RFC 9940)",
+      "example": "the signal-degrade alarm state on lambda1",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "alarm-state-lambda1"
+      ]
+    },
+    {
+      "id": "g.problem",
+      "label": "problem",
+      "synonyms": [
+        "undesirable state"
+      ],
+      "kind": "problem",
+      "gloss": "a state that is undesirable and that may require remedial action (RFC 9940)",
+      "example": "the degraded-service problem state",
+      "ref": null,
+      "relations": [],
+      "instances": [
+        "problem-svc-degrade"
+      ]
+    },
+    {
+      "id": "g.cause",
+      "label": "cause",
+      "synonyms": [
+        "root cause"
+      ],
+      "kind": "cause",
+      "gloss": "the events, established by CORRELATION, that gave rise to a fault or problem (RFC 9940) \u2014 derived, not a static code",
+      "example": "the optical BER symptom found to be the root of the IP loss",
+      "ref": "cause",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "g.problem"
+        }
+      ],
+      "instances": [
+        "cause-optical-ber"
+      ]
+    },
+    {
+      "id": "g.incident",
+      "label": "incident",
+      "synonyms": [
+        "correlated incident"
+      ],
+      "kind": "incident",
+      "gloss": "an undesired occurrence such as interruption, degradation or below-target performance of a service, formed by correlating symptoms (RFC 9940 / incident-yang)",
+      "example": "one incident correlating the optical and IP symptoms",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "correlates",
+          "target": "g.symptom"
+        }
+      ],
+      "instances": [
+        "incident-0042"
+      ]
+    },
+    {
+      "id": "g.concern",
+      "label": "concern-score",
+      "synonyms": [
+        "concern",
+        "significance"
+      ],
+      "kind": "concern",
+      "gloss": "a DYNAMIC concern score (0-100) reflecting the current degree of concern given context (anomaly-semantics) \u2014 recomputed, not a fixed label",
+      "example": "concern 78 for the BER trend now",
+      "ref": "concern",
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "concern-78"
+      ]
+    },
+    {
+      "id": "g.confidence",
+      "label": "confidence-score",
+      "synonyms": [
+        "confidence"
+      ],
+      "kind": "confidence",
+      "gloss": "a confidence score (0-100): the detector's confidence in the anomaly classification (anomaly-semantics)",
+      "example": "confidence 82",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "confidence-82"
+      ]
+    }
+  ]
+}

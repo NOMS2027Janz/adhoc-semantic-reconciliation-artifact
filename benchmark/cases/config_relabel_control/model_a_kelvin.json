@@ -1,0 +1,254 @@
+{
+  "system": "Agent T",
+  "dialect": "Kelvin-TM",
+  "modules": [
+    "kelvin-fabric@2018-12-10 (TR-547)",
+    "kelvin-carriage"
+  ],
+  "note": "Lifted semantic model, kelvin side. Each concept carries its lexical label, synonyms, a shallow kind, a gloss, a canonical example, the reference entry the agent bound it to (ref), plus structural relations (edges to other concept ids in this model) and concrete instances. A live side volunteers its gloss/example; an inert side exposes only label, kind, relations, and instances, so its meaning must be reconstructed from structure and data. ref of null marks a native gap the side self-extends to cover.",
+  "concepts": [
+    {
+      "id": "a01",
+      "label": "vertex",
+      "synonyms": [
+        "forwarding realm"
+      ],
+      "kind": "node",
+      "gloss": "a forwarding vertex in the single multi-tier fabric",
+      "example": "ROADM R1",
+      "ref": "r01",
+      "relations": [
+        {
+          "rel": "part-of",
+          "target": "a09"
+        }
+      ],
+      "instances": [
+        "R1",
+        "R2",
+        "R3",
+        "A1",
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "id": "a02",
+      "label": "span-cap-point",
+      "synonyms": [
+        "owned-vertex-edge-point",
+        "hep"
+      ],
+      "kind": "termination",
+      "gloss": "an edge point owned by a vertex where a span terminates",
+      "example": "the R1 edge point toward R2",
+      "ref": "r02",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "a01"
+        },
+        {
+          "rel": "terminates",
+          "target": "a08"
+        }
+      ],
+      "instances": [
+        "hep-R1-R2",
+        "hep-R2-R3",
+        "hep-A1-R1"
+      ]
+    },
+    {
+      "id": "a03",
+      "label": "shifting-span",
+      "synonyms": [
+        "bridging span"
+      ],
+      "kind": "adaptation",
+      "gloss": "a span expressing bridging between layers",
+      "example": "crr-to-grd bridging at R1",
+      "ref": "r03",
+      "relations": [
+        {
+          "rel": "at-vertex",
+          "target": "a01"
+        },
+        {
+          "rel": "adapts",
+          "target": "a06"
+        }
+      ],
+      "instances": [
+        "crr4/grd2 bridging at R1"
+      ]
+    },
+    {
+      "id": "a04",
+      "label": "offer-gateway-point",
+      "synonyms": [
+        "acp"
+      ],
+      "kind": "access",
+      "gloss": "a point where an external client offer accesses the network",
+      "example": "the grd2 client hand-off at A1",
+      "ref": "r05",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "a01"
+        },
+        {
+          "rel": "accesses",
+          "target": "a05"
+        }
+      ],
+      "instances": [
+        "acp-A1-grd",
+        "acp-A3-grd"
+      ]
+    },
+    {
+      "id": "a05",
+      "label": "carriage-offer",
+      "synonyms": [
+        "offer"
+      ],
+      "kind": "service",
+      "gloss": "an end-to-end carriage offer across the network",
+      "example": "the A1-A3 grd2 offer",
+      "ref": "r06",
+      "relations": [
+        {
+          "rel": "uses",
+          "target": "a04"
+        },
+        {
+          "rel": "realized-by",
+          "target": "a10"
+        },
+        {
+          "rel": "over",
+          "target": "a09"
+        }
+      ],
+      "instances": [
+        "co-a1a3-grd2 (grd2, A1 to A3)"
+      ]
+    },
+    {
+      "id": "a06",
+      "label": "tier-stream-qualifier",
+      "synonyms": [
+        "tier qualifier"
+      ],
+      "kind": "multiplex",
+      "gloss": "qualifier expressing the multiplexing and tier structure of a signal",
+      "example": "grd2 into an crr4 server",
+      "ref": "r07",
+      "relations": [
+        {
+          "rel": "qualifies",
+          "target": "a05"
+        }
+      ],
+      "instances": [
+        "grd2 mapped into crr4"
+      ]
+    },
+    {
+      "id": "a07",
+      "label": "vertex-gate-set",
+      "synonyms": [
+        "gate set"
+      ],
+      "kind": "switching",
+      "gloss": "constraints on which ports may cross-switch within a vertex",
+      "example": "permitted cross-switchs on R2",
+      "ref": "r08",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "a01"
+        }
+      ],
+      "instances": [
+        "R2 cross-switch gate set"
+      ]
+    },
+    {
+      "id": "a08",
+      "label": "span",
+      "synonyms": [],
+      "kind": "link",
+      "gloss": "a topological span between two nodes",
+      "example": "the R1-R2 span",
+      "ref": "r09",
+      "relations": [
+        {
+          "rel": "between",
+          "target": "a01"
+        },
+        {
+          "rel": "terminated-by",
+          "target": "a02"
+        }
+      ],
+      "instances": [
+        "span-R1-R2",
+        "span-R2-R3",
+        "span-R1-R3",
+        "span-A1-R1"
+      ]
+    },
+    {
+      "id": "a09",
+      "label": "fabric",
+      "synonyms": [
+        "multi-tier fabric"
+      ],
+      "kind": "topology",
+      "gloss": "the single multi-tier fabric describing the realm",
+      "example": "the zeta-over-optical fabric",
+      "ref": "r10",
+      "relations": [
+        {
+          "rel": "contains",
+          "target": "a01"
+        },
+        {
+          "rel": "contains",
+          "target": "a08"
+        }
+      ],
+      "instances": [
+        "the zeta-over-optical realm"
+      ]
+    },
+    {
+      "id": "a10",
+      "label": "circuit-end-point",
+      "synonyms": [
+        "cxp"
+      ],
+      "kind": "endpoint",
+      "gloss": "an endpoint of a circuit within a vertex",
+      "example": "the cxp for the A1-A3 offer on R1",
+      "ref": "r11",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "a01"
+        },
+        {
+          "rel": "part-of",
+          "target": "a05"
+        }
+      ],
+      "instances": [
+        "cxp-a1a3-R1",
+        "cxp-a1a3-R3"
+      ]
+    }
+  ]
+}

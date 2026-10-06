@@ -1,0 +1,231 @@
+{
+  "system": "Agent G - NMOP agent",
+  "dialect": "IETF NMOP (RFC 9940 + anomaly-semantics / incident-yang)",
+  "modules": [
+    "rfc9940-anomaly",
+    "nmop-anomaly-semantics",
+    "nmop-incident"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5.6-sol from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case obs_compute, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/obs_compute/model_b*.json.",
+  "concepts": [
+    {
+      "id": "g.node",
+      "label": "resource",
+      "synonyms": [
+        "managed object",
+        "network element"
+      ],
+      "kind": "resource",
+      "gloss": "A resource is an identifiable managed entity in the network or service environment whose state, behavior, and operational observations can be monitored or managed.",
+      "example": "node-14 is a managed network node, while ctr-app-node14 is a managed application container hosted on that node.",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "node-14",
+        "ctr-app-node14"
+      ]
+    },
+    {
+      "id": "g.event",
+      "label": "event",
+      "synonyms": [
+        "notification"
+      ],
+      "kind": "event",
+      "gloss": "An event is a discrete, time-associated notification reporting that something occurred or a state changed on a particular managed resource, without necessarily implying abnormality.",
+      "example": "trap-cpu-node14-t0 is a notification emitted for node-14 at time t0 after a CPU-related state change was observed.",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "trap-cpu-node14-t0"
+      ]
+    },
+    {
+      "id": "g.anomaly",
+      "label": "anomaly",
+      "synonyms": [
+        "deviation"
+      ],
+      "kind": "anomaly",
+      "gloss": "An anomaly is a detected deviation of a resource's observed behavior or state from an expected baseline or pattern.",
+      "example": "cpu-node14-rising represents detection that CPU utilization on node-14 is rising abnormally relative to its expected behavior.",
+      "ref": "anomaly",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "cpu-node14-rising"
+      ]
+    },
+    {
+      "id": "g.symptom",
+      "label": "symptom",
+      "synonyms": [
+        "manifestation"
+      ],
+      "kind": "symptom",
+      "gloss": "A symptom is an observable manifestation or indicator through which an anomaly becomes evident.",
+      "example": "symptom-1 may record repeated high-CPU measurements as the manifestation of the cpu-node14-rising anomaly.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "symptom-1"
+      ]
+    },
+    {
+      "id": "g.fault",
+      "label": "fault",
+      "synonyms": [
+        "failure occurrence"
+      ],
+      "kind": "fault",
+      "gloss": "A fault is an occurrence of an erroneous or failed condition in a managed resource that can impair its intended operation.",
+      "example": "fault-1 records that a CPU scheduling component on node-14 entered a failed condition and could no longer provide normal processing capacity.",
+      "ref": "fault",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "fault-1"
+      ]
+    },
+    {
+      "id": "g.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "alarm state"
+      ],
+      "kind": "alarm",
+      "gloss": "An alarm is a managed indication of an abnormal resource condition that remains operationally relevant until it is cleared or otherwise changes state.",
+      "example": "alarm-1 is raised on node-14 when sustained CPU saturation crosses an alarm threshold and remains active until utilization recovers.",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "alarm-1"
+      ]
+    },
+    {
+      "id": "g.problem",
+      "label": "problem",
+      "synonyms": [
+        "diagnosis"
+      ],
+      "kind": "problem",
+      "gloss": "A problem is a diagnostic interpretation that explains one or more observed fault occurrences in terms of an underlying operational issue.",
+      "example": "problem-1 diagnoses resource exhaustion as the issue explaining fault-1 on node-14.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "explains",
+          "target": "g.fault"
+        }
+      ],
+      "instances": [
+        "problem-1"
+      ]
+    },
+    {
+      "id": "g.cause",
+      "label": "cause",
+      "synonyms": [
+        "root cause"
+      ],
+      "kind": "cause",
+      "gloss": "A cause is the identified causal factor that produced or sustains a diagnosed problem.",
+      "example": "cause-1 identifies an unbounded workload in ctr-app-node14 as the root cause of problem-1.",
+      "ref": "cause",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "g.problem"
+        }
+      ],
+      "instances": [
+        "cause-1"
+      ]
+    },
+    {
+      "id": "g.incident",
+      "label": "incident",
+      "synonyms": [
+        "grouping"
+      ],
+      "kind": "incident",
+      "gloss": "An incident is a correlation and management grouping that collects related anomalies into one operational case for coordinated investigation or response.",
+      "example": "incident-1 groups cpu-node14-rising with related latency and container-resource anomalies observed during the same service-impacting episode.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "groups",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "incident-1"
+      ]
+    },
+    {
+      "id": "g.concern",
+      "label": "concern-score",
+      "synonyms": [
+        "concern"
+      ],
+      "kind": "concern",
+      "gloss": "A concern-score is a numeric annotation expressing how operationally concerning or worthy of attention an anomaly is, independently of certainty that the anomaly was detected correctly.",
+      "example": "The cpu-node14-rising anomaly receives concern-score 0.9 because its likely operational impact is high.",
+      "ref": "concern",
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "0.8",
+        "0.9"
+      ]
+    },
+    {
+      "id": "g.confidence",
+      "label": "confidence-score",
+      "synonyms": [
+        "confidence"
+      ],
+      "kind": "confidence",
+      "gloss": "A confidence-score is a numeric annotation expressing the assessed certainty that an identified anomaly is valid or correctly characterized, independently of its operational importance.",
+      "example": "The cpu-node14-rising anomaly receives confidence-score 0.7 because the detector has moderately strong evidence that the rise is genuinely anomalous.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "0.6",
+        "0.7"
+      ]
+    }
+  ]
+}

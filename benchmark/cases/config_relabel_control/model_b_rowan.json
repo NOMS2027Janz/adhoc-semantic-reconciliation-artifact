@@ -1,0 +1,251 @@
+{
+  "system": "Agent I",
+  "dialect": "Rowan-TM",
+  "modules": [
+    "rowan-flux-fabric (RFC 8795 on RFC 8345)",
+    "rowan-zeta-fabric",
+    "rowan-layer1-types"
+  ],
+  "note": "Lifted semantic model, rowan side. Concepts decompose the same network into per-tier networks. conduit-cap-point is the false-cognate trap: it shares the '-cap-point' shape with the kelvin span-cap-point but originates a conduit (a run head), which its relations and instances make plain even when the gloss is withheld.",
+  "concepts": [
+    {
+      "id": "b01",
+      "label": "flux-vertex",
+      "synonyms": [
+        "vertex"
+      ],
+      "kind": "node",
+      "gloss": "a flux-managed vertex in a per-tier network",
+      "example": "ROADM R1 in the zeta tier",
+      "ref": "r01",
+      "relations": [
+        {
+          "rel": "part-of",
+          "target": "b09"
+        }
+      ],
+      "instances": [
+        "R1",
+        "R2",
+        "R3",
+        "A1",
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "id": "b02",
+      "label": "cap-point",
+      "synonyms": [
+        "flux-cp",
+        "span-cap-point"
+      ],
+      "kind": "termination",
+      "gloss": "a cap point where a flux-span terminates on a vertex",
+      "example": "the R1 cp toward R2",
+      "ref": "r02",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "b01"
+        },
+        {
+          "rel": "terminates",
+          "target": "b08"
+        }
+      ],
+      "instances": [
+        "cp-R1-R2",
+        "cp-R2-R3",
+        "cp-A1-R1"
+      ]
+    },
+    {
+      "id": "b03",
+      "label": "backing-cp",
+      "synonyms": [
+        "backing cap"
+      ],
+      "kind": "adaptation",
+      "gloss": "the backing relationship of a cp on a server-tier cp",
+      "example": "an zeta cp supported by an optical cp at R1",
+      "ref": "r03",
+      "relations": [
+        {
+          "rel": "supports",
+          "target": "b02"
+        }
+      ],
+      "instances": [
+        "zeta cp over optical cp at R1"
+      ]
+    },
+    {
+      "id": "b04",
+      "label": "conduit-cap-point",
+      "synonyms": [
+        "ccp"
+      ],
+      "kind": "termination",
+      "gloss": "the point at which a flux-conduit originates or terminates, i.e. a run head",
+      "example": "the head of the A1-A3 conduit at A1",
+      "ref": "r04",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "b01"
+        },
+        {
+          "rel": "originates",
+          "target": "b05"
+        }
+      ],
+      "instances": [
+        "ccp-A1 (conduit head)",
+        "ccp-A3 (conduit head)"
+      ]
+    },
+    {
+      "id": "b05",
+      "label": "flux-conduit",
+      "synonyms": [
+        "conduit"
+      ],
+      "kind": "service",
+      "gloss": "an end-to-end traffic-engineered conduit realising a offer",
+      "example": "the A1-A3 grd2 conduit",
+      "ref": "r06",
+      "relations": [
+        {
+          "rel": "from",
+          "target": "b04"
+        },
+        {
+          "rel": "over",
+          "target": "b09"
+        }
+      ],
+      "instances": [
+        "conduit-a1a3-grd2 (grd2, A1 to A3)"
+      ]
+    },
+    {
+      "id": "b06",
+      "label": "zeta-label",
+      "synonyms": [
+        "carrier-slot",
+        "xs/xpn"
+      ],
+      "kind": "multiplex",
+      "gloss": "the zeta label expressing carrier-slot multiplexing structure",
+      "example": "the carrier slots carrying grd2 in an crr4",
+      "ref": "r07",
+      "relations": [
+        {
+          "rel": "labels",
+          "target": "b05"
+        }
+      ],
+      "instances": [
+        "xs/xpn for grd2 in crr4"
+      ]
+    },
+    {
+      "id": "b07",
+      "label": "carriage-grid",
+      "synonyms": [
+        "ckt grid"
+      ],
+      "kind": "switching",
+      "gloss": "the grid of permitted internal carriage within a vertex",
+      "example": "permitted carriage on R2",
+      "ref": "r08",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "b01"
+        }
+      ],
+      "instances": [
+        "R2 carriage grid"
+      ]
+    },
+    {
+      "id": "b08",
+      "label": "flux-span",
+      "synonyms": [
+        "span"
+      ],
+      "kind": "link",
+      "gloss": "a flux-managed span between nodes in a tier network",
+      "example": "the R1-R2 flux-span",
+      "ref": "r09",
+      "relations": [
+        {
+          "rel": "between",
+          "target": "b01"
+        },
+        {
+          "rel": "terminated-by",
+          "target": "b02"
+        }
+      ],
+      "instances": [
+        "fluxspan-R1-R2",
+        "fluxspan-R2-R3",
+        "fluxspan-R1-R3",
+        "fluxspan-A1-R1"
+      ]
+    },
+    {
+      "id": "b09",
+      "label": "flux-fabric",
+      "synonyms": [
+        "network",
+        "per-tier network"
+      ],
+      "kind": "topology",
+      "gloss": "a per-tier flux-managed network",
+      "example": "the zeta tier network",
+      "ref": "r10",
+      "relations": [
+        {
+          "rel": "contains",
+          "target": "b01"
+        },
+        {
+          "rel": "contains",
+          "target": "b08"
+        }
+      ],
+      "instances": [
+        "the zeta tier network"
+      ]
+    },
+    {
+      "id": "b10",
+      "label": "conduit-circuit-endpoint",
+      "synonyms": [
+        "circuit endpoint"
+      ],
+      "kind": "endpoint",
+      "gloss": "an endpoint of a conduit circuit within a vertex",
+      "example": "the circuit endpoint for the A1-A3 conduit on R1",
+      "ref": "r11",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "b01"
+        },
+        {
+          "rel": "part-of",
+          "target": "b05"
+        }
+      ],
+      "instances": [
+        "ccx-a1a3-R1",
+        "ccx-a1a3-R3"
+      ]
+    }
+  ]
+}

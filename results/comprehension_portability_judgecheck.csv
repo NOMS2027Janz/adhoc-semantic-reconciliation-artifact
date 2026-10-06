@@ -1,0 +1,13 @@
+case,model_side,arm,consumer,trial,meaning_score,confabulation_rate,use_recall,use_precision,ambiguity_flag_recall,over_claim,total_tokens,reasoning_tokens,latency_s
+config_cross_domain,a,bare,gpt-5.6-sol,0,1.0,0.0,1.0,0.857,0.0,1.0,2043,114,6.25
+config_cross_domain,a,bare,gpt-5.6-sol,1,1.0,0.0,1.0,0.857,0.0,1.0,2121,192,10.14
+config_cross_domain,a,bare,gpt-5.6-sol,2,1.0,0.0,1.0,0.857,0.0,1.0,2041,122,8.48
+config_cross_domain,a,anchored,gpt-5.6-sol,0,0.8,0.0,1.0,1.0,0.0,1.0,3013,434,16.17
+config_cross_domain,a,anchored,gpt-5.6-sol,1,1.0,0.0,1.0,0.857,1.0,0.0,3117,487,18.19
+config_cross_domain,a,anchored,gpt-5.6-sol,2,1.0,0.0,1.0,0.857,1.0,0.0,3034,450,16.52
+config_cross_domain,a,bare,gpt-5-nano,0,0.8,0.0,1.0,0.857,0.0,1.0,4212,2240,17.09
+config_cross_domain,a,bare,gpt-5-nano,1,1.0,0.0,1.0,0.857,0.0,1.0,4239,2304,17.47
+config_cross_domain,a,bare,gpt-5-nano,2,0.8,0.2,1.0,0.857,0.0,1.0,4983,3072,21.92
+config_cross_domain,a,anchored,gpt-5-nano,0,1.0,0.0,1.0,0.5,0.0,1.0,6178,3456,23.4
+config_cross_domain,a,anchored,gpt-5-nano,1,1.0,0.0,1.0,0.857,0.0,1.0,4850,2176,16.83
+config_cross_domain,a,anchored,gpt-5-nano,2,0.4,0.0,0.0,0.0,0.0,1.0,6043,3264,22.9

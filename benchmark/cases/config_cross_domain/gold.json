@@ -1,0 +1,27 @@
+{
+  "case": "config_cross_domain",
+  "operational_case": "cross-domain provisioning (no shared standard)",
+  "seed": "hand-authored bespoke cross-domain case: Meridian transport OSS vs Cascade IP/VPN controller, adjacent domains overlapping only at the transport-underlay seam",
+  "note": "Gold for the cross-domain configuration case. Correspondences are the correct cross-model concept pairs at the seam. false_cognates are lexically tempting pairs that must NOT be proposed — here the cross-domain 'grade' trap, where one word denotes unrelated things. residual is the per-side native concepts with no counterpart. verification is by worked provisioning and read-back, since with no standard and two domains nothing looks alike to round-trip.",
+  "correspondences": [
+    {"a": "m.circuit", "b": "c.underlay", "ref": "transport-underlay"},
+    {"a": "m.handoff", "b": "c.attachment", "ref": "demarcation"},
+    {"a": "m.rate", "b": "c.rate", "ref": "service-rate"},
+    {"a": "m.latency", "b": "c.latency", "ref": "latency-bound"},
+    {"a": "m.protection", "b": "c.protection", "ref": "protection-requirement"}
+  ],
+  "false_cognates": [
+    {"a": "m.grade", "b": "c.grade", "why": "both are labelled 'grade' but denote unrelated things: a Meridian grade is a transport protection/restoration class of a circuit; a Cascade grade is an IP class of service (scheduling and drop priority). They share no reference category and must not be corresponded — the cross-domain false cognate the ad-hoc reference is built to pre-empt."}
+  ],
+  "residual": {
+    "a_only": [{"id": "m.bearer", "ref": null, "closure": "transport-native (a wavelength); no IP counterpart"}],
+    "b_only": [{"id": "c.service", "ref": null, "closure": "IP-native service; the transport side knows only the circuit that underlays it"}, {"id": "c.vlan", "ref": null, "closure": "IP-native encapsulation; no transport counterpart"}]
+  },
+  "residual_by_placement": {"both_cognitive": 0, "one_inert": 2, "both_inert": 3},
+  "invariants": ["endpoint-identity (the demarcation)", "committed-rate (payload, not line rate)", "latency-bound", "path-protection", "underlay-binding"],
+  "verification_by_placement": {
+    "both_cognitive": "worked provisioning and read-back: run one order through the exchange, provision it, and read the instance back to confirm every pinned requirement is honoured",
+    "one_inert": "provisioning read-back on the live side; pinned-requirement evidence on the inert side",
+    "both_inert": "external adjudication or a downstream provisioning test"
+  }
+}

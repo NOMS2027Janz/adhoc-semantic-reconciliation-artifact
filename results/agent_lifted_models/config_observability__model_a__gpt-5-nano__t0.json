@@ -1,0 +1,144 @@
+{
+  "system": "Agent F — legacy fault manager",
+  "dialect": "RFC 8632 / syslog / SNMP / X.733",
+  "modules": [
+    "x733-probable-cause",
+    "rfc8632-alarms"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-nano from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_observability, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_observability/model_a*.json.",
+  "concepts": [
+    {
+      "id": "f.node",
+      "label": "managed-object",
+      "synonyms": [
+        "resource",
+        "network element"
+      ],
+      "kind": "resource",
+      "gloss": "A managed resource in the fault-management domain, representing a network element that can host events and alarms.",
+      "example": "R1",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "R1",
+        "lambda1"
+      ]
+    },
+    {
+      "id": "f.event",
+      "label": "event",
+      "synonyms": [
+        "syslog",
+        "trap"
+      ],
+      "kind": "event",
+      "gloss": "An event (such as a syslog message or SNMP trap) occurring on a managed object to report something about that resource.",
+      "example": "trap-lambda1-t0",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        }
+      ],
+      "instances": [
+        "trap-lambda1-t0"
+      ]
+    },
+    {
+      "id": "f.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "fault alarm",
+        "alarm condition"
+      ],
+      "kind": "alarm",
+      "gloss": "An alarm (fault alarm) raised on a managed object, carrying a severity and a probable cause.",
+      "example": "alarm-lambda1-SD",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        },
+        {
+          "rel": "carries",
+          "target": "f.severity"
+        },
+        {
+          "rel": "carries",
+          "target": "f.probable_cause"
+        }
+      ],
+      "instances": [
+        "alarm-lambda1-SD"
+      ]
+    },
+    {
+      "id": "f.severity",
+      "label": "severity",
+      "synonyms": [
+        "perceived severity",
+        "alarm level"
+      ],
+      "kind": "severity",
+      "gloss": "The severity level of an alarm, indicating its importance (e.g., critical, major, minor, or warning).",
+      "example": "critical",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "critical",
+        "major",
+        "minor",
+        "warning"
+      ]
+    },
+    {
+      "id": "f.probable_cause",
+      "label": "probable-cause",
+      "synonyms": [
+        "X.733 cause",
+        "cause code"
+      ],
+      "kind": "cause-code",
+      "gloss": "The probable-cause code for an alarm, identifying the root cause (e.g., lossOfSignal, degradedSignal).",
+      "example": "lossOfSignal",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "lossOfSignal",
+        "degradedSignal"
+      ]
+    },
+    {
+      "id": "f.clear",
+      "label": "clear",
+      "synonyms": [
+        "alarm clear"
+      ],
+      "kind": "clear",
+      "gloss": "An event indicating that a previously raised alarm on a managed object has been cleared.",
+      "example": "clear-lambda1-SD",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "clears",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "clear-lambda1-SD"
+      ]
+    }
+  ]
+}

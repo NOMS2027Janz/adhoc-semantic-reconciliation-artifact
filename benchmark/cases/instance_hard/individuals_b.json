@@ -1,0 +1,267 @@
+{
+  "system": "Agent I",
+  "dialect": "IETF TEAS (populated)",
+  "individuals": [
+    {
+      "id": "b.roadm1",
+      "type": "forwarding-node",
+      "name": "roadm-1",
+      "key": "k01",
+      "attrs": {
+        "role": "core",
+        "model": "MX9"
+      },
+      "rels": [
+        {
+          "rel": "adjacent",
+          "target": "b.nodeB"
+        },
+        {
+          "rel": "adjacent",
+          "target": "b.nodeC"
+        },
+        {
+          "rel": "adjacent",
+          "target": "b.roadm4"
+        }
+      ],
+      "_truth": "e1"
+    },
+    {
+      "id": "b.roadm4",
+      "type": "forwarding-node",
+      "name": "roadm-4",
+      "key": "k04",
+      "attrs": {
+        "role": "spur-agg",
+        "model": "MX7"
+      },
+      "rels": [
+        {
+          "rel": "adjacent",
+          "target": "b.roadm1"
+        },
+        {
+          "rel": "adjacent",
+          "target": "b.nodeB"
+        },
+        {
+          "rel": "adjacent",
+          "target": "b.nodeC"
+        },
+        {
+          "rel": "adjacent",
+          "target": "b.acc3"
+        }
+      ],
+      "_truth": "e4"
+    },
+    {
+      "id": "b.acc1",
+      "type": "client-svc-access",
+      "name": "acc-1",
+      "key": "k05",
+      "attrs": {
+        "tier": "access"
+      },
+      "rels": [
+        {
+          "rel": "homed-on",
+          "target": "b.roadm1"
+        }
+      ],
+      "_truth": "e5"
+    },
+    {
+      "id": "b.acc2",
+      "type": "client-svc-access",
+      "name": "acc-2",
+      "key": "k06",
+      "attrs": {
+        "tier": "access"
+      },
+      "rels": [
+        {
+          "rel": "homed-on",
+          "target": "b.roadm4"
+        }
+      ],
+      "_truth": "e6"
+    },
+    {
+      "id": "b.acc3",
+      "type": "client-svc-access",
+      "name": "acc-3",
+      "key": "k07",
+      "attrs": {
+        "tier": "access"
+      },
+      "rels": [
+        {
+          "rel": "homed-on",
+          "target": "b.roadm4"
+        }
+      ],
+      "_truth": "e7"
+    },
+    {
+      "id": "b.nodeB",
+      "type": "forwarding-node",
+      "name": "nodeB",
+      "key": null,
+      "attrs": {
+        "role": "core",
+        "model": "MX7"
+      },
+      "rels": [
+        {
+          "rel": "adjacent",
+          "target": "b.roadm1"
+        },
+        {
+          "rel": "adjacent",
+          "target": "b.roadm4"
+        }
+      ],
+      "_truth": "e2"
+    },
+    {
+      "id": "b.nodeC",
+      "type": "forwarding-node",
+      "name": "nodeC",
+      "key": null,
+      "attrs": {
+        "role": "core",
+        "model": "MX7"
+      },
+      "rels": [
+        {
+          "rel": "adjacent",
+          "target": "b.roadm1"
+        },
+        {
+          "rel": "adjacent",
+          "target": "b.roadm4"
+        }
+      ],
+      "_truth": "e3"
+    },
+    {
+      "id": "b.tunnel1",
+      "type": "connection-service",
+      "name": "tunnel-1",
+      "key": "k08",
+      "attrs": {
+        "rate": "ODU2"
+      },
+      "rels": [
+        {
+          "rel": "from",
+          "target": "b.acc1"
+        },
+        {
+          "rel": "to",
+          "target": "b.acc3"
+        }
+      ],
+      "_truth": "e8"
+    },
+    {
+      "id": "b.tunnel2",
+      "type": "connection-service",
+      "name": "tunnel-2",
+      "key": "k09",
+      "attrs": {
+        "rate": "ODU0"
+      },
+      "rels": [
+        {
+          "rel": "from",
+          "target": "b.acc2"
+        },
+        {
+          "rel": "to",
+          "target": "b.acc3"
+        }
+      ],
+      "_truth": "e9"
+    },
+    {
+      "id": "b.msx",
+      "type": "optical-mux-section",
+      "name": "mux-sec-x",
+      "key": null,
+      "attrs": {
+        "span": "short"
+      },
+      "rels": [
+        {
+          "rel": "between",
+          "target": "b.roadm1"
+        },
+        {
+          "rel": "between",
+          "target": "b.roadm4"
+        }
+      ],
+      "_truth": "e13"
+    },
+    {
+      "id": "b.msy",
+      "type": "optical-mux-section",
+      "name": "mux-sec-y",
+      "key": null,
+      "attrs": {
+        "span": "short"
+      },
+      "rels": [
+        {
+          "rel": "between",
+          "target": "b.roadm1"
+        },
+        {
+          "rel": "between",
+          "target": "b.roadm4"
+        }
+      ],
+      "_truth": "e14"
+    },
+    {
+      "id": "b.svc100",
+      "type": "connection-service",
+      "name": "svc-100",
+      "key": null,
+      "attrs": {
+        "rate": "ODU0"
+      },
+      "rels": [
+        {
+          "rel": "from",
+          "target": "b.acc3"
+        },
+        {
+          "rel": "to",
+          "target": "b.acc1"
+        }
+      ],
+      "_truth": "e11"
+    },
+    {
+      "id": "b.r1",
+      "type": "forwarding-node",
+      "name": "R1",
+      "key": null,
+      "attrs": {
+        "role": "core",
+        "model": "MX9"
+      },
+      "rels": [
+        {
+          "rel": "adjacent",
+          "target": "b.roadm4"
+        }
+      ],
+      "_truth": "e12"
+    }
+  ]
+}

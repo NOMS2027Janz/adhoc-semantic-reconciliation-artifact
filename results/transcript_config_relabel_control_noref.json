@@ -1,0 +1,366 @@
+{
+  "case": "config_relabel_control",
+  "model": "gpt-5.6-sol",
+  "reference": false,
+  "confirmed": [
+    [
+      "a02",
+      "b02"
+    ],
+    [
+      "a07",
+      "b07"
+    ],
+    [
+      "a10",
+      "b10"
+    ]
+  ],
+  "residual_a": [
+    "a01",
+    "a03",
+    "a04",
+    "a05",
+    "a06",
+    "a08",
+    "a09"
+  ],
+  "residual_b": [
+    "b01",
+    "b03",
+    "b04",
+    "b05",
+    "b06",
+    "b08",
+    "b09"
+  ],
+  "work": {
+    "candidates": 3,
+    "turns": 4,
+    "bilateral_checks": 5
+  },
+  "effort": {
+    "total_tokens": 20427,
+    "reasoning_tokens": 2343,
+    "latency_s": 97.14,
+    "model": "gpt-5.6-sol"
+  },
+  "transcript": [
+    {
+      "from": "A",
+      "answers": [],
+      "questions": [
+        {
+          "their_id": "b01",
+          "ask": "Please give its gloss, an example, and a short summary of its relations."
+        },
+        {
+          "their_id": "b02",
+          "ask": "Please give its gloss, an example, and a short summary of its relations, especially what owns it and what it terminates."
+        },
+        {
+          "their_id": "b03",
+          "ask": "Please give its gloss, an example, and a short summary of its relations, especially how it performs adaptation or bridging."
+        },
+        {
+          "their_id": "b04",
+          "ask": "Please give its gloss, an example, and a short summary of its relations, especially how it differs from b02."
+        },
+        {
+          "their_id": "b05",
+          "ask": "Please give its gloss, an example, and a short summary of its relations, including whether it denotes an end-to-end service or another conduit concept."
+        },
+        {
+          "their_id": "b06",
+          "ask": "Please give its gloss, an example, and a short summary of its relations, including what multiplexing or tier information it expresses."
+        },
+        {
+          "their_id": "b07",
+          "ask": "Please give its gloss, an example, and a short summary of its relations, especially whether it denotes cross-switch constraints at a node."
+        },
+        {
+          "their_id": "b08",
+          "ask": "Please give its gloss, an example, and a short summary of its relations."
+        },
+        {
+          "their_id": "b09",
+          "ask": "Please give its gloss, an example, and a short summary of its relations."
+        },
+        {
+          "their_id": "b10",
+          "ask": "Please give its gloss, an example, and a short summary of its relations, including whether it is an endpoint of a service circuit within a node."
+        }
+      ],
+      "proposals": [],
+      "ratifications": [],
+      "no_counterpart": [],
+      "done": false
+    },
+    {
+      "from": "B",
+      "answers": [
+        {
+          "my_id": "b01",
+          "gloss": "A flux-managed vertex in a per-tier network.",
+          "example": "ROADM R1 in the zeta tier.",
+          "relations": "It is part of b09 (flux-fabric); b02 cap-points, b04 conduit-cap-points, b07 carriage-grids, and b10 conduit circuit endpoints may be located on it, while b08 spans run between such vertices."
+        },
+        {
+          "my_id": "b02",
+          "gloss": "A cap point at which a flux-span terminates on a vertex.",
+          "example": "The R1 cap point facing R2.",
+          "relations": "It is on b01 and terminates b08. Unlike b04, it is a span termination rather than the originating or terminating head of an end-to-end conduit."
+        },
+        {
+          "my_id": "b03",
+          "gloss": "The backing relationship by which a cap point is supported by a server-tier cap point.",
+          "example": "A zeta-tier cap point backed by an optical-tier cap point at R1.",
+          "relations": "It supports b02 across tier boundaries. It denotes adaptation/backing between client- and server-tier cap points, not an ordinary link or span."
+        },
+        {
+          "my_id": "b04",
+          "gloss": "The point at which a flux-conduit originates or terminates\u2014its run head.",
+          "example": "The head of the A1\u2013A3 conduit at A1.",
+          "relations": "It lies on b01 and originates or terminates b05. It differs from b02 because b04 bounds an end-to-end conduit, whereas b02 terminates a network span."
+        },
+        {
+          "my_id": "b05",
+          "gloss": "An end-to-end traffic-engineered conduit that realizes an offer.",
+          "example": "The A1\u2013A3 grd2 conduit.",
+          "relations": "It runs from/to b04 conduit-cap-points, traverses b09, is labeled by b06, and includes b10 circuit endpoints. It denotes the realized end-to-end conduit/service, not merely a physical span."
+        },
+        {
+          "my_id": "b06",
+          "gloss": "A zeta-tier label expressing carrier-slot multiplexing structure.",
+          "example": "The carrier slots carrying grd2 within a crr4.",
+          "relations": "It labels b05 and identifies its carrier-slot allocation or multiplexing position, represented as xs/xpn."
+        },
+        {
+          "my_id": "b07",
+          "gloss": "The grid of permitted internal carriage within a vertex.",
+          "example": "The permitted carriage grid on R2.",
+          "relations": "It is located on b01 and captures which internal carriage or cross-switching is permitted at that vertex."
+        },
+        {
+          "my_id": "b08",
+          "gloss": "A flux-managed span between vertices in a tier network.",
+          "example": "The R1\u2013R2 flux-span.",
+          "relations": "It runs between b01 vertices, is terminated by b02 cap-points, and is contained in b09."
+        },
+        {
+          "my_id": "b09",
+          "gloss": "A per-tier flux-managed network.",
+          "example": "The zeta-tier network.",
+          "relations": "It contains b01 vertices and b08 spans; b05 conduits are realized over it."
+        },
+        {
+          "my_id": "b10",
+          "gloss": "An endpoint of a conduit circuit within a vertex.",
+          "example": "The circuit endpoint for the A1\u2013A3 conduit on R1.",
+          "relations": "It is located on b01 and is part of b05. It is specifically an endpoint of the conduit\u2019s circuit within a node, distinct from the conduit run head b04."
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "a01",
+          "ask": "Please give its gloss, an example, and a short relations summary, including whether it is a managed node in one tier-specific fabric."
+        },
+        {
+          "their_id": "a02",
+          "ask": "Please give its gloss, an example, and a short relations summary, especially what it is on and whether it terminates a span."
+        },
+        {
+          "their_id": "a03",
+          "ask": "Please explain what shifting-span denotes, with an example and relations summary, especially whether it is an adaptation/backing relationship between cap points in different tiers."
+        },
+        {
+          "their_id": "a04",
+          "ask": "Please give its gloss, an example, and relations summary, especially whether it is the origin/termination head of an end-to-end service or offer and how it differs from a span-cap-point."
+        },
+        {
+          "their_id": "a05",
+          "ask": "Please give its gloss, an example, and relations summary, including whether it is an offered service, a realized end-to-end conduit, or both."
+        },
+        {
+          "their_id": "a06",
+          "ask": "Please explain what tier-stream-qualifier expresses, with an example and relations summary, especially whether it identifies carrier-slot multiplexing allocation."
+        },
+        {
+          "their_id": "a07",
+          "ask": "Please give its gloss, an example, and relations summary, especially whether it represents permitted internal carriage or cross-switch constraints at a vertex."
+        },
+        {
+          "their_id": "a08",
+          "ask": "Please give its gloss, an example, and relations summary, including its endpoints and containing topology."
+        },
+        {
+          "their_id": "a09",
+          "ask": "Please give its gloss, an example, and relations summary, including whether it is a per-tier managed network containing vertices and spans."
+        },
+        {
+          "their_id": "a10",
+          "ask": "Please give its gloss, an example, and relations summary, including whether it is an endpoint of a service circuit within a vertex and how it differs from a service gateway."
+        }
+      ],
+      "proposals": [],
+      "ratifications": [],
+      "no_counterpart": [],
+      "done": false
+    },
+    {
+      "from": "A",
+      "answers": [
+        {
+          "my_id": "a01",
+          "gloss": "A forwarding vertex in the single multi-tier fabric, not intrinsically a separate node scoped to one tier-specific network.",
+          "example": "ROADM R1.",
+          "relations": "It is part of a09. Span-cap-points a02, offer-gateway-points a04, shifting-spans a03, vertex-gate-sets a07, and circuit endpoints a10 may be associated with it; a08 spans run between vertices."
+        },
+        {
+          "my_id": "a02",
+          "gloss": "An edge point owned by a vertex at which a topological span terminates.",
+          "example": "The R1 edge point toward R2, hep-R1-R2.",
+          "relations": "It is on a01 and terminates a08. It is a span termination, unlike a04, which is an external client-offer access point."
+        },
+        {
+          "my_id": "a03",
+          "gloss": "A span-like adaptation object expressing bridging between layers at a vertex.",
+          "example": "The crr4/grd2 bridging at R1.",
+          "relations": "It is at a01 and adapts a06. Although related in purpose to cross-tier backing, it is modeled as a bridging span tied to a stream qualifier, rather than specifically as a backing relationship between two cap-points."
+        },
+        {
+          "my_id": "a04",
+          "gloss": "A gateway point where an external client offer accesses the network.",
+          "example": "The grd2 client hand-off at A1, acp-A1-grd.",
+          "relations": "It is on a01 and provides access to a05. It is not a span termination like a02, nor is it defined as the run head of an internally realized conduit."
+        },
+        {
+          "my_id": "a05",
+          "gloss": "An offered end-to-end carriage service across the network.",
+          "example": "The A1\u2013A3 grd2 carriage offer, co-a1a3-grd2.",
+          "relations": "It uses a04 access points, is realized by a10 circuit endpoints, is qualified by a06, and runs over a09. It denotes the offer itself rather than a distinct traffic-engineered conduit that realizes an offer."
+        },
+        {
+          "my_id": "a06",
+          "gloss": "A qualifier expressing the multiplexing and tier structure of a signal.",
+          "example": "grd2 mapped into a crr4 server.",
+          "relations": "It qualifies a05 and is the adaptation target of a03. It expresses the client/server multiplexing structure; it is not limited by definition to a concrete carrier-slot allocation, though such allocation may be part of that structure."
+        },
+        {
+          "my_id": "a07",
+          "gloss": "The set of constraints defining which ports may be cross-switched within a vertex.",
+          "example": "The permitted cross-switches on R2.",
+          "relations": "It is located on a01 and governs permitted internal switching or carriage there."
+        },
+        {
+          "my_id": "a08",
+          "gloss": "A topological span between two vertices.",
+          "example": "The R1\u2013R2 span, span-R1-R2.",
+          "relations": "It runs between a01 vertices, is terminated by a02 span-cap-points, and is contained in a09."
+        },
+        {
+          "my_id": "a09",
+          "gloss": "The single multi-tier fabric describing the whole forwarding realm.",
+          "example": "The zeta-over-optical fabric.",
+          "relations": "It contains a01 vertices and a08 spans, and a05 carriage offers operate over it. Unlike a per-tier network, it encompasses the tiers together in one fabric."
+        },
+        {
+          "my_id": "a10",
+          "gloss": "An endpoint of a circuit within a vertex.",
+          "example": "The circuit endpoint for the A1\u2013A3 offer on R1, cxp-a1a3-R1.",
+          "relations": "It is on a01 and part of a05's realization. It is an internal circuit endpoint, distinct from a04, which is the external client-offer gateway."
+        }
+      ],
+      "questions": [],
+      "proposals": [
+        {
+          "my_id": "a02",
+          "their_id": "b02",
+          "confidence": 0.99,
+          "rationale": "Both denote a vertex-owned termination point for a topological span, with matching R1-toward-R2 examples and relations to the node and span."
+        },
+        {
+          "my_id": "a06",
+          "their_id": "b06",
+          "confidence": 0.82,
+          "rationale": "Both express the multiplexing placement of grd2 within a crr4 carrier/server structure. b06 appears somewhat narrower because it emphasizes concrete carrier-slot allocation, while a06 is a general tier-and-stream qualifier."
+        },
+        {
+          "my_id": "a07",
+          "their_id": "b07",
+          "confidence": 0.98,
+          "rationale": "Both denote the permitted internal carriage or cross-switch constraints at a vertex."
+        },
+        {
+          "my_id": "a08",
+          "their_id": "b08",
+          "confidence": 0.94,
+          "rationale": "Both denote a span between vertices terminated by span cap-points. B scopes its span to a per-tier fabric, but the underlying span concept and endpoint relations match."
+        },
+        {
+          "my_id": "a10",
+          "their_id": "b10",
+          "confidence": 0.94,
+          "rationale": "Both denote an endpoint of an end-to-end service or conduit circuit within a vertex, distinct from an external or run-head access point."
+        }
+      ],
+      "ratifications": [],
+      "no_counterpart": [
+        "a01",
+        "a03",
+        "a04",
+        "a05",
+        "a09"
+      ],
+      "done": true
+    },
+    {
+      "from": "B",
+      "answers": [],
+      "questions": [],
+      "proposals": [],
+      "ratifications": [
+        {
+          "their_id": "a02",
+          "my_id": "b02",
+          "accept": true,
+          "reason": "Both denote a cap or edge point on a vertex that terminates a topological span; their examples and core relations coincide."
+        },
+        {
+          "their_id": "a06",
+          "my_id": "b06",
+          "accept": false,
+          "reason": "b06 specifically denotes a zeta carrier-slot label identifying concrete multiplexing allocation on a conduit. a06 is a broader signal qualifier covering client/server tier and multiplexing structure, so they are related but not equivalent."
+        },
+        {
+          "their_id": "a07",
+          "my_id": "b07",
+          "accept": true,
+          "reason": "Both denote the constraints or grid of permitted internal carriage and cross-switching at a vertex."
+        },
+        {
+          "their_id": "a08",
+          "my_id": "b08",
+          "accept": false,
+          "reason": "b08 is intrinsically a flux-managed span within one tier-specific network, whereas a08 belongs to A's single multi-tier fabric and is not intrinsically scoped to a per-tier network. The structural scope is part of b08's meaning."
+        },
+        {
+          "their_id": "a10",
+          "my_id": "b10",
+          "accept": true,
+          "reason": "Both denote an internal endpoint of an end-to-end circuit within a vertex, distinct from an external gateway or conduit run head."
+        }
+      ],
+      "no_counterpart": [
+        "b01",
+        "b03",
+        "b04",
+        "b05",
+        "b06",
+        "b08",
+        "b09"
+      ],
+      "done": true
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "case": "verify_hard",
+  "note": "DERIVED from instance_hard _truth by build_verify_set.py; do not hand-edit.",
+  "verdicts": {
+    "a.r1__b.roadm1": {
+      "truth_pass": true,
+      "category": "correct",
+      "byte_clean_records": true,
+      "probe_available": null
+    },
+    "a.a1__b.acc1": {
+      "truth_pass": true,
+      "category": "correct",
+      "byte_clean_records": true,
+      "probe_available": null
+    },
+    "a.cs_odu2__b.tunnel1": {
+      "truth_pass": true,
+      "category": "correct",
+      "byte_clean_records": true,
+      "probe_available": "virtual_provision"
+    },
+    "a.cs_odu0__b.tunnel2": {
+      "truth_pass": true,
+      "category": "correct",
+      "byte_clean_records": true,
+      "probe_available": "virtual_provision"
+    },
+    "a.r2__b.nodeB": {
+      "truth_pass": true,
+      "category": "correct",
+      "byte_clean_records": true,
+      "probe_available": "interrogate"
+    },
+    "a.r3__b.nodeC": {
+      "truth_pass": true,
+      "category": "correct",
+      "byte_clean_records": true,
+      "probe_available": "interrogate"
+    },
+    "a.omsx__b.msx": {
+      "truth_pass": true,
+      "category": "correct",
+      "byte_clean_records": true,
+      "probe_available": "interrogate"
+    },
+    "a.omsy__b.msy": {
+      "truth_pass": true,
+      "category": "correct",
+      "byte_clean_records": true,
+      "probe_available": "interrogate"
+    },
+    "a.svc100__b.svc100": {
+      "truth_pass": false,
+      "category": "meaning-visible",
+      "byte_clean_records": false,
+      "probe_available": "virtual_provision"
+    },
+    "a.r1__b.r1": {
+      "truth_pass": false,
+      "category": "meaning-visible",
+      "byte_clean_records": false,
+      "probe_available": null
+    },
+    "a.r2__b.nodeC": {
+      "truth_pass": false,
+      "category": "byte-clean",
+      "byte_clean_records": true,
+      "probe_available": "interrogate"
+    },
+    "a.r3__b.nodeB": {
+      "truth_pass": false,
+      "category": "byte-clean",
+      "byte_clean_records": true,
+      "probe_available": "interrogate"
+    },
+    "a.omsx__b.msy": {
+      "truth_pass": false,
+      "category": "byte-clean",
+      "byte_clean_records": true,
+      "probe_available": "interrogate"
+    },
+    "a.omsy__b.msx": {
+      "truth_pass": false,
+      "category": "byte-clean",
+      "byte_clean_records": true,
+      "probe_available": "interrogate"
+    }
+  }
+}

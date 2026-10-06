@@ -1,0 +1,192 @@
+{
+  "system": "Acme-Device",
+  "dialect": "acme-l3vpn/acme-if/acme-bgp",
+  "modules": [
+    "acme-l3vpn",
+    "acme-if",
+    "acme-bgp"
+  ],
+  "note": "Messy Acme vendor device model (side B): deep paths, sparse glosses, config/state split, cross-module augments, leafref indirection. E11.",
+  "concepts": [
+    {
+      "id": "v.inst",
+      "label": "acme-l3vpn:instances/instance",
+      "kind": "container",
+      "ref": "vpn-service",
+      "synonyms": [],
+      "gloss": "vrf instance.",
+      "example": "instance ACME-VRF",
+      "relations": [
+        {
+          "rel": "contains",
+          "target": "v.rd_cfg"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "v.rd_cfg",
+      "label": "acme-l3vpn:instances/instance/vrf/rd",
+      "kind": "leaf",
+      "ref": "route-distinguisher",
+      "synonyms": [],
+      "gloss": "",
+      "example": "64512:100",
+      "relations": [
+        {
+          "rel": "under",
+          "target": "v.inst"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "v.rd_state",
+      "label": "acme-l3vpn:instances/instance/vrf/state/oper-rd",
+      "kind": "leaf",
+      "ref": "route-distinguisher",
+      "synonyms": [],
+      "gloss": "operational rd.",
+      "example": "64512:100",
+      "relations": [
+        {
+          "rel": "reflects",
+          "target": "v.rd_cfg"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "v.rt_imp",
+      "label": "acme-l3vpn:.../vrf/address-family/ipv4-unicast/route-target/import",
+      "kind": "leaf-list",
+      "ref": "import-rt",
+      "synonyms": [],
+      "gloss": "",
+      "example": "target:64512:100",
+      "relations": [
+        {
+          "rel": "under",
+          "target": "v.inst"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "v.rt_exp",
+      "label": "acme-l3vpn:.../vrf/address-family/ipv4-unicast/route-target/export",
+      "kind": "leaf-list",
+      "ref": "export-rt",
+      "synonyms": [],
+      "gloss": "",
+      "example": "target:64512:100",
+      "relations": [
+        {
+          "rel": "under",
+          "target": "v.inst"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "v.imp_policy",
+      "label": "acme-l3vpn:.../vrf/import-policy",
+      "kind": "leafref",
+      "ref": "import-policy",
+      "synonyms": [],
+      "gloss": "policy ref.",
+      "example": "-> policy ACME-IN",
+      "relations": [
+        {
+          "rel": "references",
+          "target": "v.seg"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "v.attach",
+      "label": "acme-if:interfaces/interface/vrf-attachment",
+      "kind": "augment",
+      "ref": "vpn-access",
+      "synonyms": [],
+      "gloss": "",
+      "example": "GE0/1 in ACME-VRF",
+      "relations": [
+        {
+          "rel": "binds",
+          "target": "v.inst"
+        },
+        {
+          "rel": "hosts",
+          "target": "v.bgp_nbr"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "v.bgp_nbr",
+      "label": "acme-bgp:bgp/neighbors/neighbor",
+      "kind": "augment",
+      "ref": "bgp-neighbor",
+      "synonyms": [],
+      "gloss": "",
+      "example": "neighbor 10.0.0.2",
+      "relations": [
+        {
+          "rel": "has",
+          "target": "v.bgp_ka"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "v.bgp_ka",
+      "label": "acme-bgp:bgp/neighbors/neighbor/timers/keepalive-interval",
+      "kind": "leaf",
+      "ref": "bgp-keepalive",
+      "synonyms": [],
+      "gloss": "",
+      "example": "30",
+      "relations": [
+        {
+          "rel": "under",
+          "target": "v.bgp_nbr"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "v.ipaddr",
+      "label": "acme-if:interfaces/interface/ipv4/address",
+      "kind": "leaf",
+      "ref": "ip-connection",
+      "synonyms": [],
+      "gloss": "",
+      "example": "10.0.0.1/30",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "v.attach"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "v.seg",
+      "label": "acme-l3vpn:instances/instance/vrf/segment-id",
+      "kind": "leaf",
+      "ref": "segment",
+      "synonyms": [],
+      "gloss": "vendor segment id.",
+      "example": "seg 4001",
+      "relations": [
+        {
+          "rel": "under",
+          "target": "v.inst"
+        }
+      ],
+      "instances": []
+    }
+  ]
+}

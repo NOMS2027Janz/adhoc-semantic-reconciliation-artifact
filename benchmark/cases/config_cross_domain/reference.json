@@ -1,0 +1,13 @@
+{
+  "id": "ref.crossdomain.adhoc.v1",
+  "kind": "lexical",
+  "reference_type": "ad_hoc_by_example",
+  "note": "An AD-HOC reference CONSTRUCTED between just these two agents for just this exchange — not adopted from any standard. Minimal: one entry per shared seam category the exchange needs, each fixed by a canonical example both sides can instantiate. It deliberately does NOT cover either side's native concepts (grade, bearer, vlan, service), which is how it pre-empts the cross-domain 'grade' false cognate. Each definition pins a requirement so it cannot be silently misread across domains.",
+  "entries": [
+    {"id": "transport-underlay", "label": "transport underlay", "synonyms": ["underlay circuit", "carrier circuit"], "class": "seam", "definition": "The transport circuit that carries an IP service as its underlay — the one object both domains share, owned by transport and consumed by IP.", "example": "Meridian circuit CIR-7 is the underlay of Cascade service SVC-42"},
+    {"id": "demarcation", "label": "demarcation point", "synonyms": ["hand-off", "attachment"], "class": "endpoint", "definition": "The single point where the transport circuit hands off to, and the IP service attaches at, the customer site — one demarcation seen from both sides.", "example": "the NY demarcation: Meridian hand-off ho-NY-CIR7 is the same point as Cascade attachment att-NY-SVC42"},
+    {"id": "service-rate", "label": "committed service rate", "synonyms": ["committed rate", "CIR"], "class": "requirement", "definition": "The committed client payload rate the service guarantees — NOT the bearer line rate. Pinned to committed payload to prevent the line-rate / committed-rate confusion.", "example": "5 Gbit/s committed (not the 100 Gbit/s bearer line rate)"},
+    {"id": "latency-bound", "label": "latency bound", "synonyms": ["delay bound", "latency tier"], "class": "requirement", "definition": "The one-way latency the service must not exceed, however each side expresses it — a number of milliseconds on the transport side, a named tier on the IP side. Pinned to a bound, not a measured metric.", "example": "<= 8 ms one-way is the same requirement as latency tier T2"},
+    {"id": "protection-requirement", "label": "path protection", "synonyms": ["resilience", "protection"], "class": "requirement", "definition": "Protection of the service against a failure of the transport PATH (a fiber cut or bearer loss) — pinned to a path/underlay failure, distinct from an IP scheduling class.", "example": "survive a single fiber cut on CIR-7's primary path by switching to the diverse path"}
+  ]
+}

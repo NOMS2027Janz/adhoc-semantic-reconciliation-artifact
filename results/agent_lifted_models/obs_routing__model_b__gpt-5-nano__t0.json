@@ -1,0 +1,231 @@
+{
+  "system": "Agent G - NMOP agent",
+  "dialect": "IETF NMOP (RFC 9940 + anomaly-semantics / incident-yang)",
+  "modules": [
+    "rfc9940-anomaly",
+    "nmop-anomaly-semantics",
+    "nmop-incident"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-nano from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case obs_routing, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/obs_routing/model_b*.json.",
+  "concepts": [
+    {
+      "id": "g.node",
+      "label": "resource",
+      "synonyms": [
+        "managed object",
+        "network element"
+      ],
+      "kind": "resource",
+      "gloss": "A resource is a managed object (network element) within the management domain that can be observed and controlled as part of network management.",
+      "example": "R7",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "R7",
+        "bgp-R7-AS64500"
+      ]
+    },
+    {
+      "id": "g.event",
+      "label": "event",
+      "synonyms": [
+        "notification"
+      ],
+      "kind": "event",
+      "gloss": "An event is a notification about a noteworthy condition or occurrence affecting a resource in the management domain.",
+      "example": "trap-bgp-R7-t0",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "trap-bgp-R7-t0"
+      ]
+    },
+    {
+      "id": "g.anomaly",
+      "label": "anomaly",
+      "synonyms": [
+        "deviation"
+      ],
+      "kind": "anomaly",
+      "gloss": "An anomaly is a deviation from expected behavior observed on a resource, indicating abnormal operation.",
+      "example": "churn-R7-rising",
+      "ref": "anomaly",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "churn-R7-rising"
+      ]
+    },
+    {
+      "id": "g.symptom",
+      "label": "symptom",
+      "synonyms": [
+        "manifestation"
+      ],
+      "kind": "symptom",
+      "gloss": "A symptom is a manifestation that indicates the presence of an underlying anomaly.",
+      "example": "symptom-1",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "symptom-1"
+      ]
+    },
+    {
+      "id": "g.fault",
+      "label": "fault",
+      "synonyms": [
+        "failure occurrence"
+      ],
+      "kind": "fault",
+      "gloss": "A fault is a failure occurrence detected on a resource.",
+      "example": "fault-1",
+      "ref": "fault",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "fault-1"
+      ]
+    },
+    {
+      "id": "g.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "alarm state"
+      ],
+      "kind": "alarm",
+      "gloss": "An alarm is the currently active alarm state reported for a resource.",
+      "example": "alarm-1",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "alarm-1"
+      ]
+    },
+    {
+      "id": "g.problem",
+      "label": "problem",
+      "synonyms": [
+        "diagnosis"
+      ],
+      "kind": "problem",
+      "gloss": "A problem is a diagnosed explanation for one or more faults.",
+      "example": "problem-1",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "explains",
+          "target": "g.fault"
+        }
+      ],
+      "instances": [
+        "problem-1"
+      ]
+    },
+    {
+      "id": "g.cause",
+      "label": "cause",
+      "synonyms": [
+        "root cause"
+      ],
+      "kind": "cause",
+      "gloss": "A cause is the underlying reason for a problem.",
+      "example": "cause-1",
+      "ref": "cause",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "g.problem"
+        }
+      ],
+      "instances": [
+        "cause-1"
+      ]
+    },
+    {
+      "id": "g.incident",
+      "label": "incident",
+      "synonyms": [
+        "grouping"
+      ],
+      "kind": "incident",
+      "gloss": "An incident is a grouping of anomalies into a higher-level event that is managed as a unit.",
+      "example": "incident-1",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "groups",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "incident-1"
+      ]
+    },
+    {
+      "id": "g.concern",
+      "label": "concern-score",
+      "synonyms": [
+        "concern"
+      ],
+      "kind": "concern",
+      "gloss": "A concern score is a numeric annotation attached to an anomaly indicating its degree of concern or risk.",
+      "example": "0.8",
+      "ref": "concern",
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "0.8",
+        "0.9"
+      ]
+    },
+    {
+      "id": "g.confidence",
+      "label": "confidence-score",
+      "synonyms": [
+        "confidence"
+      ],
+      "kind": "confidence",
+      "gloss": "A confidence score is a numeric annotation attached to an anomaly indicating the confidence in the assessment.",
+      "example": "0.6",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "0.6",
+        "0.7"
+      ]
+    }
+  ]
+}

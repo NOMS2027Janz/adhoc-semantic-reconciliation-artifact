@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intent ↔ L1 Reconciliation — TM Forum Intent OSS ↔ IETF L1CSM (cognitive agent-to-agent)</title>
+<style>
+  :root{
+    --bg:#0c1018; --panel:#121826; --panel2:#0f1420; --edge:#243049;
+    --ink:#e7edf7; --dim:#8da0bf; --faint:#5d6e8c;
+    --o:#36c2a8; --o2:#0e3a33;          /* Agent O — intent OSS */
+    --n:#7aa2ff; --n2:#172447;          /* Agent N — L1 network */
+    --bus:#c9a227; --lex:#b98bd6; --lex2:#2a1c3a;
+    --think:#9aa7c0; --action:#ffd166; --result:#5fd38d; --warn:#ff8b6b; --plan:#b98bd6;
+    --gold:#ffd166;
+    --met:#5fd38d; --margin:#ffd166; --breach:#ff8b6b;
+    --heavy:#ff8b6b; --med:#ffd166; --cheap:#36c2a8; --mech:#8da0bf;
+    --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.45}
+  h1{font-size:17px;margin:0}
+  .sub{color:var(--dim);font-size:12.5px;max-width:1180px}
+  .toolbar{position:sticky;top:0;z-index:100;background:#0c1018;border-bottom:1px solid var(--edge);padding:10px 20px 11px;box-shadow:0 6px 16px rgba(0,0,0,.45)}
+  .tbar-title{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .author{color:var(--bus);font-size:13px;font-weight:600;white-space:nowrap}
+  .author .lbl{color:var(--faint);font-weight:400;font-size:11px;margin-right:5px;text-transform:uppercase;letter-spacing:.5px}
+  .wrap{padding:14px 16px;max-width:1520px;margin:0 auto}
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+  button{background:#1b2540;color:var(--ink);border:1px solid var(--edge);border-radius:7px;padding:7px 13px;font-size:13px;cursor:pointer;font-family:var(--sans)}
+  button:hover{background:#243151}
+  button.primary{background:var(--bus);color:#1b1500;border-color:#e2bd3b;font-weight:600}
+  button:disabled{opacity:.4;cursor:default}
+  .speed{color:var(--dim);font-size:12px;margin-left:6px}
+  select{background:#1b2540;color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:5px 8px}
+  .modewrap{display:inline-flex;align-items:center;gap:8px;margin-left:14px;padding:4px 10px;border:1px solid var(--edge);border-radius:8px;background:#0f1626}
+  .modewrap .ml{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+  .toggle-sw{position:relative;width:46px;height:22px;border-radius:12px;background:#33261c;border:1px solid #5a4a2a;cursor:pointer;transition:.2s}
+  .toggle-sw.on{background:var(--lex2);border-color:#5a3d78}
+  .toggle-sw .knob{position:absolute;top:1px;left:1px;width:18px;height:18px;border-radius:50%;background:var(--warn);transition:.2s}
+  .toggle-sw.on .knob{left:25px;background:var(--lex)}
+  .modeval{font-size:12px;font-weight:700;min-width:34px}
+  .modeval.on{color:var(--lex)} .modeval.off{color:var(--warn)}
+
+  .phases{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}
+  .phase{font-size:11px;padding:4px 9px;border-radius:20px;border:1px solid var(--edge);color:var(--faint);background:#0f1626;white-space:nowrap}
+  .phase.active{color:#1b1500;background:var(--bus);border-color:#e2bd3b;font-weight:600}
+  .phase.done{color:var(--result);border-color:#27543c}
+  .phase.skip{opacity:.4;text-decoration:line-through}
+
+  header{padding:10px 20px;border-bottom:1px solid var(--edge);background:linear-gradient(180deg,#10182a,#0c1018)}
+
+  .stagenote{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(90deg,#16213c,#0f1626);border:1px solid var(--edge);border-left:3px solid var(--bus);border-radius:8px;padding:11px 15px;margin-top:13px}
+  .stagenote .lab{color:var(--bus);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;padding-top:2px;min-width:132px}
+  .stagenote .txt{font-size:12.8px;line-height:1.5;color:#d4deef}
+  .stagenote .txt b{color:#fff}
+  .instr{display:grid;grid-template-columns:200px 1fr 1fr;gap:10px;margin-top:10px}
+  .icard{background:var(--panel);border:1px solid var(--edge);border-radius:8px;padding:9px 12px}
+  .icard .h{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin-bottom:4px}
+  .icard .v{font-size:12px;color:#d4deef;line-height:1.4}
+  .cogrow{display:flex;align-items:center;gap:9px}
+  .cogbadge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:2px 8px;border-radius:10px}
+  .cog-heavy{background:#3a221c;color:var(--heavy)} .cog-med{background:#3a2f12;color:var(--med)}
+  .cog-cheap{background:#0e3a33;color:var(--cheap)} .cog-mech{background:#232b38;color:var(--mech)}
+  .meter{display:inline-flex;gap:3px}
+  .meter i{width:7px;height:13px;border-radius:2px;background:#243049;display:inline-block}
+  .meter i.on.h{background:var(--heavy)} .meter i.on.m{background:var(--med)} .meter i.on.c{background:var(--cheap)}
+  .measure{color:var(--result);font-family:var(--mono);font-size:11.5px}
+
+  .agents{display:grid;grid-template-columns:1fr 0.92fr 1fr;gap:12px;margin-top:14px}
+  .col{background:var(--panel);border:1px solid var(--edge);border-radius:10px;display:flex;flex-direction:column;min-height:300px}
+  .col.o{border-top:3px solid var(--o)}
+  .col.n{border-top:3px solid var(--n)}
+  .col.bus{border-top:3px solid var(--bus)}
+  .col h2{font-size:13px;margin:0;padding:10px 12px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center}
+  .tag{font-size:10.5px;font-weight:400;color:var(--dim)}
+  .log{flex:1;overflow-y:auto;padding:8px 10px;font-family:var(--mono);font-size:11.8px;max-height:330px}
+  .line{margin:0 0 6px;padding-left:15px;position:relative;white-space:pre-wrap;word-break:break-word;animation:fade .35s ease}
+  .line::before{position:absolute;left:0;top:0}
+  .line.think{color:var(--think)} .line.think::before{content:'·';color:var(--faint)}
+  .line.action{color:var(--action)} .line.action::before{content:'▸'}
+  .line.result{color:var(--result)} .line.result::before{content:'✓'}
+  .line.warn{color:var(--warn)} .line.warn::before{content:'!'}
+  .line.plan{color:var(--plan)} .line.plan::before{content:'✎'}
+  .line.replan{color:var(--plan)} .line.replan::before{content:'↻'}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+
+  .msg{border:1px solid var(--edge);border-radius:8px;margin:0 0 9px;overflow:hidden;animation:fade .35s ease;background:var(--panel2)}
+  .msg .mh{display:flex;justify-content:space-between;align-items:center;padding:6px 9px;font-size:11px;border-bottom:1px solid var(--edge)}
+  .msg.fromO .mh{background:linear-gradient(90deg,var(--o2),transparent)}
+  .msg.fromN .mh{background:linear-gradient(270deg,var(--n2),transparent)}
+  .msg.fromV .mh{background:linear-gradient(90deg,#2a2140,transparent)}
+  .dir{font-weight:700;letter-spacing:.3px}
+  .dir.o{color:var(--o)} .dir.n{color:var(--n)} .dir.v{color:var(--lex)}
+  .method{color:var(--bus);font-family:var(--mono);font-size:10.5px}
+  .msg .summary{padding:6px 9px;font-size:11.5px;color:var(--ink)}
+  .msg pre{margin:0;padding:8px 9px;background:#0a0e16;border-top:1px solid var(--edge);font-family:var(--mono);font-size:10.3px;color:#bcd0ee;overflow-x:auto;max-height:200px;overflow-y:auto}
+  .msg .toggle{cursor:pointer;color:var(--faint);font-size:10px;padding:4px 9px;user-select:none}
+  .msg .toggle:hover{color:var(--dim)}
+
+  .tabs{margin-top:16px;border:1px solid var(--edge);border-radius:10px;background:var(--panel);overflow:hidden}
+  .tabbar{display:flex;border-bottom:1px solid var(--edge);flex-wrap:wrap}
+  .tabbtn{padding:10px 14px;font-size:12.5px;cursor:pointer;color:var(--dim);border-right:1px solid var(--edge);background:var(--panel2);position:relative}
+  .tabbtn.active{color:var(--ink);background:var(--panel);font-weight:600}
+  .tabbtn .badge{display:inline-block;min-width:16px;text-align:center;background:var(--bus);color:#1b1500;border-radius:9px;font-size:10px;padding:0 5px;margin-left:6px;font-weight:700}
+  .tabpane{display:none;padding:14px 16px;max-height:580px;overflow-y:auto}
+  .tabpane.active{display:block}
+
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--edge);vertical-align:top}
+  th{color:var(--dim);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  .pill{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;white-space:nowrap}
+  .pill.lex{background:#13314a;color:#7cc6ff}
+  .pill.refine{background:#3a2f12;color:#ffd166}
+  .pill.realm{background:#3a1a2a;color:#ff8fb0}
+  .pill.nature{background:#222b16;color:#bfe06a}
+  .conf{font-family:var(--mono);font-size:11px}
+  .conf.hi{color:var(--result)} .conf.med{color:var(--action)} .conf.lo{color:var(--warn)}
+  .flag{color:var(--warn);font-size:11px}
+  .muted{color:var(--faint)}
+  .empty{color:var(--faint);font-style:italic;padding:20px;text-align:center}
+  .note{font-size:12px;color:var(--dim);margin-bottom:6px}
+  .sat{font-family:var(--mono);font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:8px}
+  .sat.met{background:#0e2a1c;color:var(--met)} .sat.margin{background:#2c2410;color:var(--margin)} .sat.breach{background:#2a1414;color:var(--breach)}
+
+  .lexgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:8px}
+  .lexcard{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--lex);border-radius:7px;padding:8px 10px;font-size:11px;opacity:.5;transition:opacity .3s,border-color .3s}
+  .lexcard.bound{opacity:1}
+  .lexcard.gap{border-left-color:var(--warn)}
+  .lexcard.exp{border-left-color:var(--o)}
+  .lexcard.real{border-left-color:var(--n)}
+  .lexcard .lid{font-family:var(--mono);font-size:10.5px;color:var(--lex);font-weight:700}
+  .lexcard .lkind{font-size:8.5px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;float:right}
+  .lexcard.exp .lkind{color:var(--o)} .lexcard.real .lkind{color:var(--n)}
+  .lexcard .lnm{font-weight:700;color:var(--ink)}
+  .lexcard .lcls{color:var(--faint);font-style:italic;font-size:10px}
+  .lexcard .lrow{margin-top:3px;color:var(--dim);font-size:10.5px}
+  .lexcard .lk{color:var(--faint);text-transform:uppercase;letter-spacing:.3px;font-size:9px}
+  .bindO{color:var(--o)} .bindN{color:var(--n)} .bindV{color:var(--lex)}
+  .lexcard .gapmark{color:var(--warn);font-weight:700}
+
+  .apass{margin-bottom:16px}
+  .apass h3{font-size:12.5px;margin:0 0 8px;color:var(--ink)}
+  .arow{display:grid;grid-template-columns:1fr 210px 1fr;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--edge)}
+  .aterm{font-family:var(--mono);font-size:11.5px}
+  .aterm.o{color:var(--o);text-align:right} .aterm.n{color:var(--n)}
+  .aterm.struck{text-decoration:line-through;color:var(--faint)}
+  .averd{text-align:center;font-size:10.5px;border-radius:8px;padding:4px 6px;border:1px dashed var(--faint);color:var(--dim)}
+  .averd.cand{border-style:dashed;border-color:#5a4a2a;color:var(--action);background:#221a0c}
+  .averd.hi{border-style:solid;border-color:#27543c;color:var(--result);background:#0e2a1c}
+  .averd.med{border-style:solid;border-color:#4a3f1a;color:var(--action);background:#221c0c}
+  .averd.rej{border-style:solid;border-color:#5a2626;color:var(--warn);background:#2a1414}
+  .averd.gap{border-style:solid;border-color:#5a2640;color:#ff8fb0;background:#2a1420}
+  .averd .vt{font-weight:700;display:block}
+  .averd .vs{font-size:9px;opacity:.8}
+
+  .trans-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .trans-grid h3{font-size:13px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--edge)}
+  .trans-grid h3.o{color:var(--o)} .trans-grid h3.n{color:var(--n)}
+  pre.code{background:#0a0e16;border:1px solid var(--edge);border-radius:8px;padding:11px;font-family:var(--mono);font-size:11px;color:#c7d6f0;overflow-x:auto;white-space:pre}
+  .trace{border:1px solid var(--edge);border-radius:8px;margin-bottom:14px;overflow:hidden}
+  .trace .th{padding:8px 11px;font-weight:600;font-size:12.5px;border-bottom:1px solid var(--edge)}
+  .trace.dirON .th{background:linear-gradient(90deg,var(--o2),var(--n2))}
+  .trace.dirNO .th{background:linear-gradient(90deg,var(--n2),var(--o2))}
+  .trace .body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+  .trace .cell{padding:10px 11px;border-right:1px solid var(--edge);font-size:11px}
+  .trace .cell:last-child{border-right:none}
+  .trace .cell h4{margin:0 0 6px;font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.4px}
+  .trace .cell pre{margin:0;font-family:var(--mono);font-size:10.2px;color:#bcd0ee;white-space:pre-wrap;word-break:break-word}
+  .rule{font-family:var(--mono);font-size:10.5px;color:#d3c08a;margin:0 0 5px;padding-left:13px;position:relative}
+  .rule::before{content:'→';position:absolute;left:0;color:var(--faint)}
+  .kgcol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .kgcol h3{font-size:13px;margin:0 0 8px}
+  .kgcol h3.o{color:var(--o)} .kgcol h3.n{color:var(--n)}
+  .kgbox{font-family:var(--mono);font-size:11px;color:#c2d2ee;white-space:pre-wrap;background:#0a0e16;border:1px solid var(--edge);border-radius:8px;padding:11px;min-height:60px}
+
+  .ledger{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  .ledger .lc{border:1px solid var(--edge);border-radius:9px;overflow:hidden}
+  .ledger .lc.off{border-top:3px solid var(--warn)} .ledger .lc.on{border-top:3px solid var(--lex)}
+  .ledger .lc.active{box-shadow:0 0 0 2px rgba(185,139,214,.4)}
+  .ledger .lch{padding:8px 12px;font-weight:700;font-size:12.5px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center}
+  .ledger .lc.off .lch{background:#2a1414;color:var(--warn)} .ledger .lc.on .lch{background:var(--lex2);color:var(--lex)}
+  .ledger .lr{display:flex;justify-content:space-between;padding:6px 12px;border-bottom:1px solid var(--edge);font-size:11.5px}
+  .ledger .lr .k{color:var(--dim)} .ledger .lr .v{font-family:var(--mono);font-weight:700}
+  .ledger .lr .v.good{color:var(--result)} .ledger .lr .v.bad{color:var(--warn)}
+  .savings{margin-top:12px;background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--result);border-radius:8px;padding:10px 13px;font-size:12px;color:#d4deef}
+
+  .semhead{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin:14px 0 7px}
+  .semchips{display:flex;gap:6px;flex-wrap:wrap}
+  .semchip{font-family:var(--mono);font-size:10.5px;color:var(--lex);background:var(--lex2);border:1px solid #5a3d78;border-radius:20px;padding:3px 9px}
+  .semchip.gap{color:var(--warn);background:#2a1414;border-color:#5a2626}
+  .semcard{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--result);border-radius:9px;padding:11px 13px;margin-top:8px}
+  .semcard h4{margin:0 0 3px;font-size:13px;color:var(--result)}
+  .semcard .rel{font-family:var(--mono);font-size:11px;color:#c2d2ee;margin:2px 0}
+  .semcard .rel .k{color:var(--faint)}
+  .pragrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .prag{background:#0f1626;border:1px solid var(--edge);border-radius:7px;padding:7px 10px}
+  .prag .pl{font-size:9.5px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;margin-bottom:3px}
+  .prag .pv{font-size:11px;color:#d4deef;line-height:1.4}
+  .prag.use{border-left:3px solid var(--gold)} .prag.use .pl{color:var(--gold)}
+  .prag.realm{border-left:3px solid var(--o)} .prag.realm .pl{color:var(--o)}
+  .prag.state{border-left:3px solid var(--n)} .prag.state .pl{color:var(--n)}
+  .prag.auth{border-left:3px solid var(--lex)} .prag.auth .pl{color:var(--lex)}
+  .prag.purpose{border-left:3px solid var(--result)} .prag.purpose .pl{color:var(--result)}
+  .prag.prov{border-left:3px solid var(--warn)} .prag.prov .pl{color:var(--warn)}
+  .semaff{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .semaff button:hover{background:#243151;border-color:var(--lex)}
+  #semOut{margin-top:10px;background:#0a0e16;border:1px solid var(--edge);border-radius:8px;padding:11px;font-family:var(--mono);font-size:11px;color:#bcd0ee;white-space:pre-wrap;min-height:30px;display:none}
+  #semOut.show{display:block}
+  #semOut .qa{color:var(--result)}
+
+  .mtab td.cog span{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:1px 6px;border-radius:8px}
+  .corefnote{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--lex);border-radius:8px;padding:9px 12px;font-size:11.5px;color:#d4deef;margin-bottom:10px}
+  .feasnote{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--margin);border-radius:8px;padding:9px 12px;font-size:11.5px;color:#d4deef;margin:6px 0 10px}
+
+  .topo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .topo .col{min-height:0}
+  .topo svg{width:100%;height:auto;display:block;background:radial-gradient(circle at 50% 35%,#0f1726,#0b0f18)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;padding:8px 12px;font-size:11px;color:var(--dim);border-top:1px solid var(--edge)}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .sw{width:14px;height:4px;border-radius:2px;display:inline-block}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .foot{color:var(--faint);font-size:11px;margin-top:18px;border-top:1px solid var(--edge);padding-top:12px}
+  .flash{animation:flashglow 1.6s ease}
+  @keyframes flashglow{0%{box-shadow:0 0 0 0 rgba(201,162,39,0)}
+    15%{box-shadow:0 0 0 3px rgba(201,162,39,.75)}
+    55%{box-shadow:0 0 0 3px rgba(201,162,39,.55)}
+    100%{box-shadow:0 0 0 0 rgba(201,162,39,0)}}
+  .col.flashcol{animation:flashcol 1.6s ease}
+  @keyframes flashcol{0%{box-shadow:0 0 0 0 rgba(201,162,39,0)}
+    15%{box-shadow:0 0 0 3px rgba(201,162,39,.8)}
+    100%{box-shadow:0 0 0 0 rgba(201,162,39,0)}}
+  .about{background:var(--panel);border:1px solid var(--edge);border-radius:10px;margin-top:14px;overflow:hidden}
+  .about>h2{font-size:14px;margin:0;padding:11px 14px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,#13203a,transparent)}
+  .about .body{padding:14px 18px;max-width:1200px}
+  .about .body.collapsed{display:none}
+  .about .body p{margin:0 0 10px;font-size:12.5px;line-height:1.55;color:#d4deef}
+  .about .body code{font-family:var(--mono);font-size:11px;color:#bcd0ee;background:#0a0e16;border:1px solid var(--edge);padding:1px 4px;border-radius:3px}
+  .about-toggle{background:#1b2540;color:var(--dim);border:1px solid var(--edge);border-radius:6px;padding:4px 10px;font-size:11.5px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="tbar-title">
+    <h1>Intent ↔ L1 Reconciliation — cognitive agent-to-agent live demo</h1>
+    <span class="author"><span class="lbl">demo by</span>Christopher Janz</span>
+  </div>
+  <div class="controls">
+    <button id="play" class="primary">▶ Play</button>
+    <button id="step">Step ▸</button>
+    <button id="reset">⟲ Reset</button>
+    <span class="speed">speed</span>
+    <select id="speed">
+      <option value="1500">slow</option>
+      <option value="850" selected>normal</option>
+      <option value="350">fast</option>
+    </select>
+    <span class="modewrap">
+      <span class="ml">Reference lexicon</span>
+      <span class="toggle-sw on" id="modeSw"><span class="knob"></span></span>
+      <span class="modeval on" id="modeVal">ON</span>
+    </span>
+    <span class="speed" id="counter" style="margin-left:14px"></span>
+  </div>
+  <div class="phases" id="phases"></div>
+</div>
+
+<header>
+  <div class="sub">
+    Reconciling a declarative <b>intent</b> against a structural <b>L1 service</b> model — two very different models, one network.
+    <b style="color:var(--o)">Agent&nbsp;O</b> is a <b>TM Forum Intent-interface OSS</b> (TR&nbsp;290 / IG&nbsp;1253 / TMF921);
+    <b style="color:var(--n)">Agent&nbsp;N</b> speaks <b>IETF L1CSM</b> + TE service-mapping over the OTN/optical network.
+    They <b>refine</b> quantitative expectations <b>down</b> to a realization and <b>assure</b> operational state <b>up</b> to fulfilment —
+    verified by <b>satisfaction</b>, not round-trip identity.
+    Toggle the reference lexicon <b>ON/OFF</b> to compare the work.
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="about">
+    <h2><span>About this demo — what you're looking at</span>
+        <button class="about-toggle" id="aboutToggle">Hide ▲</button></h2>
+    <div class="body" id="aboutBody">
+      <p>This is the second fully-cognitive, agent-to-agent case, and a deliberately <b>wider</b> gap than the first. <b style="color:var(--o)">Agent O</b> speaks <i>intent</i>: declarative expectations with quantitative bounds — bandwidth&nbsp;≥, latency&nbsp;≤, availability&nbsp;≥, protection required. <b style="color:var(--n)">Agent N</b> speaks a concrete <i>L1 service</i>: discrete client signals (ODUk), routes, wavelengths, protection schemes. The two differ in <b>nature</b> (a predicate vs a value), in <b>scope</b> (consumer realm vs provider realm), and in <b>abstraction</b> (what to deliver vs how it is delivered). Neither side merges the other's schema; both are competent, interrogable agents that work out the mapping between themselves.</p>
+      <p><b>The mapping is a refinement, not an equivalence.</b> An expectation such as <code>bandwidth ≥ 8&nbsp;Gbit/s</code> does not <i>equal</i> <code>ODU2</code>; it is <i>satisfied by</i> it. So the right test is not that intent&nbsp;→&nbsp;network&nbsp;→&nbsp;intent returns the original bytes — refinement is lossy and under-determined, the provider picks among many valid realizations — but that the chosen realization <b>satisfies every expectation</b>. Verification here is <b>satisfaction</b>, with <b>feasibility / best-achievable / judge</b> when an expectation cannot be fully met.</p>
+      <p><b>Two directions, both shown.</b> <b>Refine-down:</b> an intent arrives; Agent N derives and provisions a realization that satisfies it. <b>Assure-up:</b> operational state flows back; Agent O maps it to fulfilment — met, at-risk margin, or breach. Watch the cognition meter (heaviest at <b style="color:var(--heavy)">planning</b>, the <b style="color:var(--heavy)">lift</b>, the <b style="color:var(--heavy)">parametric refinement</b> and the <b style="color:var(--heavy)">feasibility judge</b>), and the pragmatics — <b>realm</b> (who decides), <b>state</b> (intended vs operational), <b>authority</b> (the judge) — which carry most of this case.</p>
+    </div>
+  </div>
+
+  <div class="stagenote">
+    <span class="lab" id="stageLab">Stage</span>
+    <span class="txt" id="stageTxt">Press <b>▶ Play</b> to begin. The agents will plan, lift to ontologies, bind to a reference lexicon, align, refine expectations down to a realization, judge feasibility, co-refer endpoints, construct the mappings, and run live changes both ways.</span>
+  </div>
+
+  <div class="instr">
+    <div class="icard"><div class="h">Cognition load</div>
+      <div class="cogrow"><span class="cogbadge cog-mech" id="cogBadge">—</span>
+        <span class="meter" id="cogMeter"><i></i><i></i><i></i></span></div></div>
+    <div class="icard"><div class="h">Gap closed by</div><div class="v" id="mechTxt">—</div></div>
+    <div class="icard"><div class="h">Verified by · measure</div><div class="v" id="verifyTxt">—</div>
+      <div class="measure" id="measureTxt" style="margin-top:4px"></div></div>
+  </div>
+
+  <div class="agents" id="agentsRow">
+    <div class="col o">
+      <h2><span>🟢 Agent&nbsp;O — Intent OSS cognitive proxy</span><span class="tag">TR&nbsp;290 / IG&nbsp;1253 / TMF921</span></h2>
+      <div class="log" id="logO"></div>
+    </div>
+    <div class="col bus">
+      <h2><span>🟡 A2A message bus</span><span class="tag">TMF Agentic / JSON-RPC</span></h2>
+      <div class="log" id="bus"></div>
+    </div>
+    <div class="col n">
+      <h2><span>🔵 Agent&nbsp;N — L1CSM network cognitive proxy</span><span class="tag">draft-ietf-ccamp-l1csm-yang + teas mapping</span></h2>
+      <div class="log" id="logN"></div>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabsBox">
+    <div class="tabbar" id="tabbar">
+      <div class="tabbtn active" data-tab="lex">Reference lexicon <span class="badge" id="lexBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="align">Alignment <span class="badge" id="alignBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="kg">Knowledge graphs &amp; instances</div>
+      <div class="tabbtn" data-tab="refine">Refinement · down <span class="badge" id="refBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="feas">Feasibility &amp; judge <span class="badge" id="feasBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="assure">Assurance · up <span class="badge" id="assureBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="tr">Mappings <span class="badge" id="trBadge" style="display:none">!</span></div>
+      <div class="tabbtn" data-tab="trace">Traces <span class="badge" id="traceBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="meas">Measures &amp; cognition <span class="badge" id="measBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="ledger">Work ledger · with vs without</div>
+      <div class="tabbtn" data-tab="semodel">Semantic model <span class="badge" id="semBadge" style="display:none">shelf</span></div>
+    </div>
+
+    <div class="tabpane active" id="pane-lex">
+      <div class="note">A thin, generic reference — neither TM Forum nor IETF. It pins identity only, and it deliberately separates <b style="color:var(--o)">expectation-kind</b> entries (a bound: ≥, ≤) from <b style="color:var(--n)">realization-kind</b> entries (a discrete value or resource). The two are connected by a <b>refinement relation</b>, not by equality. <span id="lexModeNote"></span></div>
+      <div class="lexgrid" id="lexGrid"></div>
+    </div>
+
+    <div class="tabpane" id="pane-align">
+      <div class="note">Two passes. <b>Pass 1 — label:</b> cheap candidates on names alone. <b>Pass 2 — gloss + example:</b> the disambiguating definition and canonical example confirm, reject, or mark a gap. The trap here is a <b>nature</b> false cognate — an expectation and a metric that share a word.</div>
+      <div id="alignBody"><div class="empty">No alignment yet — press Play.</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-kg">
+      <div class="note">The lift makes each implicit ontology explicit (heavy cognition). Endpoint co-reference — a separate step — settles which delivery points and access points are the same, from evidence.</div>
+      <div class="kgcol" style="margin-top:6px">
+        <div><h3 class="o">Agent O — lifted intent ontology</h3><div class="kgbox" id="kgO"><span class="muted">— not yet lifted —</span></div></div>
+        <div><h3 class="n">Agent N — lifted L1CSM ontology</h3><div class="kgbox" id="kgN"><span class="muted">— not yet lifted —</span></div></div>
+      </div>
+      <h3 style="font-size:12.5px;color:var(--ink);margin:16px 0 6px">Endpoint co-reference <span class="muted" style="font-weight:400">— which delivery points and access points co-refer, from evidence (service-order key → UNI id → location)</span></h3>
+      <div id="corefBody"><div class="empty">Endpoints co-refer in stage 8.</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-refine">
+      <div class="note">The heart of the case: each quantitative <b>expectation</b> is refined <b>down</b> to a concrete realization by a derived function, and checked by <b>satisfaction</b> — the realization meets the bound — not by round-trip identity. Refinement is one-to-many; the provider picks, in its realm.</div>
+      <table style="margin-top:8px"><thead><tr>
+        <th>Kind</th><th>Expectation (Agent O)</th><th>Realization (Agent N)</th><th>Refinement &amp; satisfaction check</th><th>✓</th>
+      </tr></thead><tbody id="refBody">
+        <tr><td colspan="5" class="empty">No refinements yet.</td></tr>
+      </tbody></table>
+    </div>
+
+    <div class="tabpane" id="pane-feas">
+      <div class="feasnote">When expectations conflict, the network computes <b>feasibility</b> and returns a <b>best-achievable</b> offer; the intent <b>judge</b> (IG&nbsp;1253) evaluates it against acceptance criteria and priorities, and accepts a degraded value or rejects. This is the beat where the agents work hardest to nail the answer down — and reach it without a human.</div>
+      <div id="feasBody"><div class="empty">Feasibility is negotiated in stage 7.</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-assure">
+      <div class="note">The other direction. Operational state flows <b>up</b> from the network; Agent O maps each measured value to the fulfilment of its expectation — <span class="sat met">MET</span>, <span class="sat margin">AT-RISK MARGIN</span>, or <span class="sat breach">BREACH</span>. Assurance is verified by the same satisfaction predicate, evaluated on live data.</div>
+      <div id="assureBody"><div class="empty">Assurance mapping appears from stage 10.</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-tr">
+      <div class="note">The negotiated artefact: two directional mappings. <b>Refine-down</b> (intent&nbsp;→&nbsp;L1CSM) is one-to-many — it carries the refinement policy and the provider's choice. <b>Assure-up</b> (operational&nbsp;→&nbsp;fulfilment) is an aggregation to a satisfaction verdict. They are <b>not</b> inverses. Cognition is spent here once; runtime executes with no inference per message.</div>
+      <div class="trans-grid" style="margin-top:8px">
+        <div><h3 class="o">Refine-down — intent ▶ L1CSM</h3><pre class="code" id="transON"><span class="muted">— generated after mediation —</span></pre></div>
+        <div><h3 class="n">Assure-up — operational ▶ fulfilment</h3><pre class="code" id="transNO"><span class="muted">— generated after mediation —</span></pre></div>
+      </div>
+    </div>
+
+    <div class="tabpane" id="pane-trace">
+      <div class="note">Deterministic application of the mappings for each live change — inbound native document, rule firings, emitted native document. No model inference per message.</div>
+      <div id="traceBody" style="margin-top:8px"><div class="empty">No translations yet.</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-meas">
+      <div class="note">The per-stage ledger: how each gap is closed, how it is verified, the measure, and the cognition load. Note that verification is <b>satisfaction</b> and <b>feasibility</b>, not round-trip identity.</div>
+      <table class="mtab" style="margin-top:8px"><thead><tr>
+        <th>Stage</th><th>Cognition</th><th>Closed by</th><th>Verified by</th><th>Measure</th>
+      </tr></thead><tbody id="measBody">
+        <tr><td colspan="5" class="empty">Fills in as stages complete.</td></tr>
+      </tbody></table>
+    </div>
+
+    <div class="tabpane" id="pane-ledger">
+      <div class="note">Same reconciliation, both ways. The reference lexicon does not just save conversation — it saves <b>verification</b>, and it pre-empts the <b>nature</b> false cognate by binding expectations and metrics to <b>different kinds</b> of entry, so "latency ≤ 5ms" is never mistaken for a measured latency.</div>
+      <div class="ledger" id="ledgerBody"></div>
+      <div class="savings" id="ledgerSavings"></div>
+    </div>
+
+    <div class="tabpane" id="pane-semodel">
+      <div class="note">The <b>form-independent semantic model</b> — meaning (semantics <i>and</i> pragmatics) lifted clear of any form, with provenance. Here the pragmatics carry the case: <b>realm</b> (consumer expectation vs provider realization), <b>state</b> (intended vs operational — the assurance loop), and <b>authority</b> (the feasibility judge). An agent consumes this <b>directly</b>; TMF921 and L1CSM are merely projections of it.</div>
+      <div id="semBody"><div class="empty">Assembled at the final stage — press Play, or jump with Step.</div></div>
+    </div>
+  </div>
+
+  <div class="topo" id="topoBox">
+    <div class="col o">
+      <h2><span>Intent view — service demands &amp; expectations</span><span class="tag" id="oStat"></span></h2>
+      <svg id="svgO" viewBox="0 0 520 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="legend">
+        <span><span class="dot" style="background:#5fd38d"></span>met</span>
+        <span><span class="dot" style="background:#ffd166"></span>at-risk margin</span>
+        <span><span class="dot" style="background:#ff8b6b"></span>breach</span>
+        <span><span class="sw" style="background:#36c2a8"></span>declared demand</span>
+      </div>
+    </div>
+    <div class="col n">
+      <h2><span>Network view — L1 realization (OTN / optical)</span><span class="tag" id="nStat"></span></h2>
+      <svg id="svgN" viewBox="0 0 520 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="legend">
+        <span><span class="dot" style="background:#7aa2ff"></span>access / ROADM</span>
+        <span><span class="sw" style="background:#5d6e8c"></span>optical link</span>
+        <span><span class="sw" style="background:#7aa2ff;height:2px;border-radius:0"></span>supporting-tp</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Staged demonstration — the conversation is scripted for legibility; a code-backed run is scaffolded separately. Schema fragments are faithful but abbreviated.
+    Intent side follows TM Forum TR&nbsp;290 (Intent Common Model / TIO), IG&nbsp;1253 (Intent Management, feasibility / best-achievable / judge) and TMF921; network side follows draft-ietf-ccamp-l1csm-yang and draft-ietf-teas-te-service-mapping-yang over the OTN/optical network of the first demo. A2A envelopes follow the TM Forum Agentic (A2A) JSON-RPC <code>message/send</code> shape.
+  </div>
+</div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+
+/* ===== the shared physical network (from demo 1) — Agent N's substrate ===== */
+const POS_N={A1:[92,72],A3:[260,72],A2:[428,72],R1:[120,300],R2:[400,300],R3:[260,330]};
+const OPT_MESH=[['R1','R2'],['R1','R3'],['R2','R3']];
+const SUPPORT=[['A1','R1'],['A2','R2'],['A3','R3']];
+const SVC_COLORS={svc0:'#4aa3ff',svc1:'#5fd38d',svc2:'#ffae57'};
+
+/* a service carries BOTH an intent (expectations, fulfilment) and a realization (odu/route/wavelength) */
+const INITIAL_SERVICES=[{
+  id:'svc0',label:'A1 ↔ A2',color:SVC_COLORS.svc0,
+  exp:{bw:'≥ 8 Gbit/s',lat:'≤ 5 ms',av:'≥ 99.99%',prot:'required'},
+  real:{odu:'ODU2 (10G)',route:'A1▸R1▸R2▸A2',latMeas:'3.2 ms',avComp:'99.995%',och:'λ1',prot:'1+1'},
+  status:'met',
+  otnPair:['A1','A2'],optPath:['R1','R2']
+}];
+let state={services:JSON.parse(JSON.stringify(INITIAL_SERVICES))};
+
+function el(t,a,c){const e=document.createElementNS('http://www.w3.org/2000/svg',t);for(const k in a)e.setAttribute(k,a[k]);if(c)(Array.isArray(c)?c:[c]).forEach(x=>e.appendChild(x));return e;}
+function line(x1,y1,x2,y2,a){return el('line',Object.assign({x1,y1,x2,y2},a));}
+function txt(x,y,s,a){const t=el('text',Object.assign({x,y},a));t.textContent=s;return t;}
+function path(pts,a){let d='M'+pts[0][0]+' '+pts[0][1];for(let i=1;i<pts.length;i++)d+=' L'+pts[i][0]+' '+pts[i][1];return el('path',Object.assign({d,fill:'none'},a));}
+function curveOffset(pts,off){return pts.map(p=>[p[0],p[1]+off]);}
+
+const STATUS_COLOR={met:'#5fd38d',margin:'#ffd166',breach:'#ff8b6b'};
+/* ---- intent view: each demand as a row of two endpoints + expectation chips + fulfilment dot ---- */
+function renderIntent(){const svg=$('svgO');svg.innerHTML='';
+  svg.appendChild(txt(260,22,'declarative expectations — the consumer realm',{fill:'#8da0bf','font-size':10,'text-anchor':'middle'}));
+  const rowH=118, top=52;
+  state.services.forEach((s,idx)=>{
+    const y=top+idx*rowH;
+    const sc=STATUS_COLOR[s.status]||'#5fd38d';
+    // endpoints
+    const ax=70, bx=450;
+    [['A@'+s.otnPair[0],ax],['B@'+s.otnPair[1],bx]].forEach(([lab,x])=>{
+      svg.appendChild(el('rect',{x:x-30,y:y-16,width:60,height:32,rx:7,fill:'#12261f',stroke:s.color,'stroke-width':1.8}));
+      svg.appendChild(txt(x,y+5,'site '+lab.split('@')[1],{fill:'#e7edf7','font-size':11,'font-weight':700,'text-anchor':'middle'}));
+    });
+    // demand link
+    svg.appendChild(line(ax+32,y,bx-32,y,{stroke:s.color,'stroke-width':3,'stroke-dasharray':'2 3',opacity:.8}));
+    svg.appendChild(el('circle',{cx:260,cy:y,r:7,fill:sc,stroke:'#0c1018','stroke-width':2}));
+    svg.appendChild(txt(260,y-14,s.label+'  ·  '+({met:'fulfilled',margin:'fulfilled · margin',breach:'breach'}[s.status]),{fill:sc,'font-size':10,'font-weight':700,'text-anchor':'middle'}));
+    // expectation chips
+    const chips=[s.exp.bw,s.exp.lat,s.exp.av,'prot '+s.exp.prot];
+    const cw=104, startx=260-(chips.length*cw)/2;
+    chips.forEach((c,i)=>{const cx=startx+i*cw;
+      svg.appendChild(el('rect',{x:cx+4,y:y+20,width:cw-8,height:20,rx:5,fill:'#0f1626',stroke:'#2a3550'}));
+      svg.appendChild(txt(cx+cw/2,y+34,c,{fill:'#bcd0ee','font-size':9.3,'text-anchor':'middle'}));});
+    // realization footnote (what satisfies it)
+    if(s.real)svg.appendChild(txt(260,y+56,'satisfied by  '+s.real.odu+' · '+s.real.latMeas+' · '+s.real.avComp+' · '+s.real.prot,{fill:'#5d6e8c','font-size':9,'text-anchor':'middle'}));
+  });
+  $('oStat').textContent=`${state.services.length} demand(s) · declarative`;}
+
+function renderNetwork(){const svg=$('svgN');svg.innerHTML='';
+  svg.appendChild(el('rect',{x:8,y:30,width:504,height:120,rx:8,fill:'#101a30',stroke:'#243049','stroke-dasharray':'4 4'}));
+  svg.appendChild(el('rect',{x:8,y:235,width:504,height:130,rx:8,fill:'#0f1626',stroke:'#243049','stroke-dasharray':'4 4'}));
+  svg.appendChild(txt(16,46,'otn-topology (ODU) — l1csm service layer',{fill:'#7aa2ff','font-size':10}));
+  svg.appendChild(txt(16,251,'optical-topology (OCh) — supporting layer',{fill:'#7aa2ff','font-size':10}));
+  OPT_MESH.forEach(([a,b])=>svg.appendChild(line(...POS_N[a],...POS_N[b],{stroke:'#5d6e8c','stroke-width':2})));
+  SUPPORT.forEach(([a,b])=>svg.appendChild(line(...POS_N[a],...POS_N[b],{stroke:'#7aa2ff','stroke-width':1.4,'stroke-dasharray':'3 3',opacity:.55})));
+  state.services.forEach((s,idx)=>{const off=(idx-1)*5;
+    svg.appendChild(path(curveOffset([POS_N[s.otnPair[0]],POS_N[s.otnPair[1]]],off),{stroke:s.color,'stroke-width':3.2,'stroke-linecap':'round'}));
+    svg.appendChild(path(curveOffset(s.optPath.map(n=>POS_N[n]),off),{stroke:s.color,'stroke-width':3.2,'stroke-dasharray':'6 3','stroke-linecap':'round',opacity:.9}));});
+  for(const n in POS_N){const [x,y]=POS_N[n];const roadm=n[0]==='R';
+    svg.appendChild(el('circle',{cx:x,cy:y,r:13,fill:roadm?'#16223f':'#1d2c52',stroke:'#7aa2ff','stroke-width':1.8}));
+    svg.appendChild(txt(x,y+4,n,{fill:'#e7edf7','font-size':11,'font-weight':700,'text-anchor':'middle'}));
+    if(roadm)svg.appendChild(txt(x,y+26,'ttp',{fill:'#7aa2ff','font-size':8,'text-anchor':'middle'}));}
+  state.services.forEach(s=>{if(s.real&&s.real.och){const m=POS_N[s.optPath[0]],m2=POS_N[s.optPath[1]];svg.appendChild(txt((m[0]+m2[0])/2,(m[1]+m2[1])/2-6,s.real.och,{fill:s.color,'font-size':9,'text-anchor':'middle'}));}});
+  $('nStat').textContent=`2 layers · ${state.services.length} l1 service(s)`;}
+function renderTopo(){renderIntent();renderNetwork();}
+
+/* ===== reference lexicon (intent / realization domain) ===== */
+// kind: 'exp' expectation-kind · 'real' realization-kind · 'both' shared category
+const LEXICON=[
+ {id:'xref:service-demand',nm:'Service demand',cls:'Service',kind:'both',def:'a requested connectivity service between endpoints',ex:'connectivity A1↔A2',o:'intent (target=connectivity)',n:'l1-connectivity service'},
+ {id:'xref:delivery-endpoint',nm:'Delivery endpoint',cls:'TerminationPoint',kind:'both',def:'customer-facing point where the service is delivered',ex:'a 10GE UNI at site A1',o:'delivery point / UNI',n:'l1csm service endpoint (access-point)'},
+ {id:'xref:capacity-expectation',nm:'Capacity expectation',cls:'Expectation',kind:'exp',def:'a lower bound on usable capacity (≥) — a predicate, not a value',ex:'bandwidth ≥ 8 Gbit/s',o:'bandwidth expectation',n:null,gapSide:'N'},
+ {id:'xref:client-signal',nm:'Client signal',cls:'Attribute',kind:'real',def:'the discrete client/ODU signal realizing capacity',ex:'ODU2 = 10G',o:null,n:'client-signal / odu-type',gapSide:'O'},
+ {id:'xref:latency-expectation',nm:'Latency expectation',cls:'Expectation',kind:'exp',def:'an upper bound on one-way delay (≤) — a predicate',ex:'latency ≤ 5 ms',o:'latency expectation',n:null,gapSide:'N'},
+ {id:'xref:latency-metric',nm:'Path latency metric',cls:'Attribute',kind:'real',def:'the measured/advertised delay of a chosen path — a value',ex:'3.2 ms on A1▸R1▸R2▸A2',o:null,n:'te-metric latency',gapSide:'O'},
+ {id:'xref:availability-expectation',nm:'Availability expectation',cls:'Expectation',kind:'exp',def:'a lower bound on availability (≥) — a predicate',ex:'availability ≥ 99.99%',o:'availability expectation',n:null,gapSide:'N'},
+ {id:'xref:protection-arrangement',nm:'Protection arrangement',cls:'Attribute',kind:'real',def:'survivability realizing availability (scheme + route disjointness)',ex:'1+1 on an SRLG-disjoint route',o:'protection requirement',n:'protection-type + te-srlg disjointness'},
+ {id:'xref:route-and-resource',nm:'Route & resource',cls:'Attribute',kind:'real',def:'the chosen path and resources — provider realm only',ex:'R1▸R2 on OCh λ1',o:null,n:'explicit-route + OCh wavelength',gapSide:'O'},
+ {id:'xref:feasibility-verdict',nm:'Feasibility verdict',cls:'Assessment',kind:'both',def:'whether and how far a demand can be met, and the acceptance decision',ex:'best-achievable 3.2 ms, accepted',o:'intent judge / acceptance (IG 1253)',n:'feasibility / best-achievable'},
+ {id:'xref:fulfilment-state',nm:'Fulfilment state',cls:'State',kind:'both',def:'whether the running service meets its expectations',ex:'fulfilled with narrowing margin',o:'intent report (fulfilled/degraded)',n:'oper-status + measured metrics'}
+];
+let lexBound=0;
+function buildLexGrid(){const g=$('lexGrid');g.innerHTML='';
+  LEXICON.forEach((e,i)=>{const kc=e.kind==='exp'?' exp':e.kind==='real'?' real':'';const d=document.createElement('div');
+    d.className='lexcard'+kc+(e.gapSide?' gap':'');d.id='lex'+i;
+    const klab=e.kind==='exp'?'expectation':e.kind==='real'?'realization':'category';
+    d.innerHTML=`<div><span class="lid">${e.id}</span><span class="lkind">${klab}</span></div><div class="lnm">${e.nm} <span class="lcls">· ${e.cls}</span></div>`+
+      `<div class="lrow"><span class="lk">def</span> ${e.def}</div>`+
+      `<div class="lrow"><span class="lk">ex</span> ${e.ex}</div>`+
+      `<div class="lrow" id="bind${i}"></div>`;
+    g.appendChild(d);});}
+function bindLexicon(){lexBound=0;
+  LEXICON.forEach((e,i)=>{const d=$('lex'+i);d.classList.add('bound');
+    let s='';
+    if(e.o)s+=`<span class="bindO">O ${e.o}</span>`; else s+=`<span class="gapmark">O realm gap</span>`;
+    s+=' · ';
+    if(e.n)s+=`<span class="bindN">N ${e.n}</span>`; else s+=`<span class="gapmark">N realm gap</span>`;
+    $('bind'+i).innerHTML=s;
+    lexBound++;});
+  const b=$('lexBadge');b.style.display='inline-block';b.textContent=LEXICON.length;
+}
+
+/* ===== alignment two-pass ===== */
+const ALIGN_CANDS=[
+ {o:'intent:target(connectivity)',n:'l1csm:l1-connectivity',verd:'hi',vt:'closeMatch · hi',vs:'label + gloss'},
+ {o:'intent:deliveryPoint',n:'l1csm:service-endpoint',verd:'hi',vt:'closeMatch · hi',vs:'label + gloss'},
+ {o:'intent:latencyExpectation',n:'teas:te-metric latency',verd:'rej',vt:'✗ rejected',vs:'gloss: a bound (≤), not a measured value — related by satisfaction',falseCognate:true},
+ {o:'intent:bandwidthExpectation',n:'l1csm:odu-type',verd:'rej',vt:'✗ rejected',vs:'gloss: a predicate (≥), not a discrete signal — a refinement',falseCognate:true},
+ {o:'intent:protectionRequirement',n:'l1csm:protection-type',verd:'med',vt:'closeMatch · med',vs:'gloss (a requirement realized by a scheme)'},
+ {o:'intent:availabilityExpectation',n:'—',verd:'gap',vt:'no direct correspondent',vs:'realized via protection + disjointness'}
+];
+function renderAlign(mode,pass){
+  const body=$('alignBody');
+  let h='';
+  h+='<div class="apass"><h3>Pass 1 · label — candidates by name alone'+(mode==='with'?' <span class="muted" style="font-weight:400">(largely pre-empted: expectations and realizations bind to different kinds)</span>':'')+'</h3>';
+  if(mode==='with'){
+    h+='<div class="corefnote">Bindings already separate <b>expectation-kind</b> from <b>realization-kind</b> entries. The label pass proposes <b>0 nature false cognates</b>: <span class="aterm o">latencyExpectation</span>→<span class="bindV">latency-expectation</span> and <span class="aterm n">te-metric latency</span>→<span class="bindV">latency-metric</span> bind to <b>different entries</b>, so "a bound = a measurement" never arises. The refinement relation between the two is recorded instead.</div>';
+  } else {
+    ALIGN_CANDS.forEach(c=>{h+=`<div class="arow"><div class="aterm o">${c.o}</div><div class="averd cand"><span class="vt">≈ candidate</span><span class="vs">by label — unconfirmed</span></div><div class="aterm n">${c.n}</div></div>`;});
+  }
+  h+='</div>';
+  if(pass>=2){
+    h+='<div class="apass"><h3>Pass 2 · gloss + example — confirm / reject / refine / gap</h3>';
+    ALIGN_CANDS.forEach(c=>{
+      const struck=c.verd==='rej'?' struck':'';
+      h+=`<div class="arow"><div class="aterm o${struck}">${c.o}</div><div class="averd ${c.verd}"><span class="vt">${c.vt}</span><span class="vs">${c.vs}</span></div><div class="aterm n${struck}">${c.n}</div></div>`;});
+    h+='<div class="corefnote" style="border-left-color:var(--margin);margin-top:10px">The two rejections are not errors — they are the discovery that <b>expectation</b> and <b>realization</b> are different in <b>nature</b>. The agents re-plan: these pairs are handled by the <b>refinement</b> stage, checked by satisfaction, not by a rename.</div>';
+    h+='</div>';
+  }
+  body.innerHTML=h;
+  const b=$('alignBadge');b.style.display='inline-block';b.textContent=(mode==='with'?4:ALIGN_CANDS.length);
+}
+
+/* ===== refinement (down) ===== */
+const REFINE=[
+ {kind:'refine',o:'bandwidth ≥ 8 Gbit/s',n:'client-signal ODU2 (10G)',d:'least ODUk with rate ≥ 8G on the discrete ladder {ODU0 1.25G, ODU1 2.5G, ODU2 10G, ODU3 40G}. Satisfaction: 10G ≥ 8G.',c:'hi'},
+ {kind:'refine',o:'latency ≤ 5 ms',n:'route A1▸R1▸R2▸A2 (budgeted)',d:'shortest feasible route within the latency budget. Satisfaction: measured 3.2 ms ≤ 5 ms.',c:'hi'},
+ {kind:'refine',o:'availability ≥ 99.99%',n:'1+1 OCh protection, SRLG-disjoint route',d:'protection + route disjointness raise computed availability. Satisfaction: 99.995% ≥ 99.99%.',c:'hi'},
+ {kind:'refine',o:'protection required',n:'protection-type = 1+1 linear',d:'direct realization of the requirement. Satisfaction: scheme present, disjointness proven.',c:'hi'},
+ {kind:'realm',o:'— (not expressed)',n:'route R1–R2 · OCh λ1 · tributary slots',d:'Provider realm: the intent never names a route or wavelength; the provider chooses among satisfying realizations. Recorded against xref:route-and-resource.',c:'hi'}
+];
+function revealRefine(idx){const tb=$('refBody');if(tb.querySelector('.empty'))tb.innerHTML='';
+  const x=REFINE[idx];const nm={refine:'refinement',realm:'realm'}[x.kind];
+  const tr=document.createElement('tr');tr.style.animation='fade .4s ease';
+  const chk=x.kind==='realm'?'<span class="muted">—</span>':'<span class="sat met">✓</span>';
+  tr.innerHTML=`<td><span class="pill ${x.kind}">${nm}</span></td><td><code>${x.o}</code></td><td><code>${x.n}</code></td><td>${x.d}</td><td>${chk}</td>`;
+  tb.appendChild(tr);const b=$('refBadge');b.style.display='inline-block';b.textContent=tb.querySelectorAll('tr').length;}
+
+/* ===== feasibility & judge ===== */
+const FEAS=[
+ {exp:'latency',req:'≤ 3 ms (tightened)',best:'3.2 ms with 1+1 protection · or 2.6 ms unprotected',verdict:'judge: latency is soft (target 3 ms, acceptable ≤ 5 ms); availability is hard — keep protection. Accept best-achievable 3.2 ms.',c:'hi'},
+ {exp:'availability',req:'≥ 99.99%',best:'99.995% achievable with the disjoint protected route',verdict:'judge: hard requirement met with margin. Accept.',c:'hi'}
+];
+function renderFeas(){const b=$('feasBody');
+  let h='<table><thead><tr><th>Expectation</th><th>Requested</th><th>Best-achievable (Agent N)</th><th>Judge decision (Agent O · IG 1253)</th><th>Conf.</th></tr></thead><tbody>';
+  FEAS.forEach(r=>{h+=`<tr><td><b>${r.exp}</b></td><td><code>${r.req}</code></td><td>${r.best}</td><td>${r.verdict}</td><td class="conf ${r.c}">HIGH</td></tr>`;});
+  h+='</tbody></table>';
+  h+='<div class="corefnote" style="margin-top:12px;border-left-color:var(--result)">The conflict — a ≤ 3 ms latency <i>and</i> protection on a longer disjoint route — is not simultaneously satisfiable. The two agents settle it between themselves: the network offers the best-achievable value, the intent judge weighs it against the expectations\' declared priorities, and accepts a degraded latency because availability is the hard constraint. <b>No human ratifies the trade-off.</b> The decision, its rationale and provenance are recorded.</div>';
+  b.innerHTML=h;const bd=$('feasBadge');bd.style.display='inline-block';bd.textContent=FEAS.length;}
+
+/* ===== assurance (up) ===== */
+let assureRows=[];
+function pushAssure(a){assureRows.push(a);renderAssure();
+  const b=$('assureBadge');b.style.display='inline-block';b.textContent=assureRows.length;}
+function renderAssure(){const b=$('assureBody');if(!assureRows.length){b.innerHTML='<div class="empty">Assurance mapping appears from stage 10.</div>';return;}
+  let h='';
+  assureRows.forEach(a=>{
+    h+=`<div class="trace" style="margin-bottom:14px"><div class="th" style="background:linear-gradient(90deg,var(--n2),var(--o2))">${a.title}</div>`;
+    h+='<table style="margin:0"><thead><tr><th>Operational value (Agent N)</th><th>Expectation (Agent O)</th><th>Fulfilment</th></tr></thead><tbody>';
+    a.rows.forEach(r=>{h+=`<tr><td><code>${r.op}</code></td><td><code>${r.exp}</code></td><td><span class="sat ${r.s}">${r.v}</span></td></tr>`;});
+    h+='</tbody></table>';
+    h+=`<div style="padding:9px 12px;font-size:11.5px" class="${a.vcls}">${a.verdict}</div>`;
+    if(a.options){
+      h+='<div style="padding:4px 12px 12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">';
+      a.options.forEach(o=>{h+=`<div style="border:1px solid ${o.chosen?'var(--result)':'var(--edge)'};border-radius:8px;padding:8px 10px;background:${o.chosen?'#0e2a1c':'#0f1626'}">`+
+        `<div style="font-weight:700;font-size:11.5px;color:${o.chosen?'var(--result)':'var(--ink)'}">${o.label}${o.chosen?' · chosen ✓':''}</div>`+
+        `<div style="font-size:10.5px;color:var(--dim);margin-top:3px;line-height:1.4">${o.detail}</div></div>`;});
+      h+='</div>';
+    }
+    h+='</div>';
+  });
+  b.innerHTML=h;}
+
+/* ===== instance (endpoint) co-reference ===== */
+const COREF=[
+ {el:'Site A1 (10GE UNI)',o:'dp-A1-uni1',n:'access-point A1',ev:'service-order key: order#7741 line 1',c:'hi'},
+ {el:'Site A2 (10GE UNI)',o:'dp-A2-uni1',n:'access-point A2',ev:'service-order key: order#7741 line 2',c:'hi'},
+ {el:'Site A3 (10GE UNI)',o:'dp-A3-uni1',n:'access-point A3',ev:'UNI id CTP-A3-1 (near-miss vs A2 same metro, resolved by UNI id)',c:'hi'}
+];
+function renderCoref(){const b=$('corefBody');
+  let h='<div class="corefnote">Vocabulary alignment settled which <b>kinds</b> correspond; this settles which <b>individuals</b> are the same demarcation point — from evidence: the service-order key where one exists, then the UNI identifier, then location. The A2/A3 near-miss (same metro) resolves by <b>UNI id</b>, not by name.</div>';
+  h+='<table><thead><tr><th>Demarcation point</th><th>Agent O handle</th><th>Agent N handle</th><th>Matched on</th><th>Conf.</th></tr></thead><tbody>';
+  COREF.forEach(r=>{h+=`<tr><td><b>${r.el}</b></td><td><code>${r.o}</code></td><td><code>${r.n}</code></td><td>${r.ev}</td><td class="conf ${r.c}">HIGH</td></tr>`;});
+  h+='</tbody></table>';b.innerHTML=h;}
+
+/* ===== mappings ===== */
+const TRANS_ON=`refine-down   (intent ▶ L1CSM)   v1 · one-to-many, carries the refinement policy
+EXPECTATION → REALIZATION  (via reference lexicon)
+  bandwidth ≥ X            → least ODUk with rate ≥ X        [xref:capacity → client-signal]
+  latency ≤ T             → route within budget T; verify measured ≤ T
+  availability ≥ A        → protection + SRLG-disjoint route; verify computed ≥ A
+  protection required     → protection-type = 1+1 linear
+ENDPOINTS
+  delivery point (UNI)    → l1csm service-endpoint (access-point)   [co-referred]
+PROVIDER REALM (chosen, not derived from intent)
+  route, OCh wavelength, tributary slots
+FEASIBILITY
+  if unsatisfiable → best-achievable → judge(priorities) → accept | reject
+VERIFY  satisfaction of every expectation — NOT round-trip identity`;
+const TRANS_NO=`assure-up   (operational ▶ fulfilment)   v1 · aggregation to a verdict
+OPERATIONAL → EXPECTATION  (satisfaction predicate on live data)
+  measured-latency m       ⊨ (latency ≤ T)      → MET | MARGIN | BREACH
+  active client-signal ODUk⊨ (bandwidth ≥ X)     → MET
+  30-day availability a    ⊨ (availability ≥ A)  → MET | BREACH
+  protection state         ⊨ (protection required)→ MET | advisory
+EVENTS
+  protection-switch, degrade, restore → re-evaluate margins, log advisory
+ROLL-UP
+  all expectations MET            → intent FULFILLED
+  any MET with narrow margin      → FULFILLED · at-risk
+  any BREACH                      → NOT FULFILLED → raise to Agent O
+VERIFY  the satisfaction verdict recomputed from operational state`;
+function revealMappings(){$('transON').textContent=TRANS_ON;$('transNO').textContent=TRANS_NO;
+  const b=$('trBadge');b.style.display='inline-block';b.textContent='✓';b.style.background='var(--result)';b.style.color='#06210f';}
+
+/* ===== traces ===== */
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function addTrace(tr){const box=$('traceBody');if(box.querySelector('.empty'))box.innerHTML='';
+  const d=document.createElement('div');d.className='trace dir'+tr.dir;
+  d.innerHTML=`<div class="th">${tr.title}</div><div class="body">`+
+    `<div class="cell"><h4>inbound (native)</h4><pre>${esc(tr.input)}</pre></div>`+
+    `<div class="cell"><h4>rule firings</h4>${tr.rules.map(r=>`<div class="rule">${esc(r)}</div>`).join('')}</div>`+
+    `<div class="cell"><h4>emitted (native)</h4><pre>${esc(tr.output)}</pre></div></div>`;
+  box.appendChild(d);const b=$('traceBadge');b.style.display='inline-block';b.textContent=box.querySelectorAll('.trace').length;}
+
+/* ===== measures ledger ===== */
+const COGCLS={heavy:'cog-heavy',med:'cog-med',cheap:'cog-cheap',mech:'cog-mech'};
+const COGLABEL={heavy:'Heavy',med:'Medium',cheap:'Cheap',mech:'Mechanical'};
+function addMeasure(stage,cog,closed,verify,measure){const tb=$('measBody');if(tb.querySelector('.empty'))tb.innerHTML='';
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td><b>${stage}</b></td><td class="cog"><span class="${COGCLS[cog]}" style="background:${cogBg(cog)};color:${cogFg(cog)}">${COGLABEL[cog]}</span></td><td>${closed}</td><td>${verify}</td><td class="measure">${measure||'—'}</td>`;
+  tb.appendChild(tr);const b=$('measBadge');b.style.display='inline-block';b.textContent=tb.querySelectorAll('tr').length;}
+function cogBg(c){return {heavy:'#3a221c',med:'#3a2f12',cheap:'#0e3a33',mech:'#232b38'}[c];}
+function cogFg(c){return {heavy:'#ff8b6b',med:'#ffd166',cheap:'#36c2a8',mech:'#8da0bf'}[c];}
+
+/* ===== work ledger ===== */
+const LEDGER={
+  without:{turns:15,cands:6,checks:6,verif:'6 gloss+example + satisfaction checks + 1 feasibility judge',fc:'2 nature cognates — caught by conversation',scale:'N² · each pair authored'},
+  with:{turns:9,cands:2,checks:2,verif:'11 binding-confirms (once, reused) + satisfaction checks + 1 feasibility judge',fc:'2 nature cognates — pre-empted (0 conversation)',scale:'N · bind once, compose pairs'}
+};
+function renderLedger(mode){const b=$('ledgerBody');
+  const row=(k,v,cls)=>`<div class="lr"><span class="k">${k}</span><span class="v ${cls||''}">${v}</span></div>`;
+  const col=(id,d,active)=>`<div class="lc ${id} ${active?'active':''}"><div class="lch"><span>Reference lexicon ${id==='on'?'ON':'OFF'}</span>${active?'<span style="font-size:10px">▶ active</span>':''}</div>`+
+    row('Conversation turns',d.turns,id==='on'?'good':'bad')+
+    row('Candidates to check',d.cands,id==='on'?'good':'bad')+
+    row('Bilateral checks',d.checks,id==='on'?'good':'bad')+
+    row('Verification ops',d.verif)+
+    row('Nature false cognates',d.fc,id==='on'?'good':'bad')+
+    row('Scaling',d.scale)+'</div>';
+  b.innerHTML=col('off',LEDGER.without,mode==='without')+col('on',LEDGER.with,mode==='with');
+  $('ledgerSavings').innerHTML='<b>What the reference buys, mostly:</b> verification, and clean separation of kinds. With it, expectations and realizations bind to <b>different</b> entries, so the "bound = measurement" and "predicate = discrete signal" nature cognates never become candidates to reject; correspondences that are genuine (endpoints, the demand itself) arrive as near-identity, checked once and reused. The refinement relations are recorded against the reference and verified by <b>satisfaction</b>. Generation scales as <b>N</b> bindings, not <b>N²</b> authored mappings.';
+}
+
+/* ===== semantic model (shelf hub) ===== */
+const SEM_TYPES=['service-demand','delivery-endpoint','capacity-expectation','client-signal','latency-expectation','latency-metric','availability-expectation','protection-arrangement','route-and-resource','feasibility-verdict','fulfilment-state'];
+const SEM_GAP_TYPES=['capacity-expectation','client-signal','latency-expectation','latency-metric','route-and-resource'];
+const SEM_SERVICE={
+  id:'svc:conn-A1-A2', label:'Service demand — connectivity A1 ↔ A2',
+  rels:[['type','service-demand (xref)'],['endpoints','delivery-endpoint @A1, @A2 (co-referred to access-points)'],
+        ['expects','capacity ≥ 8G · latency ≤ 5ms · availability ≥ 99.99% · protection'],
+        ['realized by','ODU2 (10G) · route A1▸R1▸R2▸A2 · OCh λ1 · 1+1 disjoint'],
+        ['satisfies','10G≥8G · 3.2ms≤5ms · 99.995%≥99.99% · protected'],
+        ['fulfilment','FULFILLED']],
+  prag:{
+    use:'Declarative intent: the consumer states expectations (what), not a configuration (how). The path-and-resource realization is a consequence chosen by the provider, never the request.',
+    realm:'Consumer realm = {expectations, endpoints, priorities}. Provider realm = {ODUk, route, wavelength, protection scheme}. The model records which side owns each fact — the boundary refinement crosses.',
+    state:'Intended = the expectations and the accepted realization; Operational = live measured values. Assurance is the continuous check that operational ⊨ intended. Here they agree, with a narrowing latency margin after any protection switch.',
+    auth:'Feasibility & acceptance → the intent judge (Agent O, IG 1253). Realization choice → the network (Agent N). Node/UNI identity → inventory. Governs whose value wins, and who may relax an expectation.',
+    purpose:'Adequacy to purpose: for acceptance, the satisfaction predicates are load-bearing; for assurance, the margins are; the exact route matters only to the provider. Bounds how much fidelity is "enough".',
+    prov:'Asserted by Agent O (expectations, judge decision) and Agent N (realization, measurements), reconciled; confidence HIGH; anchored to the reference lexicon; PROV-O who/when on every fact.'
+  }
+};
+function renderSemodel(){
+  const b=$('semBody');
+  let h='';
+  h+='<div class="semhead">Types — reconciled ontology, bound to the reference lexicon (expectation-kind and realization-kind kept distinct)</div><div class="semchips">';
+  SEM_TYPES.forEach(t=>{const gap=SEM_GAP_TYPES.includes(t);h+=`<span class="semchip${gap?' gap':''}">xref:${t}${gap?' · realm-scoped':''}</span>`;});
+  h+='</div>';
+  h+='<div class="semhead">Instances — the network, keyed on stable identifiers</div>';
+  h+='<div class="rel" style="font-family:var(--mono);font-size:11px;color:#c2d2ee">sites A1,A2,A3 (delivery-endpoint) co-referred to access-points — keyed by service-order + UNI id</div>';
+  const s=SEM_SERVICE;
+  h+=`<div class="semcard"><h4>${s.label}</h4>`;
+  s.rels.forEach(([k,v])=>{h+=`<div class="rel"><span class="k">${k}:</span> ${v}</div>`;});
+  h+='<div class="semhead" style="margin-top:11px">Pragmatics — carried as first-class annotations (they carry this case)</div>';
+  const P=s.prag;
+  const pcard=(cls,lab,val)=>`<div class="prag ${cls}"><div class="pl">${lab}</div><div class="pv">${val}</div></div>`;
+  h+='<div class="pragrid">'+
+     pcard('use','Use · declarative intent',P.use)+
+     pcard('realm','Realm · who decides',P.realm)+
+     pcard('state','State · intended vs operational',P.state)+
+     pcard('auth','Authority · the judge',P.auth)+
+     pcard('purpose','Purpose · adequacy',P.purpose)+
+     pcard('prov','Provenance · meta band',P.prov)+
+     '</div></div>';
+  h+='<div class="semaff">'+
+     '<button onclick="semProject(\'tmf\')">Project → TMF921 intent</button>'+
+     '<button onclick="semProject(\'l1csm\')">Project → L1CSM</button>'+
+     '<button onclick="semAgentQuery()">Agent query</button></div>';
+  h+='<div id="semOut"></div>';
+  b.innerHTML=h;
+  const bd=$('semBadge');bd.style.display='inline-block';
+}
+function semShow(txt){const o=$('semOut');o.classList.add('show');o.innerHTML=txt;}
+function semProject(which){
+  if(which==='tmf') semShow('project → TMF921 (native intent)\n\nintent "conn-A1-A2" (TIO / TR 290)\n  expectation deliverExpectation\n    target: connectivity(site-A1, site-A2)\n    condition: bandwidth >= 8 Gbit/s\n    condition: latency <= 5 ms\n    condition: availability >= 99.99%\n    condition: protection = required\n  context: customer CUST-1 · priority(latency)=soft, availability=hard\n\n<span class="qa">Form projected from the model; only the consumer-realm facts appear — no route, no wavelength.</span>');
+  else if(which==='l1csm') semShow('project → L1CSM (native service)\n\nietf-l1csm:l1-connectivity/service "svc-A1-A2"\n  service-endpoint sep-A1 { access-point A1 ; protocol 10GE }\n  service-endpoint sep-A2 { access-point A2 ; protocol 10GE }\n  odu-type: ODU2\n  te-service-mapping: te-tunnel A1-A2 (odu) over optical OCh λ1\n  protection: 1+1 linear ; te-srlg-disjoint = true\n\n<span class="qa">Same meaning, a different form — the expectations became a discrete signal, a route and a protection scheme that satisfy them.</span>');
+  else semShow('');
+}
+function semAgentQuery(){
+  semShow('agent query (read directly from the model, no translator)\n\nQ: Is the A1↔A2 service meeting its intent, and where is the margin thinnest?\nA: FULFILLED. Latency margin is thinnest: 3.2 ms vs a 5 ms bound (1.8 ms), and it narrows to ~0.9 ms after a protection switch to the disjoint path.\n\nQ: May the consumer change the wavelength to λ2?\nA: No. Wavelength is in the provider realm; the consumer may only restate expectations. The provider is authoritative for λ and may re-realize as long as every expectation stays satisfied.\n\nQ: Who accepted the degraded latency, and why?\nA: The intent judge (Agent O), because latency was declared soft and availability hard; the trade-off was settled agent-to-agent with no human ratification. Provenance recorded.\n\n<span class="qa">The agent consumes meaning and pragmatics directly; no form was parsed, and the realm boundary is explicit.</span>');
+}
+
+/* ===== A2A envelopes ===== */
+function env(id,from,intent,text,data){return {jsonrpc:"2.0",id:String(id),method:"message/send",
+  params:{message:{role:"agent",messageId:"m-"+id,contextId:"intent-l1-reconciliation",
+    metadata:{"a2a-profile":"TMF-Agentic-A2A-Telecom",sender:from,intent},
+    parts:[{kind:"text",text},...(data?[{kind:"data",data}]:[])]}}};}
+function addMsg(m){const box=$('bus');const cls=m.from==='O'?'fromO':m.from==='N'?'fromN':'fromV';
+  const d=document.createElement('div');d.className='msg '+cls;
+  const arrow=m.from==='O'?'Agent O ──▶ Agent N':m.from==='N'?'Agent N ──▶ Agent O':'Agent V ──▶ all';
+  const dcls=m.from==='O'?'o':m.from==='N'?'n':'v';
+  const json=JSON.stringify(m.body,null,2);
+  d.innerHTML=`<div class="mh"><span class="dir ${dcls}">${arrow}</span><span class="method">${m.body.params.message.metadata.intent}</span></div>`+
+    `<div class="summary">${m.summary}</div><div class="toggle">▸ show A2A envelope</div><pre style="display:none"></pre>`;
+  d.querySelector('pre').textContent=json;
+  const tg=d.querySelector('.toggle'),pre=d.querySelector('pre');
+  tg.onclick=()=>{const open=pre.style.display!=='none';pre.style.display=open?'none':'block';tg.textContent=(open?'▸ show':'▾ hide')+' A2A envelope';};
+  box.appendChild(d);box.scrollTop=box.scrollHeight;}
+
+/* ===== phases + instrumentation meta ===== */
+const PHASES=['Scenario','Plan','Lift','Bind','Align · label','Align · gloss+ex','Refine · down','Feasibility · judge','Endpoint co-ref','Construct','Validate · satisfaction','Refine change O→N','Assure · margin','Breach · remediated','Breach · lifecycle','Scale','Semantic model'];
+const META=[
+ {cog:'mech',mech:'agents agree the method; schemas never merged',verify:'—',measure:''},
+ {cog:'heavy',mech:'each agent forms an approach: lift, bind, align, refine expectations down, judge feasibility, co-refer endpoints, assure up, gate on satisfaction',verify:'each step\'s expected outcome stated in advance, so a miss is visible',measure:'planned steps: 8'},
+ {cog:'heavy',mech:'recover the implicit ontology — intent expectations & priorities vs l1 signals, routes, protection; recognise the standard; distil a per-model lexicon',verify:'lift-fidelity round-trip: regenerate native document, diff = 0',measure:'fidelity 100% · O 9 / N 9 concepts'},
+ {cog:'med',mech:'bind each concept to one reference entry; expectations and realizations bind to different kinds',verify:'binding checked against the entry\'s definition + example; realm gaps flagged',measure:m=>m==='with'?'bound 11/11 · expectation vs realization separated · cognates pre-empted':'skipped — no shared reference'},
+ {cog:'cheap',mech:'propose candidate correspondences on names alone',verify:'none yet — candidates unconfirmed by design',measure:m=>m==='with'?'2 candidates (endpoints/demand near-identity)':'6 candidates · incl. 2 nature cognates'},
+ {cog:'med',mech:'confirm / reject / refine / gap each candidate by disambiguating definition + example',verify:'nature cognates killed (a bound is not a measurement; a predicate is not a discrete signal)',measure:m=>m==='with'?'confirmed by reference · 0 to reject':'confirmed 2 · rejected 2 (→refine) · gap 1 · med 1'},
+ {cog:'heavy',mech:'refine each quantitative expectation to a concrete realization by a derived function; provider chooses within its realm',verify:'satisfaction — the realization meets every bound (NOT round-trip identity)',measure:'4 refinements · satisfaction ✓ · realm facts recorded'},
+ {cog:'heavy',mech:'on a conflicting expectation, compute feasibility & best-achievable; the intent judge weighs priorities and accepts or rejects',verify:'judge decision recorded with rationale + provenance; both agents agree',measure:'1 conflict resolved · best-achievable accepted · escalations 0 · no human'},
+ {cog:'med',mech:'co-refer delivery points and access points from evidence: order key → UNI id → location',verify:'compare instance handles; confirm the demarcation is the same',measure:'3 endpoints · 1 near-miss resolved by UNI id'},
+ {cog:'mech',mech:'generate the two directional mappings from decisions + bindings (refine-down one-to-many; assure-up aggregation)',verify:'generation (validated next)',measure:'refine-down + assure-up mappings emitted'},
+ {cog:'med',mech:'take the existing service and check the realization satisfies every expectation; compute the fulfilment verdict',verify:'satisfaction predicate on each expectation; not round-trip identity',measure:'4/4 expectations MET · intent FULFILLED'},
+ {cog:'mech',mech:'a new intent arrives; apply refine-down; provision a satisfying realization',verify:'each expectation satisfied by the chosen realization; both views converge',measure:'satisfaction ✓ · provisioned'},
+ {cog:'mech',mech:'operational state changes; apply assure-up; re-evaluate fulfilment and margins',verify:'satisfaction recomputed on live data; margin surfaced',measure:'still FULFILLED · latency margin 1.8 → 0.9 ms'},
+ {cog:'med',mech:'an operational breach is detected; the network remediates within its own realm (re-optimises the route) before any consumer action',verify:'satisfaction re-verified after remediation; the transient breach is logged',measure:'latency 5.4ms BREACH → 3.4ms MET · FULFILLED · no consumer action'},
+ {cog:'heavy',mech:'the network cannot remediate; best-achievable breaches the terms; the consumer judge takes a lifecycle action (accept / renegotiate / stop)',verify:'lifecycle decision recorded with rationale + provenance; the new state re-verified by satisfaction',measure:'unrecoverable breach · lifecycle: renegotiate · restored under relaxed terms'},
+ {cog:'cheap',mech:'a third agent (a second network domain) binds once; pairwise mappings composed from N bindings',verify:'—',measure:'bindings N=3 · pairwise composed, not authored'},
+ {cog:'med',mech:'assemble the form-independent semantic model (semantics + pragmatics), anchored to the reference, with provenance',verify:'project to any form and round-trip; answer agent queries directly from the model',measure:'1 shelf model · 6 pragmatic annotations · projects to TMF921 / L1CSM'}
+];
+const PHASE_NOTES=[
+ ["Stage 0 · Scenario","Two agents, one network, two very different models. <b>Agent O</b> is a TM Forum Intent OSS — declarative expectations. <b>Agent N</b> speaks IETF L1CSM — a concrete L1 service. They will build a working translation <b>without</b> merging schemas."],
+ ["Stage 1 · Plan","<b>Planning is cognition.</b> Each agent decides how to attack a <b>refinement</b> problem, not an equivalence: lift, bind, align, refine expectations <b>down</b>, judge feasibility, co-refer endpoints, assure <b>up</b>, and gate on <b>satisfaction</b>. They will re-plan on surprises."],
+ ["Stage 2 · Lift","Each agent recovers the ontology its model only implies — intent expectations and priorities on one side, discrete signals, routes and protection on the other. Verified by a <b>lift-fidelity round-trip</b>. Open <b>Knowledge graphs</b>."],
+ ["Stage 3 · Bind","Each concept binds to one <b>reference-lexicon</b> entry. Crucially, <b>expectation-kind</b> and <b>realization-kind</b> entries are kept apart, so a bound is never bound to a measurement. Open <b>Reference lexicon</b>."],
+ ["Stage 4 · Align · label","Cheap candidates by name alone. Under the reference this is near-empty; <b>without</b> it, the label pass proposes six candidates — including two <b>nature</b> cognates (latency-bound≈latency-metric, bandwidth-expectation≈odu-type). Open <b>Alignment</b>."],
+ ["Stage 5 · Align · gloss + example","The definition and example decide. The nature cognates are <b>rejected</b> — a bound is not a measurement, a predicate is not a discrete signal — and the agents <b>re-plan</b> them as refinements to be checked by satisfaction, not renames."],
+ ["Stage 6 · Refine · down","The heart of the case: each quantitative expectation is refined to a concrete realization by a derived function — bandwidth≥8G→ODU2, latency≤5ms→a budgeted route, availability≥99.99%→1+1 disjoint protection. Verified by <b>satisfaction</b>. Open <b>Refinement</b>."],
+ ["Stage 7 · Feasibility · judge","A tightened latency (≤3ms) conflicts with protection on the disjoint route. Agent N returns <b>best-achievable</b>; the intent <b>judge</b> weighs priorities and accepts a degraded latency because availability is hard — <b>agent-to-agent, no human</b>. Open <b>Feasibility &amp; judge</b>."],
+ ["Stage 8 · Endpoint co-reference","A separate problem: which <b>delivery points</b> and <b>access points</b> are the same demarcation. Settled from evidence — order key → UNI id → location. The A2/A3 metro near-miss resolves by UNI id. Open <b>Knowledge graphs &amp; instances</b>."],
+ ["Stage 9 · Construct","The agents generate the two directional mappings — refine-down (one-to-many) and assure-up (aggregation). They are not inverses. Open <b>Mappings</b>."],
+ ["Stage 10 · Validate · satisfaction","Check the existing service: does the realization satisfy every expectation? All four MET → intent FULFILLED. This is the right test — <b>not</b> round-trip identity. Open <b>Assurance</b>. Cognition now leaves the data path."],
+ ["Stage 11 · Refine change (O→N)","A new intent arrives — connectivity A1→A3, ≥8G, ≤5ms, ≥99.99%, protected. Agent N refines it down and provisions ODU2 A1↔A3 over OCh λ2. Watch both views converge. Open <b>Traces</b>."],
+ ["Stage 12 · Assure · margin (N→O)","A fibre cut triggers a protection switch on A1↔A2; measured latency rises to 4.1 ms. Agent O re-evaluates: still ≤ 5 ms, so <b>still FULFILLED</b> — but the margin narrows and an advisory is logged. Open <b>Assurance</b>."],
+ ["Stage 13 · Breach — network remediates","A second impairment pushes latency past the 5 ms bound — a real <b>breach</b>. The network's first responsibility is to <b>remediate within its own realm</b> (re-optimise the route), restoring satisfaction. The intent returns to <b>FULFILLED</b> with <b>no lifecycle action</b> by the consumer. Open <b>Assurance</b>."],
+ ["Stage 14 · Breach — lifecycle action","A dual failure leaves <b>no realization that satisfies the intent</b>: the network <b>cannot remediate</b> and returns a best-achievable that breaches the terms. Now a <b>consumer lifecycle action</b> is required — <b>accept</b> the breach, <b>renegotiate</b> terms, or <b>stop</b> the service. The judge chooses; the loop closes. Open <b>Assurance</b>."],
+ ["Stage 15 · Scale","A second network domain joins and binds once to the same reference. Pairwise mappings are <b>composed</b> from N bindings, not authored — the work scales as N, not N². Open <b>Work ledger</b>."],
+ ["Stage 16 · Semantic model","The artefact that goes <b>on the shelf</b>: the reconciled meaning, lifted clear of any form, with the pragmatics that carry this case — realm, intended-vs-operational, and the judge — as first-class annotations. An agent consumes it <b>directly</b>; TMF921 and L1CSM are projections. Open <b>Semantic model</b> and try Project and Agent query."]
+];
+
+/* ===== the scripted timeline (mode-aware) ===== */
+const KG_O=`Intent (TIO / TR 290)
+ ├─ Intent
+ │   └─ Expectation (deliver)
+ │       ├─ Target: connectivity(endpoint, endpoint)
+ │       ├─ Condition: bandwidth ≥ · latency ≤ · availability ≥
+ │       └─ Condition: protection = required
+ ├─ DeliveryPoint (UNI)
+ ├─ Priority / acceptance criteria  (soft | hard)
+ └─ Judge → accept | degrade | reject   (IG 1253)`;
+const KG_N=`l1-connectivity service (L1CSM)
+ ├─ service-endpoint (access-point, protocol)
+ ├─ odu-type  (discrete client signal)
+ ├─ te-service-mapping → te-tunnel (otn)
+ │     └─ explicit-route (over optical OCh)
+ ├─ protection-type + te-srlg (disjointness)
+ └─ te-metric (latency) · oper-status  (measured)`;
+
+const STEPS=[
+/* 0 scenario */
+{p:0,o:['think','Boot. I am a TM Forum Intent OSS: I hold customer intents as declarative expectations with quantitative bounds (TR 290 / TMF921).']},
+{p:0,n:['think','Boot. I am an IETF L1CSM controller: I hold concrete L1 connectivity services — discrete signals, routes, wavelengths, protection.']},
+{p:0,o:['action','Goal: a working translation between an intent and an L1 service, without a pre-agreed shared model.'],
+  msg:{from:'O',intent:'session-open',summary:'Open an A2A session; propose to reconcile intent and realization by conversation, not a shared model.',body:env(101,'Agent-O','session-open','Opening a session. I express what the customer wants as bounded expectations; you realize services. Proposal: build the mapping by exchanging native documents and explanations, no pre-agreed shared model.',{proposal:'reconcile-by-conversation'})}},
+{p:0,n:['action','Agreed. Note our models differ in nature — yours is declarative, mine is concrete. The mapping will be a refinement, not an equivalence.'],
+  msg:{from:'N',intent:'session-ack',summary:'Acknowledge; flag that intent→realization is a refinement, verified by satisfaction.',body:env(102,'Agent-N','session-ack','Acknowledged. Our models differ in nature: your expectations are predicates, my attributes are values. Expect a refinement checked by satisfaction, not a round trip.',{ack:true,relation:'refinement'})}},
+/* 1 plan */
+{p:1,o:['plan','Planning: (1) lift my intent model; (2) bind to the shared reference; (3) align by label then gloss; (4) refine each expectation DOWN to a realization and check by satisfaction; (5) judge feasibility if anything conflicts; (6) co-refer endpoints separately; (7) assure UP from operational state; (8) gate any change on satisfaction.'],
+  msg:{from:'O',intent:'method-proposal',summary:'Propose the approach: lift, bind, align, refine-down (satisfaction), feasibility judge, endpoints, assure-up.',body:env(103,'Agent-O','method-proposal','Method: lift; bind to the reference; align by label then gloss; refine each expectation down to a realization and verify by satisfaction; judge feasibility on conflict; co-refer endpoints separately; assure up from operational state.',{steps:['lift','bind','align','refine','feasibility','endpoints','assure']})}},
+{p:1,n:['plan','Same shape. I will realize and prove satisfaction, and return best-achievable when an expectation cannot be met. I state each expected outcome so a miss is visible.'],
+  msg:{from:'N',intent:'method-ack',summary:'Agree; will prove satisfaction and return best-achievable on conflict.',body:env(104,'Agent-N','method-ack','Agreed. I will realize, prove satisfaction per expectation, and return best-achievable with a feasibility assessment when a bound cannot be met.',{ack:true})}},
+{p:1,o:['plan','Reference lexicon is ON — expectations and realizations bind to different kinds, so I converse only over the genuine correspondences and the refinements.'],mode:'with'},
+{p:1,o:['plan','Reference lexicon is OFF — no shared reference. I will propose candidates by label and confirm each bilaterally. Expect two nature cognates to catch: a bound that looks like a measurement, a requirement that looks like a signal.'],mode:'without'},
+/* 2 lift */
+{p:2,o:['action','Lifting: recovering expectations, conditions, priorities and the acceptance/judge logic the API leaves implicit; recognising TR 290 / IG 1253; distilling a per-model lexicon.'],kg:{side:'o',html:KG_O},
+  msg:{from:'O',intent:'model-disclosure',summary:'Disclose the TM Forum intent framework and the lifted-ontology sketch.',body:env(105,'Agent-O','model-disclosure','I model per TM Forum TR 290 / IG 1253: Intent → Expectations with quantitative Conditions and priorities, delivery points, and a judge for acceptance. Sharing my lifted ontology sketch.',{framework:'TMF TR290/IG1253',ontology:'Intent/Expectation/Condition/DeliveryPoint/Priority/Judge'})}},
+{p:2,o:['result','Lift-fidelity round-trip: regenerated my native intent from the ontology — diff = 0. 9 concepts, each with a definition and a canonical example.']},
+{p:2,n:['action','Lifting my model similarly; recognising draft-ietf-ccamp-l1csm-yang + teas service-mapping; distilling my lexicon.'],kg:{side:'n',html:KG_N},
+  msg:{from:'N',intent:'model-disclosure',summary:'Disclose the IETF L1CSM framework and the lifted-ontology sketch.',body:env(106,'Agent-N','model-disclosure','I model per L1CSM + TE service-mapping: l1-connectivity service with endpoints, odu-type, mapping to a te-tunnel over optical, protection and SRLG, with measured metrics. Sharing my lifted ontology sketch.',{framework:'IETF L1CSM',ontology:'service/endpoint/odu-type/te-mapping/protection/te-metric'})}},
+{p:2,n:['result','Lift-fidelity round-trip clean. 9 concepts distilled.']},
+/* 3 bind */
+{p:3,o:['action','Binding my concepts to the reference lexicon, checking each against its definition + example.'],mode:'with',lexbind:true},
+{p:3,o:['result','Bound. My expectations bind to expectation-kind entries (capacity/latency/availability); I have no client-signal, route or wavelength — those are provider-realm gaps by design.'],mode:'with'},
+{p:3,n:['result','Bound. My attributes bind to realization-kind entries (client-signal, latency-metric, route-and-resource); I have no expectation entries — those are consumer-realm gaps by design.'],mode:'with'},
+{p:3,o:['think','Note: my latency-expectation binds to xref:latency-expectation; N\'s te-metric binds to xref:latency-metric — different entries. "A bound = a measurement" cannot arise.'],mode:'with'},
+{p:3,msg:{from:'O',intent:'reference-binding',summary:'Intent binding set — expectations to expectation-kind entries; realm gaps at client-signal, route, wavelength.',body:env(1,'Agent-O','reference-binding','Bound my concepts. bandwidth→capacity-expectation, latency→latency-expectation, availability→availability-expectation, deliveryPoint→delivery-endpoint. Realm gaps: no client-signal/route/wavelength (provider realm).',{bound:11,kinds:'expectation vs realization separated'})},mode:'with'},
+{p:3,o:['warn','Reference lexicon OFF — no binding step. Proceeding to align model-to-model.'],mode:'without'},
+/* 4 align label */
+{p:4,o:['action','Alignment, pass 1 — label. Proposing candidates on names alone.'],align:{pass:1}},
+{p:4,n:['think','Under the reference, expectations and realizations are already different kinds; the label pass has almost nothing to add and proposes no nature cognate.'],mode:'with'},
+{p:4,n:['think','Label matching over- and under-proposes. Six candidates — two traps: "latency" expectation ↔ "latency" te-metric, and "bandwidth" expectation ↔ odu-type. They share a word but not a nature.'],mode:'without'},
+/* 5 align gloss */
+{p:5,n:['action','Pass 2 — gloss + example. Deciding each candidate by its disambiguating definition and canonical example.'],align:{pass:2}},
+{p:5,n:['result','Demand↔l1-connectivity and deliveryPoint↔service-endpoint confirmed (closeMatch, hi). protection requirement↔protection-type confirmed by gloss (med).'],mode:'without'},
+{p:5,n:['replan','latency-bound ≈ te-metric rejected — one is a predicate (≤), the other a measured value. bandwidth-expectation ≈ odu-type rejected — a predicate, not a discrete signal. Re-plan: these are refinements, checked by satisfaction, not renames.'],mode:'without'},
+{p:5,o:['result','Under the reference these were settled at bind time — different kinds. Only the genuine correspondences remain, and the refinements go to the next stage.'],mode:'with'},
+/* 6 refine down */
+{p:6,o:['action','Refinement, down. Sending my expectations; each must be realized by something that satisfies the bound.']},
+{p:6,msg:{from:'O',intent:'refine-request',summary:'Expectations for A1↔A2: bandwidth ≥ 8G, latency ≤ 5ms, availability ≥ 99.99%, protection required.',body:env(2,'Agent-O','refine-request','Refine these expectations to a realization: bandwidth ≥ 8 Gbit/s, latency ≤ 5 ms, availability ≥ 99.99%, protection required. Endpoints: delivery points at A1 and A2.',{expectations:{bandwidth:'>=8G',latency:'<=5ms',availability:'>=99.99%',protection:'required'}})},refs:[0]},
+{p:6,n:['action','Refining. bandwidth ≥ 8G → least ODUk ≥ 8G = ODU2 (10G). latency ≤ 5ms → a budgeted route.'],refs:[1]},
+{p:6,n:['result','availability ≥ 99.99% → 1+1 OCh protection on an SRLG-disjoint route (computed 99.995%). protection satisfied directly. Every bound satisfied; route and λ chosen in my realm.'],refs:[2,3,4]},
+{p:6,o:['result','Satisfaction verified for all four expectations — not a round trip. The route and wavelength are yours to choose; I only check that the choice satisfies me.']},
+/* 7 feasibility */
+{p:7,o:['action','A harder case: the customer tightens latency to ≤ 3 ms. Re-issuing the expectation.']},
+{p:7,msg:{from:'O',intent:'refine-request',summary:'Tightened: latency ≤ 3 ms, keeping availability ≥ 99.99% and protection.',body:env(3,'Agent-O','refine-request','Tightening latency to ≤ 3 ms; availability ≥ 99.99% and protection unchanged. Priorities: latency soft (target 3 ms, acceptable ≤ 5 ms), availability hard.',{latency:'<=3ms',priority:{latency:'soft',availability:'hard'}})}},
+{p:7,n:['replan','Conflict. The SRLG-disjoint protected route is 3.2 ms — I cannot get ≤ 3 ms and keep protection. Computing best-achievable rather than failing.'],feas:true},
+{p:7,n:['result','Best-achievable: 3.2 ms with 1+1 protection, or 2.6 ms unprotected. Returning both with a feasibility assessment.'],
+  msg:{from:'N',intent:'best-achievable',summary:'Best-achievable: 3.2 ms protected, or 2.6 ms unprotected. Cannot meet ≤ 3ms with protection.',body:env(4,'Agent-N','best-achievable','Cannot satisfy latency ≤ 3 ms with protection on a disjoint route (min 3.2 ms). Best-achievable: 3.2 ms with 1+1, or 2.6 ms unprotected.',{options:[{latency:'3.2ms',protection:'1+1'},{latency:'2.6ms',protection:'none'}]})}},
+{p:7,o:['result','Judge: availability is hard, latency soft. I accept 3.2 ms with protection over 2.6 ms unprotected. Decision, rationale and provenance recorded. No human ratified this.']},
+/* 8 endpoint coref */
+{p:8,o:['action','Type alignment settled which kinds correspond. Now a separate pass: which delivery points and access points are the same demarcation — from evidence, not names.'],coref:true},
+{p:8,n:['result','Three endpoints co-referred: A1, A2, A3 by service-order key and UNI id. The A2/A3 same-metro near-miss resolves by UNI id, not by name.']},
+/* 9 construct */
+{p:9,o:['action','Enough exchanged. Generating the two directional mappings from the decisions and the reference bindings.'],trans:true},
+{p:9,n:['result','Both mappings emitted, v1. Refine-down carries the refinement policy and my realm choices; assure-up aggregates operational state to a fulfilment verdict. Cognition spent here, once.']},
+{p:9,msg:{from:'N',intent:'mapping-agreement',summary:'Artefact agreed: refine-down (one-to-many) + assure-up (aggregation), reference-anchored, v1.',body:env(5,'Agent-N','mapping-agreement','Mediation complete. 4 refinements, 1 feasibility judgment, 0 escalations. Mappings are anchored to the shared reference and verified by satisfaction.',{artefact:'mapping-pair@v1',escalations:0})}},
+/* 10 validate satisfaction */
+{p:10,o:['action','Validate: does the existing A1↔A2 realization satisfy every expectation? Checking each bound against the realized/measured value.'],assure:{title:'Validate · A1↔A2 — does the realization satisfy the intent?',
+  rows:[{op:'ODU2 · 10G active',exp:'bandwidth ≥ 8 Gbit/s',v:'MET · +2G',s:'met'},
+        {op:'measured latency 3.2 ms',exp:'latency ≤ 5 ms',v:'MET · margin 1.8 ms',s:'met'},
+        {op:'30-day availability 99.997%',exp:'availability ≥ 99.99%',v:'MET · +0.007',s:'met'},
+        {op:'protection: 1+1 active (working)',exp:'protection required',v:'MET',s:'met'}],
+  verdict:'Intent <b>FULFILLED</b> — all four expectations satisfied. Verified by satisfaction, not by a round trip.',vcls:'line result'}},
+{p:10,n:['result','Satisfaction holds on the live service. Mappings accepted; cognition leaves the data path — runtime is deterministic.']},
+/* 11 refine change O->N */
+{p:11,o:['action','New customer intent: connectivity A1→A3, bandwidth ≥ 8G, latency ≤ 5ms, availability ≥ 99.99%, protected. Emitting native TMF921 intent.']},
+{p:11,msg:{from:'O',intent:'intent-request',summary:'intent conn-A1-A3: ≥8G, ≤5ms, ≥99.99%, protected, delivery points A1 & A3.',body:env(6,'Agent-O','intent-request','New intent conn-A1-A3: bandwidth ≥ 8 Gbit/s, latency ≤ 5 ms, availability ≥ 99.99%, protection required; delivery points A1, A3.',{intent:{id:'conn-A1-A3',bandwidth:'>=8G',latency:'<=5ms',availability:'>=99.99%',protection:'required'}})},
+  trace:{dir:'ON',title:'Refine change · O→N · Agent N applies refine-down',
+   input:`intent "conn-A1-A3"\n bandwidth ≥ 8G · latency ≤ 5ms\n availability ≥ 99.99% · protection required\n delivery points A1, A3`,
+   rules:['bandwidth ≥ 8G → least ODUk ≥ 8G = ODU2 (10G)','latency ≤ 5ms → route A1▸R1▸R3▸A3 (measured 3.6 ms ≤ 5)','availability ≥ 99.99% → 1+1 disjoint (computed 99.994%)','delivery points → l1csm service-endpoints A1, A3','choose OCh λ2 in provider realm'],
+   output:`l1-connectivity service "svc-A1-A3"\n odu-type ODU2 · endpoints A1,A3\n te-tunnel A1-A3 over OCh λ2\n protection 1+1 · srlg-disjoint\n satisfies: 10G≥8G · 3.6ms≤5 · 99.994%≥99.99 ✓`},
+  n:['result','Refined and provisioned. Every expectation satisfied by the realization.']},
+{p:11,addService:{id:'svc1',label:'A1 ↔ A3',color:SVC_COLORS.svc1,
+  exp:{bw:'≥ 8 Gbit/s',lat:'≤ 5 ms',av:'≥ 99.99%',prot:'required'},
+  real:{odu:'ODU2 (10G)',route:'A1▸R1▸R3▸A3',latMeas:'3.6 ms',avComp:'99.994%',och:'λ2',prot:'1+1'},
+  status:'met',otnPair:['A1','A3'],optPath:['R1','R3']},
+  o:['result','Reflected. Both views now carry A1↔A3, realized and fulfilled. ✓']},
+/* 12 assure change N->O */
+{p:12,n:['action','An operational change on A1↔A2: a fibre cut on the working path. Protection switches to the disjoint path; measured latency rises to 4.1 ms. Emitting operational state.']},
+{p:12,msg:{from:'N',intent:'operational-state',summary:'A1↔A2: protection switch (fibre cut). Measured latency 3.2 → 4.1 ms; now on protection path.',body:env(7,'Agent-N','operational-state','A1↔A2 protection switch after a fibre cut on the working path. Now on the protection (disjoint) path; measured latency 4.1 ms; single-path exposure until repair.',{event:'protection-switch',latency:'4.1ms',exposure:'single-path'})},
+  trace:{dir:'NO',title:'Assure change · N→O · Agent O applies assure-up',
+   input:`operational-state A1↔A2\n event: protection-switch (fibre cut)\n measured latency 4.1 ms\n now on protection path · single-path exposure`,
+   rules:['measured 4.1 ms ⊨ (latency ≤ 5 ms) → MET, margin 0.9 ms','client-signal ODU2 ⊨ (bandwidth ≥ 8G) → MET','protection state = active(protection path) → requirement MET, resilience advisory','roll-up: all MET → FULFILLED · at-risk margin'],
+   output:`intent report conn-A1-A2\n state: FULFILLED (margin narrowing)\n latency margin 1.8 → 0.9 ms\n advisory: single-path exposure until repair`},
+  assure:{title:'Assure · A1↔A2 — re-evaluated after the protection switch',
+   rows:[{op:'measured latency 4.1 ms',exp:'latency ≤ 5 ms',v:'MET · margin 0.9 ms',s:'margin'},
+         {op:'ODU2 · 10G active',exp:'bandwidth ≥ 8 Gbit/s',v:'MET · +2G',s:'met'},
+         {op:'availability (30d, incl. event) 99.992%',exp:'availability ≥ 99.99%',v:'MET · +0.002',s:'met'},
+         {op:'protection: active on protection path · single-path exposure',exp:'protection required',v:'MET · advisory',s:'margin'}],
+   verdict:'Intent <b>FULFILLED · at-risk margin</b> — every expectation still satisfied on live data, but the latency margin narrowed to 0.9 ms and resilience is exposed until repair. No breach, no re-provisioning; an advisory is raised.',vcls:'line warn'},
+  o:['result','Re-evaluated. Latency 4.1 ms still ≤ 5 ms — still FULFILLED, but the margin narrowed and I log a resilience advisory.']},
+{p:12,setStatus:{id:'svc0',status:'margin'},o:['result','Intent gauge for A1↔A2 goes amber: fulfilled, at-risk margin. No breach; no re-provisioning needed.']},
+/* 13 breach — network remediates (no lifecycle action) */
+{p:13,n:['warn','A second impairment on A1↔A2 — congestion on the protection path — pushes measured latency to 5.4 ms. That passes the 5 ms bound: a breach.'],
+  msg:{from:'N',intent:'operational-state',summary:'A1↔A2 latency 5.4 ms > 5 ms — breach on the protection path.',body:env(9,'Agent-N','operational-state','A1↔A2 latency risen to 5.4 ms (congestion on the protection path) — breaches the 5 ms bound.',{event:'latency-breach',latency:'5.4ms'})}},
+{p:13,setStatus:{id:'svc0',status:'breach'},o:['warn','Latency BREACH — intent momentarily NOT FULFILLED. I hold before any lifecycle action: remediation is the network\'s responsibility first, in its own realm.']},
+{p:13,n:['action','Remediating within my realm: re-optimising the route off the congested segment — a provider-realm action, no change to your intent.'],
+  trace:{dir:'NO',title:'Breach · A1↔A2 · network remediation (N→O)',
+   input:`operational-state A1↔A2\n latency 5.4 ms > 5 ms  (BREACH)\n cause: congestion on protection path`,
+   rules:['detect: 5.4 ms breaches (latency ≤ 5 ms)','re-optimise route within the provider realm (off the congested segment)','re-measure latency = 3.4 ms','satisfaction restored — intent unchanged, no consumer action'],
+   output:`intent report conn-A1-A2\n state: FULFILLED (auto-remediated)\n latency 3.4 ms ≤ 5 ms\n no consumer lifecycle action`},
+  assure:{title:'Breach · A1↔A2 latency — network remediated (outcome 1: no lifecycle action)',
+   rows:[{op:'transient: measured latency 5.4 ms',exp:'latency ≤ 5 ms',v:'BREACH · +0.4 ms',s:'breach'},
+         {op:'re-optimised route · latency 3.4 ms',exp:'latency ≤ 5 ms',v:'MET · margin 1.6 ms',s:'met'},
+         {op:'ODU2 · 10G active',exp:'bandwidth ≥ 8 Gbit/s',v:'MET',s:'met'},
+         {op:'protection active (fault cleared)',exp:'protection required',v:'MET',s:'met'}],
+   verdict:'<b>BREACH → network remediated within its own realm → FULFILLED.</b> The provider re-optimised the route and restored satisfaction. <b>No consumer lifecycle action is required</b>; the transient breach is logged.',vcls:'line result'}},
+{p:13,setStatus:{id:'svc0',status:'met'},o:['result','Network remediated autonomously — satisfaction restored with margin. I log the transient breach, take no lifecycle action, and the customer sees no change.']},
+/* 14 breach — network cannot remediate (consumer lifecycle action) */
+{p:14,n:['warn','A dual failure now: the disjoint protection route is also cut. The only surviving path is unprotected, and its latency is 6.2 ms.'],
+  msg:{from:'N',intent:'cannot-remediate',summary:'A1↔A2: no realization satisfies the intent. Best-achievable = unprotected, 6.2 ms.',body:env(10,'Agent-N','cannot-remediate','Dual failure on A1↔A2. No realization satisfies the intent: only an unprotected path at 6.2 ms remains. I cannot remediate within my realm — protection is lost and latency exceeds the bound. Best-achievable returned for your decision.',{breach:['availability','latency'],bestAchievable:{protection:'none',latency:'6.2ms'}})}},
+{p:14,setStatus:{id:'svc0',status:'breach'},o:['warn','Unrecoverable breach — the network cannot restore satisfaction. This now requires a consumer lifecycle action: accept the breach, renegotiate terms, or stop the service.']},
+{p:14,assure:{title:'Breach · A1↔A2 — network cannot remediate · consumer lifecycle action (outcome 2)',
+   rows:[{op:'best-achievable: unprotected',exp:'protection required',v:'BREACH',s:'breach'},
+         {op:'best-achievable: latency 6.2 ms',exp:'latency ≤ 5 ms',v:'BREACH · +1.2 ms',s:'breach'},
+         {op:'availability projected < 99.99% (unprotected)',exp:'availability ≥ 99.99%',v:'BREACH',s:'breach'}],
+   verdict:'The network <b>cannot remediate</b> — no realization satisfies the intent. A <b>consumer lifecycle action</b> is required (IG 1253). The judge weighs three options:',vcls:'line warn',
+   options:[{label:'Accept the breach',detail:'Run degraded (unprotected, 6.2 ms) under a documented, time-bound exception until repair. Intent and terms unchanged; the breach is acknowledged.'},
+            {label:'Renegotiate terms',detail:'Relax latency to ≤ 8 ms and suspend the protection requirement until repair, so a satisfying realization exists again.',chosen:true},
+            {label:'Stop the service',detail:'Withdraw the intent and release the resources.'}]},
+  o:['result','Judge decision: renegotiate. Latency relaxed to ≤ 8 ms and protection suspended until repair — a documented, time-bound change of terms, recorded with rationale and provenance.']},
+{p:14,msg:{from:'O',intent:'renegotiate',summary:'Relax A1↔A2 to latency ≤ 8 ms; suspend protection until repair. Re-refine.',body:env(11,'Agent-O','renegotiate','Lifecycle action: renegotiate. For A1↔A2, relax latency to ≤ 8 ms and suspend the protection requirement until repair. Re-refine against these terms.',{latency:'<=8ms',protection:'suspended-until-repair'})},
+  trace:{dir:'ON',title:'Lifecycle · renegotiate · O→N (re-refine under relaxed terms)',
+   input:`renegotiated intent conn-A1-A2\n latency ≤ 8 ms · protection suspended\n (time-bound, until repair)`,
+   rules:['relaxed latency ≤ 8 ms → surviving path (6.2 ms) now satisfies','protection suspended → unprotected path admissible until repair','re-refine on the surviving route','satisfaction restored under the renegotiated terms'],
+   output:`l1-connectivity svc-A1-A2 (interim)\n unprotected · latency 6.2 ms ≤ 8 ms\n flagged: degraded-by-agreement, reinstate on repair`},
+  n:['result','Re-refined under the relaxed terms. The surviving path satisfies ≤ 8 ms; unprotected is admissible until repair. Satisfaction restored under the new terms.']},
+{p:14,setStatus:{id:'svc0',status:'margin'},o:['result','Service restored under renegotiated terms — fulfilled against the relaxed intent, flagged degraded-by-agreement. When the route is repaired, the original terms are reinstated automatically.']},
+/* 15 scale */
+{p:15,v:['plan','A second network domain (an IP/MPLS L3 controller) joins. It binds once to the same reference lexicon.']},
+{p:15,msg:{from:'V',intent:'reference-binding',summary:'Agent V (L3 domain) binds to the shared reference — one binding set, reused against both O and N.',body:env(12,'Agent-V','reference-binding','Bound my L3 concepts to the shared reference. l3vpn-service→service-demand, access→delivery-endpoint, sla-bandwidth→capacity-expectation. One binding, reused.',{bound:9})},ledger:true},
+{p:15,o:['result','Pairwise mappings O↔V and N↔V compose from the bindings, not authored from scratch. Intent refines across L1 or L3 the same way. The work scales as N, not N². See the Work ledger.']},
+/* 16 semantic model */
+{p:16,o:['think','Everything we reconciled is meaning — expectations, realizations, the refinement between them, the judge decision — lifted clear of form. Rather than discard it once the mappings are built, we keep it: the semantic model.']},
+{p:16,n:['action','Assembling the form-independent semantic model — semantics and pragmatics both, anchored to the reference lexicon, with provenance on every fact.'],semodel:true},
+{p:16,o:['result','Pragmatics carried as first-class annotations: use (declarative intent), realm (consumer vs provider — the boundary refinement crosses), state (intended vs operational — assurance), authority (the judge), adequacy, and provenance.']},
+{p:16,n:['result','The refine-down and assure-up mappings are now just projections from this hub; a new form (L2, L3, another OSS) binds to it (N, not N²); and a reasoning agent consumes it directly. This is the artefact on the shelf.']}
+];
+
+/* ===== player ===== */
+let MODE='with', cursor=0, playing=false, timer=null, activeSteps=[];
+function stepsForMode(){return STEPS.filter(s=>!s.mode||s.mode===MODE);}
+
+function setPhase(p){
+  PHASES.forEach((_,i)=>{const e=$('ph'+i);if(!e)return;
+    let c='phase'+(i<p?' done':i===p?' active':'');
+    if(i===3&&MODE==='without')c+=' skip';
+    e.className=c;});
+  const n=PHASE_NOTES[p];if(n){$('stageLab').innerHTML=n[0].split(' · ')[0];$('stageTxt').innerHTML=n[1];}
+  const m=META[p];if(m){
+    $('cogBadge').className='cogbadge '+COGCLS[m.cog];$('cogBadge').textContent=COGLABEL[m.cog];
+    const lvl={heavy:3,med:2,cheap:1,mech:0}[m.cog];const kind={heavy:'h',med:'m',cheap:'c',mech:'c'}[m.cog];
+    $('cogMeter').innerHTML=[0,1,2].map(i=>`<i class="${i<lvl?'on '+kind:''}"></i>`).join('');
+    $('mechTxt').textContent=m.mech;
+    $('verifyTxt').textContent=m.verify;
+    const meas=typeof m.measure==='function'?m.measure(MODE):m.measure;
+    $('measureTxt').textContent=meas;
+  }
+}
+function addLine(where,kind,text){const box=$(where);const d=document.createElement('div');d.className='line '+kind;d.textContent=text;box.appendChild(d);box.scrollTop=box.scrollHeight;}
+let measuresLogged={};
+function logMeasureFor(p){ if(measuresLogged[p])return; measuresLogged[p]=true;
+  const m=META[p];const meas=typeof m.measure==='function'?m.measure(MODE):m.measure;
+  const nm=PHASES[p];
+  if(p===0)return;
+  addMeasure(p+' · '+nm,m.cog,m.mech,m.verify,meas);
+}
+function pulse(){['svgO','svgN'].forEach(id=>{const e=$(id);e.style.transition='filter .15s';e.style.filter='brightness(1.5)';setTimeout(()=>e.style.filter='',260);});}
+function updateCounter(){$('counter').textContent=`step ${Math.min(cursor,activeSteps.length)} / ${activeSteps.length} · lexicon ${MODE==='with'?'ON':'OFF'}`;}
+
+function activateTab(name){
+  document.querySelectorAll('.tabbtn').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tabpane').forEach(x=>x.classList.remove('active'));
+  const btn=document.querySelector('.tabbtn[data-tab="'+name+'"]');if(btn)btn.classList.add('active');
+  const pane=$('pane-'+name);if(pane)pane.classList.add('active');
+}
+function flashEl(el,cls){cls=cls||'flash';if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),1700);}
+function focusForStep(s){
+  let tab=null,target=null,col=null;
+  if(s.semodel) tab='semodel';
+  else if(s.addService||s.setStatus) target=$('topoBox');
+  else if(s.assure) tab='assure';
+  else if(s.trace) tab=(s.trace.dir==='NO')?'assure':'trace';
+  else if(s.ledger) tab='ledger';
+  else if(s.trans) tab='tr';
+  else if(s.coref) tab='kg';
+  else if(s.feas) tab='feas';
+  else if(s.refs) tab='refine';
+  else if(s.align) tab='align';
+  else if(s.lexbind) tab='lex';
+  else if(s.kg) tab='kg';
+  else if(s.msg){ target=$('agentsRow'); col=$('bus').closest('.col'); }
+  else { target=$('agentsRow'); col = s.o?$('logO').closest('.col') : s.n?$('logN').closest('.col') : s.v?$('bus').closest('.col') : null; }
+  if(s.trace&&s.trace.dir==='ON') tab='trace';
+  if(tab){ activateTab(tab); target=$('tabsBox'); }
+  if(target&&target.scrollIntoView) target.scrollIntoView({behavior:'smooth',block:'center'});
+  if(col) flashEl(col,'flashcol'); else flashEl(target,'flash');
+}
+
+function applyStep(s){
+  setPhase(s.p);
+  if(s.o)addLine('logO',s.o[0],s.o[1]);
+  if(s.n)addLine('logN',s.n[0],s.n[1]);
+  if(s.v)addLine('bus','plan','Agent V · '+s.v[1]);
+  if(s.msg)addMsg(s.msg);
+  if(s.lexbind)bindLexicon();
+  if(s.align)renderAlign(MODE,s.align.pass);
+  if(s.refs)s.refs.forEach(revealRefine);
+  if(s.feas)renderFeas();
+  if(s.kg)$(s.kg.side==='o'?'kgO':'kgN').textContent=s.kg.html;
+  if(s.coref)renderCoref();
+  if(s.trans)revealMappings();
+  if(s.trace)addTrace(s.trace);
+  if(s.assure)pushAssure(s.assure);
+  if(s.ledger)renderLedger(MODE);
+  if(s.semodel)renderSemodel();
+  if(s.addService){state.services.push(s.addService);renderTopo();pulse();}
+  if(s.setStatus){const sv=state.services.find(x=>x.id===s.setStatus.id);if(sv){sv.status=s.setStatus.status;if(s.setStatus.latMeas&&sv.real)sv.real.latMeas=s.setStatus.latMeas;}renderTopo();pulse();}
+  logMeasureFor(s.p);
+  updateCounter();
+  focusForStep(s);
+}
+function step(){if(cursor>=activeSteps.length){stop();return;}applyStep(activeSteps[cursor]);cursor++;
+  if(cursor>=activeSteps.length){setPhase(PHASES.length-1);renderLedger(MODE);$('play').disabled=true;$('step').disabled=true;stop();}}
+function play(){if(playing){stop();return;}playing=true;$('play').textContent='⏸ Pause';
+  const tick=()=>{if(!playing)return;step();if(cursor<activeSteps.length)timer=setTimeout(tick,+$('speed').value);else stop();};tick();}
+function stop(){playing=false;clearTimeout(timer);$('play').textContent='▶ Play';}
+
+function buildPhases(){const c=$('phases');c.innerHTML='';PHASES.forEach((p,i)=>{const d=document.createElement('div');d.className='phase';d.id='ph'+i;d.textContent=i+'. '+p;c.appendChild(d);});}
+function reset(){stop();cursor=0;measuresLogged={};lexBound=0;assureRows=[];
+  state={services:JSON.parse(JSON.stringify(INITIAL_SERVICES))};
+  activeSteps=stepsForMode();
+  ['logO','logN','bus'].forEach(id=>$(id).innerHTML='');
+  buildLexGrid();$('lexBadge').style.display='none';
+  $('alignBody').innerHTML='<div class="empty">No alignment yet — press Play.</div>';$('alignBadge').style.display='none';
+  $('refBody').innerHTML='<tr><td colspan="5" class="empty">No refinements yet.</td></tr>';$('refBadge').style.display='none';
+  $('feasBody').innerHTML='<div class="empty">Feasibility is negotiated in stage 7.</div>';$('feasBadge').style.display='none';
+  $('assureBody').innerHTML='<div class="empty">Assurance mapping appears from stage 10.</div>';$('assureBadge').style.display='none';
+  $('transON').innerHTML='<span class="muted">— generated after mediation —</span>';$('transNO').innerHTML='<span class="muted">— generated after mediation —</span>';$('trBadge').style.display='none';
+  $('traceBody').innerHTML='<div class="empty">No translations yet.</div>';$('traceBadge').style.display='none';
+  $('semBody').innerHTML='<div class="empty">Assembled at the final stage — press Play, or jump with Step.</div>';$('semBadge').style.display='none';
+  $('measBody').innerHTML='<tr><td colspan="5" class="empty">Fills in as stages complete.</td></tr>';$('measBadge').style.display='none';
+  $('kgO').innerHTML='<span class="muted">— not yet lifted —</span>';$('kgN').innerHTML='<span class="muted">— not yet lifted —</span>';
+  $('corefBody').innerHTML='<div class="empty">Endpoints co-refer in stage 8.</div>';
+  $('lexModeNote').innerHTML=MODE==='with'?'':'<b style="color:var(--warn)">Reference OFF: binding is skipped; alignment runs model-to-model and the nature cognates are caught by conversation.</b>';
+  renderLedger(MODE);
+  $('play').disabled=false;$('step').disabled=false;
+  buildPhases();setPhase(0);renderTopo();updateCounter();
+}
+function setMode(on){MODE=on?'with':'without';
+  $('modeSw').className='toggle-sw'+(on?' on':'');
+  $('modeVal').className='modeval'+(on?' on':' off');$('modeVal').textContent=on?'ON':'OFF';
+  reset();
+}
+
+/* wiring */
+$('tabbar').addEventListener('click',e=>{const b=e.target.closest('.tabbtn');if(!b)return;
+  document.querySelectorAll('.tabbtn').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tabpane').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');$('pane-'+b.dataset.tab).classList.add('active');});
+$('play').onclick=play;$('step').onclick=()=>{stop();step();};$('reset').onclick=reset;
+$('modeSw').onclick=()=>setMode(MODE!=='with');
+$('aboutToggle').onclick=()=>{const b=$('aboutBody');const c=b.classList.toggle('collapsed');$('aboutToggle').textContent=c?'Show ▼':'Hide ▲';};
+
+/* init + optional auto-advance for screenshots: ?mode=without&auto=N */
+(function(){const q=new URLSearchParams(location.search);
+  if(q.get('mode')==='without'){MODE='without';$('modeSw').className='toggle-sw';$('modeVal').className='modeval off';$('modeVal').textContent='OFF';}
+  reset();
+  const a=parseInt(q.get('auto'),10);if(a>0){for(let k=0;k<a&&cursor<activeSteps.length;k++)step();}
+})();
+</script>
+</body>
+</html>

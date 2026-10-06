@@ -1,0 +1,377 @@
+{
+  "system": "Agent T",
+  "dialect": "ONF TAPI",
+  "modules": [
+    "tapi-topology@2018-12-10 (TR-547)",
+    "tapi-connectivity",
+    "tapi-photonic-media"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5.6-sol from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_big_hard, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_big_hard/model_a*.json.",
+  "concepts": [
+    {
+      "id": "t.node",
+      "label": "node",
+      "synonyms": [
+        "forwarding domain"
+      ],
+      "kind": "node",
+      "gloss": "A node is a forwarding or switching domain within the multi-layer topology that hosts termination, service-access, connection, adaptation, and switching-rule resources.",
+      "example": "R2 is a node in the OTN-over-optical topology, hosting link termination points toward R1 and R3 and an OCh/OTU4 adaptation.",
+      "ref": "forwarding-node",
+      "relations": [
+        {
+          "rel": "part-of",
+          "target": "t.topo"
+        }
+      ],
+      "instances": [
+        "R1",
+        "R2",
+        "R3",
+        "R4",
+        "A1",
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "id": "t.ltp",
+      "label": "link-termination-point",
+      "synonyms": [
+        "owned-node-edge-point",
+        "nep"
+      ],
+      "kind": "termination",
+      "gloss": "A link-termination-point is a node-owned edge point at which a topology link terminates, identifying that link's attachment to the node.",
+      "example": "nep-R1-R2 is the termination point on R1 for link-R1-R2.",
+      "ref": "link-termination",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "t.node"
+        },
+        {
+          "rel": "terminates",
+          "target": "t.link"
+        }
+      ],
+      "instances": [
+        "nep-R1-R2",
+        "nep-R2-R3",
+        "nep-A1-R1"
+      ]
+    },
+    {
+      "id": "t.adapt",
+      "label": "transitional-link",
+      "synonyms": [
+        "adaptation link"
+      ],
+      "kind": "adaptation",
+      "gloss": "A transitional link is an intra-node adaptation relation that maps traffic between layer protocols or multiplexing levels described by a layer-protocol qualifier.",
+      "example": "At R1, the OTU4/ODU2 transitional link adapts an ODU2 client signal into an OTU4 server signal.",
+      "ref": "layer-adaptation",
+      "relations": [
+        {
+          "rel": "at-node",
+          "target": "t.node"
+        },
+        {
+          "rel": "adapts",
+          "target": "t.lpq"
+        }
+      ],
+      "instances": [
+        "OTU4/ODU2 adaptation at R1",
+        "OCh/OTU4 adaptation at R2"
+      ]
+    },
+    {
+      "id": "t.sip",
+      "label": "service-interface-point",
+      "synonyms": [
+        "sip"
+      ],
+      "kind": "access",
+      "gloss": "A service-interface-point is a node-associated access point through which a client requests or consumes a connectivity service.",
+      "example": "sip-A1-odu is the ODU service access point at A1 used as one endpoint of cs-a1a3-odu2.",
+      "ref": "client-svc-access",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "t.node"
+        },
+        {
+          "rel": "accesses",
+          "target": "t.cs"
+        }
+      ],
+      "instances": [
+        "sip-A1-odu",
+        "sip-A3-odu",
+        "sip-A2-odu"
+      ]
+    },
+    {
+      "id": "t.cs",
+      "label": "connectivity-service",
+      "synonyms": [
+        "service"
+      ],
+      "kind": "service",
+      "gloss": "A connectivity-service is an end-to-end traffic-connectivity offering between service-interface-points, realized by connection endpoints and optionally governed by a protection group.",
+      "example": "cs-a1a3-odu2 provides protected ODU2 connectivity from the SIP at A1 to the SIP at A3 and is protected by pgroup-a1a3.",
+      "ref": "connection-service",
+      "relations": [
+        {
+          "rel": "uses",
+          "target": "t.sip"
+        },
+        {
+          "rel": "realized-by",
+          "target": "t.cep"
+        },
+        {
+          "rel": "protected-by",
+          "target": "t.pgroup"
+        }
+      ],
+      "instances": [
+        "cs-a1a3-odu2 (ODU2, A1-A3, protected)",
+        "cs-a2a3-odu0 (ODU0, A2-A3)"
+      ]
+    },
+    {
+      "id": "t.lpq",
+      "label": "layer-protocol-qualifier",
+      "synonyms": [
+        "layer qualifier"
+      ],
+      "kind": "multiplex",
+      "gloss": "A layer-protocol-qualifier specifies the client/server layer or multiplexing relationship applicable to a connectivity service and usable by an adaptation.",
+      "example": "ODU0 into ODU2 identifies an ODU0 client carried within an ODU2 server for the relevant service adaptation.",
+      "ref": "multiplex-structure",
+      "relations": [
+        {
+          "rel": "qualifies",
+          "target": "t.cs"
+        }
+      ],
+      "instances": [
+        "ODU2 into OTU4",
+        "ODU0 into ODU2"
+      ]
+    },
+    {
+      "id": "t.nrg",
+      "label": "node-rule-group",
+      "synonyms": [
+        "rule group"
+      ],
+      "kind": "switching",
+      "gloss": "A node-rule-group is a node-local set of constraints or capabilities governing which termination points or signals may be switched or cross-connected within that node.",
+      "example": "R2 cross-connect rule group defines the switching combinations permitted through node R2.",
+      "ref": "switching-constraint",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "t.node"
+        }
+      ],
+      "instances": [
+        "R2 cross-connect rule group",
+        "R3 cross-connect rule group"
+      ]
+    },
+    {
+      "id": "t.link",
+      "label": "link",
+      "synonyms": [],
+      "kind": "link",
+      "gloss": "A link is a topology-level adjacency between nodes whose ends are represented by node-owned link-termination-points.",
+      "example": "link-R1-R2 connects nodes R1 and R2 and terminates at their respective edge points, including nep-R1-R2 on R1.",
+      "ref": "topo-link",
+      "relations": [
+        {
+          "rel": "between",
+          "target": "t.node"
+        },
+        {
+          "rel": "terminated-by",
+          "target": "t.ltp"
+        }
+      ],
+      "instances": [
+        "link-R1-R2",
+        "link-R2-R3",
+        "link-R3-R4",
+        "link-R1-R4",
+        "link-A1-R1"
+      ]
+    },
+    {
+      "id": "t.topo",
+      "label": "topology",
+      "synonyms": [
+        "multi-layer topology"
+      ],
+      "kind": "topology",
+      "gloss": "A topology is the containing multi-layer network view that organizes the domain's nodes and the links connecting them.",
+      "example": "The OTN-over-optical domain is represented as one topology containing nodes R1–R4 and A1–A3 together with links such as link-R1-R2.",
+      "ref": "topology",
+      "relations": [
+        {
+          "rel": "contains",
+          "target": "t.node"
+        },
+        {
+          "rel": "contains",
+          "target": "t.link"
+        }
+      ],
+      "instances": [
+        "the OTN-over-optical domain (one multi-layer topology)"
+      ]
+    },
+    {
+      "id": "t.cep",
+      "label": "connection-end-point",
+      "synonyms": [
+        "cep"
+      ],
+      "kind": "endpoint",
+      "gloss": "A connection-end-point is a node-local endpoint of the connection construct that realizes a particular connectivity service inside the network.",
+      "example": "cep-a1a3-R1 is the R1-side connection endpoint belonging to the realization of cs-a1a3-odu2.",
+      "ref": "conn-endpoint",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "t.node"
+        },
+        {
+          "rel": "part-of",
+          "target": "t.cs"
+        }
+      ],
+      "instances": [
+        "cep-a1a3-R1",
+        "cep-a1a3-R3"
+      ]
+    },
+    {
+      "id": "t.och",
+      "label": "media-channel",
+      "synonyms": [
+        "OCh",
+        "optical channel"
+      ],
+      "kind": "optical",
+      "gloss": "A media-channel is an individual optical channel, typically a wavelength or spectral allocation, carried over an optical multiplex section and transporting adapted client/server traffic.",
+      "example": "och-lambda1-R1-R3 is the lambda1 optical channel from R1 toward R3, carried over the applicable OMS resources and transporting adapted OTN traffic.",
+      "ref": "optical-channel",
+      "relations": [
+        {
+          "rel": "over",
+          "target": "t.oms"
+        },
+        {
+          "rel": "carries",
+          "target": "t.adapt"
+        }
+      ],
+      "instances": [
+        "och-lambda1-R1-R3",
+        "och-lambda2-R2-R4"
+      ]
+    },
+    {
+      "id": "t.oms",
+      "label": "media-channel-group",
+      "synonyms": [
+        "OMS",
+        "optical multiplex section"
+      ],
+      "kind": "optical",
+      "gloss": "A media-channel-group is an optical multiplex section between nodes that aggregates multiple media channels for joint transport over an optical span.",
+      "example": "oms-R1-R2 is the optical multiplex section between R1 and R2 that can aggregate channels such as lambda1.",
+      "ref": "optical-mux-section",
+      "relations": [
+        {
+          "rel": "between",
+          "target": "t.node"
+        },
+        {
+          "rel": "aggregates",
+          "target": "t.och"
+        }
+      ],
+      "instances": [
+        "oms-R1-R2",
+        "oms-R2-R3"
+      ]
+    },
+    {
+      "id": "t.sgrade",
+      "label": "signal-grade",
+      "synonyms": [
+        "signal quality",
+        "OSNR grade"
+      ],
+      "kind": "quality",
+      "gloss": "A signal-grade is a classified optical-quality level, such as an OSNR grade, assigned to a specific media channel.",
+      "example": "lambda1 has grade-A, indicating a high-OSNR quality classification for och-lambda1-R1-R3.",
+      "ref": "signal-quality",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "t.och"
+        }
+      ],
+      "instances": [
+        "grade-A (high OSNR) on lambda1",
+        "grade-B on lambda2"
+      ]
+    },
+    {
+      "id": "t.pgroup",
+      "label": "protection-group",
+      "synonyms": [
+        "1+1 group"
+      ],
+      "kind": "protection",
+      "gloss": "A protection-group is a resilience construct that protects a connectivity service by coordinating working and protection realizations, such as a 1+1 pair.",
+      "example": "pgroup-a1a3 protects cs-a1a3-odu2 with a working route R1-R3 and a concurrently available protection route R1-R4-R3.",
+      "ref": "protection-group",
+      "relations": [
+        {
+          "rel": "protects",
+          "target": "t.cs"
+        }
+      ],
+      "instances": [
+        "pgroup-a1a3 (1+1: working R1-R3, protect R1-R4-R3)"
+      ]
+    },
+    {
+      "id": "t.vendor",
+      "label": "x-vendor-7731",
+      "synonyms": [
+        "proprietary attr 7731"
+      ],
+      "kind": "opaque",
+      "gloss": "x-vendor-7731 is an opaque vendor-specific node attribute whose hexadecimal value has implementation-defined semantics not exposed by the standard model.",
+      "example": "On node R2, x-vendor-7731 is present with the proprietary value 0x1A.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "t.node"
+        }
+      ],
+      "instances": [
+        "x-vendor-7731=0x1A on R2",
+        "x-vendor-7731=0x1C on R3"
+      ]
+    }
+  ]
+}

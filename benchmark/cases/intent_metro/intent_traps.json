@@ -1,0 +1,134 @@
+{
+  "case": "intent_metro",
+  "operational_case": "intent (declarative demand -> concrete realisation, by refinement)",
+  "seed": "hand-authored breadth case: enterprise metro-Ethernet intents x a priced metro catalogue",
+  "margin": 0.1,
+  "actual_attrs": {
+    "m1a": {
+      "bw_gbps": 1.0,
+      "latency_ms": 8,
+      "availability": 0.999,
+      "protection": "none",
+      "cost": 20
+    },
+    "m1b": {
+      "bw_gbps": 1.0,
+      "latency_ms": 10,
+      "availability": 0.9999,
+      "protection": "1+1",
+      "cost": 40
+    },
+    "m2a": {
+      "bw_gbps": 10.0,
+      "latency_ms": 4,
+      "availability": 0.9999,
+      "protection": "none",
+      "cost": 50
+    },
+    "m2b": {
+      "bw_gbps": 10.0,
+      "latency_ms": 6,
+      "availability": 0.99999,
+      "protection": "1+1",
+      "cost": 80
+    },
+    "m2c": {
+      "bw_gbps": 10.0,
+      "latency_ms": 5,
+      "availability": 0.99999,
+      "protection": "1+1",
+      "cost": 95
+    },
+    "m3a": {
+      "bw_gbps": 1.0,
+      "latency_ms": 5,
+      "availability": 0.999,
+      "protection": "none",
+      "cost": 18
+    },
+    "m4a": {
+      "bw_gbps": 2.0,
+      "latency_ms": 12,
+      "availability": 0.999,
+      "protection": "none",
+      "cost": 30
+    },
+    "m4b": {
+      "bw_gbps": 2.0,
+      "latency_ms": 14,
+      "availability": 0.9995,
+      "protection": "1+1",
+      "cost": 55
+    }
+  },
+  "operational": {
+    "TM1/h0": {
+      "realisation": "m1a",
+      "reading": {
+        "bw_gbps": 1.0,
+        "latency_ms": 7,
+        "availability": 0.9995,
+        "protection": "none",
+        "cost": 20
+      }
+    },
+    "TM1/h1": {
+      "realisation": "m1a",
+      "reading": {
+        "bw_gbps": 1.0,
+        "latency_ms": 11,
+        "availability": 0.9995,
+        "protection": "none",
+        "cost": 20
+      }
+    },
+    "TM1/h2": {
+      "realisation": "m1b",
+      "reading": {
+        "bw_gbps": 1.0,
+        "latency_ms": 10,
+        "availability": 0.9999,
+        "protection": "1+1",
+        "cost": 40
+      }
+    },
+    "TM1/h3": {
+      "realisation": "m1b",
+      "reading": {
+        "bw_gbps": 1.0,
+        "latency_ms": 10,
+        "availability": 0.9999,
+        "protection": "1+1",
+        "cost": 40
+      }
+    },
+    "TM2/h0": {
+      "realisation": "m2b",
+      "reading": {
+        "bw_gbps": 10.0,
+        "latency_ms": 6,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 80
+      }
+    },
+    "TM2/h1": {
+      "realisation": "m2b",
+      "reading": {
+        "bw_gbps": 10.0,
+        "latency_ms": 7,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 80
+      }
+    }
+  },
+  "experiment_only": [
+    "MI5",
+    "MI6"
+  ],
+  "traps_note": {
+    "nature_false_cognate": "an expectation 'latency <= X' vs a measured 'latency' metric must not be conflated",
+    "unit_scale": "bandwidth bounds in Gbit/s vs metro access rates must be compared correctly"
+  }
+}

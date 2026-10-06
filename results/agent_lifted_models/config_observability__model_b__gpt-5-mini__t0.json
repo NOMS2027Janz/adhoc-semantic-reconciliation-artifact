@@ -1,0 +1,226 @@
+{
+  "system": "Agent G — IETF NMOP agent",
+  "dialect": "RFC 9940 + anomaly-semantics + incident-yang",
+  "modules": [
+    "rfc9940-terminology",
+    "nmop-anomaly-semantics",
+    "nmop-network-incident-yang"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-mini from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case config_observability, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_observability/model_b*.json.",
+  "concepts": [
+    {
+      "id": "g.node",
+      "label": "resource",
+      "synonyms": [
+        "managed resource",
+        "node"
+      ],
+      "kind": "resource",
+      "gloss": "A managed resource (physical or logical) in the network being observed or controlled, for example a device, a port, or a virtual service instance that metrics and states are associated with.",
+      "example": "lambda1: an optical wavelength channel provisioned on transport node R1 (the managed resource) that carries customer traffic and is the subject of BER samples and alarms.",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "R1",
+        "lambda1"
+      ]
+    },
+    {
+      "id": "g.event",
+      "label": "event",
+      "synonyms": [
+        "value variation"
+      ],
+      "kind": "event",
+      "gloss": "A recorded observation or value change sampled from a resource (a measurement or timed value variation) representing a single telemetry point or sample related to a node.",
+      "example": "ber-sample-lambda1-t0: a BER measurement taken on lambda1 at timestamp t0 with value 1e-6 (a single sampled event on that node).",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "ber-sample-lambda1-t0"
+      ]
+    },
+    {
+      "id": "g.anomaly",
+      "label": "anomaly",
+      "synonyms": [
+        "deviation",
+        "outlier"
+      ],
+      "kind": "anomaly",
+      "gloss": "A detected deviation from that resource's expected behaviour or baseline (an outlier or abnormal pattern) observed on a node's metric stream.",
+      "example": "anom-ber-lambda1: an anomaly record created when recent BER samples on lambda1 exceed the normal baseline and threshold (e.g., sustained BER crossing 1e-5), marking an unusual pattern on that node.",
+      "ref": "anomaly",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "anom-ber-lambda1"
+      ]
+    },
+    {
+      "id": "g.symptom",
+      "label": "symptom",
+      "synonyms": [
+        "indication"
+      ],
+      "kind": "symptom",
+      "gloss": "An observed indication (derived or raw) that points to the presence of a higher-level problem, used as evidence that a problem may exist.",
+      "example": "sym-ber-lambda1: a symptom representing persistent elevated BER on lambda1 that indicates possible service degradation and is used to link to the problem record problem-svc-degrade.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "indicates",
+          "target": "g.problem"
+        }
+      ],
+      "instances": [
+        "sym-ber-lambda1"
+      ]
+    },
+    {
+      "id": "g.fault",
+      "label": "fault",
+      "synonyms": [
+        "defect"
+      ],
+      "kind": "fault",
+      "gloss": "A localized defect or failure manifesting on a resource (node) that explains degraded behaviour or a component-level malfunction.",
+      "example": "fault-lambda1-degrade: a diagnosed fault on the lambda1 transponder (e.g., transmitter degradation causing low optical power) tied to the lambda1 resource and observed BER rise.",
+      "ref": "fault",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "fault-lambda1-degrade"
+      ]
+    },
+    {
+      "id": "g.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "alarm state"
+      ],
+      "kind": "alarm",
+      "gloss": "A signalling state raised for a resource when monitoring rules or thresholds detect a condition that requires operator attention (an asserted alarm state on a node).",
+      "example": "alarm-state-lambda1: an alarm asserted for lambda1 after BER exceeded the configured threshold for 5 minutes, recorded with severity=major and associated with that node.",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "alarm-state-lambda1"
+      ]
+    },
+    {
+      "id": "g.problem",
+      "label": "problem",
+      "synonyms": [
+        "undesirable state"
+      ],
+      "kind": "problem",
+      "gloss": "A sustained undesirable state affecting service or system behaviour (an operational issue) typically inferred from symptoms, alarms, or faults and requiring remediation.",
+      "example": "problem-svc-degrade: a service degradation problem affecting customer throughput, inferred from multiple symptoms (sym-ber-lambda1) and alarms (alarm-state-lambda1) across the service path.",
+      "ref": null,
+      "relations": [],
+      "instances": [
+        "problem-svc-degrade"
+      ]
+    },
+    {
+      "id": "g.cause",
+      "label": "cause",
+      "synonyms": [
+        "root cause"
+      ],
+      "kind": "cause",
+      "gloss": "A determined root cause explanation that accounts for a problem (an attribution linking underlying condition(s) to the problem instance).",
+      "example": "cause-optical-ber: the root cause attributed to problem-svc-degrade determined to be an optical amplifier failure increasing noise and causing high BER on lambda1.",
+      "ref": "cause",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "g.problem"
+        }
+      ],
+      "instances": [
+        "cause-optical-ber"
+      ]
+    },
+    {
+      "id": "g.incident",
+      "label": "incident",
+      "synonyms": [
+        "correlated incident"
+      ],
+      "kind": "incident",
+      "gloss": "A correlated grouping of symptoms and events considered a single actionable occurrence for incident management, created by associating related indications into one record.",
+      "example": "incident-0042: an incident that correlates sym-ber-lambda1 and alarm-state-lambda1 (and related samples) into a single ticket for triage and remediation across the affected resources.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "correlates",
+          "target": "g.symptom"
+        }
+      ],
+      "instances": [
+        "incident-0042"
+      ]
+    },
+    {
+      "id": "g.concern",
+      "label": "concern-score",
+      "synonyms": [
+        "concern",
+        "significance"
+      ],
+      "kind": "concern",
+      "gloss": "A numeric significance score attached to an anomaly that expresses how operationally concerning that anomaly is (used to prioritise attention or escalation).",
+      "example": "concern-78: a concern-score of 78/100 attached to anom-ber-lambda1 indicating a high operational significance and recommending elevated priority for investigation.",
+      "ref": "concern",
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "concern-78"
+      ]
+    },
+    {
+      "id": "g.confidence",
+      "label": "confidence-score",
+      "synonyms": [
+        "confidence"
+      ],
+      "kind": "confidence",
+      "gloss": "A numeric confidence score annotating an anomaly that quantifies the system's certainty that the detected anomaly is real or correctly attributed.",
+      "example": "confidence-82: a confidence-score of 82% associated with anom-ber-lambda1 meaning the detection algorithm estimates an 82% probability that the anomaly is a true positive.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "confidence-82"
+      ]
+    }
+  ]
+}

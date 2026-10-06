@@ -1,0 +1,80 @@
+{
+  "system": "Agent O",
+  "dialect": "TM Forum intent (TMF921 / IG 1253)",
+  "intents": [
+    {
+      "id": "MI1",
+      "pair": "M1",
+      "flow_class": "business-data",
+      "bounds": {
+        "bandwidth_min": 0.5,
+        "latency_max": 10,
+        "availability_min": 0.999,
+        "protection_required": false
+      },
+      "note": "fully satisfiable on the direct 1G path"
+    },
+    {
+      "id": "MI2",
+      "pair": "M2",
+      "flow_class": "critical-txn",
+      "bounds": {
+        "bandwidth_min": 10,
+        "latency_max": 6,
+        "availability_min": 0.9999,
+        "protection_required": true
+      },
+      "note": "fully satisfiable on the protected 10G path"
+    },
+    {
+      "id": "MI3",
+      "pair": "M2",
+      "flow_class": "critical-txn",
+      "bounds": {
+        "bandwidth_min": 10,
+        "latency_max": 4.5,
+        "availability_min": 0.99999,
+        "protection_required": true
+      },
+      "note": "infeasible; the accept/reject FLIPS with the policy (premium holds latency and refers; assured degrades latency and accepts)"
+    },
+    {
+      "id": "MI4",
+      "pair": "M1",
+      "flow_class": "business-data",
+      "bounds": {
+        "bandwidth_min": 1,
+        "latency_max": 6,
+        "availability_min": 0.9999,
+        "protection_required": true
+      },
+      "note": "infeasible; only a slower protected path exists, so the decision flips with the policy"
+    },
+    {
+      "id": "MI5",
+      "pair": "M3",
+      "flow_class": "business-data",
+      "bounds": {
+        "bandwidth_min": 1,
+        "latency_max": 6,
+        "availability_min": 0.999,
+        "protection_required": false
+      },
+      "note": "EXPERIMENT-ONLY: advertised latency (7ms) says infeasible; the live path is 5ms and actually satisfies - only a feasibility probe reveals it",
+      "experiment_only": true
+    },
+    {
+      "id": "MI6",
+      "pair": "M4",
+      "flow_class": "critical-txn",
+      "bounds": {
+        "bandwidth_min": 2,
+        "latency_max": 15,
+        "availability_min": 0.9999,
+        "protection_required": true
+      },
+      "note": "EXPERIMENT-ONLY: advertised availability (.9999) says satisfiable; the live availability is .9995 and actually breaches - a probe catches the false refine",
+      "experiment_only": true
+    }
+  ]
+}

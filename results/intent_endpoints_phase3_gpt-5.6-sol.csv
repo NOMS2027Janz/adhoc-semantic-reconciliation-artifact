@@ -1,0 +1,7 @@
+case,phase,model,placement,trial,submitted,precision,recall,experiment_only_recall,residual_total,interrogate_calls,turns,total_tokens,reasoning_tokens,latency_s
+intent_endpoints,coref,gpt-5.6-sol,both_cognitive,0,True,1.0,1.0,1.0,0,8,3,4395,77,9.24
+intent_endpoints,coref,gpt-5.6-sol,both_cognitive,1,True,1.0,1.0,1.0,0,8,3,4398,76,10.68
+intent_endpoints,coref,gpt-5.6-sol,provider_inert,0,True,1.0,0.6,0.0,4,0,1,1236,45,2.68
+intent_endpoints,coref,gpt-5.6-sol,provider_inert,1,True,1.0,0.6,0.0,4,0,1,1251,60,2.53
+intent_endpoints,coref,gpt-5.6-sol,both_inert,0,True,1.0,0.6,0.0,4,0,1,1187,79,4.0
+intent_endpoints,coref,gpt-5.6-sol,both_inert,1,True,1.0,0.6,0.0,4,0,1,1140,32,2.64

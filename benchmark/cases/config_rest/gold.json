@@ -1,0 +1,27 @@
+{
+  "case": "config_rest",
+  "operational_case": "REST cross-standard reconciliation (MEF Sonata product order vs TMF641 service order), no shared standard",
+  "seed": "hand-authored REST case built from two real, published REST/OpenAPI interfaces (MEF LSO Sonata product ordering; TM Forum TMF641 service ordering). The concept surfaces mirror the real specifications; only this gold key is authored. The two APIs share the TMF Open API framework (orderItem, action, state, characteristic), so they look alike on the surface while denoting different things across the commercial-product / technical-service seam.",
+  "note": "Gold for the REST cross-standard case. Correspondences are the correct cross-model concept pairs at the product<->service seam. false_cognates are surface-tempting pairs that must NOT be proposed — here the 'state' trap, identical field name AND identical lifecycle enum on both sides, but the product-order state tracks commercial fulfilment while the service-order state tracks technical activation. residual is the per-side native concepts with no counterpart. Verification is by worked provisioning read-back across the seam.",
+  "correspondences": [
+    {"a": "p.order", "b": "s.order", "ref": "order-envelope"},
+    {"a": "p.item", "b": "s.item", "ref": "orderable-item"},
+    {"a": "p.product", "b": "s.service", "ref": "delivered-construct"},
+    {"a": "p.config", "b": "s.char", "ref": "technical-parameters"},
+    {"a": "p.place", "b": "s.place", "ref": "service-site"}
+  ],
+  "false_cognates": [
+    {"a": "p.state", "b": "s.state", "why": "both are labelled 'state' and carry the SAME lifecycle enum (acknowledged, rejected, pending, held, inProgress, completed, failed, cancelled), because MEF LSO adopted the TMF Open API state model. But the product-order state tracks COMMERCIAL fulfilment to the buyer while the service-order state tracks TECHNICAL activation in the operator's network: a product 'completed' (delivered to the buyer) is not a service 'completed' (activated). Same name and same enum, different object and lifecycle — the surface-identical cross-layer cognate the ad-hoc reference is built to pre-empt."}
+  ],
+  "residual": {
+    "a_only": [{"id": "p.term", "ref": null, "closure": "commercial contract term of the ordered item; no counterpart in the operator's technical service order"}],
+    "b_only": [{"id": "s.spec", "ref": null, "closure": "technical service blueprint the service instantiates; an intra-operator design artefact not exposed in the commercial product order"}, {"id": "s.support", "ref": null, "closure": "internal lower-layer supporting service (the transport underlay); invisible to the buyer/seller product order"}]
+  },
+  "residual_by_placement": {"both_cognitive": 0, "one_inert": 2, "both_inert": 3},
+  "invariants": ["order-envelope identity (product order <-> fulfilling service order)", "delivered-construct identity (ordered product <-> realising service)", "technical-parameter equality (config <-> characteristics)", "service-site identity (UNI location <-> service termination)", "state-layer separation (commercial fulfilment != technical activation)"],
+  "verification_by_placement": {
+    "both_cognitive": "worked provisioning read-back: raise one service order to fulfil the product order and read the activated service back to confirm every ordered parameter is honoured at the same site",
+    "one_inert": "provisioning read-back on the live side; pinned-requirement evidence on the inert side",
+    "both_inert": "external adjudication or a downstream provisioning test"
+  }
+}

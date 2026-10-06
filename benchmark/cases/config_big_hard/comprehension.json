@@ -1,0 +1,54 @@
+{
+  "model": "a",
+  "meaning_questions": [
+    {
+      "id": "q_node",
+      "concept_id": "t.node",
+      "question": "What does this concept denote, in terms a domain engineer would recognise?",
+      "answer_key": "A forwarding node in the single multi-layer network topology.",
+      "must_not_confuse_with": []
+    },
+    {
+      "id": "q_cs",
+      "concept_id": "t.cs",
+      "question": "What does 'connectivity-service' denote here?",
+      "answer_key": "An end-to-end connectivity service across the network (a provisioned path between endpoints).",
+      "must_not_confuse_with": []
+    },
+    {
+      "id": "q_link",
+      "concept_id": "t.link",
+      "question": "What does 'link' denote here?",
+      "answer_key": "A topological link between two nodes.",
+      "must_not_confuse_with": []
+    },
+    {
+      "id": "q_sgrade",
+      "concept_id": "t.sgrade",
+      "question": "What does 'signal-grade' denote here?",
+      "answer_key": "The optical signal grade (OSNR class) of a channel — a physical-layer transmission-quality class. It is NOT a service-level class or commercial tier.",
+      "must_not_confuse_with": ["i.sclass"]
+    },
+    {
+      "id": "q_pgroup",
+      "concept_id": "t.pgroup",
+      "question": "What does 'protection-group' denote here?",
+      "answer_key": "A 1+1 protection group pairing a working and a protection path — a resilience construct. It is NOT a protection role played by a single path.",
+      "must_not_confuse_with": ["i.prole"]
+    },
+    {
+      "id": "q_vendor",
+      "concept_id": "t.vendor",
+      "question": "What does 'x-vendor-7731' denote here?",
+      "answer_key": "Its meaning cannot be determined from this model: an opaque vendor-proprietary concept with no description and no shared-reference binding. A faithful consumer should say it cannot be determined rather than guess.",
+      "must_not_confuse_with": []
+    }
+  ],
+  "use_task": {
+    "goal": "You must provision a protected, end-to-end optical connectivity service across the topology between two client access points. Using ONLY this model, list the concepts directly relevant to that task and say in one phrase how each is used.",
+    "relevant_ids": ["t.cs", "t.sip", "t.node", "t.link", "t.och", "t.pgroup"],
+    "irrelevant_ids": ["t.vendor"],
+    "answer_key": "t.cs = the service being provisioned; t.sip = the client access points it runs between; t.node/t.link/t.topo = the topology it traverses; t.och/t.oms = the optical realisation; t.pgroup = the 1+1 protection requirement. t.vendor is opaque and cannot be used; t.sgrade is a quality tag, not an actionable provisioning knob."
+  },
+  "ambiguous_ids": ["t.vendor", "t.sgrade"]
+}

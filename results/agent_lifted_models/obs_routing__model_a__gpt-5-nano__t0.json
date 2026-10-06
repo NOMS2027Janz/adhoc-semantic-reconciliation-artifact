@@ -1,0 +1,145 @@
+{
+  "system": "Agent F - legacy fault manager",
+  "dialect": "RFC 8632 / syslog / SNMP / X.733 (routing)",
+  "modules": [
+    "x733-probable-cause",
+    "rfc8632-alarms"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-nano from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case obs_routing, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/obs_routing/model_a*.json.",
+  "concepts": [
+    {
+      "id": "f.node",
+      "label": "managed-object",
+      "synonyms": [
+        "resource",
+        "router",
+        "BGP session"
+      ],
+      "kind": "resource",
+      "gloss": "A managed resource in the fault-management domain representing a network element (such as a router or a BGP session) that can be the subject of events and alarms.",
+      "example": "R7",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "R7",
+        "bgp-R7-AS64500"
+      ]
+    },
+    {
+      "id": "f.event",
+      "label": "event",
+      "synonyms": [
+        "syslog",
+        "trap"
+      ],
+      "kind": "event",
+      "gloss": "An event record indicating something notable occurred on a managed resource, such as a syslog message or SNMP trap.",
+      "example": "trap-bgp-R7-t0",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        }
+      ],
+      "instances": [
+        "trap-bgp-R7-t0"
+      ]
+    },
+    {
+      "id": "f.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "fault alarm",
+        "alarm condition"
+      ],
+      "kind": "alarm",
+      "gloss": "An alarm is a fault-condition record attached to a resource, optionally carrying a severity level and a probable cause.",
+      "example": "alarm-bgp-R7-down",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        },
+        {
+          "rel": "carries",
+          "target": "f.severity"
+        },
+        {
+          "rel": "carries",
+          "target": "f.probable_cause"
+        }
+      ],
+      "instances": [
+        "alarm-bgp-R7-down"
+      ]
+    },
+    {
+      "id": "f.severity",
+      "label": "severity",
+      "synonyms": [
+        "perceived severity",
+        "alarm level"
+      ],
+      "kind": "severity",
+      "gloss": "The seriousness level of an alarm, expressed as one of the predefined levels (critical, major, minor, or warning).",
+      "example": "critical",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "critical",
+        "major",
+        "minor",
+        "warning"
+      ]
+    },
+    {
+      "id": "f.probable_cause",
+      "label": "probable-cause",
+      "synonyms": [
+        "X.733 cause",
+        "cause code"
+      ],
+      "kind": "cause-code",
+      "gloss": "A code indicating the most likely root cause of an alarm, aligned with X.733 cause codes.",
+      "example": "bgpConnectionLost",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "bgpConnectionLost",
+        "holdTimerExpired"
+      ]
+    },
+    {
+      "id": "f.clear",
+      "label": "clear",
+      "synonyms": [
+        "alarm clear"
+      ],
+      "kind": "clear",
+      "gloss": "An action that clears or acknowledges an existing alarm on a resource.",
+      "example": "clear-alarm-bgp-R7-down",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "clears",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "clear-alarm-bgp-R7-down"
+      ]
+    }
+  ]
+}

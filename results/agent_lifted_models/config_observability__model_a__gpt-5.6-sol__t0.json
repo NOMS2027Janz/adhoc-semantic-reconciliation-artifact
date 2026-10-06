@@ -1,0 +1,144 @@
+{
+  "system": "Agent F — legacy fault manager",
+  "dialect": "RFC 8632 / syslog / SNMP / X.733",
+  "modules": [
+    "x733-probable-cause",
+    "rfc8632-alarms"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5.6-sol from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_observability, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_observability/model_a*.json.",
+  "concepts": [
+    {
+      "id": "f.node",
+      "label": "managed-object",
+      "synonyms": [
+        "resource",
+        "network element"
+      ],
+      "kind": "resource",
+      "gloss": "A managed-object is an identifiable network resource or element whose operational state is monitored and against which events and alarms are raised.",
+      "example": "The optical resource lambda1 is the managed object on which trap-lambda1-t0 occurs and alarm-lambda1-SD is raised.",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "R1",
+        "lambda1"
+      ]
+    },
+    {
+      "id": "f.event",
+      "label": "event",
+      "synonyms": [
+        "syslog",
+        "trap"
+      ],
+      "kind": "event",
+      "gloss": "An event is a point-in-time notification, such as a syslog message or SNMP trap, reporting an occurrence observed on a managed object without necessarily representing a persistent fault condition.",
+      "example": "trap-lambda1-t0 is an event emitted for the managed object lambda1 at time t0.",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        }
+      ],
+      "instances": [
+        "trap-lambda1-t0"
+      ]
+    },
+    {
+      "id": "f.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "fault alarm",
+        "alarm condition"
+      ],
+      "kind": "alarm",
+      "gloss": "An alarm is a fault-condition record associated with a managed object that carries a perceived severity and a probable-cause code and remains relevant until cleared or otherwise resolved.",
+      "example": "alarm-lambda1-SD records a degraded-signal fault on lambda1, carrying severity major and probable cause degradedSignal.",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        },
+        {
+          "rel": "carries",
+          "target": "f.severity"
+        },
+        {
+          "rel": "carries",
+          "target": "f.probable_cause"
+        }
+      ],
+      "instances": [
+        "alarm-lambda1-SD"
+      ]
+    },
+    {
+      "id": "f.severity",
+      "label": "severity",
+      "synonyms": [
+        "perceived severity",
+        "alarm level"
+      ],
+      "kind": "severity",
+      "gloss": "Severity is the perceived impact or urgency classification assigned to an alarm, using levels such as critical, major, minor, or warning.",
+      "example": "alarm-lambda1-SD carries the severity major, indicating a more serious condition than minor or warning but below critical.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "critical",
+        "major",
+        "minor",
+        "warning"
+      ]
+    },
+    {
+      "id": "f.probable_cause",
+      "label": "probable-cause",
+      "synonyms": [
+        "X.733 cause",
+        "cause code"
+      ],
+      "kind": "cause-code",
+      "gloss": "A probable-cause is the standardized X.733-style cause code carried by an alarm to identify the type of fault believed to have produced the alarm condition.",
+      "example": "alarm-lambda1-SD carries degradedSignal as its probable cause, distinguishing it from a lossOfSignal fault.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "lossOfSignal",
+        "degradedSignal"
+      ]
+    },
+    {
+      "id": "f.clear",
+      "label": "clear",
+      "synonyms": [
+        "alarm clear"
+      ],
+      "kind": "clear",
+      "gloss": "A clear is a lifecycle notification or record that terminates a specific previously raised alarm because its associated fault condition is no longer active.",
+      "example": "clear-lambda1-SD clears alarm-lambda1-SD after the degraded-signal condition on lambda1 has ended.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "clears",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "clear-lambda1-SD"
+      ]
+    }
+  ]
+}

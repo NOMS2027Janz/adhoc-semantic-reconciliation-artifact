@@ -1,0 +1,67 @@
+{
+  "case": "config_vendor_messy",
+  "note": "Standard(A) <-> messy vendor(B) L3VPN correspondences. Includes a config/state 2:1 (s.rd ~ v.rd_cfg AND v.rd_state) and native gaps. Authored + validated by build_vendor_messy_case.py; do not hand-edit.",
+  "correspondences": [
+    {
+      "a": "s.vpnsvc",
+      "b": "v.inst",
+      "ref": "vpn-service"
+    },
+    {
+      "a": "s.rd",
+      "b": "v.rd_cfg",
+      "ref": "route-distinguisher"
+    },
+    {
+      "a": "s.rd",
+      "b": "v.rd_state",
+      "ref": "route-distinguisher"
+    },
+    {
+      "a": "s.importrt",
+      "b": "v.rt_imp",
+      "ref": "import-rt"
+    },
+    {
+      "a": "s.exportrt",
+      "b": "v.rt_exp",
+      "ref": "export-rt"
+    },
+    {
+      "a": "s.vpnaccess",
+      "b": "v.attach",
+      "ref": "vpn-access"
+    },
+    {
+      "a": "s.bgpneighbor",
+      "b": "v.bgp_nbr",
+      "ref": "bgp-neighbor"
+    },
+    {
+      "a": "s.bgpka",
+      "b": "v.bgp_ka",
+      "ref": "bgp-keepalive"
+    },
+    {
+      "a": "s.ipconn",
+      "b": "v.ipaddr",
+      "ref": "ip-connection"
+    }
+  ],
+  "false_cognates": [
+    {
+      "a": "s.importrt",
+      "b": "v.imp_policy",
+      "why": "import-route-target vs import-policy: both carry 'import', but a route-target community vs a named routing-policy filter (a leafref). s.importrt's true partner is v.rt_imp; v.imp_policy's standard partner is a native gap."
+    }
+  ],
+  "residual": {
+    "a_native": [
+      "s.svcbw"
+    ],
+    "b_native": [
+      "v.seg",
+      "v.imp_policy"
+    ]
+  }
+}

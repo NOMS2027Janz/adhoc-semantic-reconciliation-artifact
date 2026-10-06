@@ -1,0 +1,54 @@
+{
+  "system": "Agent G (NMOP anomalies)",
+  "dialect": "RFC 9940",
+  "individuals": [
+    {
+      "id": "g.an1",
+      "type": "underlying-condition",
+      "name": "anom-ber-lambda1",
+      "key": "corr-001",
+      "attrs": {
+        "resource": "lambda1",
+        "t": "t0"
+      },
+      "rels": [],
+      "_truth": "c1"
+    },
+    {
+      "id": "g.an2",
+      "type": "underlying-condition",
+      "name": "anom-bgp-R1",
+      "key": "corr-002",
+      "attrs": {
+        "resource": "R1",
+        "t": "t1"
+      },
+      "rels": [],
+      "_truth": "c2"
+    },
+    {
+      "id": "g.an3",
+      "type": "underlying-condition",
+      "name": "anom-L3-a",
+      "key": null,
+      "attrs": {
+        "resource": "L3",
+        "t": "t2"
+      },
+      "rels": [],
+      "_truth": "c3"
+    },
+    {
+      "id": "g.an4",
+      "type": "underlying-condition",
+      "name": "anom-L3-b",
+      "key": null,
+      "attrs": {
+        "resource": "L3",
+        "t": "t2"
+      },
+      "rels": [],
+      "_truth": "c4"
+    }
+  ]
+}

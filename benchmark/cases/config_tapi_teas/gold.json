@@ -1,0 +1,35 @@
+{
+  "case": "config_tapi_teas",
+  "operational_case": "configuration",
+  "seed": "real",
+  "note": "Gold-standard reconciliation for the configuration case. Correspondences are the correct cross-model concept pairs. false_cognates are lexically tempting pairs that must NOT be proposed. residual_by_placement gives the items expected to remain open at each cognition placement. invariants are what a correct translation must preserve. verification_by_placement names the method each placement admits.",
+  "correspondences": [
+    {"a": "t.node", "b": "i.tenode", "ref": "forwarding-node"},
+    {"a": "t.ltp", "b": "i.tp", "ref": "link-termination"},
+    {"a": "t.translink", "b": "i.stp", "ref": "layer-adaptation"},
+    {"a": "t.cs", "b": "i.tunnel", "ref": "connection-service"},
+    {"a": "t.lpq", "b": "i.otnlabel", "ref": "multiplex-structure"},
+    {"a": "t.nrg", "b": "i.cmatrix", "ref": "switching-constraint"},
+    {"a": "t.link", "b": "i.telink", "ref": "topo-link"},
+    {"a": "t.topo", "b": "i.tetopo", "ref": "topology"},
+    {"a": "t.cep", "b": "i.tcep", "ref": "conn-endpoint"}
+  ],
+  "false_cognates": [
+    {"a": "t.ltp", "b": "i.ttp", "why": "link-termination-point and tunnel-termination-point share the '-termination-point' name shape but denote a link end and a trail head respectively; they bind to different reference entries."}
+  ],
+  "residual": {
+    "a_only": [{"id": "t.sip", "ref": "client-svc-access", "closure": "TEAS side self-extends"}],
+    "b_only": [{"id": "i.ttp", "ref": "trail-termination", "closure": "TAPI side self-extends"}]
+  },
+  "residual_by_placement": {
+    "both_cognitive": 0,
+    "one_inert": 1,
+    "both_inert": 2
+  },
+  "invariants": ["endpoint-identity", "connectivity", "capacity", "layer-relationships", "switching-constraints", "odu-multiplexing"],
+  "verification_by_placement": {
+    "both_cognitive": "closed-loop worked exchange, self-certifying",
+    "one_inert": "evidence and round-trip on invariants",
+    "both_inert": "external adjudication or downstream test"
+  }
+}

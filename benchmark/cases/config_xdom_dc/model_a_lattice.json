@@ -1,0 +1,24 @@
+{
+  "system": "Agent X — Lattice",
+  "dialect": "Lattice (bespoke DC-fabric OSS)",
+  "modules": ["lattice-fabric", "lattice-vlans"],
+  "note": "Lifted semantic model, Lattice (data-centre fabric) side. Home-grown, no standard vocabulary. Lattice (the physical leaf/spine fabric) and the overlay SDN controller are adjacent domains that touch only where the overlay binds to the underlay on a leaf. Concepts carry a bespoke label, synonyms, a kind, a gloss, an example, the ad-hoc reference entry bound to (ref; a native-only concept binds to a native-gap ref), relations, and instances. Carries the 'zone' trap (availability-zone) and one opaque tag. ref=null marks an opaque item.",
+  "concepts": [
+    {"id": "x.bind", "label": "fabric-attachment", "synonyms": ["access-port binding", "leaf attachment"], "kind": "attachment", "gloss": "the point on a leaf switch where an overlay segment is bound onto a local fabric VLAN and port", "example": "the attachment of tenant-blue traffic on leaf-3 port et-9", "ref": "underlay-binding",
+     "relations": [{"rel": "on", "target": "x.leaf"}, {"rel": "carries", "target": "x.vlan"}], "instances": ["attach-leaf3-blue"]},
+    {"id": "x.vlan", "label": "fabric-vlan", "synonyms": ["local VLAN", "bridge vlan"], "kind": "l2-domain", "gloss": "the local VLAN on a leaf that carries one tenant broadcast domain within the fabric", "example": "VLAN 1201 for tenant-blue on leaf-3", "ref": "segment-id",
+     "relations": [{"rel": "on", "target": "x.leaf"}], "instances": ["vlan-1201 (tenant-blue)"]},
+    {"id": "x.leaf", "label": "leaf-switch", "synonyms": ["ToR", "access switch"], "kind": "node", "gloss": "a leaf (top-of-rack) switch where servers and overlay bindings attach to the fabric", "example": "leaf-3 in pod-A", "ref": "edge-device",
+     "relations": [{"rel": "in", "target": "x.spine"}], "instances": ["leaf-3", "leaf-4"]},
+    {"id": "x.mtu", "label": "fabric-mtu", "synonyms": ["underlay mtu"], "kind": "framing", "gloss": "the MTU the fabric enforces, sized to carry encapsulated overlay frames without fragmentation", "example": "9216-byte MTU across the fabric for VXLAN overhead", "ref": "mtu",
+     "relations": [{"rel": "of", "target": "x.leaf"}], "instances": ["MTU 9216"]},
+    {"id": "x.gw", "label": "svi-gateway", "synonyms": ["vlan gateway", "SVI"], "kind": "l3-gateway", "gloss": "the L3 gateway interface for a fabric VLAN, giving tenant hosts their default route", "example": "the SVI for VLAN 1201, 10.20.1.1", "ref": "default-gateway",
+     "relations": [{"rel": "for", "target": "x.vlan"}], "instances": ["svi-1201 (10.20.1.1)"]},
+    {"id": "x.spine", "label": "spine-switch", "synonyms": ["spine", "fabric core"], "kind": "node", "gloss": "a spine switch forming the fabric backbone between leaves - a fabric-internal object with no overlay counterpart", "example": "spine-1 interconnecting all leaves in pod-A", "ref": "fabric-spine",
+     "relations": [{"rel": "interconnects", "target": "x.leaf"}], "instances": ["spine-1", "spine-2"]},
+    {"id": "x.az", "label": "availability-zone", "synonyms": ["zone", "fault domain"], "kind": "fault-domain", "gloss": "an availability zone: a physical fault domain of the fabric (power/cooling/pod boundary) over which placement is spread - a fabric-internal notion of a 'zone', unrelated to any policy grouping", "example": "AZ-1 comprising pod-A's racks on independent power", "ref": "avail-zone",
+     "relations": [{"rel": "spans", "target": "x.leaf"}], "instances": ["AZ-1", "AZ-2"]},
+    {"id": "x.vendor", "label": "lattice-tag-3", "synonyms": ["proprietary attr 3"], "kind": "opaque", "gloss": "", "example": "", "ref": null,
+     "relations": [{"rel": "on", "target": "x.leaf"}], "instances": ["lattice-tag-3=0x9 on leaf-3"]}
+  ]
+}

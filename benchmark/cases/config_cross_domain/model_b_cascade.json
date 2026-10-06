@@ -1,0 +1,24 @@
+{
+  "system": "Agent Y — Cascade",
+  "dialect": "Cascade (bespoke IP/VPN controller)",
+  "modules": ["cascade-services", "cascade-endpoints"],
+  "note": "Lifted semantic model, Cascade (IP/VPN) side. Home-grown, no standard vocabulary; same field conventions as the Meridian model. The two worlds are different domains and overlap only where a Cascade service rides a Meridian circuit as its underlay.",
+  "concepts": [
+    {"id": "c.underlay", "label": "underlay", "synonyms": ["service underlay"], "kind": "underlay-binding", "gloss": "the transport circuit a service is bound to ride over — owned by the transport domain, consumed here", "example": "service SVC-42 rides underlay U-7", "ref": "transport-underlay",
+     "relations": [{"rel": "carries-service", "target": "c.service"}], "instances": ["U-7 (under SVC-42)"]},
+    {"id": "c.attachment", "label": "attachment", "synonyms": ["attachment point"], "kind": "attachment-point", "gloss": "the logical point at which a service attaches to the customer site — where the IP service meets the customer router", "example": "the NY attachment of SVC-42", "ref": "demarcation",
+     "relations": [{"rel": "of-service", "target": "c.service"}, {"rel": "bears", "target": "c.vlan"}], "instances": ["att-NY-SVC42", "att-FRA-SVC42"]},
+    {"id": "c.rate", "label": "rate", "synonyms": ["CIR"], "kind": "rate", "gloss": "the committed information rate the service guarantees to the customer's traffic", "example": "5 Gbit/s CIR on SVC-42", "ref": "service-rate",
+     "relations": [{"rel": "of-service", "target": "c.service"}], "instances": ["5 Gbit/s CIR"]},
+    {"id": "c.latency", "label": "latency", "synonyms": ["tier"], "kind": "latency", "gloss": "the latency commitment of the service, expressed as a named SLA tier rather than a raw number", "example": "SVC-42 is latency tier T2 (<= 8 ms)", "ref": "latency-bound",
+     "relations": [{"rel": "of-service", "target": "c.service"}], "instances": ["tier T2 (<=8ms)"]},
+    {"id": "c.protection", "label": "protection", "synonyms": [], "kind": "protection", "gloss": "the resilience the service requires — that connectivity survive a failure in its transport path", "example": "SVC-42 must survive a single underlay path failure", "ref": "protection-requirement",
+     "relations": [{"rel": "of-service", "target": "c.service"}], "instances": ["survive one path failure"]},
+    {"id": "c.grade", "label": "grade", "synonyms": [], "kind": "service-class", "gloss": "the IP class of service applied to the traffic — its scheduling and drop priority in the routers", "example": "SVC-42 traffic is gold class of service (low-latency queue)", "ref": null,
+     "relations": [{"rel": "of-service", "target": "c.service"}], "instances": ["gold", "silver", "bronze"]},
+    {"id": "c.vlan", "label": "vlan", "synonyms": ["c-tag", "encapsulation"], "kind": "encapsulation", "gloss": "the VLAN tag identifying the customer's traffic on an attachment — a purely IP/Ethernet object", "example": "C-VLAN 100 on the NY attachment of SVC-42", "ref": null,
+     "relations": [{"rel": "on-attachment", "target": "c.attachment"}], "instances": ["C-VLAN 100"]},
+    {"id": "c.service", "label": "service", "synonyms": ["vpn service", "ip service"], "kind": "ip-service", "gloss": "the end-to-end IP/VPN service delivered to the customer, riding a transport underlay; unknown to the transport domain, which sees only the circuit", "example": "SVC-42, a point-to-point IP service NY to FRA", "ref": null,
+     "relations": [{"rel": "rides", "target": "c.underlay"}, {"rel": "attaches-at", "target": "c.attachment"}], "instances": ["SVC-42 (NY-FRA)"]}
+  ]
+}

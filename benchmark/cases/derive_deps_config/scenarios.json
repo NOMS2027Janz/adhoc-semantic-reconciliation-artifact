@@ -1,0 +1,39 @@
+{
+  "case": "derive_deps_config",
+  "note": "Correlation scenarios over the derive_deps_config resources, reused from E7b so the correlation step is identical except for the source of the dependency map (hand-fed gold vs agent-derived). Symptoms reference the two service chains {otu2,ip-le3,l3vpn-acme} and {otu5,ip-le7,evpn-globex}. Incident gold is DERIVED by correlate() with the GOLD dependency map.",
+  "scenarios": [
+    {
+      "id": "C1",
+      "window": 5.0,
+      "note": "Cross-layer chain in chain A -> one incident rooted at optical; unrelated service symptom on chain B left separate. 2 incidents.",
+      "symptoms": [
+        {"id": "s1", "label": "OTU2 pre-FEC BER rising", "layer": "optical", "resource": "otu2", "t": 0},
+        {"id": "s2", "label": "IS-IS adjacency flap on link le3", "layer": "ip", "resource": "ip-le3", "t": 2},
+        {"id": "s3", "label": "L3VPN ACME latency-SLA breach", "layer": "service", "resource": "l3vpn-acme", "t": 3},
+        {"id": "s4", "label": "EVPN Globex CE reachability loss", "layer": "service", "resource": "evpn-globex", "t": 2}
+      ]
+    },
+    {
+      "id": "C2",
+      "window": 5.0,
+      "note": "Two independent cross-layer incidents (different chains); must not over-merge. 2 incidents.",
+      "symptoms": [
+        {"id": "s1", "label": "OTU2 loss of signal", "layer": "optical", "resource": "otu2", "t": 0},
+        {"id": "s2", "label": "link le3 down", "layer": "ip", "resource": "ip-le3", "t": 1},
+        {"id": "s3", "label": "OTU5 pre-FEC BER rising", "layer": "optical", "resource": "otu5", "t": 1},
+        {"id": "s4", "label": "IS-IS adjacency flap on link le7", "layer": "ip", "resource": "ip-le7", "t": 2},
+        {"id": "s5", "label": "EVPN Globex SLA breach", "layer": "service", "resource": "evpn-globex", "t": 3}
+      ]
+    },
+    {
+      "id": "C3",
+      "window": 5.0,
+      "note": "Same chain A, but a later service symptom falls outside the time window -> not merged. 2 incidents.",
+      "symptoms": [
+        {"id": "s1", "label": "OTU2 pre-FEC BER rising", "layer": "optical", "resource": "otu2", "t": 0},
+        {"id": "s2", "label": "IS-IS adjacency flap on link le3", "layer": "ip", "resource": "ip-le3", "t": 2},
+        {"id": "s3", "label": "L3VPN ACME SLA breach during a later change window", "layer": "service", "resource": "l3vpn-acme", "t": 30}
+      ]
+    }
+  ]
+}

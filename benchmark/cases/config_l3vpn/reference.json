@@ -1,0 +1,20 @@
+{
+  "id": "ref.l3vpn.thin.v1",
+  "kind": "lexical",
+  "note": "Thin lexical reference for the IP/MPLS L3VPN case. Identity-only entries. It has NO entry for proprietary/opaque items (x-op-tag-91, vrf-tag-0x7): those carry no public meaning and remain residual. route-distinguisher and route-target are distinct entries, as are routing-policy (route-policy) and QoS (qos-profile), and customer-edge and iBGP session, so labels sharing 'route-', 'policy', or 'neighbor' bind apart.",
+  "entries": [
+    {"id": "l3vpn-instance", "label": "L3VPN instance", "synonyms": ["l3vpn", "ip-vpn", "vpn-service"], "class": "service", "definition": "The managed layer-3 VPN as one end-to-end service across the provider network.", "example": "the ACME L3VPN over PE1, PE2, PE3"},
+    {"id": "vrf", "label": "VRF", "synonyms": ["vpn-node", "routing-instance", "vpn routing table"], "class": "instance", "definition": "The per-PE instance of the VPN: the virtual routing and forwarding table for the customer on one device.", "example": "the ACME VRF on PE1"},
+    {"id": "network-access", "label": "network access", "synonyms": ["attachment", "attachment-circuit", "sub-interface"], "class": "access", "definition": "The point at which a customer site attaches to the VPN on a PE.", "example": "the ACME attachment on PE1 toward CE-A"},
+    {"id": "customer-edge", "label": "customer edge", "synonyms": ["ce", "customer router"], "class": "peer", "definition": "The customer-owned router that peers with the PE across an attachment.", "example": "CE-A at the ACME headquarters"},
+    {"id": "route-distinguisher", "label": "route distinguisher", "synonyms": ["rd"], "class": "identifier", "definition": "The value prepended to a VRF's routes to make them globally unique; an identifier, not a policy.", "example": "65000:101 on the ACME VRF at PE1"},
+    {"id": "route-target", "label": "route target", "synonyms": ["rt", "vpn-target", "target community"], "class": "policy-value", "definition": "The extended-community value controlling which VRFs import and export a route; a policy value, not an identifier.", "example": "import/export 65000:1 on the hub VRF"},
+    {"id": "ip-addressing", "label": "PE-CE addressing", "synonyms": ["ip-connection", "interface-address"], "class": "addressing", "definition": "The IP subnet and addresses on a PE-CE attachment.", "example": "10.0.1.0/30, PE .1 / CE .2"},
+    {"id": "qos-profile", "label": "QoS profile", "synonyms": ["qos", "service-policy", "policy-map"], "class": "qos", "definition": "The quality-of-service treatment (policing, queueing) applied to traffic on an attachment.", "example": "gold: 200 Mbit/s CIR, low-latency queue"},
+    {"id": "pe-device", "label": "provider edge", "synonyms": ["pe", "ne", "device", "router"], "class": "node", "definition": "A provider-edge router hosting the customer's VRFs.", "example": "PE1"},
+    {"id": "ce-pe-protocol", "label": "PE-CE routing protocol", "synonyms": ["routing-protocol", "ce-protocol"], "class": "protocol", "definition": "The routing protocol run between a PE and a CE across an attachment.", "example": "eBGP between PE1 and CE-A"},
+    {"id": "route-policy", "label": "routing policy", "synonyms": ["route-map", "policy-statement", "import/export policy"], "class": "policy", "definition": "A policy that filters and manipulates routes on import and export of a VRF; distinct from a QoS policy.", "example": "deny customer default, set local-preference on import"},
+    {"id": "sla-report", "label": "SLA report", "synonyms": ["service report"], "class": "assurance", "definition": "A periodic conformance report on the service's SLA; a service-view construct with no device-config counterpart.", "example": "the monthly availability report for the ACME VPN"},
+    {"id": "ibgp-session", "label": "iBGP session", "synonyms": ["bgp-neighbor", "bgp-peer"], "class": "session", "definition": "An internal-BGP session between PEs carrying VPN routes across the provider core; a device-config construct with no network-model counterpart, distinct from a customer-edge peer.", "example": "the iBGP session from PE1 to PE2"}
+  ]
+}

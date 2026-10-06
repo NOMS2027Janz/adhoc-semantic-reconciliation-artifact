@@ -1,0 +1,184 @@
+{
+  "system": "Agent X — Lattice",
+  "dialect": "Lattice (bespoke DC-fabric OSS)",
+  "modules": [
+    "lattice-fabric",
+    "lattice-vlans"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-mini from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_xdom_dc, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_xdom_dc/model_a*.json.",
+  "concepts": [
+    {
+      "id": "x.bind",
+      "label": "fabric-attachment",
+      "synonyms": [
+        "access-port binding",
+        "leaf attachment"
+      ],
+      "kind": "attachment",
+      "gloss": "A fabric-attachment that binds a specific local L2 domain (VLAN) to an access attachment point on a particular leaf switch, representing an access-port or leaf attachment in the fabric.",
+      "example": "attach-leaf3-blue = an access attachment on leaf-3 that carries vlan-1201 (tenant-blue), i.e. the access-port binding that places that port into the tenant-blue VLAN.",
+      "ref": "underlay-binding",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "x.leaf"
+        },
+        {
+          "rel": "carries",
+          "target": "x.vlan"
+        }
+      ],
+      "instances": [
+        "attach-leaf3-blue"
+      ]
+    },
+    {
+      "id": "x.vlan",
+      "label": "fabric-vlan",
+      "synonyms": [
+        "local VLAN",
+        "bridge vlan"
+      ],
+      "kind": "l2-domain",
+      "gloss": "A fabric-scoped L2 broadcast domain (a local/bridge VLAN) defined on a leaf switch to segregate tenant or service traffic at layer 2.",
+      "example": "vlan-1201 (tenant-blue) = the local L2 domain configured on leaf-3 that carries all tenant-blue host traffic on that leaf.",
+      "ref": "segment-id",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "x.leaf"
+        }
+      ],
+      "instances": [
+        "vlan-1201 (tenant-blue)"
+      ]
+    },
+    {
+      "id": "x.leaf",
+      "label": "leaf-switch",
+      "synonyms": [
+        "ToR",
+        "access switch"
+      ],
+      "kind": "node",
+      "gloss": "A leaf (ToR/access) switch node in the data‑center fabric that hosts access attachments and VLANs and uplinks into the fabric core (spines).",
+      "example": "leaf-3 = a ToR/access switch that hosts attach-leaf3-blue and vlan-1201 (tenant-blue) and uplinks into the fabric spines (e.g., spine-1, spine-2).",
+      "ref": "edge-device",
+      "relations": [
+        {
+          "rel": "in",
+          "target": "x.spine"
+        }
+      ],
+      "instances": [
+        "leaf-3",
+        "leaf-4"
+      ]
+    },
+    {
+      "id": "x.mtu",
+      "label": "fabric-mtu",
+      "synonyms": [
+        "underlay mtu"
+      ],
+      "kind": "framing",
+      "gloss": "An underlay framing parameter that records the maximum transmission unit (MTU) setting applied to a leaf (or its interfaces) and therefore to frames traversing that leaf.",
+      "example": "MTU 9216 = the jumbo-frame MTU configured on leaf-3 so its uplinks and attached endpoints use 9216-byte frames across the fabric.",
+      "ref": "mtu",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "x.leaf"
+        }
+      ],
+      "instances": [
+        "MTU 9216"
+      ]
+    },
+    {
+      "id": "x.gw",
+      "label": "svi-gateway",
+      "synonyms": [
+        "vlan gateway",
+        "SVI"
+      ],
+      "kind": "l3-gateway",
+      "gloss": "A switched virtual interface (SVI) or VLAN gateway: the layer‑3 gateway IP/interface on a leaf that serves as the default router for hosts in a given VLAN.",
+      "example": "svi-1201 (10.20.1.1) = the SVI configured on leaf-3 that provides the L3 gateway for hosts in vlan-1201 (tenant-blue).",
+      "ref": "default-gateway",
+      "relations": [
+        {
+          "rel": "for",
+          "target": "x.vlan"
+        }
+      ],
+      "instances": [
+        "svi-1201 (10.20.1.1)"
+      ]
+    },
+    {
+      "id": "x.spine",
+      "label": "spine-switch",
+      "synonyms": [
+        "spine",
+        "fabric core"
+      ],
+      "kind": "node",
+      "gloss": "A spine (fabric-core) switch node whose role is to interconnect leaf switches and carry inter-leaf and routed fabric traffic.",
+      "example": "spine-1 = a fabric-core switch that uplinks to leaf-3 and leaf-4 to carry inter-leaf traffic and provide fabric forwarding.",
+      "ref": "fabric-spine",
+      "relations": [
+        {
+          "rel": "interconnects",
+          "target": "x.leaf"
+        }
+      ],
+      "instances": [
+        "spine-1",
+        "spine-2"
+      ]
+    },
+    {
+      "id": "x.az",
+      "label": "availability-zone",
+      "synonyms": [
+        "zone",
+        "fault domain"
+      ],
+      "kind": "fault-domain",
+      "gloss": "An availability zone / fault-domain grouping that spans one or more leaf switches to represent a shared failure or locality domain within the fabric.",
+      "example": "AZ-1 = an availability zone that contains leaf-3 (so leaf-3 is in the same fault domain AZ-1), while AZ-2 contains leaf-4.",
+      "ref": "avail-zone",
+      "relations": [
+        {
+          "rel": "spans",
+          "target": "x.leaf"
+        }
+      ],
+      "instances": [
+        "AZ-1",
+        "AZ-2"
+      ]
+    },
+    {
+      "id": "x.vendor",
+      "label": "lattice-tag-3",
+      "synonyms": [
+        "proprietary attr 3"
+      ],
+      "kind": "opaque",
+      "gloss": "A vendor-proprietary, opaque per-leaf attribute (lattice-tag-3) used by the fabric for device-specific metadata or flags that are not part of the standard model.",
+      "example": "lattice-tag-3=0x9 on leaf-3 = a vendor-specific tag value 0x9 attached to leaf-3 (used internally by the lattice fabric for proprietary behavior).",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on",
+          "target": "x.leaf"
+        }
+      ],
+      "instances": [
+        "lattice-tag-3=0x9 on leaf-3"
+      ]
+    }
+  ]
+}

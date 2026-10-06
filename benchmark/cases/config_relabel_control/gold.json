@@ -1,0 +1,94 @@
+{
+  "case": "config_tapi_teas",
+  "operational_case": "configuration",
+  "seed": "real",
+  "note": "Gold-standard reconciliation for the configuration case. Correspondences are the correct cross-model concept pairs. false_cognates are lexically tempting pairs that must NOT be proposed. residual_by_placement gives the items expected to remain open at each cognition placement. invariants are what a correct translation must preserve. verification_by_placement names the method each placement admits.",
+  "correspondences": [
+    {
+      "a": "a01",
+      "b": "b01",
+      "ref": "r01"
+    },
+    {
+      "a": "a02",
+      "b": "b02",
+      "ref": "r02"
+    },
+    {
+      "a": "a03",
+      "b": "b03",
+      "ref": "r03"
+    },
+    {
+      "a": "a05",
+      "b": "b05",
+      "ref": "r06"
+    },
+    {
+      "a": "a06",
+      "b": "b06",
+      "ref": "r07"
+    },
+    {
+      "a": "a07",
+      "b": "b07",
+      "ref": "r08"
+    },
+    {
+      "a": "a08",
+      "b": "b08",
+      "ref": "r09"
+    },
+    {
+      "a": "a09",
+      "b": "b09",
+      "ref": "r10"
+    },
+    {
+      "a": "a10",
+      "b": "b10",
+      "ref": "r11"
+    }
+  ],
+  "false_cognates": [
+    {
+      "a": "a02",
+      "b": "b04",
+      "why": "link-termination-point and tunnel-termination-point share the '-termination-point' name shape but denote a link end and a trail head respectively; they bind to different reference entries."
+    }
+  ],
+  "residual": {
+    "a_only": [
+      {
+        "id": "a04",
+        "ref": "client-svc-access",
+        "closure": "TEAS side self-extends"
+      }
+    ],
+    "b_only": [
+      {
+        "id": "b04",
+        "ref": "trail-termination",
+        "closure": "TAPI side self-extends"
+      }
+    ]
+  },
+  "residual_by_placement": {
+    "both_cognitive": 0,
+    "one_inert": 1,
+    "both_inert": 2
+  },
+  "invariants": [
+    "endpoint-identity",
+    "connectivity",
+    "capacity",
+    "layer-relationships",
+    "switching-constraints",
+    "odu-multiplexing"
+  ],
+  "verification_by_placement": {
+    "both_cognitive": "closed-loop worked exchange, self-certifying",
+    "one_inert": "evidence and round-trip on invariants",
+    "both_inert": "external adjudication or downstream test"
+  }
+}

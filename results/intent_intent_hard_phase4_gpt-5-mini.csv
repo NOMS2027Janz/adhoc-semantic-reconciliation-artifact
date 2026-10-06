@@ -1,0 +1,7 @@
+case,phase,model,trajectory,policy,placement,trial,setpiece,submitted,n_hops,fulfilment_correct,decision_correct,migration_correct,hop_accuracy,telemetry_calls,best_calls,policy_calls,turns,total_tokens,reasoning_tokens,latency_s
+intent_hard,assure,gpt-5-mini,T1,exec,both_cognitive,0,True,True,4,4,4,4,1.0,4,2,2,12,46570,1536,34.29
+intent_hard,assure,gpt-5-mini,T1,exec,both_cognitive,1,True,True,4,4,4,3,0.75,4,2,2,10,34722,1472,26.76
+intent_hard,assure,gpt-5-mini,T2,resil,both_cognitive,0,False,True,2,2,2,2,1.0,2,1,0,6,17503,1216,18.86
+intent_hard,assure,gpt-5-mini,T2,resil,both_cognitive,1,False,True,2,2,2,2,1.0,2,1,1,7,21271,1024,18.35
+intent_hard,assure,gpt-5-mini,T3,bulk,both_cognitive,0,False,True,2,2,1,1,0.5,2,0,1,4,15968,2432,38.19
+intent_hard,assure,gpt-5-mini,T3,bulk,both_cognitive,1,False,True,2,2,1,1,0.5,2,0,1,4,11308,1600,18.93

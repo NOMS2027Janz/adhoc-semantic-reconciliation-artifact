@@ -1,0 +1,24 @@
+{
+  "system": "Agent X — Beacon",
+  "dialect": "Beacon (bespoke RAN OSS)",
+  "modules": ["beacon-radio", "beacon-backhaul"],
+  "note": "Lifted semantic model, Beacon (radio-access) side. Home-grown, no standard vocabulary. Beacon and the packet-core controller are adjacent domains that touch only at the user-plane transport seam between the cell site and the core. Each concept carries a bespoke label, synonyms, a kind, a gloss, an example, the ad-hoc reference entry it bound to (ref; a native-only concept binds to a native-gap ref with no counterpart), relations, and instances. A live side volunteers gloss/example; an inert side exposes only label, kind, relations, and instances. ref=null marks an opaque item with no public meaning.",
+  "concepts": [
+    {"id": "x.backhaul", "label": "backhaul-link", "synonyms": ["transport link", "site uplink"], "kind": "transport", "gloss": "the user-plane transport link carrying subscriber traffic from the cell site up to the core; the underlay the core's sessions ride", "example": "the 10G backhaul from site NR-because-441 to the core edge", "ref": "up-transport",
+     "relations": [{"rel": "presents-at", "target": "x.sitegw"}, {"rel": "serves", "target": "x.cell"}], "instances": ["bh-441 (site-to-core)"]},
+    {"id": "x.sitegw", "label": "site-gateway", "synonyms": ["cell-site gateway", "CSG"], "kind": "demarcation", "gloss": "the router at the cell site where the backhaul presents to the transport network; the demarcation toward the core", "example": "the CSG port at site NR-441 facing the transport ring", "ref": "transport-demarc",
+     "relations": [{"rel": "on-link", "target": "x.backhaul"}], "instances": ["csg-441"]},
+    {"id": "x.dscp", "label": "backhaul-marking", "synonyms": ["transport marking", "diffserv"], "kind": "qos-marking", "gloss": "the DiffServ marking the backhaul honours on subscriber traffic across the transport", "example": "EF marking honoured for voice bearers on bh-441", "ref": "transport-qos",
+     "relations": [{"rel": "on-link", "target": "x.backhaul"}], "instances": ["EF / AF41 / default"]},
+    {"id": "x.cap", "label": "backhaul-capacity", "synonyms": ["transport capacity"], "kind": "rate", "gloss": "the committed transport capacity of the backhaul link available to subscriber traffic", "example": "8 Gbit/s committed on bh-441", "ref": "transport-capacity",
+     "relations": [{"rel": "of-link", "target": "x.backhaul"}], "instances": ["8 Gbit/s committed"]},
+    {"id": "x.mtu", "label": "backhaul-mtu", "synonyms": ["transport mtu"], "kind": "framing", "gloss": "the transport MTU on the backhaul, sized to carry encapsulated user-plane packets without fragmentation", "example": "1600-byte MTU on bh-441 to fit GTP overhead", "ref": "transport-mtu",
+     "relations": [{"rel": "of-link", "target": "x.backhaul"}], "instances": ["MTU 1600"]},
+    {"id": "x.cell", "label": "radio-cell", "synonyms": ["cell", "sector"], "kind": "radio", "gloss": "a radio cell: the coverage area served from the site over the air interface — a radio-internal object with no transport counterpart", "example": "cell 441-A on the 3.5 GHz band", "ref": "radio-cell",
+     "relations": [{"rel": "served-by", "target": "x.backhaul"}], "instances": ["cell 441-A", "cell 441-B"]},
+    {"id": "x.rrc", "label": "rrc-session", "synonyms": ["session", "radio connection"], "kind": "radio-state", "gloss": "an RRC session: a device's radio-resource-control connection state on the air interface — a radio-internal notion of a 'session', unrelated to any transport or core session", "example": "the RRC-connected session for a handset in cell 441-A", "ref": "radio-session",
+     "relations": [{"rel": "in", "target": "x.cell"}], "instances": ["rrc-session #55 (cell 441-A)"]},
+    {"id": "x.vendor", "label": "beacon-tag-7", "synonyms": ["proprietary attr 7"], "kind": "opaque", "gloss": "", "example": "", "ref": null,
+     "relations": [{"rel": "on-link", "target": "x.backhaul"}], "instances": ["beacon-tag-7=0x2 on bh-441"]}
+  ]
+}

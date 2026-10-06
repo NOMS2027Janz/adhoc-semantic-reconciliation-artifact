@@ -1,0 +1,264 @@
+{
+  "system": "Agent T",
+  "dialect": "Kelvin-TM",
+  "modules": [
+    "kelvin-fabric@2018-12-10 (TR-547)",
+    "kelvin-carriage"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5.6-sol from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_relabel_control, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_relabel_control/model_a*.json.",
+  "concepts": [
+    {
+      "id": "a01",
+      "label": "vertex",
+      "synonyms": [
+        "forwarding realm"
+      ],
+      "kind": "node",
+      "gloss": "A vertex is a forwarding realm within a fabric at which links terminate and access, adaptation, switching, or circuit-endpoint functions may reside.",
+      "example": "R1 is a vertex in the zeta-over-optical realm: span-R1-R2 terminates there, and the crr4/grd2 bridging adaptation is performed there.",
+      "ref": "r01",
+      "relations": [
+        {
+          "rel": "part-of",
+          "target": "a09"
+        }
+      ],
+      "instances": [
+        "R1",
+        "R2",
+        "R3",
+        "A1",
+        "A2",
+        "A3"
+      ],
+      "evidence": "Read as a network node from kind `node`, membership in fabric a09, and router/access-node instances R1–R3 and A1–A3; ruled out span a08, which connects vertices rather than acting as one."
+    },
+    {
+      "id": "a02",
+      "label": "span-cap-point",
+      "synonyms": [
+        "owned-vertex-edge-point",
+        "hep"
+      ],
+      "kind": "termination",
+      "gloss": "A span-cap-point is the vertex-owned termination point at which one end of a network span is attached to a vertex.",
+      "example": "hep-R1-R2 is the termination on R1 for span-R1-R2, anchoring that span at the R1 vertex.",
+      "ref": "r02",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "a01"
+        },
+        {
+          "rel": "terminates",
+          "target": "a08"
+        }
+      ],
+      "instances": [
+        "hep-R1-R2",
+        "hep-R2-R3",
+        "hep-A1-R1"
+      ],
+      "evidence": "Read as a link-facing termination from kind `termination`, relations `on-vertex` a01 and `terminates` a08, and hep-R1-R2-style instances; ruled out access point a04 and service endpoint a10, which face services rather than terminate spans."
+    },
+    {
+      "id": "a03",
+      "label": "shifting-span",
+      "synonyms": [
+        "bridging span"
+      ],
+      "kind": "adaptation",
+      "gloss": "A shifting-span is a vertex-local adaptation that bridges a carried stream between the tiers or multiplex contexts identified by a tier-stream qualifier.",
+      "example": "At R1, the `crr4/grd2 bridging` shifting-span adapts the grd2 stream into the crr4 context specified by `grd2 mapped into crr4`.",
+      "ref": "r03",
+      "relations": [
+        {
+          "rel": "at-vertex",
+          "target": "a01"
+        },
+        {
+          "rel": "adapts",
+          "target": "a06"
+        }
+      ],
+      "instances": [
+        "crr4/grd2 bridging at R1"
+      ],
+      "evidence": "Read as an inter-tier adaptation from kind `adaptation`, its location at vertex a01, its `adapts` relation to qualifier a06, and instance `crr4/grd2 bridging at R1`; ruled out gate set a07, which switches traffic without expressing a tier mapping."
+    },
+    {
+      "id": "a04",
+      "label": "offer-gateway-point",
+      "synonyms": [
+        "acp"
+      ],
+      "kind": "access",
+      "gloss": "An offer-gateway-point is an access-facing point on a vertex through which a customer or edge attachment enters or leaves a carriage offer.",
+      "example": "acp-A1-grd on vertex A1 is the ingress access point for the grd carriage offer from A1 toward A3, while acp-A3-grd provides the corresponding egress access.",
+      "ref": "r05",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "a01"
+        },
+        {
+          "rel": "accesses",
+          "target": "a05"
+        }
+      ],
+      "instances": [
+        "acp-A1-grd",
+        "acp-A3-grd"
+      ],
+      "evidence": "Read as a service-access attachment from kind `access`, relations `on-vertex` a01 and `accesses` carriage-offer a05, and acp-A1-grd/acp-A3-grd instances; ruled out a02 link terminations and a10 circuit endpoints."
+    },
+    {
+      "id": "a05",
+      "label": "carriage-offer",
+      "synonyms": [
+        "offer"
+      ],
+      "kind": "service",
+      "gloss": "A carriage-offer is an end-to-end transport service over a fabric that carries a specified tier stream between access gateway points and is realized by associated circuit endpoints.",
+      "example": "co-a1a3-grd2 carries the grd2 stream from acp-A1-grd to acp-A3-grd over the zeta-over-optical realm and is represented internally by cxp-a1a3-R1 and cxp-a1a3-R3.",
+      "ref": "r06",
+      "relations": [
+        {
+          "rel": "uses",
+          "target": "a04"
+        },
+        {
+          "rel": "realized-by",
+          "target": "a10"
+        },
+        {
+          "rel": "over",
+          "target": "a09"
+        }
+      ],
+      "instances": [
+        "co-a1a3-grd2 (grd2, A1 to A3)"
+      ],
+      "evidence": "Read as an end-to-end transport service from kind `service`, its use of access points a04, realization by circuit endpoints a10, operation over fabric a09, and instance `co-a1a3-grd2 (grd2, A1 to A3)`; ruled out physical span a08."
+    },
+    {
+      "id": "a06",
+      "label": "tier-stream-qualifier",
+      "synonyms": [
+        "tier qualifier"
+      ],
+      "kind": "multiplex",
+      "gloss": "A tier-stream-qualifier specifies the multiplex stream and tier mapping under which a carriage offer is carried or interpreted.",
+      "example": "For co-a1a3-grd2, the qualifier `grd2 mapped into crr4` states that the offered grd2 stream occupies or is conveyed within the crr4 multiplex tier.",
+      "ref": "r07",
+      "relations": [
+        {
+          "rel": "qualifies",
+          "target": "a05"
+        }
+      ],
+      "instances": [
+        "grd2 mapped into crr4"
+      ],
+      "evidence": "Read as a multiplex-layer qualification from kind `multiplex`, relation `qualifies` carriage-offer a05, and instance `grd2 mapped into crr4`; ruled out shifting-span a03, which performs the adaptation rather than describing its stream/tier mapping."
+    },
+    {
+      "id": "a07",
+      "label": "vertex-gate-set",
+      "synonyms": [
+        "gate set"
+      ],
+      "kind": "switching",
+      "gloss": "A vertex-gate-set is the collection of switching gates at a vertex through which compatible terminations or flows can be cross-connected.",
+      "example": "The R2 cross-switch gate set can select a cross-connection through R2 between traffic arriving from span-R1-R2 and traffic leaving on span-R2-R3.",
+      "ref": "r08",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "a01"
+        }
+      ],
+      "instances": [
+        "R2 cross-switch gate set"
+      ],
+      "evidence": "Read as a node-local switching construct from kind `switching`, relation `on-vertex` a01, and instance `R2 cross-switch gate set`; ruled out adaptation a03, which maps between tiers rather than selecting cross-connections."
+    },
+    {
+      "id": "a08",
+      "label": "span",
+      "synonyms": [],
+      "kind": "link",
+      "gloss": "A span is a network link between vertices whose ends are anchored by span-cap-points on those vertices.",
+      "example": "span-R1-R2 connects vertices R1 and R2, with hep-R1-R2 providing its R1-side termination and a corresponding span-cap-point providing its R2-side termination.",
+      "ref": "r09",
+      "relations": [
+        {
+          "rel": "between",
+          "target": "a01"
+        },
+        {
+          "rel": "terminated-by",
+          "target": "a02"
+        }
+      ],
+      "instances": [
+        "span-R1-R2",
+        "span-R2-R3",
+        "span-R1-R3",
+        "span-A1-R1"
+      ],
+      "evidence": "Read as a point-to-point network link from kind `link`, relation `between` vertices a01, reciprocal termination by a02, and span-R1-R2/span-A1-R1 instances; ruled out carriage-offer a05, which is an end-to-end service over the topology."
+    },
+    {
+      "id": "a09",
+      "label": "fabric",
+      "synonyms": [
+        "multi-tier fabric"
+      ],
+      "kind": "topology",
+      "gloss": "A fabric is a multi-tier network topology that contains the forwarding vertices and spans over which carriage offers are delivered.",
+      "example": "The zeta-over-optical realm is a fabric containing vertices such as R1, R2, R3, A1, A2, and A3 and spans such as span-R1-R2 and span-A1-R1.",
+      "ref": "r10",
+      "relations": [
+        {
+          "rel": "contains",
+          "target": "a01"
+        },
+        {
+          "rel": "contains",
+          "target": "a08"
+        }
+      ],
+      "instances": [
+        "the zeta-over-optical realm"
+      ],
+      "evidence": "Read as the enclosing network topology from kind `topology`, containment of vertices a01 and spans a08, and instance `the zeta-over-optical realm`; ruled out vertex a01, which is an element inside the fabric."
+    },
+    {
+      "id": "a10",
+      "label": "circuit-end-point",
+      "synonyms": [
+        "cxp"
+      ],
+      "kind": "endpoint",
+      "gloss": "A circuit-end-point is a vertex-local endpoint of the internal circuit that realizes a carriage offer within the fabric.",
+      "example": "cxp-a1a3-R1 and cxp-a1a3-R3 are the two circuit endpoints on R1 and R3 that realize the internal path for co-a1a3-grd2.",
+      "ref": "r11",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "a01"
+        },
+        {
+          "rel": "part-of",
+          "target": "a05"
+        }
+      ],
+      "instances": [
+        "cxp-a1a3-R1",
+        "cxp-a1a3-R3"
+      ],
+      "evidence": "Read as an endpoint of a service-realizing circuit from kind `endpoint`, relations `on-vertex` a01 and `part-of` carriage-offer a05, and paired cxp-a1a3-R1/R3 instances; ruled out offer-gateway-point a04, which is the external access point, and span-cap-point a02, which terminates a link."
+    }
+  ]
+}

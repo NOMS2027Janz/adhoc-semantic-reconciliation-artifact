@@ -1,0 +1,182 @@
+{
+  "model": "gpt-5-nano",
+  "trajectory": "T1",
+  "policy": "exec",
+  "setpiece": true,
+  "row": {
+    "case": "intent_hard",
+    "phase": "assure",
+    "model": "gpt-5-nano",
+    "trajectory": "T1",
+    "policy": "exec",
+    "placement": "both_cognitive",
+    "trial": 0,
+    "setpiece": true,
+    "submitted": true,
+    "telemetry_calls": 2,
+    "best_calls": 1,
+    "policy_calls": 1,
+    "turns": 2,
+    "total_tokens": 20651,
+    "reasoning_tokens": 8512,
+    "latency_s": 65.18,
+    "n_hops": 4,
+    "fulfilment_correct": 4,
+    "decision_correct": 4,
+    "migration_correct": 3,
+    "hop_accuracy": 0.75
+  },
+  "transcript": [
+    {
+      "step": "prompt",
+      "phase": "assure",
+      "placement": "both_cognitive",
+      "reference_variant": "none",
+      "policy_id": "exec",
+      "trajectory_id": "T1"
+    },
+    {
+      "step": "read_operational",
+      "args": {
+        "hop_id": "h0"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "realisation": "r1a",
+          "reading": {
+            "bw_gbps": 10.0,
+            "latency_ms": 3,
+            "availability": 0.99995,
+            "protection": "none",
+            "cost": 40
+          }
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "read_operational",
+      "args": {
+        "hop_id": "h1"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "realisation": "r1a",
+          "reading": {
+            "bw_gbps": 10.0,
+            "latency_ms": 6,
+            "availability": 0.99995,
+            "protection": "none",
+            "cost": 40
+          }
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "best_achievable",
+      "args": {
+        "intent_id": "I1"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "offer": "r1a",
+          "attrs": {
+            "bw_gbps": 10.0,
+            "latency_ms": 3,
+            "availability": 0.99995,
+            "protection": "none",
+            "cost": 40
+          },
+          "violated_bounds": [],
+          "satisfies_all": true,
+          "priority_used": [
+            "latency",
+            "availability",
+            "protection",
+            "bandwidth"
+          ]
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "check_feasibility",
+      "args": {
+        "intent_id": "I1",
+        "realisation_id": "r1c"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "realisation": "r1c",
+          "satisfies_all": true,
+          "violated_bounds": [],
+          "attrs": {
+            "bw_gbps": 10.0,
+            "latency_ms": 4,
+            "availability": 0.99999,
+            "protection": "1+1",
+            "cost": 85
+          }
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "consult_policy",
+      "args": {
+        "intent_id": "I1",
+        "realisation_id": "r1c"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "realisation": "r1c",
+          "decision": "accept",
+          "hard_bounds": [
+            "latency",
+            "availability"
+          ],
+          "affordability_floor": 90,
+          "violated_bounds": []
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "submit",
+      "args": {
+        "hops": [
+          {
+            "hop_id": "h0",
+            "fulfilment": "met",
+            "decision": "hold",
+            "new_realisation": "r1a"
+          },
+          {
+            "hop_id": "h1",
+            "fulfilment": "breach",
+            "decision": "accept",
+            "new_realisation": "r1c"
+          },
+          {
+            "hop_id": "h2",
+            "fulfilment": "breach",
+            "decision": "refer",
+            "new_realisation": ""
+          },
+          {
+            "hop_id": "h3",
+            "fulfilment": "met",
+            "decision": "accept",
+            "new_realisation": "r1a"
+          }
+        ]
+      }
+    }
+  ]
+}

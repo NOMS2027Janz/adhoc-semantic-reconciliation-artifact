@@ -1,0 +1,16 @@
+{
+  "id": "ref.otn.core.v1",
+  "kind": "lexical",
+  "note": "Nine core entries used by the N-scaling case. Four independent models of one OTN network each bind to these, with different local labels.",
+  "entries": [
+    {"id": "forwarding-node", "label": "forwarding node", "definition": "A device that forwards traffic.", "example": "ROADM R1"},
+    {"id": "link-termination", "label": "link termination", "definition": "The point where a link terminates on a node.", "example": "the R1 end of R1-R2"},
+    {"id": "layer-adaptation", "label": "layer adaptation", "definition": "One layer carried over another.", "example": "ODU2 over OTU4"},
+    {"id": "connection-service", "label": "connection service", "definition": "An end-to-end service across the network.", "example": "the A1-A3 ODU2 service"},
+    {"id": "multiplex-structure", "label": "multiplex structure", "definition": "How a signal is multiplexed into a server layer.", "example": "ODU2 in OTU4"},
+    {"id": "switching-constraint", "label": "switching constraint", "definition": "Which ports may cross-connect within a node.", "example": "R2 cross-connects"},
+    {"id": "topo-link", "label": "topological link", "definition": "A link between two nodes.", "example": "R1-R2"},
+    {"id": "topology", "label": "topology", "definition": "The graph of nodes and links.", "example": "the OTN domain"},
+    {"id": "conn-endpoint", "label": "connection endpoint", "definition": "An endpoint of a connection within a node.", "example": "the A1-A3 endpoint on R1"}
+  ]
+}

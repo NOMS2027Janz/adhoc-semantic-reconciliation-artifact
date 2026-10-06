@@ -1,0 +1,84 @@
+{
+  "id": "ref.l3vpn.vendor.v1",
+  "kind": "lexical",
+  "note": "Shared L3VPN lexicon binding the clean standard and messy vendor sides (E11).",
+  "entries": [
+    {
+      "id": "vpn-service",
+      "label": "L3VPN service instance",
+      "class": "service",
+      "definition": "one L3VPN service / VRF instance across the network",
+      "example": "the ACME L3VPN"
+    },
+    {
+      "id": "route-distinguisher",
+      "label": "route distinguisher",
+      "class": "identifier",
+      "definition": "the value making a VPN's routes globally unique; one logical value whether read from config or operational state",
+      "example": "64512:100"
+    },
+    {
+      "id": "import-rt",
+      "label": "import route target",
+      "class": "policy-value",
+      "definition": "the route-target community on which routes are imported into the VRF",
+      "example": "target:64512:100"
+    },
+    {
+      "id": "export-rt",
+      "label": "export route target",
+      "class": "policy-value",
+      "definition": "the route-target community attached to routes exported from the VRF",
+      "example": "target:64512:100"
+    },
+    {
+      "id": "vpn-access",
+      "label": "VPN network access",
+      "class": "access",
+      "definition": "the customer attachment to the VPN at a provider edge",
+      "example": "the ACME attachment on PE1"
+    },
+    {
+      "id": "bgp-neighbor",
+      "label": "PE-CE BGP neighbor",
+      "class": "protocol",
+      "definition": "the PE-CE BGP peering exchanging customer routes",
+      "example": "neighbor 10.0.0.2"
+    },
+    {
+      "id": "bgp-keepalive",
+      "label": "BGP keepalive interval",
+      "class": "parameter",
+      "definition": "the keepalive interval for the PE-CE BGP peer",
+      "example": "30 seconds"
+    },
+    {
+      "id": "ip-connection",
+      "label": "IP connection / addressing",
+      "class": "addressing",
+      "definition": "the IP addressing configured on the customer attachment",
+      "example": "10.0.0.1/30"
+    },
+    {
+      "id": "service-bandwidth",
+      "label": "service bandwidth",
+      "class": "rate",
+      "definition": "the contracted service bandwidth (a service-view construct)",
+      "example": "200 Mbit/s"
+    },
+    {
+      "id": "import-policy",
+      "label": "import routing-policy",
+      "class": "policy-ref",
+      "definition": "a named routing-policy filter applied on import; NOT a route-target value (a common false cognate)",
+      "example": "policy ACME-IN"
+    },
+    {
+      "id": "segment",
+      "label": "vendor segment id",
+      "class": "vendor-knob",
+      "definition": "an Acme-specific segment identifier with no standard-model counterpart",
+      "example": "seg 4001"
+    }
+  ]
+}

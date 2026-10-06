@@ -1,0 +1,35 @@
+{
+  "case": "config_cross_domain",
+  "note": "E9 (Brad pt 13). An external interconnect-agreement / SLA artefact for the Meridian(transport, X) <-> Cascade(IP, Y) seam. Each clause states, in operational terms, who OWNS / REALISES / MEASURES a shared field -- the authority is to be DERIVED from the clause, not read off a label. Deliberate difficulty: the committed-rate clause names transport's carriage duty AND the IP-side ownership (the 'transport claims everything it carries' lure); the demarcation clause is written as genuinely JOINT (the correct answer is to defer to 'shared', not invent a single owner). Clauses are faithful to pragmatics.json (the gold), but the mapping from clause to X/Y/shared requires reading.",
+  "parties": {
+    "X": "Meridian Transport (optical/OTN provider)",
+    "Y": "Cascade IP (IP/VPN service provider)"
+  },
+  "clauses": [
+    {
+      "id": "cl-latency",
+      "field": "latency-realized",
+      "text": "One-way latency is a property of the optical path and is measured and guaranteed by Meridian at the transport demarcation per the path-engineering record. Cascade specifies only the latency TIER its service requires; it does not measure or realise the delivered figure."
+    },
+    {
+      "id": "cl-protection",
+      "field": "path-protection",
+      "text": "Path protection is realised by Meridian's diversely-routed transport and its protection switching. Cascade requires that the circuit be protected but does not operate or own the protection mechanism."
+    },
+    {
+      "id": "cl-class",
+      "field": "service-class",
+      "text": "Forwarding class and scheduling priority are configured in the Cascade IP routers according to the customer's QoS policy. Meridian's optical line 'grade' is a separate transport-line classification and confers no authority over the IP service class."
+    },
+    {
+      "id": "cl-rate",
+      "field": "committed-rate",
+      "text": "The committed information rate is the customer's contracted service bandwidth under the Cascade service SLA; it is owned, set and policed by Cascade. Meridian shall provision transport capacity sufficient to CARRY the committed rate, but carriage does not confer ownership: the committed rate is a Cascade commitment, not a Meridian transport parameter."
+    },
+    {
+      "id": "cl-demarc",
+      "field": "demarcation",
+      "text": "The interconnect demarcation point and its attachment parameters are JOINTLY defined by Meridian and Cascade. Neither party's local naming governs; the demarcation is co-owned and any change requires bilateral agreement and sign-off by both parties."
+    }
+  ]
+}

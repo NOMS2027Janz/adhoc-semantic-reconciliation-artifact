@@ -1,0 +1,54 @@
+{
+  "system": "Agent F (legacy alarms)",
+  "dialect": "RFC 8632",
+  "individuals": [
+    {
+      "id": "f.al1",
+      "type": "underlying-condition",
+      "name": "alarm-lambda1-SD",
+      "key": "corr-001",
+      "attrs": {
+        "resource": "lambda1",
+        "t": "t0"
+      },
+      "rels": [],
+      "_truth": "c1"
+    },
+    {
+      "id": "f.al2",
+      "type": "underlying-condition",
+      "name": "alarm-R1-bgp",
+      "key": "corr-002",
+      "attrs": {
+        "resource": "R1",
+        "t": "t1"
+      },
+      "rels": [],
+      "_truth": "c2"
+    },
+    {
+      "id": "f.al3",
+      "type": "underlying-condition",
+      "name": "alarm-L3-loss",
+      "key": null,
+      "attrs": {
+        "resource": "L3",
+        "t": "t2"
+      },
+      "rels": [],
+      "_truth": "c3"
+    },
+    {
+      "id": "f.al4",
+      "type": "underlying-condition",
+      "name": "alarm-L3-loss2",
+      "key": null,
+      "attrs": {
+        "resource": "L3",
+        "t": "t2"
+      },
+      "rels": [],
+      "_truth": "c4"
+    }
+  ]
+}

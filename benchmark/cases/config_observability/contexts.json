@@ -1,0 +1,22 @@
+{
+  "contexts": [
+    {
+      "id": "normal",
+      "maintenance_window": false,
+      "season": "workday",
+      "note": "business as usual"
+    },
+    {
+      "id": "maintenance",
+      "maintenance_window": true,
+      "season": "workday",
+      "note": "a planned maintenance change is in effect on the resource"
+    },
+    {
+      "id": "holiday",
+      "maintenance_window": false,
+      "season": "holiday",
+      "note": "a holiday: seasonal shifts are expected"
+    }
+  ]
+}

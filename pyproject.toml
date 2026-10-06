@@ -1,0 +1,18 @@
+[project]
+name = "ad-hoc-semantic-reconciliation"
+version = "0.1.0"
+description = "A study harness for ad hoc semantic reconciliation between divergent network models, using shared references and cognitive agents."
+authors = [{ name = "Christopher Janz" }]
+requires-python = ">=3.10"
+dependencies = []  # the walking skeleton is standard-library only
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "matplotlib>=3.7", "numpy>=1.24"]  # matplotlib+numpy: every pipeline/figures_*.py needs them
+openai = ["openai>=1.40"]  # for the language-model agent stack (src/reconcile/stacks/agent_openai.py)
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

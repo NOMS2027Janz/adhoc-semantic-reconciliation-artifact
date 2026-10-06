@@ -1,0 +1,254 @@
+{
+  "system": "Agent T",
+  "dialect": "ONF TAPI",
+  "modules": [
+    "tapi-topology@2018-12-10 (TR-547)",
+    "tapi-connectivity"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-mini from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_tapi_teas, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_tapi_teas/model_a*.json.",
+  "concepts": [
+    {
+      "id": "t.node",
+      "label": "node",
+      "synonyms": [
+        "forwarding domain"
+      ],
+      "kind": "node",
+      "gloss": "A node is a forwarding domain element in the topology (a physical or logical network device) that contains termination points and participates in links inside a multi-layer topology.",
+      "example": "R1 is a node in the OTN-over-optical topology that hosts NEPs such as nep-R1-R2 and participates in links link-R1-R2 and link-R1-R3.",
+      "ref": "forwarding-node",
+      "relations": [
+        {
+          "rel": "part-of",
+          "target": "t.topo"
+        }
+      ],
+      "instances": [
+        "R1",
+        "R2",
+        "R3",
+        "A1",
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "id": "t.ltp",
+      "label": "link-termination-point",
+      "synonyms": [
+        "owned-node-edge-point",
+        "nep"
+      ],
+      "kind": "termination",
+      "gloss": "A link-termination-point (LTP or NEP) is a node-owned termination where a link attaches to a node, representing the node-side interface that terminates that link.",
+      "example": "nep-R1-R2 is an LTP located on node R1 that terminates link-R1-R2 and provides the attachment point for that inter-node connection.",
+      "ref": "link-termination",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "t.node"
+        },
+        {
+          "rel": "terminates",
+          "target": "t.link"
+        }
+      ],
+      "instances": [
+        "nep-R1-R2",
+        "nep-R2-R3",
+        "nep-A1-R1"
+      ]
+    },
+    {
+      "id": "t.translink",
+      "label": "transitional-link",
+      "synonyms": [
+        "adaptation link"
+      ],
+      "kind": "adaptation",
+      "gloss": "A transitional-link (adaptation link) is a node-local adaptation construct that performs layer mapping or adaptation (multiplexing) of one protocol/tributary into another on a node.",
+      "example": "OTU4/ODU2 adaptation at R1 is a transitional-link on node R1 that adapts an ODU2 client stream into OTU4 transport so the ODU2-based connectivity can traverse the optical layer.",
+      "ref": "layer-adaptation",
+      "relations": [
+        {
+          "rel": "at-node",
+          "target": "t.node"
+        },
+        {
+          "rel": "adapts",
+          "target": "t.lpq"
+        }
+      ],
+      "instances": [
+        "OTU4/ODU2 adaptation at R1"
+      ]
+    },
+    {
+      "id": "t.sip",
+      "label": "service-interface-point",
+      "synonyms": [
+        "sip"
+      ],
+      "kind": "access",
+      "gloss": "A service-interface-point (SIP) is an access point on a node through which a connectivity-service is exposed or consumed (the service-facing interface of a node).",
+      "example": "sip-A1-odu is a SIP on node A1 that provides access to the ODU-level connectivity service (for example the service instance cs-a1a3-odu2).",
+      "ref": "client-svc-access",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "t.node"
+        },
+        {
+          "rel": "accesses",
+          "target": "t.cs"
+        }
+      ],
+      "instances": [
+        "sip-A1-odu",
+        "sip-A3-odu"
+      ]
+    },
+    {
+      "id": "t.cs",
+      "label": "connectivity-service",
+      "synonyms": [
+        "service"
+      ],
+      "kind": "service",
+      "gloss": "A connectivity-service is an abstract end-to-end service representing a requested connection between service-interface-points; it is carried over a topology, uses SIPs, and is realized by connection end points (CEPs).",
+      "example": "cs-a1a3-odu2 is a connectivity-service describing an ODU2 connection from A1 to A3 that uses SIPs (sip-A1-odu, sip-A3-odu) and is realized by CEPs (cep-a1a3-R1, cep-a1a3-R3) across the OTN-over-optical topology.",
+      "ref": "connection-service",
+      "relations": [
+        {
+          "rel": "uses",
+          "target": "t.sip"
+        },
+        {
+          "rel": "realized-by",
+          "target": "t.cep"
+        },
+        {
+          "rel": "over",
+          "target": "t.topo"
+        }
+      ],
+      "instances": [
+        "cs-a1a3-odu2 (ODU2, A1 to A3)"
+      ]
+    },
+    {
+      "id": "t.lpq",
+      "label": "layer-protocol-qualifier",
+      "synonyms": [
+        "layer qualifier"
+      ],
+      "kind": "multiplex",
+      "gloss": "A layer-protocol-qualifier is a descriptor of how one layer protocol is mapped or multiplexed into another (a multiplexing/qualification used to qualify connectivity behavior).",
+      "example": "ODU2 mapped into OTU4 is an LPQ indicating that the connectivity service carries ODU2 client traffic encapsulated inside OTU4 transport.",
+      "ref": "multiplex-structure",
+      "relations": [
+        {
+          "rel": "qualifies",
+          "target": "t.cs"
+        }
+      ],
+      "instances": [
+        "ODU2 mapped into OTU4"
+      ]
+    },
+    {
+      "id": "t.nrg",
+      "label": "node-rule-group",
+      "synonyms": [
+        "rule group"
+      ],
+      "kind": "switching",
+      "gloss": "A node-rule-group is a configured grouping of switching or cross-connect rules on a node that defines how traffic is switched or connected inside that node.",
+      "example": "R2 cross-connect rule group is a node-rule-group on node R2 that contains the cross-connect rules used to switch incoming ODU channels to the correct outgoing channels for service paths.",
+      "ref": "switching-constraint",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "t.node"
+        }
+      ],
+      "instances": [
+        "R2 cross-connect rule group"
+      ]
+    },
+    {
+      "id": "t.link",
+      "label": "link",
+      "synonyms": [],
+      "kind": "link",
+      "gloss": "A link is a relationship connecting two nodes in the topology (physical or logical path) that is terminated by LTPs at each end and carries transport between those nodes.",
+      "example": "link-R1-R2 is a link between nodes R1 and R2 that is terminated by LTPs (for example nep-R1-R2 on R1 and the corresponding NEP on R2) and carries OTU4 transport between the nodes.",
+      "ref": "topo-link",
+      "relations": [
+        {
+          "rel": "between",
+          "target": "t.node"
+        },
+        {
+          "rel": "terminated-by",
+          "target": "t.ltp"
+        }
+      ],
+      "instances": [
+        "link-R1-R2",
+        "link-R2-R3",
+        "link-R1-R3",
+        "link-A1-R1"
+      ]
+    },
+    {
+      "id": "t.topo",
+      "label": "topology",
+      "synonyms": [
+        "multi-layer topology"
+      ],
+      "kind": "topology",
+      "gloss": "A topology (multi-layer topology) is the container object that holds the set of nodes and links (and their inter-layer artifacts) that together define the network domain over which services are provided.",
+      "example": "The OTN-over-optical domain is the topology containing nodes R1,R2,R3,A1,A2,A3, links such as link-R1-R2 and link-A1-R1, and adaptations like the OTU4/ODU2 adaptation at R1.",
+      "ref": "topology",
+      "relations": [
+        {
+          "rel": "contains",
+          "target": "t.node"
+        },
+        {
+          "rel": "contains",
+          "target": "t.link"
+        }
+      ],
+      "instances": [
+        "the OTN-over-optical domain"
+      ]
+    },
+    {
+      "id": "t.cep",
+      "label": "connection-end-point",
+      "synonyms": [
+        "cep"
+      ],
+      "kind": "endpoint",
+      "gloss": "A connection-end-point (CEP) is the node-local endpoint instance that participates in and realizes a connectivity-service; it represents the service's presence at a particular node.",
+      "example": "cep-a1a3-R1 is a CEP on node R1 that is part of the realization of cs-a1a3-odu2 and represents the service endpoint of the A1‑to‑A3 ODU2 connection at R1.",
+      "ref": "conn-endpoint",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "t.node"
+        },
+        {
+          "rel": "part-of",
+          "target": "t.cs"
+        }
+      ],
+      "instances": [
+        "cep-a1a3-R1",
+        "cep-a1a3-R3"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+case,setting,reconciler,verifier,self_check,uses_reference,trial,precision_pre,resolved_pre,precision_post,resolved_post,surviving_fc_pre,surviving_fc_post,proposed,kept,dropped,verify_reasoning_tokens
+config_tapi_teas,1 · configuration (flagship),gpt-5.6-sol,gpt-5.6-sol,True,False,0,1.0,0.556,1.0,0.556,0,0,5,5,0,490
+config_tapi_teas,1 · configuration (flagship),gpt-5.6-sol,gpt-5-mini,False,False,0,1.0,0.556,1.0,0.444,0,0,5,4,1,960
+config_tapi_teas,1 · configuration (flagship),gpt-5.6-sol,gpt-5.6-sol,True,True,0,1.0,1.0,1.0,1.0,0,0,9,9,0,1793
+config_tapi_teas,1 · configuration (flagship),gpt-5.6-sol,gpt-5-mini,False,True,0,1.0,1.0,1.0,0.667,0,0,9,6,3,1088
+config_big_hard,1 · configuration (hard),gpt-5.6-sol,gpt-5.6-sol,True,False,0,1.0,0.917,1.0,0.667,0,0,11,8,3,1080
+config_big_hard,1 · configuration (hard),gpt-5.6-sol,gpt-5-mini,False,False,0,1.0,0.917,1.0,0.667,0,0,11,8,3,1408
+config_big_hard,1 · configuration (hard),gpt-5.6-sol,gpt-5.6-sol,True,True,0,1.0,1.0,1.0,1.0,0,0,12,12,0,417
+config_big_hard,1 · configuration (hard),gpt-5.6-sol,gpt-5-mini,False,True,0,1.0,1.0,1.0,0.75,0,0,12,9,3,1728
+config_cross_domain,3 · cross-domain,gpt-5.6-sol,gpt-5.6-sol,True,False,0,1.0,0.4,1.0,0.2,0,0,2,1,1,466
+config_cross_domain,3 · cross-domain,gpt-5.6-sol,gpt-5-mini,False,False,0,1.0,0.4,1.0,0.2,0,0,2,1,1,1088
+config_cross_domain,3 · cross-domain,gpt-5.6-sol,gpt-5.6-sol,True,True,0,1.0,1.0,1.0,0.6,0,0,5,3,2,723
+config_cross_domain,3 · cross-domain,gpt-5.6-sol,gpt-5-mini,False,True,0,1.0,1.0,1.0,1.0,0,0,5,5,0,832
+config_observability,4 · observability,gpt-5.6-sol,gpt-5.6-sol,True,False,0,1.0,0.75,1.0,0.25,0,0,3,1,2,122
+config_observability,4 · observability,gpt-5.6-sol,gpt-5-mini,False,False,0,1.0,0.75,1.0,0.25,0,0,3,1,2,1216
+config_observability,4 · observability,gpt-5.6-sol,gpt-5.6-sol,True,True,0,1.0,0.75,1.0,0.5,0,0,3,2,1,781
+config_observability,4 · observability,gpt-5.6-sol,gpt-5-mini,False,True,0,1.0,0.75,1.0,0.5,0,0,3,2,1,1088

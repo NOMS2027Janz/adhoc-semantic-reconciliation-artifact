@@ -1,0 +1,184 @@
+{
+  "system": "Agent X — Lattice",
+  "dialect": "Lattice (bespoke DC-fabric OSS)",
+  "modules": [
+    "lattice-fabric",
+    "lattice-vlans"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5.6-sol from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_xdom_dc, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_xdom_dc/model_a*.json.",
+  "concepts": [
+    {
+      "id": "x.bind",
+      "label": "fabric-attachment",
+      "synonyms": [
+        "access-port binding",
+        "leaf attachment"
+      ],
+      "kind": "attachment",
+      "gloss": "A configuration binding on a leaf switch that attaches an access-facing port or endpoint to a specific fabric VLAN so its Layer-2 traffic is carried in that domain.",
+      "example": "attach-leaf3-blue binds an access port on leaf-3 to tenant-blue's VLAN 1201, causing frames from that port to enter the VLAN 1201 Layer-2 domain.",
+      "ref": "underlay-binding",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "x.leaf"
+        },
+        {
+          "rel": "carries",
+          "target": "x.vlan"
+        }
+      ],
+      "instances": [
+        "attach-leaf3-blue"
+      ]
+    },
+    {
+      "id": "x.vlan",
+      "label": "fabric-vlan",
+      "synonyms": [
+        "local VLAN",
+        "bridge vlan"
+      ],
+      "kind": "l2-domain",
+      "gloss": "A leaf-local IEEE 802.1Q Layer-2 broadcast domain identified by a VLAN ID and instantiated on a fabric leaf for tenant traffic.",
+      "example": "vlan-1201 (tenant-blue) creates VLAN ID 1201 on leaf-3 as the local Layer-2 domain for tenant-blue.",
+      "ref": "segment-id",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "x.leaf"
+        }
+      ],
+      "instances": [
+        "vlan-1201 (tenant-blue)"
+      ]
+    },
+    {
+      "id": "x.leaf",
+      "label": "leaf-switch",
+      "synonyms": [
+        "ToR",
+        "access switch"
+      ],
+      "kind": "node",
+      "gloss": "A top-of-rack or access-layer fabric switch that hosts endpoint attachments and local VLANs and connects upstream through the spine tier.",
+      "example": "leaf-3 hosts tenant-blue's VLAN 1201 and its access-port binding while connecting into the fabric through spine-1 and spine-2.",
+      "ref": "edge-device",
+      "relations": [
+        {
+          "rel": "in",
+          "target": "x.spine"
+        }
+      ],
+      "instances": [
+        "leaf-3",
+        "leaf-4"
+      ]
+    },
+    {
+      "id": "x.mtu",
+      "label": "fabric-mtu",
+      "synonyms": [
+        "underlay mtu"
+      ],
+      "kind": "framing",
+      "gloss": "The maximum Layer-2 frame size, in bytes, configured for a leaf switch's fabric or underlay forwarding interfaces.",
+      "example": "MTU 9216 on leaf-3 permits fabric underlay interfaces on that leaf to carry frames up to 9,216 bytes.",
+      "ref": "mtu",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "x.leaf"
+        }
+      ],
+      "instances": [
+        "MTU 9216"
+      ]
+    },
+    {
+      "id": "x.gw",
+      "label": "svi-gateway",
+      "synonyms": [
+        "vlan gateway",
+        "SVI"
+      ],
+      "kind": "l3-gateway",
+      "gloss": "A switched virtual interface that provides Layer-3 default-gateway routing for hosts in a particular fabric VLAN.",
+      "example": "svi-1201 assigns 10.20.1.1 as the Layer-3 gateway address for hosts attached to VLAN 1201.",
+      "ref": "default-gateway",
+      "relations": [
+        {
+          "rel": "for",
+          "target": "x.vlan"
+        }
+      ],
+      "instances": [
+        "svi-1201 (10.20.1.1)"
+      ]
+    },
+    {
+      "id": "x.spine",
+      "label": "spine-switch",
+      "synonyms": [
+        "spine",
+        "fabric core"
+      ],
+      "kind": "node",
+      "gloss": "A core-tier fabric switch that interconnects leaf switches and provides transit connectivity between them rather than directly hosting endpoint attachments.",
+      "example": "spine-1 connects leaf-3 and leaf-4, allowing fabric traffic to transit between the two leaf switches.",
+      "ref": "fabric-spine",
+      "relations": [
+        {
+          "rel": "interconnects",
+          "target": "x.leaf"
+        }
+      ],
+      "instances": [
+        "spine-1",
+        "spine-2"
+      ]
+    },
+    {
+      "id": "x.az",
+      "label": "availability-zone",
+      "synonyms": [
+        "zone",
+        "fault domain"
+      ],
+      "kind": "fault-domain",
+      "gloss": "An operational fault-isolation domain grouping or spanning a set of leaf switches whose availability is managed independently from leaves in other zones.",
+      "example": "AZ-1 spans leaf-3 and other leaves assigned to the same fault domain, while AZ-2 represents a separately failing domain.",
+      "ref": "avail-zone",
+      "relations": [
+        {
+          "rel": "spans",
+          "target": "x.leaf"
+        }
+      ],
+      "instances": [
+        "AZ-1",
+        "AZ-2"
+      ]
+    },
+    {
+      "id": "x.vendor",
+      "label": "lattice-tag-3",
+      "synonyms": [
+        "proprietary attr 3"
+      ],
+      "kind": "opaque",
+      "gloss": "An opaque, vendor-specific attribute stored on a leaf switch whose value has no model-defined semantics and must be interpreted by the Lattice implementation.",
+      "example": "leaf-3 carries lattice-tag-3 with the raw value 0x9, which downstream Lattice software may interpret according to proprietary rules.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on",
+          "target": "x.leaf"
+        }
+      ],
+      "instances": [
+        "lattice-tag-3=0x9 on leaf-3"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,81 @@
+{
+  "id": "ref.obs_compute.adhoc.v1",
+  "kind": "lexical",
+  "note": "Thin ad-hoc reference the agents construct. Distinct entries for alarm-state, anomaly, fault, concern and cause, so the ontological cognate (alarm vs anomaly) and the two pins bind apart. The NMOP-native concepts (symptom, problem, incident, confidence) have NO entry and remain residual.",
+  "entries": [
+    {
+      "id": "node",
+      "label": "resource",
+      "synonyms": [
+        "managed object",
+        "network element"
+      ],
+      "class": "resource",
+      "definition": "A managed element under observation.",
+      "example": "a router, session, server, or container"
+    },
+    {
+      "id": "event",
+      "label": "event",
+      "synonyms": [
+        "notification",
+        "trap",
+        "syslog"
+      ],
+      "class": "event",
+      "definition": "A raw event on a resource at a moment, before interpretation.",
+      "example": "a threshold-crossing trap"
+    },
+    {
+      "id": "alarm-state",
+      "label": "alarm",
+      "synonyms": [
+        "alarm state",
+        "alarm condition"
+      ],
+      "class": "state",
+      "definition": "A declared undesirable STATE requiring attention.",
+      "example": "a raised alarm on a resource"
+    },
+    {
+      "id": "fault",
+      "label": "fault",
+      "synonyms": [
+        "failure occurrence"
+      ],
+      "class": "occurrence",
+      "definition": "A confirmed fault occurrence - the thing that has actually gone wrong.",
+      "example": "a session down; a failed fan"
+    },
+    {
+      "id": "anomaly",
+      "label": "anomaly",
+      "synonyms": [
+        "deviation"
+      ],
+      "class": "deviation",
+      "definition": "A deviation from expected behaviour that MAY be benign; not itself an undesirable state.",
+      "example": "a rising trend that may be expected load"
+    },
+    {
+      "id": "concern",
+      "label": "concern score",
+      "synonyms": [
+        "concern"
+      ],
+      "class": "annotation",
+      "definition": "A dynamic concern score annotating an anomaly, recomputed from context; not a fixed severity.",
+      "example": "0.8 during business hours"
+    },
+    {
+      "id": "cause",
+      "label": "cause",
+      "synonyms": [
+        "root cause"
+      ],
+      "class": "derived",
+      "definition": "A cause derived by correlating events and anomalies; not a static code.",
+      "example": "a flapping upstream link, correlated"
+    }
+  ]
+}

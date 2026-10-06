@@ -1,0 +1,32 @@
+{
+  "model": "a",
+  "meaning_questions": [
+    {"id": "q_ethsvc", "concept_id": "m.ethsvc",
+     "question": "What does this concept denote, in terms a domain engineer would recognise?",
+     "answer_key": "The multipoint Ethernet service connecting the customer's UNIs — the carrier-Ethernet virtual service itself.",
+     "must_not_confuse_with": []},
+    {"id": "q_seg", "concept_id": "m.seg",
+     "question": "What does 'network-segment' denote here?",
+     "answer_key": "The customer VLAN broadcast segment carried by the service. It is NOT an Ethernet Segment Identifier (a multihoming construct); it is the customer's L2 broadcast domain.",
+     "must_not_confuse_with": ["e.esi"]},
+    {"id": "q_maclearn", "concept_id": "m.maclearn",
+     "question": "What does 'MAC-learning' denote here?",
+     "answer_key": "How the service learns customer source-MAC addresses at a UNI in order to forward frames. It is NOT MAC mobility (moving a learned MAC between locations).",
+     "must_not_confuse_with": ["e.macmob"]},
+    {"id": "q_bwp", "concept_id": "m.bwp",
+     "question": "What does 'bandwidth-profile' denote here?",
+     "answer_key": "The ingress rate profile (CIR/EIR) policed at a UNI.",
+     "must_not_confuse_with": []},
+    {"id": "q_vendor", "concept_id": "m.vendor",
+     "question": "What does 'x-mef-attr-5' denote here?",
+     "answer_key": "Its meaning cannot be determined from this model: an opaque vendor/proprietary attribute with no description and no shared-reference binding. A faithful consumer should say it cannot be determined rather than guess.",
+     "must_not_confuse_with": []}
+  ],
+  "use_task": {
+    "goal": "You must provision a multipoint Ethernet service, policed to a committed bandwidth profile, presenting at customer demarcation points. Using ONLY this model, list the concepts directly relevant and say in one phrase how each is used.",
+    "relevant_ids": ["m.ethsvc", "m.uni", "m.ep", "m.seg", "m.bwp", "m.cos"],
+    "irrelevant_ids": ["m.vendor"],
+    "answer_key": "m.ethsvc = the service provisioned; m.uni = customer demarcation; m.ep = the service endpoint at a UNI; m.seg = the carried VLAN segment; m.bwp = the policed rate profile; m.cos = forwarding class. m.vendor is opaque and cannot be used."
+  },
+  "ambiguous_ids": ["m.vendor", "m.seg", "m.maclearn"]
+}

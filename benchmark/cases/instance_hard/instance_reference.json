@@ -1,0 +1,74 @@
+{
+  "note": "Two reference variants for the reference-variant axis (see the design note sec. 8). 'instance' publishes opaque keys + a canonical descriptor; 'invariant' publishes the semantic-invariant signature a virtual manipulation checks against.",
+  "instance": [
+    {
+      "key": "k01",
+      "type": "forwarding-node",
+      "canonical": "R1"
+    },
+    {
+      "key": "k04",
+      "type": "forwarding-node",
+      "canonical": "R4"
+    },
+    {
+      "key": "k05",
+      "type": "client-svc-access",
+      "canonical": "A1"
+    },
+    {
+      "key": "k06",
+      "type": "client-svc-access",
+      "canonical": "A2"
+    },
+    {
+      "key": "k07",
+      "type": "client-svc-access",
+      "canonical": "A3"
+    },
+    {
+      "key": "k08",
+      "type": "connection-service",
+      "canonical": "cs-a1a3-odu2"
+    },
+    {
+      "key": "k09",
+      "type": "connection-service",
+      "canonical": "cs-a2a3-odu0"
+    }
+  ],
+  "invariant": [
+    {
+      "key": "k08",
+      "type": "connection-service",
+      "canonical": "cs-a1a3-odu2",
+      "invariants": {
+        "endpoint-identity": [
+          "A1",
+          "A3"
+        ],
+        "capacity": "ODU2",
+        "layer-relationships": "ODU2/OTU4",
+        "odu-multiplexing": "ODU2->OTU4",
+        "switching-constraints": "core-transit",
+        "protection-integrity": "1+1"
+      }
+    },
+    {
+      "key": "k09",
+      "type": "connection-service",
+      "canonical": "cs-a2a3-odu0",
+      "invariants": {
+        "endpoint-identity": [
+          "A2",
+          "A3"
+        ],
+        "capacity": "ODU0",
+        "layer-relationships": "ODU0/ODU2",
+        "odu-multiplexing": "ODU0->ODU2",
+        "switching-constraints": "core-transit",
+        "protection-integrity": "none"
+      }
+    }
+  ]
+}

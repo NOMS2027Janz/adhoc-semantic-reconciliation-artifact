@@ -1,0 +1,132 @@
+{
+  "trajectories": [
+    {
+      "id": "T1",
+      "intent_id": "I1",
+      "policy_id": "exec",
+      "setpiece": true,
+      "initial_realisation": "r1a",
+      "narrative": "An order-execution service across its life: bought, a provider-side latency degradation self-remediated by reroute, a consumer six-nines demand that must be referred, and a provider restore to the cheaper path once the fault clears.",
+      "hops": [
+        {
+          "hop_id": "h0",
+          "origin": "provider",
+          "kind": "assess",
+          "bounds": {
+            "bandwidth_min": 8,
+            "latency_max": 5,
+            "availability_min": 0.9999,
+            "protection_required": false
+          },
+          "event": "service in operation; routine assurance reading"
+        },
+        {
+          "hop_id": "h1",
+          "origin": "provider",
+          "kind": "assess",
+          "bounds": {
+            "bandwidth_min": 8,
+            "latency_max": 5,
+            "availability_min": 0.9999,
+            "protection_required": false
+          },
+          "event": "the direct path's latency has degraded; assurance predicts a breach"
+        },
+        {
+          "hop_id": "h2",
+          "origin": "consumer",
+          "kind": "demand",
+          "bounds": {
+            "bandwidth_min": 8,
+            "latency_max": 5,
+            "availability_min": 0.999999,
+            "protection_required": false
+          },
+          "event": "the consumer now requires six-nines availability for a critical window"
+        },
+        {
+          "hop_id": "h3",
+          "origin": "provider",
+          "kind": "restore",
+          "bounds": {
+            "bandwidth_min": 8,
+            "latency_max": 5,
+            "availability_min": 0.9999,
+            "protection_required": false
+          },
+          "target": "r1a",
+          "event": "the direct-path fault has cleared; the provider offers to move back to the cheaper direct route"
+        }
+      ]
+    },
+    {
+      "id": "T2",
+      "intent_id": "I3",
+      "policy_id": "resil",
+      "setpiece": false,
+      "initial_realisation": "r4b",
+      "narrative": "A resilience-first service: an at-risk latency margin held, then a degradation the network cannot self-remediate without losing protection \u2014 referred.",
+      "hops": [
+        {
+          "hop_id": "h0",
+          "origin": "provider",
+          "kind": "assess",
+          "bounds": {
+            "bandwidth_min": 40,
+            "latency_max": 12,
+            "availability_min": 0.9999,
+            "protection_required": true
+          },
+          "event": "routine assurance; latency sitting near its margin"
+        },
+        {
+          "hop_id": "h1",
+          "origin": "provider",
+          "kind": "assess",
+          "bounds": {
+            "bandwidth_min": 40,
+            "latency_max": 12,
+            "availability_min": 0.9999,
+            "protection_required": true
+          },
+          "event": "latency degrades past the agreed bound; only an unprotected alternative exists"
+        }
+      ]
+    },
+    {
+      "id": "T3",
+      "intent_id": "I4",
+      "policy_id": "bulk",
+      "setpiece": false,
+      "initial_realisation": "r2b",
+      "narrative": "A bulk service that steps aside to save money when the workload shrinks.",
+      "hops": [
+        {
+          "hop_id": "h0",
+          "origin": "provider",
+          "kind": "assess",
+          "bounds": {
+            "bandwidth_min": 2,
+            "latency_max": 8,
+            "availability_min": 0.999,
+            "protection_required": false
+          },
+          "event": "routine assurance; comfortably met"
+        },
+        {
+          "hop_id": "h1",
+          "origin": "consumer",
+          "kind": "restore",
+          "bounds": {
+            "bandwidth_min": 1,
+            "latency_max": 8,
+            "availability_min": 0.999,
+            "protection_required": false
+          },
+          "target": "r2a",
+          "event": "the workload has shrunk; the consumer steps aside to the cheaper direct path"
+        }
+      ]
+    }
+  ]
+}

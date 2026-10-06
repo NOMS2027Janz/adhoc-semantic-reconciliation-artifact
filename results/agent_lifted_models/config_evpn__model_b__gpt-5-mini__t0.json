@@ -1,0 +1,243 @@
+{
+  "system": "Agent E",
+  "dialect": "IETF EVPN (RFC 7432 / RFC 8365)",
+  "modules": [
+    "ietf-evpn",
+    "ietf-bgp-l2vpn-evpn"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-mini from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case config_evpn, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_evpn/model_b*.json.",
+  "concepts": [
+    {
+      "id": "e.evi",
+      "label": "evpn-instance",
+      "synonyms": [
+        "EVI",
+        "MAC-VRF"
+      ],
+      "kind": "service",
+      "gloss": "An evpn-instance (EVI / MAC-VRF) is the EVPN-layer L2 forwarding/tenant instance that represents a tenant's MAC-VRF and is realized on one or more attachment-circuits (ACs) to provide that tenant's Ethernet service.",
+      "example": "EVI-5000 (MAC-VRF ACME) is the EVPN instance for the ACME tenant and is realized on attachment-circuits such as AC-PE1 and AC-PE2 to carry the tenant's MAC learning and forwarding.",
+      "ref": "eth-vpn",
+      "relations": [
+        {
+          "rel": "realized-on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "EVI-5000 (MAC-VRF ACME)"
+      ]
+    },
+    {
+      "id": "e.ac",
+      "label": "attachment-circuit",
+      "synonyms": [
+        "AC",
+        "access-interface"
+      ],
+      "kind": "access",
+      "gloss": "An attachment-circuit (AC / access-interface) is the physical or logical customer-facing interface on a PE that carries a customer's traffic and is placed into (mapped into) a specific evpn-instance (EVI).",
+      "example": "AC-PE1 is an attachment circuit on PE1 that is configured into EVI-5000 to carry the ACME tenant's Ethernet traffic.",
+      "ref": "uni",
+      "relations": [
+        {
+          "rel": "into",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "AC-PE1",
+        "AC-PE2",
+        "AC-PE3"
+      ]
+    },
+    {
+      "id": "e.access",
+      "label": "vpn-network-access",
+      "synonyms": [
+        "endpoint",
+        "access-endpoint"
+      ],
+      "kind": "endpoint",
+      "gloss": "A vpn-network-access endpoint is the customer-facing endpoint identifier (for example a subinterface, S-VLAN or CE-facing port) that is located at a particular attachment-circuit and represents the CE's attachment into the EVPN service.",
+      "example": "ep-PE1 is a VPN network access endpoint located at AC-PE1 and represents the CE attachment point for the ACME tenant within EVI-5000.",
+      "ref": "svc-endpoint",
+      "relations": [
+        {
+          "rel": "at",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "ep-PE1",
+        "ep-PE2",
+        "ep-PE3"
+      ]
+    },
+    {
+      "id": "e.vlan",
+      "label": "bridge-domain",
+      "synonyms": [
+        "bridge-vlan",
+        "vlan"
+      ],
+      "kind": "l2-domain",
+      "gloss": "A bridge-domain (bridge-vlan / VLAN) is the L2 broadcast/forwarding domain inside an evpn-instance that groups customer MACs (often corresponding to a VLAN ID) for switching within that EVI.",
+      "example": "bd-vlan-200 is the bridge-domain for VLAN 200 within EVI-5000, carrying all customer frames associated with that L2 domain.",
+      "ref": "vlan",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "bd-vlan-200"
+      ]
+    },
+    {
+      "id": "e.policer",
+      "label": "ingress-policer",
+      "synonyms": [
+        "rate-limiter"
+      ],
+      "kind": "rate",
+      "gloss": "An ingress-policer (rate-limiter) is a rate-control object applied on an attachment-circuit to limit or police incoming traffic toward the EVPN instance on that AC.",
+      "example": "policer-200/50 is configured on AC-PE1 to police ingress traffic into EVI-5000 (for example limiting the entered traffic rate according to the policer profile).",
+      "ref": "bw-profile",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "policer-200/50",
+        "policer-100/0"
+      ]
+    },
+    {
+      "id": "e.tc",
+      "label": "traffic-class",
+      "synonyms": [
+        "forwarding-class",
+        "class"
+      ],
+      "kind": "cos",
+      "gloss": "A traffic-class (forwarding-class / class) is a CoS/forwarding classification defined inside an evpn-instance used to map and treat traffic (e.g., EF, BE) for queuing and forwarding decisions within that MAC-VRF.",
+      "example": "EF-class is a traffic-class defined in EVI-5000 to identify and forward low-latency traffic with expedited forwarding treatment.",
+      "ref": "cos",
+      "relations": [
+        {
+          "rel": "in",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "EF-class",
+        "BE-class"
+      ]
+    },
+    {
+      "id": "e.maclearn",
+      "label": "mac-vrf-learning",
+      "synonyms": [
+        "local MAC learning"
+      ],
+      "kind": "l2-control",
+      "gloss": "mac-vrf-learning (local MAC learning) is the per-attachment-circuit configuration that enables the PE to perform local MAC address learning on that AC (as opposed to relying solely on control-plane EVPN advertisements).",
+      "example": "local learning @AC-PE1 enables the PE at AC-PE1 to learn and populate local MAC entries for EVI-5000 from observed frames on that attachment-circuit.",
+      "ref": "mac-learning",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "local learning @AC-PE1"
+      ]
+    },
+    {
+      "id": "e.mtu",
+      "label": "interface-mtu",
+      "synonyms": [
+        "MTU"
+      ],
+      "kind": "framing",
+      "gloss": "An interface-mtu (MTU) is the framing-size configuration applied on an attachment-circuit that sets the maximum transmit/receive frame size allowed on that access interface feeding the EVPN service.",
+      "example": "MTU 9100 is set on AC-PE2 to allow jumbo frames on the attachment-circuit that feeds EVI-5000.",
+      "ref": "mtu",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "MTU 9100"
+      ]
+    },
+    {
+      "id": "e.esi",
+      "label": "ethernet-segment",
+      "synonyms": [
+        "ESI",
+        "segment"
+      ],
+      "kind": "multihoming",
+      "gloss": "An ethernet-segment (ESI / segment) is the multihoming identifier representing a single customer Ethernet attachment that spans multiple attachment-circuits (and typically multiple PEs) to enable EVPN multihoming behavior for the associated EVI.",
+      "example": "ESI-0011 (dual-homed) identifies the customer Ethernet segment that spans AC-PE1 and AC-PE2, enabling the CE to be multihomed into EVI-5000 across both attachment-circuits.",
+      "ref": "ethernet-segment",
+      "relations": [
+        {
+          "rel": "spans",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "ESI-0011 (dual-homed)"
+      ]
+    },
+    {
+      "id": "e.macmob",
+      "label": "MAC-mobility",
+      "synonyms": [
+        "MAC-move"
+      ],
+      "kind": "l2-control",
+      "gloss": "MAC-mobility (MAC-move) is the EVPN L2-control mechanism inside an evpn-instance that records and propagates that a particular MAC has moved between attachment-circuits so remote PEs can update forwarding (often using mobility sequence information).",
+      "example": "mobility seq=3 for a moved MAC indicates that within EVI-5000 a given MAC address has been seen to move and the mobility sequence number 3 is used in EVPN advertisements to update remote forwarding tables.",
+      "ref": "mac-mobility",
+      "relations": [
+        {
+          "rel": "in",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "mobility seq=3 for a moved MAC"
+      ]
+    },
+    {
+      "id": "e.vendor",
+      "label": "vendor-evi-tag",
+      "synonyms": [
+        "proprietary evi tag"
+      ],
+      "kind": "opaque",
+      "gloss": "A vendor-evi-tag (proprietary evi tag) is an opaque, vendor-specific identifier or tag attached to an evpn-instance used for proprietary segmentation or metadata that is not part of the standard EVPN model.",
+      "example": "vendor-evi-tag on EVI-5000 is a vendor-proprietary tag applied to the ACME tenant's EVI to convey device-specific metadata or mapping that other vendors may not interpret.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "vendor-evi-tag on EVI-5000"
+      ]
+    }
+  ]
+}

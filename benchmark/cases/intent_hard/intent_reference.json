@@ -1,0 +1,126 @@
+{
+  "note": "Two reference arms (design sec. 4). 'unit_value_set' pins units, value sets, and the expectation-vs-realisation kind separation; 'invariant' publishes the committed guarantee floor a satisfaction check evaluates against when a side is inert.",
+  "unit_value_set": [
+    {
+      "term": "bandwidth",
+      "kind": "unit",
+      "meaning": "an expectation bound in Gbit/s; realised by a discrete ODU client signal. ODU rates map to usable bandwidth: ODU0~1.25Gbit/s, ODU1~2.5Gbit/s, ODU2~10.0Gbit/s, ODU3~40.0Gbit/s, ODU4~100.0Gbit/s"
+    },
+    {
+      "term": "latency",
+      "kind": "kind-separation",
+      "meaning": "an expectation 'latency <= X ms' is a BOUND, not a measured value; a telemetry 'latency' reading is a metric. Do not conflate the expectation with the metric."
+    },
+    {
+      "term": "availability",
+      "kind": "value-set",
+      "meaning": "stated in nines; .9999 = four-nines, .99999 = five-nines. A higher requirement is a strictly tighter bound."
+    },
+    {
+      "term": "protection",
+      "kind": "value-set",
+      "meaning": "protection classes: 'none' | '1+1'. 'protection required' is satisfied only by a protected ('1+1') realisation."
+    }
+  ],
+  "invariant": [
+    {
+      "id": "r1a",
+      "pair": "P1",
+      "guaranteed": {
+        "bw_gbps": 10.0,
+        "latency_ms": 3,
+        "availability": 0.99995,
+        "protection": "none",
+        "cost": 40
+      }
+    },
+    {
+      "id": "r1b",
+      "pair": "P1",
+      "guaranteed": {
+        "bw_gbps": 10.0,
+        "latency_ms": 6,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 70
+      }
+    },
+    {
+      "id": "r1c",
+      "pair": "P1",
+      "guaranteed": {
+        "bw_gbps": 10.0,
+        "latency_ms": 4,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 85
+      }
+    },
+    {
+      "id": "r2a",
+      "pair": "P2",
+      "guaranteed": {
+        "bw_gbps": 1.25,
+        "latency_ms": 4,
+        "availability": 0.999,
+        "protection": "none",
+        "cost": 20
+      }
+    },
+    {
+      "id": "r2b",
+      "pair": "P2",
+      "guaranteed": {
+        "bw_gbps": 2.5,
+        "latency_ms": 7,
+        "availability": 0.9999,
+        "protection": "1+1",
+        "cost": 45
+      }
+    },
+    {
+      "id": "r3a",
+      "pair": "P3",
+      "guaranteed": {
+        "bw_gbps": 2.5,
+        "latency_ms": 5,
+        "availability": 0.9995,
+        "protection": "none",
+        "cost": 25
+      }
+    },
+    {
+      "id": "r4a",
+      "pair": "P4",
+      "guaranteed": {
+        "bw_gbps": 40.0,
+        "latency_ms": 8,
+        "availability": 0.999,
+        "protection": "none",
+        "cost": 60
+      }
+    },
+    {
+      "id": "r4b",
+      "pair": "P4",
+      "guaranteed": {
+        "bw_gbps": 40.0,
+        "latency_ms": 12,
+        "availability": 0.99995,
+        "protection": "1+1",
+        "cost": 95
+      }
+    },
+    {
+      "id": "r5a",
+      "pair": "P5",
+      "guaranteed": {
+        "bw_gbps": 10.0,
+        "latency_ms": 9,
+        "availability": 0.999,
+        "protection": "none",
+        "cost": 35
+      }
+    }
+  ]
+}

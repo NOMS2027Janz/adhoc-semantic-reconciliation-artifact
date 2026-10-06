@@ -1,0 +1,24 @@
+{
+  "system": "Agent Y — Summit",
+  "dialect": "Summit (bespoke packet-core controller)",
+  "modules": ["summit-userplane", "summit-sessions"],
+  "note": "Lifted semantic model, Summit (packet-core) side. Home-grown, no standard vocabulary. Summit and the RAN OSS touch only at the user-plane transport seam. Concepts carry a bespoke label, synonyms, a kind, a gloss, an example, the ad-hoc reference entry bound to (ref; native-only concepts bind to a native-gap ref), relations, and instances. Carries the surface partner of the 'session' trap (pdu-session near rrc-session) and one opaque tag. ref=null marks an opaque item.",
+  "concepts": [
+    {"id": "y.n3", "label": "n3-transport", "synonyms": ["user-plane transport", "core uplink"], "kind": "transport", "gloss": "the user-plane transport between the access site and the core user-plane function; the underlay that carries the core's data sessions", "example": "the N3 transport from the core edge down to site NR-441", "ref": "up-transport",
+     "relations": [{"rel": "terminates-at", "target": "y.upfep"}, {"rel": "carries", "target": "y.pdu"}], "instances": ["n3-441"]},
+    {"id": "y.upfep", "label": "upf-transport-endpoint", "synonyms": ["user-plane endpoint", "N3 endpoint"], "kind": "demarcation", "gloss": "the user-plane function's endpoint where the N3 transport terminates in the core; the demarcation toward the access", "example": "the UPF N3 endpoint serving site NR-441", "ref": "transport-demarc",
+     "relations": [{"rel": "on", "target": "y.n3"}], "instances": ["upf-ep-441"]},
+    {"id": "y.dscp", "label": "n3-dscp", "synonyms": ["core marking", "diffserv policy"], "kind": "qos-marking", "gloss": "the DiffServ marking the core sets on user-plane packets, mapped from the session's QoS, for the transport to honour", "example": "EF set for a voice flow's packets on n3-441", "ref": "transport-qos",
+     "relations": [{"rel": "on", "target": "y.n3"}], "instances": ["EF / AF41 / default"]},
+    {"id": "y.cap", "label": "n3-capacity", "synonyms": ["transport demand"], "kind": "rate", "gloss": "the transport capacity the core requires on the N3 for the sessions it places at a site", "example": "8 Gbit/s required on n3-441 at the busy hour", "ref": "transport-capacity",
+     "relations": [{"rel": "of", "target": "y.n3"}], "instances": ["8 Gbit/s required"]},
+    {"id": "y.mtu", "label": "n3-mtu", "synonyms": ["tunnel mtu"], "kind": "framing", "gloss": "the MTU the core needs on the N3 to carry encapsulated user packets without fragmentation", "example": "1600-byte MTU required on n3-441 for GTP encapsulation", "ref": "transport-mtu",
+     "relations": [{"rel": "of", "target": "y.n3"}], "instances": ["MTU 1600"]},
+    {"id": "y.qosflow", "label": "qos-flow", "synonyms": ["flow"], "kind": "core-qos", "gloss": "a QoS flow within a data session, the finest granularity of core QoS — a core-internal object with no transport counterpart", "example": "the guaranteed-bit-rate flow for a voice call inside a session", "ref": "core-qos-flow",
+     "relations": [{"rel": "within", "target": "y.pdu"}], "instances": ["qos-flow GBR-voice", "qos-flow default"]},
+    {"id": "y.pdu", "label": "pdu-session", "synonyms": ["session", "data session"], "kind": "core-state", "gloss": "a PDU session: a subscriber's end-to-end data connection through the core to a data network — a core-internal notion of a 'session', unrelated to a radio connection", "example": "the internet PDU session for a handset served at site NR-441", "ref": "core-session",
+     "relations": [{"rel": "over", "target": "y.n3"}], "instances": ["pdu-session #8830 (internet)"]},
+    {"id": "y.vendor", "label": "summit-tag-9", "synonyms": ["proprietary attr 9"], "kind": "opaque", "gloss": "", "example": "", "ref": null,
+     "relations": [{"rel": "on", "target": "y.n3"}], "instances": ["summit-tag-9=0x4 on n3-441"]}
+  ]
+}

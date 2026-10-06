@@ -1,0 +1,61 @@
+{
+  "system": "Agent S",
+  "dialect": "legacy SNMP/NMS",
+  "note": "Agent S: one representation of the shared OTN network, bound to the reference.",
+  "concepts": [
+    {
+      "id": "d.forwarding",
+      "label": "ifentry-node",
+      "kind": "concept",
+      "ref": "forwarding-node"
+    },
+    {
+      "id": "d.link",
+      "label": "ifindex-port",
+      "kind": "concept",
+      "ref": "link-termination"
+    },
+    {
+      "id": "d.layer",
+      "label": "layer-stacking",
+      "kind": "concept",
+      "ref": "layer-adaptation"
+    },
+    {
+      "id": "d.connection",
+      "label": "circuit",
+      "kind": "concept",
+      "ref": "connection-service"
+    },
+    {
+      "id": "d.multiplex",
+      "label": "mux-attr",
+      "kind": "concept",
+      "ref": "multiplex-structure"
+    },
+    {
+      "id": "d.switching",
+      "label": "xconn-table",
+      "kind": "concept",
+      "ref": "switching-constraint"
+    },
+    {
+      "id": "d.topo",
+      "label": "if-link",
+      "kind": "concept",
+      "ref": "topo-link"
+    },
+    {
+      "id": "d.topology",
+      "label": "mib-topology",
+      "kind": "concept",
+      "ref": "topology"
+    },
+    {
+      "id": "d.conn",
+      "label": "xconn-endpoint",
+      "kind": "concept",
+      "ref": "conn-endpoint"
+    }
+  ]
+}

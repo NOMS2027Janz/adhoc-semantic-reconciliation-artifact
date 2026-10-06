@@ -1,0 +1,161 @@
+{
+  "case": "intent_hard",
+  "operational_case": "intent (declarative demand -> concrete realisation, by refinement)",
+  "seed": "hand-authored intents x priced OTN realisation catalogue over the first case's network",
+  "margin": 0.1,
+  "actual_attrs": {
+    "r1a": {
+      "bw_gbps": 10.0,
+      "latency_ms": 3,
+      "availability": 0.99995,
+      "protection": "none",
+      "cost": 40
+    },
+    "r1b": {
+      "bw_gbps": 10.0,
+      "latency_ms": 6,
+      "availability": 0.99999,
+      "protection": "1+1",
+      "cost": 70
+    },
+    "r1c": {
+      "bw_gbps": 10.0,
+      "latency_ms": 4,
+      "availability": 0.99999,
+      "protection": "1+1",
+      "cost": 85
+    },
+    "r2a": {
+      "bw_gbps": 1.25,
+      "latency_ms": 4,
+      "availability": 0.999,
+      "protection": "none",
+      "cost": 20
+    },
+    "r2b": {
+      "bw_gbps": 2.5,
+      "latency_ms": 7,
+      "availability": 0.9995,
+      "protection": "1+1",
+      "cost": 45
+    },
+    "r3a": {
+      "bw_gbps": 2.5,
+      "latency_ms": 5,
+      "availability": 0.9995,
+      "protection": "none",
+      "cost": 25
+    },
+    "r4a": {
+      "bw_gbps": 40.0,
+      "latency_ms": 8,
+      "availability": 0.999,
+      "protection": "none",
+      "cost": 60
+    },
+    "r4b": {
+      "bw_gbps": 40.0,
+      "latency_ms": 12,
+      "availability": 0.99995,
+      "protection": "1+1",
+      "cost": 95
+    },
+    "r5a": {
+      "bw_gbps": 10.0,
+      "latency_ms": 7,
+      "availability": 0.999,
+      "protection": "none",
+      "cost": 35
+    }
+  },
+  "operational": {
+    "T1/h0": {
+      "realisation": "r1a",
+      "reading": {
+        "bw_gbps": 10.0,
+        "latency_ms": 3,
+        "availability": 0.99995,
+        "protection": "none",
+        "cost": 40
+      }
+    },
+    "T1/h1": {
+      "realisation": "r1a",
+      "reading": {
+        "bw_gbps": 10.0,
+        "latency_ms": 6,
+        "availability": 0.99995,
+        "protection": "none",
+        "cost": 40
+      }
+    },
+    "T1/h2": {
+      "realisation": "r1c",
+      "reading": {
+        "bw_gbps": 10.0,
+        "latency_ms": 4,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 85
+      }
+    },
+    "T1/h3": {
+      "realisation": "r1c",
+      "reading": {
+        "bw_gbps": 10.0,
+        "latency_ms": 4,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 85
+      }
+    },
+    "T2/h0": {
+      "realisation": "r4b",
+      "reading": {
+        "bw_gbps": 40.0,
+        "latency_ms": 12,
+        "availability": 0.99995,
+        "protection": "1+1",
+        "cost": 95
+      }
+    },
+    "T2/h1": {
+      "realisation": "r4b",
+      "reading": {
+        "bw_gbps": 40.0,
+        "latency_ms": 14,
+        "availability": 0.99995,
+        "protection": "1+1",
+        "cost": 95
+      }
+    },
+    "T3/h0": {
+      "realisation": "r2b",
+      "reading": {
+        "bw_gbps": 2.5,
+        "latency_ms": 7,
+        "availability": 0.9995,
+        "protection": "1+1",
+        "cost": 45
+      }
+    },
+    "T3/h1": {
+      "realisation": "r2b",
+      "reading": {
+        "bw_gbps": 2.5,
+        "latency_ms": 7,
+        "availability": 0.9995,
+        "protection": "1+1",
+        "cost": 45
+      }
+    }
+  },
+  "experiment_only": [
+    "I6",
+    "I7"
+  ],
+  "traps_note": {
+    "nature_false_cognate": "an expectation 'latency <= X' vs a measured 'latency' metric (refine-down vs assure-up) must not be conflated",
+    "unit_scale": "bandwidth bounds in Gbit/s vs discrete ODU client rates must be scaled correctly"
+  }
+}

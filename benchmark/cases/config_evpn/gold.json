@@ -1,0 +1,109 @@
+{
+  "case": "config_evpn",
+  "operational_case": "configuration",
+  "seed": "hand-authored (breadth case: carrier-Ethernet VPN, MEF service vs IETF EVPN)",
+  "note": "Gold standard DERIVED from model ref bindings by derive_gold.py; do not hand-edit.",
+  "correspondences": [
+    {
+      "a": "m.bwp",
+      "b": "e.policer",
+      "ref": "bw-profile"
+    },
+    {
+      "a": "m.cos",
+      "b": "e.tc",
+      "ref": "cos"
+    },
+    {
+      "a": "m.ethsvc",
+      "b": "e.evi",
+      "ref": "eth-vpn"
+    },
+    {
+      "a": "m.maclearn",
+      "b": "e.maclearn",
+      "ref": "mac-learning"
+    },
+    {
+      "a": "m.mtu",
+      "b": "e.mtu",
+      "ref": "mtu"
+    },
+    {
+      "a": "m.ep",
+      "b": "e.access",
+      "ref": "svc-endpoint"
+    },
+    {
+      "a": "m.uni",
+      "b": "e.ac",
+      "ref": "uni"
+    },
+    {
+      "a": "m.seg",
+      "b": "e.vlan",
+      "ref": "vlan"
+    }
+  ],
+  "false_cognates": [
+    {
+      "a": "m.seg",
+      "b": "e.esi",
+      "why": "network-segment vs ethernet-segment: both carry 'segment', but a customer VLAN broadcast domain vs an Ethernet Segment (ESI) that bundles a multi-homed site's links; m.seg's true partner is e.vlan and e.esi is a native gap."
+    },
+    {
+      "a": "m.maclearn",
+      "b": "e.macmob",
+      "why": "MAC-learning vs MAC-mobility: both carry 'MAC-', but learning source MACs at a UNI vs handling a MAC that moves between PEs; m.maclearn's true partner is e.maclearn and e.macmob is a native gap."
+    }
+  ],
+  "residual": {
+    "a_only": [
+      {
+        "id": "m.sla",
+        "ref": "svc-availability",
+        "reason": "native gap (self-extend)"
+      },
+      {
+        "id": "m.vendor",
+        "ref": null,
+        "reason": "opaque (no public meaning)"
+      }
+    ],
+    "b_only": [
+      {
+        "id": "e.esi",
+        "ref": "ethernet-segment",
+        "reason": "native gap (self-extend)"
+      },
+      {
+        "id": "e.macmob",
+        "ref": "mac-mobility",
+        "reason": "native gap (self-extend)"
+      },
+      {
+        "id": "e.vendor",
+        "ref": null,
+        "reason": "opaque (no public meaning)"
+      }
+    ]
+  },
+  "residual_by_placement": {
+    "both_cognitive": 3,
+    "one_inert": 4,
+    "both_inert": 5
+  },
+  "invariants": [
+    "broadcast-domain-integrity",
+    "mac-learning-consistency",
+    "uni-attachment",
+    "bandwidth-profile-enforcement",
+    "vlan-mapping",
+    "frame-mtu-consistency"
+  ],
+  "verification_by_placement": {
+    "both_cognitive": "closed-loop worked exchange, self-certifying",
+    "one_inert": "evidence and round-trip on invariants",
+    "both_inert": "external adjudication or downstream test"
+  }
+}

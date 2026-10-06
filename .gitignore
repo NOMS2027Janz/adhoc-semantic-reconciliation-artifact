@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+.venv/
+
+# secrets — never commit your API key
+.env
+
+# build intermediates
+*.print.html
+
+# OS / editor cruft
+.DS_Store
+
+# macOS duplicate artifacts (e.g. "file 2.html") — kept out of the published archive
+* 2.*
+* 2

@@ -1,0 +1,61 @@
+{
+  "system": "Agent M",
+  "dialect": "TM Forum / MEF service model",
+  "note": "Agent M: one representation of the shared OTN network, bound to the reference.",
+  "concepts": [
+    {
+      "id": "c.forwarding",
+      "label": "forwarding-element",
+      "kind": "concept",
+      "ref": "forwarding-node"
+    },
+    {
+      "id": "c.link",
+      "label": "uni-port",
+      "kind": "concept",
+      "ref": "link-termination"
+    },
+    {
+      "id": "c.layer",
+      "label": "adaptation-fn",
+      "kind": "concept",
+      "ref": "layer-adaptation"
+    },
+    {
+      "id": "c.connection",
+      "label": "evc",
+      "kind": "concept",
+      "ref": "connection-service"
+    },
+    {
+      "id": "c.multiplex",
+      "label": "encapsulation",
+      "kind": "concept",
+      "ref": "multiplex-structure"
+    },
+    {
+      "id": "c.switching",
+      "label": "forwarding-rule",
+      "kind": "concept",
+      "ref": "switching-constraint"
+    },
+    {
+      "id": "c.topo",
+      "label": "evc-link",
+      "kind": "concept",
+      "ref": "topo-link"
+    },
+    {
+      "id": "c.topology",
+      "label": "service-topology",
+      "kind": "concept",
+      "ref": "topology"
+    },
+    {
+      "id": "c.conn",
+      "label": "service-endpoint",
+      "kind": "concept",
+      "ref": "conn-endpoint"
+    }
+  ]
+}

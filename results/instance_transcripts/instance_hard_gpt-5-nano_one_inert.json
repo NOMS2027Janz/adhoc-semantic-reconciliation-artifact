@@ -1,0 +1,145 @@
+{
+  "model": "gpt-5-nano",
+  "placement": "one_inert",
+  "row": {
+    "case": "instance_hard",
+    "model": "gpt-5-nano",
+    "placement": "one_inert",
+    "reference_variant": "none",
+    "evidence": "name+key+attrs+rels",
+    "budget": 12,
+    "trial": 0,
+    "submitted": true,
+    "proposed": 11,
+    "precision": 1.0,
+    "recall": 1.0,
+    "surviving_instance_fc": 0,
+    "experiment_only_recall": 1.0,
+    "residual_total": 3,
+    "residual_experiment_only": 0,
+    "residual_native": 3,
+    "confirmed_provision": 0,
+    "refuted_provision": 1,
+    "interrogated": 0,
+    "interrogate_calls": 0,
+    "provision_calls": 1,
+    "turns": 2,
+    "total_tokens": 19005,
+    "reasoning_tokens": 6656,
+    "latency_s": 40.8,
+    "mean_conf_correct": 0.939,
+    "mean_conf_incorrect": "",
+    "surviving_traps": ""
+  },
+  "transcript": [
+    {
+      "step": "prompt",
+      "placement": "one_inert",
+      "reference_variant": "none",
+      "evidence": [
+        "attrs",
+        "key",
+        "name",
+        "rels"
+      ]
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.svc100",
+        "b_id": "b.svc100"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "confirmed": false,
+          "diverging_invariants": {
+            "capacity": {
+              "A": "ODU1",
+              "B": "ODU0"
+            },
+            "endpoint-identity": {
+              "A": [
+                "A1",
+                "A2"
+              ],
+              "B": [
+                "A3",
+                "A1"
+              ]
+            }
+          }
+        },
+        "message": "invariants diverge: the two are not the same service"
+      }
+    },
+    {
+      "step": "submit",
+      "args": {
+        "correspondences": [
+          {
+            "a_id": "a.r1",
+            "b_id": "b.roadm1",
+            "confidence": 0.95
+          },
+          {
+            "a_id": "a.r4",
+            "b_id": "b.roadm4",
+            "confidence": 0.95
+          },
+          {
+            "a_id": "a.r2",
+            "b_id": "b.nodeB",
+            "confidence": 0.95
+          },
+          {
+            "a_id": "a.r3",
+            "b_id": "b.nodeC",
+            "confidence": 0.95
+          },
+          {
+            "a_id": "a.a1",
+            "b_id": "b.acc1",
+            "confidence": 0.95
+          },
+          {
+            "a_id": "a.a2",
+            "b_id": "b.acc2",
+            "confidence": 0.95
+          },
+          {
+            "a_id": "a.a3",
+            "b_id": "b.acc3",
+            "confidence": 0.95
+          },
+          {
+            "a_id": "a.cs_odu2",
+            "b_id": "b.tunnel1",
+            "confidence": 0.92
+          },
+          {
+            "a_id": "a.cs_odu0",
+            "b_id": "b.tunnel2",
+            "confidence": 0.92
+          },
+          {
+            "a_id": "a.omsx",
+            "b_id": "b.msx",
+            "confidence": 0.92
+          },
+          {
+            "a_id": "a.omsy",
+            "b_id": "b.msy",
+            "confidence": 0.92
+          }
+        ],
+        "residual_a": [
+          "a.svc100"
+        ],
+        "residual_b": [
+          "b.svc100"
+        ]
+      }
+    }
+  ]
+}

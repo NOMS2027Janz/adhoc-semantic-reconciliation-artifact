@@ -1,0 +1,28 @@
+{
+  "system": "Agent T",
+  "dialect": "ONF TAPI",
+  "modules": ["tapi-topology@2018-12-10 (TR-547)", "tapi-connectivity"],
+  "note": "Lifted semantic model, TAPI side. Each concept carries its lexical label, synonyms, a shallow kind, a gloss, a canonical example, the reference entry the agent bound it to (ref), plus structural relations (edges to other concept ids in this model) and concrete instances. A live side volunteers its gloss/example; an inert side exposes only label, kind, relations, and instances, so its meaning must be reconstructed from structure and data. ref of null marks a native gap the side self-extends to cover.",
+  "concepts": [
+    {"id": "t.node", "label": "node", "synonyms": ["forwarding domain"], "kind": "node", "gloss": "a forwarding node in the single multi-layer topology", "example": "ROADM R1", "ref": "forwarding-node",
+     "relations": [{"rel": "part-of", "target": "t.topo"}], "instances": ["R1", "R2", "R3", "A1", "A2", "A3"]},
+    {"id": "t.ltp", "label": "link-termination-point", "synonyms": ["owned-node-edge-point", "nep"], "kind": "termination", "gloss": "an edge point owned by a node where a link terminates", "example": "the R1 edge point toward R2", "ref": "link-termination",
+     "relations": [{"rel": "on-node", "target": "t.node"}, {"rel": "terminates", "target": "t.link"}], "instances": ["nep-R1-R2", "nep-R2-R3", "nep-A1-R1"]},
+    {"id": "t.translink", "label": "transitional-link", "synonyms": ["adaptation link"], "kind": "adaptation", "gloss": "a link expressing adaptation between layers", "example": "OTU-to-ODU adaptation at R1", "ref": "layer-adaptation",
+     "relations": [{"rel": "at-node", "target": "t.node"}, {"rel": "adapts", "target": "t.lpq"}], "instances": ["OTU4/ODU2 adaptation at R1"]},
+    {"id": "t.sip", "label": "service-interface-point", "synonyms": ["sip"], "kind": "access", "gloss": "a point where an external client service accesses the network", "example": "the ODU2 client hand-off at A1", "ref": "client-svc-access",
+     "relations": [{"rel": "on-node", "target": "t.node"}, {"rel": "accesses", "target": "t.cs"}], "instances": ["sip-A1-odu", "sip-A3-odu"]},
+    {"id": "t.cs", "label": "connectivity-service", "synonyms": ["service"], "kind": "service", "gloss": "an end-to-end connectivity service across the network", "example": "the A1-A3 ODU2 service", "ref": "connection-service",
+     "relations": [{"rel": "uses", "target": "t.sip"}, {"rel": "realized-by", "target": "t.cep"}, {"rel": "over", "target": "t.topo"}], "instances": ["cs-a1a3-odu2 (ODU2, A1 to A3)"]},
+    {"id": "t.lpq", "label": "layer-protocol-qualifier", "synonyms": ["layer qualifier"], "kind": "multiplex", "gloss": "qualifier expressing the multiplexing and layer structure of a signal", "example": "ODU2 into an OTU4 server", "ref": "multiplex-structure",
+     "relations": [{"rel": "qualifies", "target": "t.cs"}], "instances": ["ODU2 mapped into OTU4"]},
+    {"id": "t.nrg", "label": "node-rule-group", "synonyms": ["rule group"], "kind": "switching", "gloss": "constraints on which ports may cross-connect within a node", "example": "permitted cross-connects on R2", "ref": "switching-constraint",
+     "relations": [{"rel": "on-node", "target": "t.node"}], "instances": ["R2 cross-connect rule group"]},
+    {"id": "t.link", "label": "link", "synonyms": [], "kind": "link", "gloss": "a topological link between two nodes", "example": "the R1-R2 link", "ref": "topo-link",
+     "relations": [{"rel": "between", "target": "t.node"}, {"rel": "terminated-by", "target": "t.ltp"}], "instances": ["link-R1-R2", "link-R2-R3", "link-R1-R3", "link-A1-R1"]},
+    {"id": "t.topo", "label": "topology", "synonyms": ["multi-layer topology"], "kind": "topology", "gloss": "the single multi-layer topology describing the domain", "example": "the OTN-over-optical topology", "ref": "topology",
+     "relations": [{"rel": "contains", "target": "t.node"}, {"rel": "contains", "target": "t.link"}], "instances": ["the OTN-over-optical domain"]},
+    {"id": "t.cep", "label": "connection-end-point", "synonyms": ["cep"], "kind": "endpoint", "gloss": "an endpoint of a connection within a node", "example": "the CEP for the A1-A3 service on R1", "ref": "conn-endpoint",
+     "relations": [{"rel": "on-node", "target": "t.node"}, {"rel": "part-of", "target": "t.cs"}], "instances": ["cep-a1a3-R1", "cep-a1a3-R3"]}
+  ]
+}

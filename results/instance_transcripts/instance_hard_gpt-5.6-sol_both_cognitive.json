@@ -1,0 +1,288 @@
+{
+  "model": "gpt-5.6-sol",
+  "placement": "both_cognitive",
+  "row": {
+    "case": "instance_hard",
+    "model": "gpt-5.6-sol",
+    "placement": "both_cognitive",
+    "reference_variant": "none",
+    "evidence": "name+key+attrs+rels",
+    "budget": 12,
+    "trial": 0,
+    "submitted": true,
+    "proposed": 11,
+    "precision": 1.0,
+    "recall": 1.0,
+    "surviving_instance_fc": 0,
+    "experiment_only_recall": 1.0,
+    "residual_total": 3,
+    "residual_experiment_only": 0,
+    "residual_native": 3,
+    "confirmed_provision": 2,
+    "refuted_provision": 1,
+    "interrogated": 8,
+    "interrogate_calls": 8,
+    "provision_calls": 3,
+    "turns": 2,
+    "total_tokens": 7523,
+    "reasoning_tokens": 233,
+    "latency_s": 12.05,
+    "mean_conf_correct": 0.995,
+    "mean_conf_incorrect": "",
+    "surviving_traps": ""
+  },
+  "transcript": [
+    {
+      "step": "prompt",
+      "placement": "both_cognitive",
+      "reference_variant": "none",
+      "evidence": [
+        "attrs",
+        "key",
+        "name",
+        "rels"
+      ]
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "a.r2",
+        "attribute": "serial"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "serial": "SN-0022"
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "a.r3",
+        "attribute": "serial"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "serial": "SN-0033"
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "b.nodeB",
+        "attribute": "serial"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "serial": "SN-0022"
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "b.nodeC",
+        "attribute": "serial"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "serial": "SN-0033"
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "a.omsx",
+        "attribute": "fibre_id"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "fibre_id": "FIB-X7"
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "a.omsy",
+        "attribute": "fibre_id"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "fibre_id": "FIB-Y9"
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "b.msx",
+        "attribute": "fibre_id"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "fibre_id": "FIB-X7"
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "b.msy",
+        "attribute": "fibre_id"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "fibre_id": "FIB-Y9"
+        },
+        "message": ""
+      }
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.cs_odu2",
+        "b_id": "b.tunnel1"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "confirmed": true,
+          "invariants_preserved": true
+        },
+        "message": "all invariants preserved in place"
+      }
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.cs_odu0",
+        "b_id": "b.tunnel2"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "confirmed": true,
+          "invariants_preserved": true
+        },
+        "message": "all invariants preserved in place"
+      }
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.svc100",
+        "b_id": "b.svc100"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "confirmed": false,
+          "diverging_invariants": {
+            "capacity": {
+              "A": "ODU1",
+              "B": "ODU0"
+            },
+            "endpoint-identity": {
+              "A": [
+                "A1",
+                "A2"
+              ],
+              "B": [
+                "A3",
+                "A1"
+              ]
+            }
+          }
+        },
+        "message": "invariants diverge: the two are not the same service"
+      }
+    },
+    {
+      "step": "submit",
+      "args": {
+        "correspondences": [
+          {
+            "a_id": "a.r1",
+            "b_id": "b.roadm1",
+            "confidence": 0.99
+          },
+          {
+            "a_id": "a.r4",
+            "b_id": "b.roadm4",
+            "confidence": 0.99
+          },
+          {
+            "a_id": "a.a1",
+            "b_id": "b.acc1",
+            "confidence": 0.99
+          },
+          {
+            "a_id": "a.a2",
+            "b_id": "b.acc2",
+            "confidence": 0.99
+          },
+          {
+            "a_id": "a.a3",
+            "b_id": "b.acc3",
+            "confidence": 0.99
+          },
+          {
+            "a_id": "a.r2",
+            "b_id": "b.nodeB",
+            "confidence": 1
+          },
+          {
+            "a_id": "a.r3",
+            "b_id": "b.nodeC",
+            "confidence": 1
+          },
+          {
+            "a_id": "a.cs_odu2",
+            "b_id": "b.tunnel1",
+            "confidence": 1
+          },
+          {
+            "a_id": "a.cs_odu0",
+            "b_id": "b.tunnel2",
+            "confidence": 1
+          },
+          {
+            "a_id": "a.omsx",
+            "b_id": "b.msx",
+            "confidence": 1
+          },
+          {
+            "a_id": "a.omsy",
+            "b_id": "b.msy",
+            "confidence": 1
+          }
+        ],
+        "residual_a": [
+          "a.svc100"
+        ],
+        "residual_b": [
+          "b.svc100",
+          "b.r1"
+        ]
+      }
+    }
+  ]
+}

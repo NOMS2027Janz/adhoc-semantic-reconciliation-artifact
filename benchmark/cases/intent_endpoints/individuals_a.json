@@ -1,0 +1,61 @@
+{
+  "system": "Agent O",
+  "dialect": "TMF service order (endpoints)",
+  "individuals": [
+    {
+      "id": "o.ep1",
+      "type": "client-svc-access",
+      "name": "EP-A1",
+      "key": "so-501",
+      "attrs": {
+        "site": "NY-DC1"
+      },
+      "rels": [],
+      "_truth": "u1"
+    },
+    {
+      "id": "o.ep2",
+      "type": "client-svc-access",
+      "name": "EP-A2",
+      "key": "so-502",
+      "attrs": {
+        "site": "CHI-DC1"
+      },
+      "rels": [],
+      "_truth": "u2"
+    },
+    {
+      "id": "o.ep3",
+      "type": "client-svc-access",
+      "name": "EP-A3",
+      "key": "so-503",
+      "attrs": {
+        "site": "FRA-DC1"
+      },
+      "rels": [],
+      "_truth": "u3"
+    },
+    {
+      "id": "o.ep4",
+      "type": "client-svc-access",
+      "name": "EP-A4",
+      "key": null,
+      "attrs": {
+        "site": "LDN-DC2"
+      },
+      "rels": [],
+      "_truth": "u4"
+    },
+    {
+      "id": "o.ep5",
+      "type": "client-svc-access",
+      "name": "EP-A5",
+      "key": null,
+      "attrs": {
+        "site": "LDN-DC2"
+      },
+      "rels": [],
+      "_truth": "u5"
+    }
+  ]
+}

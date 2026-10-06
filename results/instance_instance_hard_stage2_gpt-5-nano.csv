@@ -1,0 +1,5 @@
+case,model,placement,reference_variant,evidence,budget,trial,submitted,proposed,precision,recall,surviving_instance_fc,experiment_only_recall,residual_total,residual_experiment_only,residual_native,confirmed_provision,refuted_provision,interrogated,interrogate_calls,provision_calls,turns,total_tokens,reasoning_tokens,latency_s,mean_conf_correct,mean_conf_incorrect,surviving_traps
+instance_hard,gpt-5-nano,both_cognitive,none,name+key+attrs+rels,unbounded,0,True,11,1.0,1.0,0,1.0,3,0,3,0,1,8,8,1,7,69336,8192,66.24,0.983,,
+instance_hard,gpt-5-nano,both_cognitive,none,name+key+attrs+rels,unbounded,1,True,11,1.0,1.0,0,1.0,3,0,3,0,0,5,5,0,2,20504,7424,52.88,0.905,,
+instance_hard,gpt-5-nano,both_cognitive,none,name+key+attrs+rels,unbounded,2,True,11,1.0,1.0,0,1.0,3,0,3,2,0,4,8,2,7,102411,11968,88.44,0.925,,
+instance_hard,gpt-5-nano,both_cognitive,none,name+key+attrs+rels,unbounded,3,True,11,1.0,1.0,0,1.0,3,0,3,0,0,14,16,0,5,72408,11968,86.66,0.949,,

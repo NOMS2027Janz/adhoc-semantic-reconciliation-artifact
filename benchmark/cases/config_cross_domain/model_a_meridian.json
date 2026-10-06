@@ -1,0 +1,22 @@
+{
+  "system": "Agent X — Meridian",
+  "dialect": "Meridian (bespoke transport OSS)",
+  "modules": ["meridian-circuits", "meridian-bearers"],
+  "note": "Lifted semantic model, Meridian (transport) side. Home-grown, no standard vocabulary. Each concept carries a bespoke label, synonyms, a shallow kind, a gloss, a canonical example, the ad-hoc reference entry the agent bound it to (ref; null = a native concept with no shared category), structural relations, and instances. A live side volunteers gloss/example; an inert side exposes only label, kind, relations, and instances, so its meaning must be reconstructed with no standard to lean on.",
+  "concepts": [
+    {"id": "m.circuit", "label": "circuit", "synonyms": ["bearer circuit"], "kind": "transport-circuit", "gloss": "a provisioned transport circuit carrying a client end to end across the optical core; the underlay an external service rides", "example": "circuit CIR-7 from the NY hand-off to the Frankfurt hand-off", "ref": "transport-underlay",
+     "relations": [{"rel": "presents-at", "target": "m.handoff"}, {"rel": "carried-on", "target": "m.bearer"}], "instances": ["CIR-7 (NY-FRA)"]},
+    {"id": "m.handoff", "label": "hand-off", "synonyms": ["circuit hand-off"], "kind": "demarcation-point", "gloss": "the physical demarcation where a circuit presents to the client equipment", "example": "the NY hand-off port where CIR-7 meets the customer router", "ref": "demarcation",
+     "relations": [{"rel": "on-circuit", "target": "m.circuit"}], "instances": ["ho-NY-CIR7", "ho-FRA-CIR7"]},
+    {"id": "m.rate", "label": "rate", "synonyms": [], "kind": "rate", "gloss": "the committed client payload rate the circuit guarantees end to end — not the bearer's line rate", "example": "5 Gbit/s committed on CIR-7", "ref": "service-rate",
+     "relations": [{"rel": "of-circuit", "target": "m.circuit"}], "instances": ["5 Gbit/s committed"]},
+    {"id": "m.latency", "label": "latency", "synonyms": [], "kind": "latency", "gloss": "the one-way propagation delay of the circuit, a measured number of milliseconds set by path length", "example": "7.2 ms one-way on CIR-7's primary path", "ref": "latency-bound",
+     "relations": [{"rel": "of-circuit", "target": "m.circuit"}], "instances": ["7.2 ms (primary path)"]},
+    {"id": "m.protection", "label": "protection", "synonyms": [], "kind": "protection", "gloss": "protection of the circuit against a failure of the transport path — a fiber cut or bearer loss — by switching to a diverse path", "example": "CIR-7 protected 1+1 against a cut on the primary fiber", "ref": "protection-requirement",
+     "relations": [{"rel": "of-circuit", "target": "m.circuit"}], "instances": ["1+1 path protection"]},
+    {"id": "m.grade", "label": "grade", "synonyms": [], "kind": "transport-grade", "gloss": "the transport quality grade of a circuit — its physical protection and restoration class", "example": "CIR-7 is a platinum-grade circuit (dual-path protected)", "ref": null,
+     "relations": [{"rel": "of-circuit", "target": "m.circuit"}], "instances": ["platinum", "gold", "best-effort"]},
+    {"id": "m.bearer", "label": "bearer", "synonyms": ["wavelength", "lambda"], "kind": "bearer", "gloss": "the physical optical bearer (a wavelength on a fiber) on which circuits are carried — a transport-internal object with no client-facing meaning", "example": "the 193.1 THz wavelength on the NY-FRA span carrying CIR-7", "ref": null,
+     "relations": [{"rel": "carries", "target": "m.circuit"}], "instances": ["lambda 193.1THz NY-FRA"]}
+  ]
+}

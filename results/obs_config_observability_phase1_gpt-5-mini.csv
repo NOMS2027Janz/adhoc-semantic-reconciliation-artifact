@@ -1,0 +1,13 @@
+case,phase,model,placement,reference,trial,precision,recall,f1,surviving_false_cognates,residual,total_tokens,reasoning_tokens,latency_s
+config_observability,schema,gpt-5-mini,both_cognitive,no-ref,0,1.0,0.75,0.857,0,11,3507,1216,22.44
+config_observability,schema,gpt-5-mini,both_cognitive,no-ref,1,1.0,0.75,0.857,0,11,3569,1280,18.87
+config_observability,schema,gpt-5-mini,both_cognitive,ref,0,1.0,0.75,0.857,0,11,3501,640,10.62
+config_observability,schema,gpt-5-mini,both_cognitive,ref,1,1.0,0.75,0.857,0,11,3427,576,9.41
+config_observability,schema,gpt-5-mini,one_inert,no-ref,0,0.75,0.75,0.75,1,9,3634,1344,18.84
+config_observability,schema,gpt-5-mini,one_inert,no-ref,1,0.75,0.75,0.75,1,9,3465,1216,17.61
+config_observability,schema,gpt-5-mini,one_inert,ref,0,1.0,0.75,0.857,0,11,3988,1280,22.36
+config_observability,schema,gpt-5-mini,one_inert,ref,1,1.0,0.75,0.857,0,11,3721,1024,18.62
+config_observability,schema,gpt-5-mini,both_inert,no-ref,0,0.5,0.5,0.5,1,9,4130,1920,27.29
+config_observability,schema,gpt-5-mini,both_inert,no-ref,1,0.75,0.75,0.75,1,9,3284,1088,17.99
+config_observability,schema,gpt-5-mini,both_inert,ref,0,1.0,0.75,0.857,0,11,4202,1536,21.17
+config_observability,schema,gpt-5-mini,both_inert,ref,1,1.0,0.75,0.857,0,11,4282,1664,21.77

@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reference-Lexicon Ontology Reconciliation — TAPI ↔ IETF TEAS (revised demo)</title>
+<style>
+  :root{
+    --bg:#0c1018; --panel:#121826; --panel2:#0f1420; --edge:#243049;
+    --ink:#e7edf7; --dim:#8da0bf; --faint:#5d6e8c;
+    --tapi:#36c2a8; --tapi2:#0e3a33;
+    --ietf:#7aa2ff; --ietf2:#172447;
+    --bus:#c9a227; --lex:#b98bd6; --lex2:#2a1c3a;
+    --think:#9aa7c0; --action:#ffd166; --result:#5fd38d; --warn:#ff8b6b; --plan:#b98bd6;
+    --svc0:#4aa3ff; --svc1:#5fd38d; --svc2:#ffae57;
+    --heavy:#ff8b6b; --med:#ffd166; --cheap:#36c2a8; --mech:#8da0bf;
+    --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.45}
+  h1{font-size:17px;margin:0}
+  .sub{color:var(--dim);font-size:12.5px;max-width:1150px}
+  .toolbar{position:sticky;top:0;z-index:100;background:#0c1018;border-bottom:1px solid var(--edge);padding:10px 20px 11px;box-shadow:0 6px 16px rgba(0,0,0,.45)}
+  .tbar-title{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .author{color:var(--bus);font-size:13px;font-weight:600;white-space:nowrap}
+  .author .lbl{color:var(--faint);font-weight:400;font-size:11px;margin-right:5px;text-transform:uppercase;letter-spacing:.5px}
+  .wrap{padding:14px 16px;max-width:1520px;margin:0 auto}
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+  button{background:#1b2540;color:var(--ink);border:1px solid var(--edge);border-radius:7px;padding:7px 13px;font-size:13px;cursor:pointer;font-family:var(--sans)}
+  button:hover{background:#243151}
+  button.primary{background:var(--bus);color:#1b1500;border-color:#e2bd3b;font-weight:600}
+  button:disabled{opacity:.4;cursor:default}
+  .speed{color:var(--dim);font-size:12px;margin-left:6px}
+  select{background:#1b2540;color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:5px 8px}
+  /* lexicon toggle */
+  .modewrap{display:inline-flex;align-items:center;gap:8px;margin-left:14px;padding:4px 10px;border:1px solid var(--edge);border-radius:8px;background:#0f1626}
+  .modewrap .ml{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+  .toggle-sw{position:relative;width:46px;height:22px;border-radius:12px;background:#33261c;border:1px solid #5a4a2a;cursor:pointer;transition:.2s}
+  .toggle-sw.on{background:var(--lex2);border-color:#5a3d78}
+  .toggle-sw .knob{position:absolute;top:1px;left:1px;width:18px;height:18px;border-radius:50%;background:var(--warn);transition:.2s}
+  .toggle-sw.on .knob{left:25px;background:var(--lex)}
+  .modeval{font-size:12px;font-weight:700;min-width:34px}
+  .modeval.on{color:var(--lex)} .modeval.off{color:var(--warn)}
+
+  .phases{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}
+  .phase{font-size:11px;padding:4px 9px;border-radius:20px;border:1px solid var(--edge);color:var(--faint);background:#0f1626;white-space:nowrap}
+  .phase.active{color:#1b1500;background:var(--bus);border-color:#e2bd3b;font-weight:600}
+  .phase.done{color:var(--result);border-color:#27543c}
+  .phase.skip{opacity:.4;text-decoration:line-through}
+
+  header{padding:10px 20px;border-bottom:1px solid var(--edge);background:linear-gradient(180deg,#10182a,#0c1018)}
+
+  /* stage note + instrumentation */
+  .stagenote{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(90deg,#16213c,#0f1626);border:1px solid var(--edge);border-left:3px solid var(--bus);border-radius:8px;padding:11px 15px;margin-top:13px}
+  .stagenote .lab{color:var(--bus);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;padding-top:2px;min-width:132px}
+  .stagenote .txt{font-size:12.8px;line-height:1.5;color:#d4deef}
+  .stagenote .txt b{color:#fff}
+  .instr{display:grid;grid-template-columns:200px 1fr 1fr;gap:10px;margin-top:10px}
+  .icard{background:var(--panel);border:1px solid var(--edge);border-radius:8px;padding:9px 12px}
+  .icard .h{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin-bottom:4px}
+  .icard .v{font-size:12px;color:#d4deef;line-height:1.4}
+  .cogrow{display:flex;align-items:center;gap:9px}
+  .cogbadge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:2px 8px;border-radius:10px}
+  .cog-heavy{background:#3a221c;color:var(--heavy)} .cog-med{background:#3a2f12;color:var(--med)}
+  .cog-cheap{background:#0e3a33;color:var(--cheap)} .cog-mech{background:#232b38;color:var(--mech)}
+  .meter{display:inline-flex;gap:3px}
+  .meter i{width:7px;height:13px;border-radius:2px;background:#243049;display:inline-block}
+  .meter i.on.h{background:var(--heavy)} .meter i.on.m{background:var(--med)} .meter i.on.c{background:var(--cheap)}
+  .measure{color:var(--result);font-family:var(--mono);font-size:11.5px}
+
+  .agents{display:grid;grid-template-columns:1fr 0.92fr 1fr;gap:12px;margin-top:14px}
+  .col{background:var(--panel);border:1px solid var(--edge);border-radius:10px;display:flex;flex-direction:column;min-height:300px}
+  .col.tapi{border-top:3px solid var(--tapi)}
+  .col.ietf{border-top:3px solid var(--ietf)}
+  .col.bus{border-top:3px solid var(--bus)}
+  .col h2{font-size:13px;margin:0;padding:10px 12px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center}
+  .tag{font-size:10.5px;font-weight:400;color:var(--dim)}
+  .log{flex:1;overflow-y:auto;padding:8px 10px;font-family:var(--mono);font-size:11.8px;max-height:330px}
+  .line{margin:0 0 6px;padding-left:15px;position:relative;white-space:pre-wrap;word-break:break-word;animation:fade .35s ease}
+  .line::before{position:absolute;left:0;top:0}
+  .line.think{color:var(--think)} .line.think::before{content:'·';color:var(--faint)}
+  .line.action{color:var(--action)} .line.action::before{content:'▸'}
+  .line.result{color:var(--result)} .line.result::before{content:'✓'}
+  .line.warn{color:var(--warn)} .line.warn::before{content:'!'}
+  .line.plan{color:var(--plan)} .line.plan::before{content:'✎'}
+  .line.replan{color:var(--plan)} .line.replan::before{content:'↻'}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+
+  .msg{border:1px solid var(--edge);border-radius:8px;margin:0 0 9px;overflow:hidden;animation:fade .35s ease;background:var(--panel2)}
+  .msg .mh{display:flex;justify-content:space-between;align-items:center;padding:6px 9px;font-size:11px;border-bottom:1px solid var(--edge)}
+  .msg.fromT .mh{background:linear-gradient(90deg,var(--tapi2),transparent)}
+  .msg.fromI .mh{background:linear-gradient(270deg,var(--ietf2),transparent)}
+  .msg.fromV .mh{background:linear-gradient(90deg,#2a2140,transparent)}
+  .dir{font-weight:700;letter-spacing:.3px}
+  .dir.t{color:var(--tapi)} .dir.i{color:var(--ietf)} .dir.v{color:var(--lex)}
+  .method{color:var(--bus);font-family:var(--mono);font-size:10.5px}
+  .msg .summary{padding:6px 9px;font-size:11.5px;color:var(--ink)}
+  .msg pre{margin:0;padding:8px 9px;background:#0a0e16;border-top:1px solid var(--edge);font-family:var(--mono);font-size:10.3px;color:#bcd0ee;overflow-x:auto;max-height:200px;overflow-y:auto}
+  .msg .toggle{cursor:pointer;color:var(--faint);font-size:10px;padding:4px 9px;user-select:none}
+  .msg .toggle:hover{color:var(--dim)}
+
+  .tabs{margin-top:16px;border:1px solid var(--edge);border-radius:10px;background:var(--panel);overflow:hidden}
+  .tabbar{display:flex;border-bottom:1px solid var(--edge);flex-wrap:wrap}
+  .tabbtn{padding:10px 14px;font-size:12.5px;cursor:pointer;color:var(--dim);border-right:1px solid var(--edge);background:var(--panel2);position:relative}
+  .tabbtn.active{color:var(--ink);background:var(--panel);font-weight:600}
+  .tabbtn .badge{display:inline-block;min-width:16px;text-align:center;background:var(--bus);color:#1b1500;border-radius:9px;font-size:10px;padding:0 5px;margin-left:6px;font-weight:700}
+  .tabpane{display:none;padding:14px 16px;max-height:560px;overflow-y:auto}
+  .tabpane.active{display:block}
+
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--edge);vertical-align:top}
+  th{color:var(--dim);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  .pill{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;white-space:nowrap}
+  .pill.lex{background:#13314a;color:#7cc6ff}
+  .pill.gran{background:#3a2f12;color:#ffd166}
+  .pill.scope{background:#3a1a2a;color:#ff8fb0}
+  .pill.prag{background:#222b16;color:#bfe06a}
+  .conf{font-family:var(--mono);font-size:11px}
+  .conf.hi{color:var(--result)} .conf.med{color:var(--action)} .conf.lo{color:var(--warn)}
+  .flag{color:var(--warn);font-size:11px}
+  .muted{color:var(--faint)}
+  .empty{color:var(--faint);font-style:italic;padding:20px;text-align:center}
+  .note{font-size:12px;color:var(--dim);margin-bottom:6px}
+
+  /* lexicon cards */
+  .lexgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:8px}
+  .lexcard{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--lex);border-radius:7px;padding:8px 10px;font-size:11px;opacity:.5;transition:opacity .3s,border-color .3s}
+  .lexcard.bound{opacity:1}
+  .lexcard.gap{border-left-color:var(--warn)}
+  .lexcard .lid{font-family:var(--mono);font-size:10.5px;color:var(--lex);font-weight:700}
+  .lexcard .lnm{font-weight:700;color:var(--ink)}
+  .lexcard .lcls{color:var(--faint);font-style:italic;font-size:10px}
+  .lexcard .lrow{margin-top:3px;color:var(--dim);font-size:10.5px}
+  .lexcard .lk{color:var(--faint);text-transform:uppercase;letter-spacing:.3px;font-size:9px}
+  .bindT{color:var(--tapi)} .bindI{color:var(--ietf)} .bindV{color:var(--lex)}
+  .lexcard .gapmark{color:var(--warn);font-weight:700}
+
+  /* alignment two-pass */
+  .apass{margin-bottom:16px}
+  .apass h3{font-size:12.5px;margin:0 0 8px;color:var(--ink)}
+  .arow{display:grid;grid-template-columns:1fr 190px 1fr;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--edge)}
+  .aterm{font-family:var(--mono);font-size:11.5px}
+  .aterm.t{color:var(--tapi);text-align:right} .aterm.i{color:var(--ietf)}
+  .aterm.struck{text-decoration:line-through;color:var(--faint)}
+  .averd{text-align:center;font-size:10.5px;border-radius:8px;padding:4px 6px;border:1px dashed var(--faint);color:var(--dim)}
+  .averd.cand{border-style:dashed;border-color:#5a4a2a;color:var(--action);background:#221a0c}
+  .averd.hi{border-style:solid;border-color:#27543c;color:var(--result);background:#0e2a1c}
+  .averd.med{border-style:solid;border-color:#4a3f1a;color:var(--action);background:#221c0c}
+  .averd.rej{border-style:solid;border-color:#5a2626;color:var(--warn);background:#2a1414}
+  .averd.gap{border-style:solid;border-color:#5a2640;color:#ff8fb0;background:#2a1420}
+  .averd .vt{font-weight:700;display:block}
+  .averd .vs{font-size:9px;opacity:.8}
+
+  .trans-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .trans-grid h3{font-size:13px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--edge)}
+  .trans-grid h3.t{color:var(--tapi)} .trans-grid h3.i{color:var(--ietf)}
+  pre.code{background:#0a0e16;border:1px solid var(--edge);border-radius:8px;padding:11px;font-family:var(--mono);font-size:11px;color:#c7d6f0;overflow-x:auto;white-space:pre}
+  .trace{border:1px solid var(--edge);border-radius:8px;margin-bottom:14px;overflow:hidden}
+  .trace .th{padding:8px 11px;font-weight:600;font-size:12.5px;border-bottom:1px solid var(--edge)}
+  .trace.dirTI .th{background:linear-gradient(90deg,var(--tapi2),var(--ietf2))}
+  .trace.dirIT .th{background:linear-gradient(90deg,var(--ietf2),var(--tapi2))}
+  .trace .body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+  .trace .cell{padding:10px 11px;border-right:1px solid var(--edge);font-size:11px}
+  .trace .cell:last-child{border-right:none}
+  .trace .cell h4{margin:0 0 6px;font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.4px}
+  .trace .cell pre{margin:0;font-family:var(--mono);font-size:10.2px;color:#bcd0ee;white-space:pre-wrap;word-break:break-word}
+  .rule{font-family:var(--mono);font-size:10.5px;color:#d3c08a;margin:0 0 5px;padding-left:13px;position:relative}
+  .rule::before{content:'→';position:absolute;left:0;color:var(--faint)}
+  .kgcol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .kgcol h3{font-size:13px;margin:0 0 8px}
+  .kgcol h3.t{color:var(--tapi)} .kgcol h3.i{color:var(--ietf)}
+  .kgbox{font-family:var(--mono);font-size:11px;color:#c2d2ee;white-space:pre-wrap;background:#0a0e16;border:1px solid var(--edge);border-radius:8px;padding:11px;min-height:60px}
+
+  /* ledger */
+  .ledger{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  .ledger .lc{border:1px solid var(--edge);border-radius:9px;overflow:hidden}
+  .ledger .lc.off{border-top:3px solid var(--warn)} .ledger .lc.on{border-top:3px solid var(--lex)}
+  .ledger .lc.active{box-shadow:0 0 0 2px rgba(185,139,214,.4)}
+  .ledger .lch{padding:8px 12px;font-weight:700;font-size:12.5px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center}
+  .ledger .lc.off .lch{background:#2a1414;color:var(--warn)} .ledger .lc.on .lch{background:var(--lex2);color:var(--lex)}
+  .ledger .lr{display:flex;justify-content:space-between;padding:6px 12px;border-bottom:1px solid var(--edge);font-size:11.5px}
+  .ledger .lr .k{color:var(--dim)} .ledger .lr .v{font-family:var(--mono);font-weight:700}
+  .ledger .lr .v.good{color:var(--result)} .ledger .lr .v.bad{color:var(--warn)}
+  .savings{margin-top:12px;background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--result);border-radius:8px;padding:10px 13px;font-size:12px;color:#d4deef}
+
+  /* semantic model (shelf) */
+  .semhead{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin:14px 0 7px}
+  .semchips{display:flex;gap:6px;flex-wrap:wrap}
+  .semchip{font-family:var(--mono);font-size:10.5px;color:var(--lex);background:var(--lex2);border:1px solid #5a3d78;border-radius:20px;padding:3px 9px}
+  .semchip.gap{color:var(--warn);background:#2a1414;border-color:#5a2626}
+  .semcard{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--result);border-radius:9px;padding:11px 13px;margin-top:8px}
+  .semcard h4{margin:0 0 3px;font-size:13px;color:var(--result)}
+  .semcard .rel{font-family:var(--mono);font-size:11px;color:#c2d2ee;margin:2px 0}
+  .semcard .rel .k{color:var(--faint)}
+  .pragrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .prag{background:#0f1626;border:1px solid var(--edge);border-radius:7px;padding:7px 10px}
+  .prag .pl{font-size:9.5px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;margin-bottom:3px}
+  .prag .pv{font-size:11px;color:#d4deef;line-height:1.4}
+  .prag.use{border-left:3px solid var(--gold)} .prag.use .pl{color:var(--gold)}
+  .prag.realm{border-left:3px solid var(--tapi)} .prag.realm .pl{color:var(--tapi)}
+  .prag.state{border-left:3px solid var(--ietf)} .prag.state .pl{color:var(--ietf)}
+  .prag.auth{border-left:3px solid var(--lex)} .prag.auth .pl{color:var(--lex)}
+  .prag.purpose{border-left:3px solid var(--result)} .prag.purpose .pl{color:var(--result)}
+  .prag.prov{border-left:3px solid var(--warn)} .prag.prov .pl{color:var(--warn)}
+  .semaff{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .semaff button{background:#1b2540;border:1px solid var(--edge);color:var(--ink);border-radius:7px;padding:7px 12px;font-size:12px;cursor:pointer}
+  .semaff button:hover{background:#243151;border-color:var(--lex)}
+  #semOut{margin-top:10px;background:#0a0e16;border:1px solid var(--edge);border-radius:8px;padding:11px;font-family:var(--mono);font-size:11px;color:#bcd0ee;white-space:pre-wrap;min-height:30px;display:none}
+  #semOut.show{display:block}
+  #semOut .qa{color:var(--result)}
+
+  /* measures ledger */
+  .mtab td.cog span{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:1px 6px;border-radius:8px}
+
+  /* coref */
+  .corefnote{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--lex);border-radius:8px;padding:9px 12px;font-size:11.5px;color:#d4deef;margin-bottom:10px}
+
+  .topo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .topo .col{min-height:0}
+  .topo svg{width:100%;height:auto;display:block;background:radial-gradient(circle at 50% 35%,#0f1726,#0b0f18)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;padding:8px 12px;font-size:11px;color:var(--dim);border-top:1px solid var(--edge)}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .sw{width:14px;height:4px;border-radius:2px;display:inline-block}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .foot{color:var(--faint);font-size:11px;margin-top:18px;border-top:1px solid var(--edge);padding-top:12px}
+  /* step focus highlight */
+  .flash{animation:flashglow 1.6s ease}
+  @keyframes flashglow{0%{box-shadow:0 0 0 0 rgba(201,162,39,0)}
+    15%{box-shadow:0 0 0 3px rgba(201,162,39,.75)}
+    55%{box-shadow:0 0 0 3px rgba(201,162,39,.55)}
+    100%{box-shadow:0 0 0 0 rgba(201,162,39,0)}}
+  .col.flashcol{animation:flashcol 1.6s ease}
+  @keyframes flashcol{0%{box-shadow:0 0 0 0 rgba(201,162,39,0)}
+    15%{box-shadow:0 0 0 3px rgba(201,162,39,.8)}
+    100%{box-shadow:0 0 0 0 rgba(201,162,39,0)}}
+  .about{background:var(--panel);border:1px solid var(--edge);border-radius:10px;margin-top:14px;overflow:hidden}
+  .about>h2{font-size:14px;margin:0;padding:11px 14px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,#13203a,transparent)}
+  .about .body{padding:14px 18px;max-width:1200px}
+  .about .body.collapsed{display:none}
+  .about .body p{margin:0 0 10px;font-size:12.5px;line-height:1.55;color:#d4deef}
+  .about .body code{font-family:var(--mono);font-size:11px;color:#bcd0ee;background:#0a0e16;border:1px solid var(--edge);padding:1px 4px;border-radius:3px}
+  .about-toggle{background:#1b2540;color:var(--dim);border:1px solid var(--edge);border-radius:6px;padding:4px 10px;font-size:11.5px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="tbar-title">
+    <h1>Reference-Lexicon Ontology Reconciliation — revised live demo</h1>
+    <span class="author"><span class="lbl">demo by</span>Christopher Janz</span>
+  </div>
+  <div class="controls">
+    <button id="play" class="primary">▶ Play</button>
+    <button id="step">Step ▸</button>
+    <button id="reset">⟲ Reset</button>
+    <span class="speed">speed</span>
+    <select id="speed">
+      <option value="1500">slow</option>
+      <option value="850" selected>normal</option>
+      <option value="350">fast</option>
+    </select>
+    <span class="modewrap">
+      <span class="ml">Reference lexicon</span>
+      <span class="toggle-sw on" id="modeSw"><span class="knob"></span></span>
+      <span class="modeval on" id="modeVal">ON</span>
+    </span>
+    <span class="speed" id="counter" style="margin-left:14px"></span>
+  </div>
+  <div class="phases" id="phases"></div>
+</div>
+
+<header>
+  <div class="sub">
+    Reconciling two independently-authored models of one OTN network.
+    <b style="color:var(--tapi)">Agent&nbsp;T</b> speaks <b>ONF TAPI</b>;
+    <b style="color:var(--ietf)">Agent&nbsp;I</b> speaks <b>IETF TEAS/OTN</b>.
+    They <b>plan</b> the attack, <b>lift</b> to ontologies, <b>bind</b> to a thin shared <b style="color:var(--lex)">reference lexicon</b>,
+    align in two passes, reconcile the residual, co-refer instances, and validate by round-trip.
+    Toggle the reference lexicon <b>ON/OFF</b> to compare the work — especially the verification work.
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="about">
+    <h2><span>About this demo — what you're looking at</span>
+        <button class="about-toggle" id="aboutToggle">Hide ▲</button></h2>
+    <div class="body" id="aboutBody">
+      <p>This is the fully-cognitive, agent-to-agent case: both sides are competent, interrogable agents. Rather than merge schemas, each agent <b>plans</b> how to attack the reconciliation, <b>lifts</b> its data model to an explicit ontology, and — when the reference is on — <b>binds</b> its concepts to a thin, generic <b style="color:var(--lex)">reference lexicon</b> that pins identity only (id, names, a shallow class, a disambiguating definition, one canonical example). Correspondences then fall out by shared reference; only the residual (granularity, scope) is negotiated, and instance co-reference is settled separately, from evidence.</p>
+      <p><b>Three things are made explicit.</b> (1) At every stage — how the gap is closed <i>and how it is verified</i>, with a measure. (2) Where the hardest cognition acts: <b style="color:var(--heavy)">planning</b>, the <b style="color:var(--heavy)">lift</b>, and the <b style="color:var(--heavy)">residual reconciliation</b> — watch the cognition meter. (3) The value of the reference lexicon: flip it <b>OFF</b> and the same task costs more conversation and, above all, more <i>verification</i> — see the <b>Work ledger</b>.</p>
+      <p><b>Planning is part of the cognitive workflow.</b> The agents do not run a fixed pipeline; they choose the order in which gaps are closed and re-plan when they meet a surprise — the false cognate, a scope gap. The planning beat and its re-plans are shown in the agent windows.</p>
+    </div>
+  </div>
+
+  <div class="stagenote">
+    <span class="lab" id="stageLab">Stage</span>
+    <span class="txt" id="stageTxt">Press <b>▶ Play</b> to begin. The agents will plan the attack, lift to ontologies, bind to the reference lexicon, align, reconcile the residual, co-refer instances, and validate.</span>
+  </div>
+
+  <div class="instr">
+    <div class="icard"><div class="h">Cognition load</div>
+      <div class="cogrow"><span class="cogbadge cog-mech" id="cogBadge">—</span>
+        <span class="meter" id="cogMeter"><i></i><i></i><i></i></span></div></div>
+    <div class="icard"><div class="h">Gap closed by</div><div class="v" id="mechTxt">—</div></div>
+    <div class="icard"><div class="h">Verified by · measure</div><div class="v" id="verifyTxt">—</div>
+      <div class="measure" id="measureTxt" style="margin-top:4px"></div></div>
+  </div>
+
+  <div class="agents" id="agentsRow">
+    <div class="col tapi">
+      <h2><span>🟢 Agent&nbsp;T — TAPI cognitive proxy</span><span class="tag">ONF TR-547 / tapi-topology</span></h2>
+      <div class="log" id="logT"></div>
+    </div>
+    <div class="col bus">
+      <h2><span>🟡 A2A-T message bus</span><span class="tag">TMF Agentic / JSON-RPC</span></h2>
+      <div class="log" id="bus"></div>
+    </div>
+    <div class="col ietf">
+      <h2><span>🔵 Agent&nbsp;I — IETF TEAS cognitive proxy</span><span class="tag">RFC 8795 + otn-topo</span></h2>
+      <div class="log" id="logI"></div>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabsBox">
+    <div class="tabbar" id="tabbar">
+      <div class="tabbtn active" data-tab="lex">Reference lexicon <span class="badge" id="lexBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="align">Alignment <span class="badge" id="alignBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="kg">Knowledge graphs &amp; instances</div>
+      <div class="tabbtn" data-tab="dec">Residual decisions <span class="badge" id="decBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="tr">Translators <span class="badge" id="trBadge" style="display:none">!</span></div>
+      <div class="tabbtn" data-tab="trace">Traces <span class="badge" id="traceBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="meas">Measures &amp; cognition <span class="badge" id="measBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="ledger">Work ledger · with vs without</div>
+      <div class="tabbtn" data-tab="semodel">Semantic model <span class="badge" id="semBadge" style="display:none">shelf</span></div>
+    </div>
+
+    <div class="tabpane active" id="pane-lex">
+      <div class="note">A thin, generic reference — neither TAPI nor IETF/ACTN, only the essential categories. Each side <b>binds</b> its concepts here; entries light up as they are bound. Two entries have a scope gap on one side (amber). <span id="lexModeNote"></span></div>
+      <div class="lexgrid" id="lexGrid"></div>
+    </div>
+
+    <div class="tabpane" id="pane-align">
+      <div class="note">Two passes. <b>Pass 1 — label:</b> cheap candidates on names alone (deliberately over/under-proposes). <b>Pass 2 — gloss + example:</b> the disambiguating definition and canonical example confirm, reject, or mark a gap.</div>
+      <div id="alignBody"><div class="empty">No alignment yet — press Play.</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-kg">
+      <div class="note">The lift makes each implicit ontology explicit (heavy cognition). Instance co-reference — a separate step — settles which individuals are the same, from evidence.</div>
+      <div class="kgcol" style="margin-top:6px">
+        <div><h3 class="t">Agent T — lifted TAPI ontology</h3><div class="kgbox" id="kgT"><span class="muted">— not yet lifted —</span></div></div>
+        <div><h3 class="i">Agent I — lifted IETF ontology</h3><div class="kgbox" id="kgI"><span class="muted">— not yet lifted —</span></div></div>
+      </div>
+      <h3 style="font-size:12.5px;color:var(--ink);margin:16px 0 6px">Instance co-reference <span class="muted" style="font-weight:400">— which individuals co-refer, from evidence (shared key → attribute → topology)</span></h3>
+      <div id="corefBody"><div class="empty">Instances co-refer in stage 8.</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-dec">
+      <div class="note">The residual after alignment — granularity and scope gaps — closed by derived transforms and by self-extension, each verified and logged.</div>
+      <table style="margin-top:8px"><thead><tr>
+        <th>Gap</th><th>TAPI</th><th>IETF</th><th>Closure &amp; verification</th><th>Conf.</th>
+      </tr></thead><tbody id="decBody">
+        <tr><td colspan="5" class="empty">No residual decisions yet.</td></tr>
+      </tbody></table>
+    </div>
+
+    <div class="tabpane" id="pane-tr">
+      <div class="note">The negotiated artefact: two directional translators (dictionary + structural transforms + identity map), composed from the committed decisions and the reference bindings. Cognition is spent here, once; runtime executes with no inference per message.</div>
+      <div class="trans-grid" style="margin-top:8px">
+        <div><h3 class="t">T→I translator</h3><pre class="code" id="transTI"><span class="muted">— generated after mediation —</span></pre></div>
+        <div><h3 class="i">I→T translator</h3><pre class="code" id="transIT"><span class="muted">— generated after mediation —</span></pre></div>
+      </div>
+    </div>
+
+    <div class="tabpane" id="pane-trace">
+      <div class="note">Deterministic application of the translators for each live change — inbound native instance, rule firings, emitted native instance. No model inference per message.</div>
+      <div id="traceBody" style="margin-top:8px"><div class="empty">No translations yet.</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-meas">
+      <div class="note">The per-stage ledger: how each gap is closed, how it is verified, the measure, and the cognition load. This is requirements (1) and (2) made durable.</div>
+      <table class="mtab" style="margin-top:8px"><thead><tr>
+        <th>Stage</th><th>Cognition</th><th>Closed by</th><th>Verified by</th><th>Measure</th>
+      </tr></thead><tbody id="measBody">
+        <tr><td colspan="5" class="empty">Fills in as stages complete.</td></tr>
+      </tbody></table>
+    </div>
+
+    <div class="tabpane" id="pane-ledger">
+      <div class="note">Same reconciliation, both ways. The reference lexicon does not just save conversation — it saves <b>verification</b>: correspondences arrive as near-identity bindings (checked once, reused), and the NEP≈TTP false cognate never becomes a candidate to be rejected.</div>
+      <div class="ledger" id="ledgerBody"></div>
+      <div class="savings" id="ledgerSavings"></div>
+    </div>
+
+    <div class="tabpane" id="pane-semodel">
+      <div class="note">The <b>form-independent semantic model</b> — meaning (semantics <i>and</i> pragmatics) lifted clear of any form, with provenance. This is the artefact a reasoning agent consumes <b>directly</b>, and the hub the translators merely project from. Ad hoc for this network and anchored to the thin reference lexicon; expressed as an RDF/OWL graph with SKOS lexicon bindings and PROV-O provenance. Not a universal model.</div>
+      <div id="semBody"><div class="empty">Assembled at the final stage — press Play, or jump with Step.</div></div>
+    </div>
+  </div>
+
+  <div class="topo" id="topoBox">
+    <div class="col tapi">
+      <h2><span>TAPI view — single multi-layer topology</span><span class="tag" id="tapiStat"></span></h2>
+      <svg id="svgT" viewBox="0 0 520 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="legend">
+        <span><span class="dot" style="background:#36c2a8"></span>ROADM</span>
+        <span><span class="dot" style="background:#e7edf7"></span>Access node</span>
+        <span><span class="sw" style="background:#5d6e8c"></span>OMS link</span>
+        <span><span class="sw" style="background:#36c2a8"></span>spur</span>
+      </div>
+    </div>
+    <div class="col ietf">
+      <h2><span>IETF view — stacked per-layer networks</span><span class="tag" id="ietfStat"></span></h2>
+      <svg id="svgI" viewBox="0 0 520 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="legend">
+        <span><span class="dot" style="background:#7aa2ff"></span>te-node</span>
+        <span><span class="sw" style="background:#5d6e8c"></span>te-link</span>
+        <span><span class="sw" style="background:#7aa2ff;height:2px;border-radius:0"></span>supporting-tp</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Staged demonstration — the conversation is scripted for legibility; a code-backed run is scaffolded separately. Schema fragments are faithful but abbreviated.
+    Reference-lexicon entries are generic (neither ONF nor IETF), pinning identity only. A2A envelopes follow the TM Forum Agentic (A2A-T) JSON-RPC <code>message/send</code> shape.
+  </div>
+</div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+
+/* ===== model network ===== */
+const POS_T={R1:[175,135],R2:[345,135],R3:[260,250],A1:[68,72],A2:[452,72],A3:[260,345]};
+const MESH=[['R1','R2'],['R2','R3'],['R1','R3']];
+const SPURS=[['A1','R1'],['A2','R2'],['A3','R3']];
+const POS_I={A1:[92,72],A3:[260,72],A2:[428,72],R1:[120,300],R2:[400,300],R3:[260,330]};
+const OPT_MESH=[['R1','R2'],['R1','R3'],['R2','R3']];
+const SUPPORT=[['A1','R1'],['A2','R2'],['A3','R3']];
+const SVC_COLORS={svc0:'#4aa3ff',svc1:'#5fd38d',svc2:'#ffae57'};
+const INITIAL_SERVICES=[{id:'svc0',label:'ODU2 A1↔A2',color:SVC_COLORS.svc0,odu:'ODU2',och:'λ1',tapiPath:['A1','R1','R2','A2'],otnPair:['A1','A2'],optPath:['R1','R2']}];
+let state={services:JSON.parse(JSON.stringify(INITIAL_SERVICES))};
+
+function el(t,a,c){const e=document.createElementNS('http://www.w3.org/2000/svg',t);for(const k in a)e.setAttribute(k,a[k]);if(c)(Array.isArray(c)?c:[c]).forEach(x=>e.appendChild(x));return e;}
+function line(x1,y1,x2,y2,a){return el('line',Object.assign({x1,y1,x2,y2},a));}
+function txt(x,y,s,a){const t=el('text',Object.assign({x,y},a));t.textContent=s;return t;}
+function path(pts,a){let d='M'+pts[0][0]+' '+pts[0][1];for(let i=1;i<pts.length;i++)d+=' L'+pts[i][0]+' '+pts[i][1];return el('path',Object.assign({d,fill:'none'},a));}
+function curveOffset(pts,off){return pts.map(p=>[p[0],p[1]+off]);}
+function hex(x,y,r){let p='';for(let i=0;i<6;i++){const a=Math.PI/3*i-Math.PI/2;p+=(x+r*Math.cos(a))+','+(y+r*Math.sin(a))+' ';}return p.trim();}
+function renderTAPI(){const svg=$('svgT');svg.innerHTML='';
+  MESH.forEach(([a,b])=>svg.appendChild(line(...POS_T[a],...POS_T[b],{stroke:'#5d6e8c','stroke-width':2})));
+  SPURS.forEach(([a,b])=>svg.appendChild(line(...POS_T[a],...POS_T[b],{stroke:'#36c2a8','stroke-width':2,opacity:.8})));
+  state.services.forEach((s,idx)=>{const pts=s.tapiPath.map(n=>POS_T[n]);svg.appendChild(path(curveOffset(pts,(idx-1)*5),{stroke:s.color,'stroke-width':3.4,'stroke-linecap':'round',opacity:.95}));});
+  for(const n in POS_T){const [x,y]=POS_T[n];const roadm=n[0]==='R';
+    if(roadm)svg.appendChild(el('polygon',{points:hex(x,y,15),fill:'#0e3a33',stroke:'#36c2a8','stroke-width':2}));
+    else{svg.appendChild(el('rect',{x:x-17,y:y-13,width:34,height:26,rx:6,fill:'#1a2336',stroke:'#e7edf7','stroke-width':1.6}));
+      ['#cf6','#ffd166','#36c2a8'].forEach((c,i)=>svg.appendChild(el('circle',{cx:x-10+i*10,cy:y+(n==='A3'?-19:19),r:2.6,fill:c})));}
+    svg.appendChild(txt(x,roadm?y-21:y-19,n,{fill:'#e7edf7','font-size':12,'font-weight':700,'text-anchor':'middle'}));}
+  state.services.forEach(s=>{const m=POS_T[s.tapiPath[1]],m2=POS_T[s.tapiPath[2]];svg.appendChild(txt((m[0]+m2[0])/2,(m[1]+m2[1])/2-6,s.och,{fill:s.color,'font-size':9,'text-anchor':'middle'}));});
+  $('tapiStat').textContent=`1 topology · 6 nodes · ${state.services.length} service(s)`;}
+function renderIETF(){const svg=$('svgI');svg.innerHTML='';
+  svg.appendChild(el('rect',{x:8,y:30,width:504,height:120,rx:8,fill:'#101a30',stroke:'#243049','stroke-dasharray':'4 4'}));
+  svg.appendChild(el('rect',{x:8,y:235,width:504,height:130,rx:8,fill:'#0f1626',stroke:'#243049','stroke-dasharray':'4 4'}));
+  svg.appendChild(txt(16,46,'network: otn-topology (ODU)',{fill:'#7aa2ff','font-size':10}));
+  svg.appendChild(txt(16,251,'network: optical-topology (OCh)',{fill:'#7aa2ff','font-size':10}));
+  OPT_MESH.forEach(([a,b])=>svg.appendChild(line(...POS_I[a],...POS_I[b],{stroke:'#5d6e8c','stroke-width':2})));
+  SUPPORT.forEach(([a,b])=>svg.appendChild(line(...POS_I[a],...POS_I[b],{stroke:'#7aa2ff','stroke-width':1.4,'stroke-dasharray':'3 3',opacity:.55})));
+  state.services.forEach((s,idx)=>{const off=(idx-1)*5;
+    svg.appendChild(path(curveOffset([POS_I[s.otnPair[0]],POS_I[s.otnPair[1]]],off),{stroke:s.color,'stroke-width':3.2,'stroke-linecap':'round'}));
+    svg.appendChild(path(curveOffset(s.optPath.map(n=>POS_I[n]),off),{stroke:s.color,'stroke-width':3.2,'stroke-dasharray':'6 3','stroke-linecap':'round',opacity:.9}));});
+  for(const n in POS_I){const [x,y]=POS_I[n];const roadm=n[0]==='R';
+    svg.appendChild(el('circle',{cx:x,cy:y,r:13,fill:roadm?'#16223f':'#1d2c52',stroke:'#7aa2ff','stroke-width':1.8}));
+    svg.appendChild(txt(x,y+4,n,{fill:'#e7edf7','font-size':11,'font-weight':700,'text-anchor':'middle'}));
+    if(roadm)svg.appendChild(txt(x,y+26,'ttp',{fill:'#7aa2ff','font-size':8,'text-anchor':'middle'}));}
+  $('ietfStat').textContent=`2 networks · ${state.services.length} tunnel(s)`;}
+function renderTopo(){renderTAPI();renderIETF();}
+
+/* ===== reference lexicon ===== */
+const LEXICON=[
+ {id:'xref:forwarding-node',nm:'Forwarding node',cls:'NetworkElement',def:'switches/forwards within a layer',ex:'a ROADM',t:'node/ForwardingDomain',i:'te-node'},
+ {id:'xref:access-node',nm:'Access node',cls:'NetworkElement',def:'customer-facing add/drop/aggregate node',ex:'access node A1',t:'access node',i:'access te-node'},
+ {id:'xref:link-termination',nm:'Link termination point',cls:'TerminationPoint',def:'where a link attaches to a node in a layer',ex:'a port on an OMS link',t:'owned-node-edge-point',i:'termination-point'},
+ {id:'xref:topological-link',nm:'Topological link',cls:'Link',def:'adjacency between two link-terminations',ex:'OMS link R1–R2',t:'link',i:'link'},
+ {id:'xref:layer-adaptation',nm:'Layer adaptation',cls:'Relation',def:'client carried over a server layer',ex:'ODU over OCh',t:'transitional-link',i:'supporting-tp chain'},
+ {id:'xref:switching-constraint',nm:'Switching constraint',cls:'Constraint',def:'which LTPs may interconnect in a node',ex:'A1 LTP-1 ⇄ LTP-2',t:'node-rule-group',i:'connectivity-matrix'},
+ {id:'xref:trail-termination',nm:'Trail / tunnel termination',cls:'TerminationPoint',def:'head end where a trail/tunnel starts or ends — NOT a link end',ex:'a transponder on an OCh trail',t:null,i:'tunnel-termination-point',gapSide:'T'},
+ {id:'xref:client-service-access',nm:'Client service access',cls:'TerminationPoint',def:'demarcation where a customer service is presented',ex:'a 10GE UNI at A1',t:'service-interface-point',i:null,gapSide:'I'},
+ {id:'xref:shared-risk-group',nm:'Shared-risk group',cls:'Attribute',def:'resources sharing a failure risk',ex:'fibres in one duct',t:'risk-characteristic',i:'te-srlgs'},
+ {id:'xref:connection-service',nm:'Connection service',cls:'Service',def:'carry a signal between endpoints (endpoint-intent vs path-oriented)',ex:'10G ODU2 A1↔A2',t:'connectivity-service',i:'te-tunnel'},
+ {id:'xref:multiplex-structure',nm:'Multiplex structure',cls:'Attribute',def:'tributary slot/port structure of a mux signal',ex:'ODU2 over ODU4 = 8×1.25G',t:'layer-protocol-qualifier',i:'otn-label TS/TPN'},
+ {id:'xref:protection-scheme',nm:'Protection scheme',cls:'Attribute',def:'survivability arrangement',ex:'1+1, 1:1, restoration',t:'resilience-type',i:'protection-type'}
+];
+let lexBound=0;
+function buildLexGrid(){const g=$('lexGrid');g.innerHTML='';
+  LEXICON.forEach((e,i)=>{const d=document.createElement('div');d.className='lexcard'+(e.gapSide?' gap':'');d.id='lex'+i;
+    d.innerHTML=`<div><span class="lid">${e.id}</span></div><div class="lnm">${e.nm} <span class="lcls">· ${e.cls}</span></div>`+
+      `<div class="lrow"><span class="lk">def</span> ${e.def}</div>`+
+      `<div class="lrow"><span class="lk">ex</span> ${e.ex}</div>`+
+      `<div class="lrow" id="bind${i}"></div>`;
+    g.appendChild(d);});}
+function bindLexicon(){lexBound=0;
+  LEXICON.forEach((e,i)=>{const d=$('lex'+i);d.classList.add('bound');
+    let s='';
+    if(e.t)s+=`<span class="bindT">T ${e.t}</span>`; else s+=`<span class="gapmark">T scope gap → self-extend</span>`;
+    s+=' · ';
+    if(e.i)s+=`<span class="bindI">I ${e.i}</span>`; else s+=`<span class="gapmark">I scope gap → self-extend</span>`;
+    $('bind'+i).innerHTML=s;
+    lexBound++;});
+  const b=$('lexBadge');b.style.display='inline-block';b.textContent=LEXICON.length;
+}
+
+/* ===== alignment passes ===== */
+// candidates for WITHOUT mode (label pass), and outcomes for pass 2
+const ALIGN_CANDS=[
+ {t:'tapi:Link',i:'ietf:link',verd:'hi',vt:'closeMatch · hi',vs:'label + gloss'},
+ {t:'tapi:ForwardingDomain',i:'ietf:node',verd:'hi',vt:'closeMatch · hi',vs:'label + gloss'},
+ {t:'tapi:NodeEdgePoint',i:'ietf:termination-point',verd:'hi',vt:'closeMatch · hi',vs:'label + gloss'},
+ {t:'tapi:NodeEdgePoint',i:'ietf:tunnel-termination-point',verd:'rej',vt:'✗ rejected',vs:'gloss: false cognate (a tunnel head, not a link end)',falseCognate:true},
+ {t:'tapi:NodeRuleGroup',i:'ietf:connectivity-matrix',verd:'med',vt:'closeMatch · med',vs:'gloss (labels differ)'},
+ {t:'tapi:ServiceInterfacePoint',i:'—',verd:'gap',vt:'no correspondent',vs:'scope gap'}
+];
+function renderAlign(mode,pass){
+  const body=$('alignBody');
+  let h='';
+  // pass 1
+  h+='<div class="apass"><h3>Pass 1 · label — candidates by name alone'+(mode==='with'?' <span class="muted" style="font-weight:400">(largely pre-empted: shared references carry near-identity)</span>':'')+'</h3>';
+  if(mode==='with'){
+    h+='<div class="corefnote">Bindings already establish 9 correspondences as near-identity by shared reference. The label pass proposes <b>0 false cognates</b>: <span class="aterm t">NodeEdgePoint</span>→<span class="bindV">link-termination</span> and <span class="aterm i">tunnel-termination-point</span>→<span class="bindV">trail-termination</span> bind to <b>different entries</b>, so NEP≈TTP never arises.</div>';
+  } else {
+    ALIGN_CANDS.forEach(c=>{h+=`<div class="arow"><div class="aterm t">${c.t}</div><div class="averd cand"><span class="vt">≈ candidate</span><span class="vs">by label — unconfirmed</span></div><div class="aterm i">${c.i}</div></div>`;});
+  }
+  h+='</div>';
+  // pass 2
+  if(pass>=2){
+    h+='<div class="apass"><h3>Pass 2 · gloss + example — confirm / reject / gap</h3>';
+    ALIGN_CANDS.forEach(c=>{
+      const struck=c.verd==='rej'?' struck':'';
+      h+=`<div class="arow"><div class="aterm t${struck}">${c.t}</div><div class="averd ${c.verd}"><span class="vt">${c.vt}</span><span class="vs">${c.vs}</span></div><div class="aterm i${struck}">${c.i}</div></div>`;});
+    h+='</div>';
+  }
+  body.innerHTML=h;
+  const conf=ALIGN_CANDS.filter(c=>c.verd==='hi'||c.verd==='med').length;
+  const b=$('alignBadge');b.style.display='inline-block';b.textContent=(mode==='with'?9:ALIGN_CANDS.length);
+}
+
+/* ===== residual decisions ===== */
+const DECISIONS=[
+ {gap:'gran',t:'uuid in one Context',i:'(network,node,tp) tuple',d:'Identity remap table, persisted. Verify: bijective, round-trips.',c:'hi'},
+ {gap:'gran',t:'1 multi-layer node + transitional links',i:'per-layer te-nodes + supporting-node',d:'Derived transform (explode/collapse). Verify: explode→collapse returns original.',c:'hi'},
+ {gap:'gran',t:'node-rule-group / forwarding-rule',i:'connectivity-matrices',d:'Rule-groups ⇄ valid switching pairs. Verify: worked example.',c:'hi'},
+ {gap:'gran',t:'layer-protocol-qualifier ODUk',i:'otn-label TS/TPN',d:'Derive TS/TPN from ODU type + server. Verify: ODU2→TS{1..8}→ODU2.',c:'hi'},
+ {gap:'scope',t:'— (no TTP)',i:'tunnel-termination-point',d:'T self-extends: TTP ≅ PHOTONIC NEP(OTSi)+mapped access. Anchored to xref:trail-termination. Verify: round-trips.',c:'hi'},
+ {gap:'scope',t:'service-interface-point',i:'— (no SIP)',d:'I self-extends: SIP ≅ inter-layer client TP + service-mapping. Anchored to xref:client-service-access. Verify: round-trips.',c:'hi'},
+ {gap:'prag',t:'connectivity-service (endpoint-intent)',i:'te-tunnel (path-oriented)',d:'Align use, not only term: SIP endpoints ⇄ TTPs, route ⇄ explicit-route-objects.',c:'hi'}
+];
+function revealDecision(idx){const tb=$('decBody');if(tb.querySelector('.empty'))tb.innerHTML='';
+  const x=DECISIONS[idx];const nm={lex:'lexical',gran:'granularity',scope:'scope',prag:'pragmatic'}[x.gap];
+  const tr=document.createElement('tr');tr.style.animation='fade .4s ease';
+  tr.innerHTML=`<td><span class="pill ${x.gap}">${nm}</span></td><td><code>${x.t}</code></td><td><code>${x.i}</code></td><td>${x.d}</td><td class="conf ${x.c}">${x.c==='hi'?'HIGH':'MED'}</td>`;
+  tb.appendChild(tr);const b=$('decBadge');b.style.display='inline-block';b.textContent=tb.querySelectorAll('tr').length;}
+
+/* ===== instance co-reference ===== */
+const COREF=[
+ {el:'Node A1',t:'t-ne-01',i:'node A1',ev:'shared key: mgmt-addr 10.0.0.1',c:'hi'},
+ {el:'Node A2',t:'t-ne-02',i:'node A2',ev:'shared key: mgmt-addr 10.0.0.2',c:'hi'},
+ {el:'Node A3',t:'t-ne-03',i:'node A3',ev:'shared key: mgmt-addr 10.0.0.3',c:'hi'},
+ {el:'ROADM R1',t:'t-rd-11',i:'R1',ev:'shared key: mgmt-addr 10.0.1.1',c:'hi'},
+ {el:'ROADM R2',t:'t-rd-12',i:'R2',ev:'structure: spurs to A2 (near-miss vs R3, resolved by topology)',c:'hi'},
+ {el:'ROADM R3',t:'t-rd-13',i:'R3',ev:'structure: spurs to A3',c:'hi'}
+];
+function renderCoref(){const b=$('corefBody');
+  let h='<div class="corefnote">Type alignment settled which <b>kinds</b> correspond; this settles which <b>individuals</b> are the same thing, from evidence — a shared key where one exists, then attribute agreement, then topology. The two agents build and compare their instance graphs; the R2/R3 near-miss is resolved by <b>structure</b> (its spurs), not by name.</div>';
+  h+='<table><thead><tr><th>Physical element</th><th>Agent T handle</th><th>Agent I handle</th><th>Matched on</th><th>Conf.</th></tr></thead><tbody>';
+  COREF.forEach(r=>{h+=`<tr><td><b>${r.el}</b></td><td><code>${r.t}</code></td><td><code>${r.i}</code></td><td>${r.ev}</td><td class="conf ${r.c}">HIGH</td></tr>`;});
+  h+='</tbody></table>';b.innerHTML=h;}
+
+/* ===== translators ===== */
+const TRANS_TI=`translator T→I   (TAPI ▶ IETF)    v1 · from decisions + reference bindings
+DICTIONARY  (via reference lexicon)
+  node/ForwardingDomain → te-node          [xref:forwarding-node]
+  owned-node-edge-point → termination-point [xref:link-termination]
+  link                  → link             [xref:topological-link]
+  node-rule-group       → connectivity-matrix
+  service-interface-point → inter-layer client TP + service-mapping   [I self-extend]
+STRUCTURAL
+  one multi-layer topology → networks[] per layer + supporting-* chains
+  connectivity-service → te-tunnel; SIP endpoints → TTPs; route → explicit-route-objects
+  layer-protocol-qualifier ODUk → otn-label TS = f(ODUk,server)
+IDENTITY   uuid ⇄ (network,node,tp)   [persisted]`;
+const TRANS_IT=`translator I→T   (IETF ▶ TAPI)    v1 · from decisions + reference bindings
+DICTIONARY  (via reference lexicon)
+  te-node               → node             [xref:forwarding-node]
+  termination-point     → owned-node-edge-point
+  link                  → link
+  connectivity-matrix   → node-rule-group
+  tunnel-termination-point → PHOTONIC NEP(OTSi) + mapped access        [T self-extend]
+STRUCTURAL
+  networks[] + supporting-* → one multi-layer topology (collapse)
+  te-tunnel → connectivity-service; TTPs → SIP endpoints; ERO → NEP route
+  otn-label TS/TPN → layer-protocol-qualifier ODUk (+capacity)
+IDENTITY   (network,node,tp) ⇄ uuid   [shared]`;
+function revealTranslators(){$('transTI').textContent=TRANS_TI;$('transIT').textContent=TRANS_IT;
+  const b=$('trBadge');b.style.display='inline-block';b.textContent='✓';b.style.background='var(--result)';b.style.color='#06210f';}
+
+/* ===== traces ===== */
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function addTrace(tr){const box=$('traceBody');if(box.querySelector('.empty'))box.innerHTML='';
+  const d=document.createElement('div');d.className='trace dir'+tr.dir;
+  d.innerHTML=`<div class="th">${tr.title}</div><div class="body">`+
+    `<div class="cell"><h4>inbound (native)</h4><pre>${esc(tr.input)}</pre></div>`+
+    `<div class="cell"><h4>rule firings</h4>${tr.rules.map(r=>`<div class="rule">${esc(r)}</div>`).join('')}</div>`+
+    `<div class="cell"><h4>emitted (native)</h4><pre>${esc(tr.output)}</pre></div></div>`;
+  box.appendChild(d);const b=$('traceBadge');b.style.display='inline-block';b.textContent=box.querySelectorAll('.trace').length;}
+
+/* ===== measures ledger ===== */
+const COGCLS={heavy:'cog-heavy',med:'cog-med',cheap:'cog-cheap',mech:'cog-mech'};
+const COGLABEL={heavy:'Heavy',med:'Medium',cheap:'Cheap',mech:'Mechanical'};
+function addMeasure(stage,cog,closed,verify,measure){const tb=$('measBody');if(tb.querySelector('.empty'))tb.innerHTML='';
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td><b>${stage}</b></td><td class="cog"><span class="${COGCLS[cog]}" style="background:${cogBg(cog)};color:${cogFg(cog)}">${COGLABEL[cog]}</span></td><td>${closed}</td><td>${verify}</td><td class="measure">${measure||'—'}</td>`;
+  tb.appendChild(tr);const b=$('measBadge');b.style.display='inline-block';b.textContent=tb.querySelectorAll('tr').length;}
+function cogBg(c){return {heavy:'#3a221c',med:'#3a2f12',cheap:'#0e3a33',mech:'#232b38'}[c];}
+function cogFg(c){return {heavy:'#ff8b6b',med:'#ffd166',cheap:'#36c2a8',mech:'#8da0bf'}[c];}
+
+/* ===== work ledger with vs without ===== */
+const LEDGER={
+  without:{turns:14,cands:6,checks:6,verif:'6 gloss+example + 2 round-trips',fc:'1 — caught by conversation',scale:'N² · each pair authored'},
+  with:{turns:8,cands:1,checks:1,verif:'11 binding-confirms (once, reused) + 2 round-trips',fc:'1 — pre-empted by lexicon (0 conversation)',scale:'N · bind once, compose pairs'}
+};
+function renderLedger(mode){const b=$('ledgerBody');
+  const row=(k,v,cls)=>`<div class="lr"><span class="k">${k}</span><span class="v ${cls||''}">${v}</span></div>`;
+  const col=(id,title,d,active)=>`<div class="lc ${id} ${active?'active':''}"><div class="lch"><span>Reference lexicon ${id==='on'?'ON':'OFF'}</span>${active?'<span style="font-size:10px">▶ active</span>':''}</div>`+
+    row('Conversation turns',d.turns,id==='on'?'good':'bad')+
+    row('Candidates to check',d.cands,id==='on'?'good':'bad')+
+    row('Bilateral checks',d.checks,id==='on'?'good':'bad')+
+    row('Verification ops',d.verif)+
+    row('False cognate',d.fc,id==='on'?'good':'bad')+
+    row('Scaling',d.scale)+'</div>';
+  b.innerHTML=col('off','',LEDGER.without,mode==='without')+col('on','',LEDGER.with,mode==='with');
+  $('ledgerSavings').innerHTML='<b>What the reference buys, mostly:</b> verification. With it, correspondences arrive as near-identity bindings — checked once against a definition and example, then reused — and the NEP≈TTP false cognate is never a candidate to reject. Without it, every candidate is confirmed bilaterally and the false cognate costs a gloss+example rejection. The generation work scales as <b>N</b> bindings rather than <b>N²</b> authored translators.';
+}
+
+/* ===== semantic model (the shelf hub) ===== */
+const SEM_TYPES=['forwarding-node','access-node','link-termination','topological-link','layer-adaptation','switching-constraint','trail-termination','client-service-access','shared-risk-group','connection-service','multiplex-structure','protection-scheme'];
+const SEM_GAP_TYPES=['trail-termination','client-service-access']; // scope gaps, self-extended
+// pragmatics carried on the exemplar service instance
+const SEM_SERVICE={
+  id:'svc:odu2-A1-A2', label:'Connection service — ODU2, A1 ↔ A2',
+  rels:[['type','connection-service (xref)'],['endpoints','client-service-access @A1, @A2'],
+        ['capacity','ODU2 · 10G'],['route','A1 ▸ R1 ▸ R2 ▸ A2'],['carried by','layer-adaptation → OCh trail λ1'],
+        ['protection','unprotected']],
+  prag:{
+    use:'Endpoint-intent: the consumer states endpoints and capacity; the path is a consequence, not the request. (The path-oriented te-tunnel view is a projection, not the meaning.)',
+    realm:'Consumer realm = {endpoints, capacity, protection}. Provider realm = {route R1–R2, wavelength λ1, tributary slots}. The model records which side each fact belongs to.',
+    state:'Intended = requested/configured; Operational = active and up. Here they agree; an agent must not read one for the other.',
+    auth:'ODU service → OTN controller (Agent T·I). OCh trail & λ1 → optical controller. Node identity (A1,A2,R1,R2) → inventory. Governs whose value wins on conflict.',
+    purpose:'Adequacy to purpose: for provisioning, route + capacity are load-bearing; for an inventory or topology view, endpoints + capacity suffice. Bounds how much fidelity is "enough".',
+    prov:'Asserted by Agent T and Agent I, reconciled; confidence HIGH; anchored to the reference lexicon; PROV-O who/when on every fact.'
+  }
+};
+function renderSemodel(){
+  const b=$('semBody');
+  let h='';
+  h+='<div class="semhead">Types — reconciled ontology, bound to the reference lexicon</div><div class="semchips">';
+  SEM_TYPES.forEach(t=>{const gap=SEM_GAP_TYPES.includes(t);h+=`<span class="semchip${gap?' gap':''}">xref:${t}${gap?' · self-extended':''}</span>`;});
+  h+='</div>';
+  h+='<div class="semhead">Instances — the network, keyed on stable identifiers</div>';
+  h+='<div class="rel" style="font-family:var(--mono);font-size:11px;color:#c2d2ee">nodes R1,R2,R3 (forwarding-node) · A1,A2,A3 (access-node) — keyed by mgmt-addr</div>';
+  const s=SEM_SERVICE;
+  h+=`<div class="semcard"><h4>${s.label}</h4>`;
+  s.rels.forEach(([k,v])=>{h+=`<div class="rel"><span class="k">${k}:</span> ${v}</div>`;});
+  h+='<div class="semhead" style="margin-top:11px">Pragmatics — carried as first-class annotations</div>';
+  const P=s.prag;
+  const pcard=(cls,lab,val)=>`<div class="prag ${cls}"><div class="pl">${lab}</div><div class="pv">${val}</div></div>`;
+  h+='<div class="pragrid">'+
+     pcard('use','Use',P.use)+
+     pcard('realm','Realm · who decides',P.realm)+
+     pcard('state','State · intended vs operational',P.state)+
+     pcard('auth','Authority · source of truth',P.auth)+
+     pcard('purpose','Purpose · adequacy',P.purpose)+
+     pcard('prov','Provenance · meta band',P.prov)+
+     '</div></div>';
+  h+='<div class="semaff">'+
+     '<button onclick="semProject(\'tapi\')">Project → TAPI</button>'+
+     '<button onclick="semProject(\'ietf\')">Project → IETF</button>'+
+     '<button onclick="semAgentQuery()">Agent query</button></div>';
+  h+='<div id="semOut"></div>';
+  b.innerHTML=h;
+  const bd=$('semBadge');bd.style.display='inline-block';
+}
+function semShow(txt){const o=$('semOut');o.classList.add('show');o.innerHTML=txt;}
+function semProject(which){
+  if(which==='tapi') semShow('project → TAPI (native connectivity-service)\n\ntapi-connectivity:connectivity-service svc-odu2-a1a2\n  service-layer=ODU  requested-capacity=10G\n  end-point[DSR]  sip-A1-c1 , sip-A2-c1\n  connection route: nep-A1-odu ▸ nep-R1-photonic ▸ nep-R2-photonic ▸ nep-A2-odu (OCh λ1)\n\n<span class="qa">Form projected from the model; the meaning above is unchanged.</span>');
+  else semShow('project → IETF (native te-tunnel)\n\nietf-te:tunnels/tunnel "tunnel-odu2-a1a2"\n  encoding=lsp-encoding-oduk  source=A1 dest=A2\n  te-bandwidth.otn.odu-type=ODU2\n  explicit-route-objects: R1-ttp ▸ R2-ttp (OCh λ1)\n  + otn-topology te-link A1–A2 (supporting optical-topology λ1)\n\n<span class="qa">Same meaning, a different form — endpoint-intent becomes a path-oriented tunnel on projection.</span>');
+}
+function semAgentQuery(){
+  semShow('agent query (read directly from the model, no translator)\n\nQ: Which services cross R2, and is intended == operational?\nA: svc:odu2-A1-A2 (ODU2, A1↔A2) traverses R2 on OCh λ1. intended == operational (active). Unprotected.\n\nQ: Who is authoritative for the wavelength, and may the consumer change it?\nA: The optical controller is authoritative for λ1; it is in the provider realm, so the consumer cannot set it — only request capacity and endpoints.\n\n<span class="qa">The agent consumes meaning and pragmatics directly; no form was parsed.</span>');
+}
+
+/* ===== A2A envelopes ===== */
+function env(id,from,intent,text,data){return {jsonrpc:"2.0",id:String(id),method:"message/send",
+  params:{message:{role:"agent",messageId:"m-"+id,contextId:"otn-reconciliation",
+    metadata:{"a2a-t-profile":"TMF-Agentic-A2A-Telecom",sender:from,intent},
+    parts:[{kind:"text",text},...(data?[{kind:"data",data}]:[])]}}};}
+function addMsg(m){const box=$('bus');const cls=m.from==='T'?'fromT':m.from==='I'?'fromI':'fromV';
+  const d=document.createElement('div');d.className='msg '+cls;
+  const arrow=m.from==='T'?'Agent T ──▶ Agent I':m.from==='I'?'Agent I ──▶ Agent T':'Agent V ──▶ all';
+  const dcls=m.from==='T'?'t':m.from==='I'?'i':'v';
+  const json=JSON.stringify(m.body,null,2);
+  d.innerHTML=`<div class="mh"><span class="dir ${dcls}">${arrow}</span><span class="method">${m.body.params.message.metadata.intent}</span></div>`+
+    `<div class="summary">${m.summary}</div><div class="toggle">▸ show A2A-T envelope</div><pre style="display:none"></pre>`;
+  d.querySelector('pre').textContent=json;
+  const tg=d.querySelector('.toggle'),pre=d.querySelector('pre');
+  tg.onclick=()=>{const open=pre.style.display!=='none';pre.style.display=open?'none':'block';tg.textContent=(open?'▸ show':'▾ hide')+' A2A-T envelope';};
+  box.appendChild(d);box.scrollTop=box.scrollHeight;}
+
+/* ===== phases + instrumentation meta ===== */
+const PHASES=['Scenario','Plan','Lift','Bind','Align · label','Align · gloss+ex','Granularity gap','Scope gap','Instance co-ref','Construct','Validate','Change 1 T→I','Change 2 I→T','Scale','Semantic model'];
+const META=[ /* per phase: cog, mech, verify, measure (measure may be fn of mode) */
+ {cog:'mech',mech:'agents agree the method; schemas never merged',verify:'—',measure:''},
+ {cog:'heavy',mech:'each agent forms an approach: lift, bind, align (label→gloss), lexical first, instances separate, gate on round-trip',verify:'each step\'s expected outcome stated in advance, so a miss is visible',measure:'planned steps: 8'},
+ {cog:'heavy',mech:'recover the implicit ontology (entities, relations, granularity); recognise the standard; distil a per-model lexicon',verify:'lift-fidelity round-trip: regenerate native instance, diff = 0',measure:'fidelity 100% · T 11 / I 11 concepts'},
+ {cog:'med',mech:'bind each concept to one reference entry (id, definition, canonical example)',verify:'binding checked against the entry\'s definition + example; residual flagged',measure:m=>m==='with'?'bound 11/12 each · residual 1 each · false cognate pre-empted':'skipped — no shared reference'},
+ {cog:'cheap',mech:'propose candidate correspondences on names alone',verify:'none yet — candidates unconfirmed by design',measure:m=>m==='with'?'0 candidates (near-identity by reference)':'6 candidates · incl. NEP≈TTP false cognate'},
+ {cog:'med',mech:'confirm / reject / gap each candidate by disambiguating definition + canonical example',verify:'false cognate killed (its example is a tunnel head, not a link end)',measure:m=>m==='with'?'confirmed by reference · 0 to reject':'confirmed 4 · rejected 1 · gap 2 · precision 4/6'},
+ {cog:'heavy',mech:'derived transforms — explode/collapse layers; ODU type ⇄ tributary slots',verify:'worked example round-trips (explode→collapse; ODU2→TS{1..8}→ODU2)',measure:'4 transforms · round-trip ✓'},
+ {cog:'heavy',mech:'deficient side self-extends and records against the reference (TTP, SIP)',verify:'self-extension round-trips; anchored to a reference entry',measure:'self-extensions 2 · escalations 0'},
+ {cog:'med',mech:'co-refer individuals from evidence: shared key → attribute → topology',verify:'build and compare the two instance graphs; confirm placement',measure:'6 individuals · 1 near-miss resolved by structure'},
+ {cog:'mech',mech:'generate directional translators from decisions + bindings',verify:'generation (validated next)',measure:'rules: T→I 9 · I→T 9'},
+ {cog:'mech',mech:'take the existing service through both directions',verify:'translate → translate-back → compare; only faithful round-trip lets a change proceed',measure:'round-trip T→I→T ✓ · I→T→I ✓'},
+ {cog:'mech',mech:'apply T→I translator to a native change',verify:'both graphs / topologies converge; no per-message inference',measure:'convergence ✓'},
+ {cog:'mech',mech:'apply I→T translator to a native change',verify:'both graphs / topologies converge; no per-message inference',measure:'convergence ✓'},
+ {cog:'cheap',mech:'a third agent binds once; pairwise translators composed from N bindings',verify:'—',measure:'bindings N=3 · pairwise composed, not authored'},
+ {cog:'med',mech:'assemble the form-independent semantic model (semantics + pragmatics), anchored to the reference, with provenance',verify:'project to any form and round-trip; answer agent queries directly from the model',measure:'1 shelf model · 6 pragmatic annotations · projects to any form'}
+];
+const PHASE_NOTES=[
+ ["Stage 0 · Scenario","Two agents on the <b>same physical OTN network</b> — Agent T as ONF TAPI, Agent I as IETF TEAS. They will build a working translation <b>without</b> merging schemas."],
+ ["Stage 1 · Plan","<b>Planning is cognition.</b> Each agent decides how to attack the problem — lift, bind, align (label then gloss), lexical gaps first, instances separate, and gate any change on a round-trip. They will <b>re-plan</b> when they hit a surprise."],
+ ["Stage 2 · Lift","Each agent recovers the ontology its data model only implies — heavier than a parse — and distils a per-model lexicon. Verified by a <b>lift-fidelity round-trip</b>. Open <b>Knowledge graphs</b>."],
+ ["Stage 3 · Bind","Each concept binds to one <b>reference-lexicon</b> entry, checked against its definition and canonical example. Because NEP and TTP bind to <b>different</b> entries, the NEP≈TTP false cognate is pre-empted. Open <b>Reference lexicon</b>."],
+ ["Stage 4 · Align · label","Cheap candidates by name alone. Under the reference this is near-empty; <b>without</b> it, the label pass proposes six candidates — including the false cognate. Open <b>Alignment</b>."],
+ ["Stage 5 · Align · gloss + example","The disambiguating definition and canonical example decide: confirm, reject, or gap. The false cognate is <b>rejected</b> — its example is a tunnel head, not a link end — and the agents <b>re-plan</b> it as a scope gap."],
+ ["Stage 6 · Granularity gap","Granularity: one multi-layer node ⇄ per-layer te-nodes; ODU type ⇄ tributary slots. Closed by a <b>derived transform</b>, verified by explode→collapse round-trip. Open <b>Residual decisions</b>."],
+ ["Stage 7 · Scope gap","Scope gaps: TTP (T lacks), SIP (I lacks). The deficient side <b>self-extends</b> and records against the reference — <b>re-planning</b> rather than escalating. Escalations: 0."],
+ ["Stage 8 · Instance co-reference","A separate problem: which <b>individuals</b> are the same. Settled from evidence — shared key → attribute → topology. The R2/R3 near-miss is resolved by <b>structure</b>. Open <b>Knowledge graphs &amp; instances</b>."],
+ ["Stage 9 · Construct","The agents generate the two directional translators from the committed decisions and the reference bindings. Open <b>Translators</b>."],
+ ["Stage 10 · Validate","Round-trip the existing service both ways and compare. Only a faithful round-trip lets a real change proceed — <b>cognition now leaves the data path</b>."],
+ ["Stage 11 · Change 1 (T→I)","Agent T provisions a new ODU2 A1→A3 and emits native TAPI; Agent I applies the T→I translator. Watch both topologies <b>converge</b>. Open <b>Traces</b>."],
+ ["Stage 12 · Change 2 (I→T)","Agent I provisions an ODU0 A3→A2 in native IETF; Agent T applies I→T. Both views converge again — deterministic transforms, no inference."],
+ ["Stage 13 · Scale","A third agent binds once to the reference. Pairwise translators are <b>composed</b> from N bindings, not authored from scratch — the work scales as N, not N². Open <b>Work ledger</b>."],
+ ["Stage 14 · Semantic model","The artefact that goes <b>on the shelf</b>: the reconciled meaning, lifted clear of any form, with pragmatics and provenance as first-class annotations. An agent consumes it <b>directly</b>; the translators were only projections from it. Open <b>Semantic model</b> and try Project → TAPI / IETF and Agent query."]
+];
+
+/* ===== the scripted timeline (mode-aware) ===== */
+// step fields: p, t/i/v (log [kind,text]), msg, dec (index), decs [idx...], kg{side,html},
+//   trans, addService, trace, coref(bool), lexbind(bool), align{pass}, ledger(bool), mode('with'|'without')
+const KG_T=`Topology(T0) — multi-layer {PHOTONIC,ODU,DSR}
+ ├─ Node (ForwardingDomain)
+ │   ├─ OwnedNodeEdgePoint (LTP, layer-tagged)
+ │   └─ NodeRuleGroup → forwarding-rule
+ ├─ Link (transitional link carries layer change)
+ ├─ ServiceInterfacePoint (customer access)
+ └─ ConnectivityService → Connection (SIP endpoints)`;
+const KG_I=`networks[] — one per layer
+ ├─ otn-topology (ODU)      ┐ supporting-network
+ │   ├─ te-node             │ supporting-node
+ │   │   ├─ termination-point
+ │   │   └─ connectivity-matrices
+ │   └─ te-link             ┘
+ ├─ optical-topology (OCh)
+ │   └─ tunnel-termination-point (TTP)
+ └─ te-tunnel (explicit-route-objects)`;
+
+const STEPS=[
+/* 0 scenario */
+{p:0,t:['think','Boot. Operator domain, exposed as ONF TAPI (tapi-topology / tapi-connectivity).']},
+{p:0,i:['think','Boot. Same physical domain, peer controller, exposed as IETF TEAS (te-topology + otn-topology).']},
+{p:0,t:['action','Goal: a working translation without a pre-agreed shared model.'],
+  msg:{from:'T',intent:'session-open',summary:'Open an A2A-T session; propose to reconcile by conversation, not a shared model.',body:env(101,'Agent-T','session-open','Opening a session. Proposal: build a working translation by exchanging native instances and natural-language explanations, without a pre-agreed shared model.',{proposal:'reconcile-by-conversation'})}},
+{p:0,i:['action','Agreed. Schemas are not merged; we exchange instances and explanations.'],
+  msg:{from:'I',intent:'session-ack',summary:'Acknowledge; schemas will not be merged.',body:env(102,'Agent-I','session-ack','Acknowledged. Schemas will not be merged; we exchange native instances plus explanations and reconcile.',{ack:true})}},
+/* 1 plan */
+{p:1,t:['plan','Planning the attack: (1) lift my model to an ontology; (2) bind to the shared reference; (3) align by label, then confirm by gloss + example; (4) take lexical gaps first — they surface granularity and scope; (5) hold instance co-reference for a separate pass; (6) gate any change on a round-trip.'],
+  msg:{from:'T',intent:'method-proposal',summary:'Propose the approach: lift, bind, align (label→gloss), residual, instances, validate.',body:env(103,'Agent-T','method-proposal','Proposed method: lift each model to an ontology; bind to the shared reference; align by label then gloss+example; take lexical first; hold instance co-reference separate; gate any change on a round-trip.',{steps:['lift','bind','align','residual','instances','validate']})}},
+{p:1,i:['plan','Same shape. I will state the expected outcome of each step, so a miss is visible and we re-plan.'],
+  msg:{from:'I',intent:'method-ack',summary:'Agree the approach; will state expected outcomes per step.',body:env(104,'Agent-I','method-ack','Agreed. I will state the expected outcome of each step, so a miss is visible and we re-plan.',{ack:true})}},
+{p:1,t:['plan','Reference lexicon is ON — I will bind to it, so most correspondences fall out by reference and I converse only over the residual.'],mode:'with'},
+{p:1,t:['plan','Reference lexicon is OFF — no shared reference. I will propose candidates by label and confirm each bilaterally. Expect more checks, and a false cognate to catch.'],mode:'without'},
+/* 2 lift */
+{p:2,t:['action','Lifting: recovering entities, relations and granularity the schema leaves implicit; recognising ONF TAPI; distilling a per-model lexicon.'],kg:{side:'t',html:KG_T},
+  msg:{from:'T',intent:'model-disclosure',summary:'Disclose the ONF TAPI framework and the lifted-ontology sketch.',body:env(105,'Agent-T','model-disclosure','I model per ONF TAPI: one multi-layer topology, layers tagged on each NEP. Sharing my lifted ontology sketch and a representative fragment.',{framework:'ONF TAPI',ontology:'Topology(T0)/Node/NEP/Link/SIP/ConnectivityService'})}},
+{p:2,t:['result','Lift-fidelity round-trip: regenerated my native fragment from the ontology — diff = 0. 11 concepts, each with a definition and a canonical example.']},
+{p:2,i:['action','Lifting my model similarly; recognising RFC 8795 + otn-topo; distilling my lexicon.'],kg:{side:'i',html:KG_I},
+  msg:{from:'I',intent:'model-disclosure',summary:'Disclose the IETF TEAS framework and the lifted-ontology sketch.',body:env(106,'Agent-I','model-disclosure','I model per IETF TEAS: one network per layer, stitched by supporting-*. Sharing my lifted ontology sketch and a fragment.',{framework:'IETF TEAS',ontology:'networks[]/te-node/TP/te-link/TTP/te-tunnel'})}},
+{p:2,i:['result','Lift-fidelity round-trip clean. 11 concepts distilled.']},
+/* 3 bind (with) */
+{p:3,t:['action','Binding my concepts to the reference lexicon (checking each against its definition + example).'],mode:'with',lexbind:true},
+{p:3,t:['result','Bound 11/12. Residual: I have no trail-termination — a scope gap I will self-extend later.'],mode:'with'},
+{p:3,i:['result','Bound 11/12. Residual: I have no client-service-access (SIP) — a scope gap.'],mode:'with'},
+{p:3,i:['think','Note: my termination-point binds to xref:link-termination; my tunnel-termination-point binds to xref:trail-termination — different entries. NEP≈TTP cannot arise.'],mode:'with'},
+{p:3,msg:{from:'T',intent:'reference-binding',summary:'TAPI binding set to the shared reference lexicon (11/12; scope gap at trail-termination).',body:env(1,'Agent-T','reference-binding','Bound my concepts to the shared reference. NEP→link-termination, SIP→client-service-access, node→forwarding-node, etc. One scope gap: no trail-termination.',{bound:11,of:12,gap:'trail-termination'})},mode:'with'},
+{p:3,t:['warn','Reference lexicon OFF — no binding step. Proceeding to align model-to-model.'],mode:'without'},
+/* 4 align label */
+{p:4,t:['action','Alignment, pass 1 — label. Proposing candidates on names alone.'],align:{pass:1}},
+{p:4,i:['think','Under the reference, near-identity bindings already carry 9 correspondences; the label pass has almost nothing to add, and proposes no false cognate.'],mode:'with'},
+{p:4,i:['think','Label matching over- and under-proposes. Six candidates — including a trap: NodeEdgePoint label-matches tunnel-termination-point.'],mode:'without'},
+/* 5 align gloss+example */
+{p:5,i:['action','Pass 2 — gloss + example. Deciding each candidate by its disambiguating definition and canonical example.'],align:{pass:2}},
+{p:5,i:['result','NEP↔TP confirmed (closeMatch, hi). node-rule-group↔connectivity-matrix confirmed by gloss (labels differ, med).'],mode:'without'},
+{p:5,i:['replan','NEP≈TTP rejected — the example is a tunnel head, not a link end. Re-plan: TTP is a scope gap, not a rename. SIP has no correspondent — a scope gap too.'],mode:'without'},
+{p:5,t:['result','Under the reference these were settled at bind time. Only the two gaps (TTP, SIP) remain for the residual.'],mode:'with'},
+/* 6 granularity */
+{p:6,i:['action','Residual, granularity. Identity spaces first: your uuids vs my (network,node,tp) tuples.']},
+{p:6,msg:{from:'I',intent:'reconcile-identity',summary:'Persisted bijective uuid ⇄ (network,node,tp) remap so translations round-trip.',body:env(2,'Agent-I','reconcile-identity','Flat uuids vs hierarchical tuples. Persisted bijection; example uuid:node-A1 ⇄ (otn-topology,A1).',{remap:{"node-A1":{network:"otn-topology",node:"A1"}}})},decs:[0]},
+{p:6,t:['action','The structural one: my single multi-layer topology vs your per-layer networks. A derived transform, not a rename.'],decs:[1]},
+{p:6,t:['result','Explode → collapse returns the original. Switching constraints and ODU multiplexing likewise, each checked by worked example.'],decs:[2,3]},
+/* 7 scope */
+{p:7,i:['action','Scope gaps. My tunnel-termination-point has no first-class TAPI equivalent.']},
+{p:7,t:['replan','Scope gap. Re-plan: rather than escalate, I self-extend — TTP ≅ PHOTONIC NEP(OTSi) + mapped access — and record it against xref:trail-termination.'],decs:[4]},
+{p:7,i:['replan','Symmetric gap: your SIP has no IETF entity. I self-extend — SIP ≅ inter-layer client TP + service-mapping — recorded against xref:client-service-access.'],decs:[5]},
+{p:7,t:['result','Both scope gaps bridged by self-extension; each round-trips. Escalations this round: 0.'],decs:[6]},
+/* 8 instance coref */
+{p:8,t:['action','Type alignment settled which kinds correspond. Now a separate pass: which individuals co-refer — from evidence, not names.'],coref:true},
+{p:8,i:['result','Six individuals co-referred: A1–A3 by mgmt-addr, R1 by mgmt-addr, R2/R3 by structure. The R2/R3 near-miss resolves by spurs, not by name. Instance graphs compared — placement agrees.']},
+/* 9 construct */
+{p:9,t:['action','Enough exchanged. Generating the two directional translators from the decisions and the reference bindings.'],trans:true},
+{p:9,i:['result','Both translators emitted, v1. Cognition spent here, once; runtime is deterministic transform code.']},
+{p:9,msg:{from:'I',intent:'mapping-agreement',summary:'Artefact agreed: dictionary (reference-anchored) + structural transforms + identity map, both directions, v1.',body:env(3,'Agent-I','mapping-agreement','Mediation complete. 7 residual decisions, 2 self-extensions, 0 escalations. Dictionary is anchored to the shared reference.',{artefact:'translator-pair@v1',escalations:0})}},
+/* 10 validate */
+{p:10,t:['action','Validate: take the existing ODU2 A1↔A2 service T→I→T and compare to the original.']},
+{p:10,i:['result','And I→T→I. Identity holds both ways (modulo the agreed remap). Translators accepted; cognition leaves the data path.']},
+/* 11 change 1 */
+{p:11,t:['action','Operator request: new ODU2 A1→A3 over OCh λ2. Emitting native tapi-connectivity.']},
+{p:11,msg:{from:'T',intent:'network-change',summary:'connectivity-service cs-a1a3-odu2: ODU2 between SIP@A1 and SIP@A3, route A1▸R1▸R3▸A3 on λ2.',body:env(4,'Agent-T','network-change','New 10G ODU2 between SIPs at A1 and A3; NEP route A1(ODU)▸R1▸R3▸A3(ODU) on a new OCh λ2.',{"connectivity-service":{uuid:"cs-a1a3-odu2",odu:"ODU2",endpoints:["sip-A1-c1","sip-A3-c1"],route:["nep-A1-odu","nep-R1-photonic","nep-R3-photonic","nep-A3-odu"]}})},
+  trace:{dir:'TI',title:'Change 1 · T→I · Agent I applies the T→I translator',
+   input:`connectivity-service cs-a1a3-odu2\n ODU2 10G · SIP A1 , SIP A3\n route nep-A1-odu ▸ R1 ▸ R3 ▸ nep-A3-odu`,
+   rules:['SIP endpoints → tunnel-termination-points ttp@A1, ttp@A3','ODU2 → te-bandwidth.otn odu-type=ODU2','connectivity-service → te-tunnel @otn-topology','photonic route → explicit-route-objects (OCh λ2, R1▸R3)','add te-link A1–A3 + supporting-tp → optical'],
+   output:`te-tunnel "tunnel-a1a3-odu2"\n source=A1 dest=A3  odu-type=ODU2\n ERO: R1-ttp ▸ R3-ttp (λ2)\n + otn-topology te-link A1–A3`},
+  i:['result','Translated. New te-tunnel + supporting OCh trail committed.']},
+{p:11,addService:{id:'svc1',label:'ODU2 A1↔A3',color:SVC_COLORS.svc1,odu:'ODU2',och:'λ2',tapiPath:['A1','R1','R3','A3'],otnPair:['A1','A3'],optPath:['R1','R3']},t:['result','Reflected on my side. Both views now show A1↔A3 over λ2. ✓']},
+/* 12 change 2 */
+{p:12,i:['action','A change from my side: ODU0 A3→A2 over OCh λ3. Emitting native ietf-te tunnel.']},
+{p:12,msg:{from:'I',intent:'network-change',summary:'te-tunnel tunnel-a3a2-odu0: ODU0 A3→A2, ERO R3-ttp▸R2-ttp on λ3.',body:env(5,'Agent-I','network-change','New ODU0 tunnel A3→A2; explicit route over a new OCh λ3 (R3▸R2).',{"te-tunnel":{name:"tunnel-a3a2-odu0",odu:"ODU0",src:"A3",dst:"A2",ero:["R3-ttp","R2-ttp"]}})},
+  trace:{dir:'IT',title:'Change 2 · I→T · Agent T applies the I→T translator',
+   input:`te-tunnel "tunnel-a3a2-odu0"\n A3→A2  odu-type=ODU0  TS{1}/TPN1\n ERO: R3-ttp ▸ R2-ttp (λ3)`,
+   rules:['TTPs (R3,R2) → PHOTONIC NEPs(OTSi) + mapped access','odu-type=ODU0 → layer-protocol-qualifier ODU0 (+1.25G)','te-tunnel → connectivity-service cs-a3a2-odu0','ERO → NEP route (collapse to one topology)','supporting-tp → layer-protocol-transition on transitional link'],
+   output:`connectivity-service cs-a3a2-odu0\n SIP A3 , SIP A2\n route nep-A3-odu ▸ R3 ▸ R2 ▸ nep-A2-odu (λ3)`},
+  t:['result','Translated to a native connectivity-service and committed.']},
+{p:12,addService:{id:'svc2',label:'ODU0 A3↔A2',color:SVC_COLORS.svc2,odu:'ODU0',och:'λ3',tapiPath:['A3','R3','R2','A2'],otnPair:['A3','A2'],optPath:['R3','R2']},i:['result','Reflected. Both views carry all three services identically. ✓']},
+/* 13 scale */
+{p:13,v:['plan','A third agent (a vendor inventory model) joins. I bind once to the same reference lexicon.']},
+{p:13,msg:{from:'V',intent:'reference-binding',summary:'Agent V binds its inventory model to the shared reference — one binding set, reused against both T and I.',body:env(6,'Agent-V','reference-binding','Bound my inventory concepts to the shared reference. site→access-node, port→link-termination, circuit→connection-service. One binding, reused.',{bound:9})},ledger:true},
+{p:13,t:['result','Pairwise translators V↔T and V↔I are composed from the bindings, not authored from scratch. The work scales as N, not N². See the Work ledger.']},
+/* 14 semantic model — the shelf hub */
+{p:14,t:['think','Everything we reconciled is meaning, lifted clear of form. Rather than discard it once the translators are built, we keep it: the semantic model.']},
+{p:14,i:['action','Assembling the form-independent semantic model — semantics and pragmatics both, anchored to the reference lexicon, with provenance on every fact.'],semodel:true},
+{p:14,t:['result','Pragmatics carried as first-class annotations: use, realm (who decides), state (intended vs operational), authority, adequacy-to-purpose, and provenance.']},
+{p:14,i:['result','The T↔I translators are now just projections from this hub; a new form binds to it (N, not N²); and a reasoning agent consumes it directly. This is the artefact on the shelf.']}
+];
+
+/* ===== player ===== */
+let MODE='with', cursor=0, playing=false, timer=null, activeSteps=[];
+function stepsForMode(){return STEPS.filter(s=>!s.mode||s.mode===MODE);}
+
+function setPhase(p){
+  PHASES.forEach((_,i)=>{const e=$('ph'+i);if(!e)return;
+    let c='phase'+(i<p?' done':i===p?' active':'');
+    if(i===3&&MODE==='without')c+=' skip';
+    e.className=c;});
+  const n=PHASE_NOTES[p];if(n){$('stageLab').innerHTML=n[0].split(' · ')[0];$('stageTxt').innerHTML=n[1];}
+  // instrumentation
+  const m=META[p];if(m){
+    $('cogBadge').className='cogbadge '+COGCLS[m.cog];$('cogBadge').textContent=COGLABEL[m.cog];
+    const lvl={heavy:3,med:2,cheap:1,mech:0}[m.cog];const kind={heavy:'h',med:'m',cheap:'c',mech:'c'}[m.cog];
+    $('cogMeter').innerHTML=[0,1,2].map(i=>`<i class="${i<lvl?'on '+kind:''}"></i>`).join('');
+    $('mechTxt').textContent=m.mech;
+    $('verifyTxt').textContent=m.verify;
+    const meas=typeof m.measure==='function'?m.measure(MODE):m.measure;
+    $('measureTxt').textContent=meas;
+  }
+}
+function addLine(where,kind,text){const box=$(where);const d=document.createElement('div');d.className='line '+kind;d.textContent=text;box.appendChild(d);box.scrollTop=box.scrollHeight;}
+let measuresLogged={};
+function logMeasureFor(p){ if(measuresLogged[p])return; measuresLogged[p]=true;
+  const m=META[p];const meas=typeof m.measure==='function'?m.measure(MODE):m.measure;
+  const nm=PHASES[p];
+  if(p===0)return;
+  addMeasure(p+' · '+nm,m.cog,m.mech,m.verify,meas);
+}
+function pulse(){['svgT','svgI'].forEach(id=>{const e=$(id);e.style.transition='filter .15s';e.style.filter='brightness(1.5)';setTimeout(()=>e.style.filter='',260);});}
+function updateCounter(){$('counter').textContent=`step ${Math.min(cursor,activeSteps.length)} / ${activeSteps.length} · lexicon ${MODE==='with'?'ON':'OFF'}`;}
+
+/* ---- step focus: scroll to and highlight the most relevant view for a step ---- */
+function activateTab(name){
+  document.querySelectorAll('.tabbtn').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tabpane').forEach(x=>x.classList.remove('active'));
+  const btn=document.querySelector('.tabbtn[data-tab="'+name+'"]');if(btn)btn.classList.add('active');
+  const pane=$('pane-'+name);if(pane)pane.classList.add('active');
+}
+function flashEl(el,cls){cls=cls||'flash';if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),1700);}
+function focusForStep(s){
+  let tab=null,target=null,col=null;
+  if(s.semodel) tab='semodel';
+  else if(s.addService) target=$('topoBox');
+  else if(s.trace) tab='trace';
+  else if(s.ledger) tab='ledger';
+  else if(s.trans) tab='tr';
+  else if(s.coref) tab='kg';
+  else if(s.decs||typeof s.dec==='number') tab='dec';
+  else if(s.align) tab='align';
+  else if(s.lexbind) tab='lex';
+  else if(s.kg) tab='kg';
+  else if(s.msg){ target=$('agentsRow'); col=$('bus').closest('.col'); }
+  else { target=$('agentsRow'); col = s.t?$('logT').closest('.col') : s.i?$('logI').closest('.col') : s.v?$('bus').closest('.col') : null; }
+  if(tab){ activateTab(tab); target=$('tabsBox'); }
+  if(target&&target.scrollIntoView) target.scrollIntoView({behavior:'smooth',block:'center'});
+  if(col) flashEl(col,'flashcol'); else flashEl(target,'flash');
+}
+
+function applyStep(s){
+  setPhase(s.p);
+  if(s.t)addLine('logT',s.t[0],s.t[1]);
+  if(s.i)addLine('logI',s.i[0],s.i[1]);
+  if(s.v)addLine('bus','plan','Agent V · '+s.v[1]); // show V planning on the bus lane as text
+  if(s.msg)addMsg(s.msg);
+  if(s.lexbind)bindLexicon();
+  if(s.align)renderAlign(MODE,s.align.pass);
+  if(typeof s.dec==='number')revealDecision(s.dec);
+  if(s.decs)s.decs.forEach(revealDecision);
+  if(s.kg)$(s.kg.side==='t'?'kgT':'kgI').textContent=s.kg.html;
+  if(s.coref)renderCoref();
+  if(s.trans)revealTranslators();
+  if(s.trace)addTrace(s.trace);
+  if(s.ledger)renderLedger(MODE);
+  if(s.semodel)renderSemodel();
+  if(s.addService){state.services.push(s.addService);renderTopo();pulse();}
+  logMeasureFor(s.p);
+  updateCounter();
+  focusForStep(s);
+}
+function step(){if(cursor>=activeSteps.length){stop();return;}applyStep(activeSteps[cursor]);cursor++;
+  if(cursor>=activeSteps.length){setPhase(PHASES.length-1);renderLedger(MODE);$('play').disabled=true;$('step').disabled=true;stop();}}
+function play(){if(playing){stop();return;}playing=true;$('play').textContent='⏸ Pause';
+  const tick=()=>{if(!playing)return;step();if(cursor<activeSteps.length)timer=setTimeout(tick,+$('speed').value);else stop();};tick();}
+function stop(){playing=false;clearTimeout(timer);$('play').textContent='▶ Play';}
+
+function buildPhases(){const c=$('phases');c.innerHTML='';PHASES.forEach((p,i)=>{const d=document.createElement('div');d.className='phase';d.id='ph'+i;d.textContent=i+'. '+p;c.appendChild(d);});}
+function reset(){stop();cursor=0;measuresLogged={};lexBound=0;
+  state={services:JSON.parse(JSON.stringify(INITIAL_SERVICES))};
+  activeSteps=stepsForMode();
+  ['logT','logI','bus'].forEach(id=>$(id).innerHTML='');
+  buildLexGrid();$('lexBadge').style.display='none';
+  $('alignBody').innerHTML='<div class="empty">No alignment yet — press Play.</div>';$('alignBadge').style.display='none';
+  $('decBody').innerHTML='<tr><td colspan="5" class="empty">No residual decisions yet.</td></tr>';$('decBadge').style.display='none';
+  $('transTI').innerHTML='<span class="muted">— generated after mediation —</span>';$('transIT').innerHTML='<span class="muted">— generated after mediation —</span>';$('trBadge').style.display='none';
+  $('traceBody').innerHTML='<div class="empty">No translations yet.</div>';$('traceBadge').style.display='none';
+  $('semBody').innerHTML='<div class="empty">Assembled at the final stage — press Play, or jump with Step.</div>';$('semBadge').style.display='none';
+  $('measBody').innerHTML='<tr><td colspan="5" class="empty">Fills in as stages complete.</td></tr>';$('measBadge').style.display='none';
+  $('kgT').innerHTML='<span class="muted">— not yet lifted —</span>';$('kgI').innerHTML='<span class="muted">— not yet lifted —</span>';
+  $('corefBody').innerHTML='<div class="empty">Instances co-refer in stage 8.</div>';
+  $('lexModeNote').innerHTML=MODE==='with'?'':'<b style="color:var(--warn)">Reference OFF: binding is skipped; alignment runs model-to-model and the false cognate is caught by conversation.</b>';
+  renderLedger(MODE);
+  $('play').disabled=false;$('step').disabled=false;
+  buildPhases();setPhase(0);renderTopo();updateCounter();
+}
+function setMode(on){MODE=on?'with':'without';
+  $('modeSw').className='toggle-sw'+(on?' on':'');
+  $('modeVal').className='modeval'+(on?' on':' off');$('modeVal').textContent=on?'ON':'OFF';
+  reset();
+}
+
+/* wiring */
+$('tabbar').addEventListener('click',e=>{const b=e.target.closest('.tabbtn');if(!b)return;
+  document.querySelectorAll('.tabbtn').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tabpane').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');$('pane-'+b.dataset.tab).classList.add('active');});
+$('play').onclick=play;$('step').onclick=()=>{stop();step();};$('reset').onclick=reset;
+$('modeSw').onclick=()=>setMode(MODE!=='with');
+$('aboutToggle').onclick=()=>{const b=$('aboutBody');const c=b.classList.toggle('collapsed');$('aboutToggle').textContent=c?'Show ▼':'Hide ▲';};
+
+/* init + optional auto-advance for screenshots: ?mode=without&auto=N */
+(function(){const q=new URLSearchParams(location.search);
+  if(q.get('mode')==='without'){MODE='without';$('modeSw').className='toggle-sw';$('modeVal').className='modeval off';$('modeVal').textContent='OFF';}
+  reset();
+  const a=parseInt(q.get('auto'),10);if(a>0){for(let k=0;k<a&&cursor<activeSteps.length;k++)step();}
+})();
+</script>
+</body>
+</html>

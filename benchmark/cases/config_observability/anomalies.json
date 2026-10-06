@@ -1,0 +1,100 @@
+{
+  "anomalies": [
+    {
+      "id": "A1",
+      "label": "rising pre-FEC BER on lambda1",
+      "resource": "lambda1",
+      "plane": "forwarding",
+      "pattern": "trend",
+      "lifecycle": "validation",
+      "concern": 78,
+      "confidence": 82,
+      "seasonal_expected": false,
+      "action_reason_trigger": [
+        "degrade",
+        "corrupt",
+        "link-layer"
+      ]
+    },
+    {
+      "id": "A2",
+      "label": "minor latency jitter on L1",
+      "resource": "L1",
+      "plane": "forwarding",
+      "pattern": "spike",
+      "lifecycle": "detection",
+      "concern": 35,
+      "confidence": 60,
+      "seasonal_expected": false,
+      "action_reason_trigger": [
+        "delay",
+        "congestion",
+        "queue"
+      ]
+    },
+    {
+      "id": "A3",
+      "label": "BGP session flaps on R1",
+      "resource": "R1",
+      "plane": "control",
+      "pattern": "other",
+      "lifecycle": "validation",
+      "concern": 88,
+      "confidence": 90,
+      "seasonal_expected": false,
+      "action_reason_trigger": [
+        "drop",
+        "unreachable",
+        "next-hop"
+      ]
+    },
+    {
+      "id": "A4",
+      "label": "CPU utilisation drift on R9 mgmt",
+      "resource": "R9",
+      "plane": "management",
+      "pattern": "mean_shift",
+      "lifecycle": "detection",
+      "concern": 30,
+      "confidence": 45,
+      "seasonal_expected": false,
+      "action_reason_trigger": [
+        "none",
+        "none",
+        "none"
+      ]
+    },
+    {
+      "id": "A5",
+      "label": "traffic seasonality shift on L2",
+      "resource": "L2",
+      "plane": "forwarding",
+      "pattern": "seasonality_shift",
+      "lifecycle": "refinement",
+      "concern": 55,
+      "confidence": 62,
+      "seasonal_expected": true,
+      "action_reason_trigger": [
+        "none",
+        "administered",
+        "schedule"
+      ]
+    },
+    {
+      "id": "A6",
+      "label": "unconfirmed spike on lambda2",
+      "resource": "lambda2",
+      "plane": "forwarding",
+      "pattern": "spike",
+      "lifecycle": "detection",
+      "concern": 80,
+      "confidence": 30,
+      "seasonal_expected": false,
+      "action_reason_trigger": [
+        "degrade",
+        "unknown",
+        "unknown"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "system": "Agent I",
+  "dialect": "IETF TEAS",
+  "note": "Agent I: one representation of the shared OTN network, bound to the reference.",
+  "concepts": [
+    {
+      "id": "b.forwarding",
+      "label": "te-node",
+      "kind": "concept",
+      "ref": "forwarding-node"
+    },
+    {
+      "id": "b.link",
+      "label": "termination-point",
+      "kind": "concept",
+      "ref": "link-termination"
+    },
+    {
+      "id": "b.layer",
+      "label": "supporting-tp",
+      "kind": "concept",
+      "ref": "layer-adaptation"
+    },
+    {
+      "id": "b.connection",
+      "label": "te-tunnel",
+      "kind": "concept",
+      "ref": "connection-service"
+    },
+    {
+      "id": "b.multiplex",
+      "label": "otn-label",
+      "kind": "concept",
+      "ref": "multiplex-structure"
+    },
+    {
+      "id": "b.switching",
+      "label": "connectivity-matrix",
+      "kind": "concept",
+      "ref": "switching-constraint"
+    },
+    {
+      "id": "b.topo",
+      "label": "te-link",
+      "kind": "concept",
+      "ref": "topo-link"
+    },
+    {
+      "id": "b.topology",
+      "label": "te-topology",
+      "kind": "concept",
+      "ref": "topology"
+    },
+    {
+      "id": "b.conn",
+      "label": "tunnel-connection-endpoint",
+      "kind": "concept",
+      "ref": "conn-endpoint"
+    }
+  ]
+}

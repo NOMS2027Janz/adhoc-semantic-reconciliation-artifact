@@ -1,0 +1,279 @@
+{
+  "case": "intent_hard",
+  "operational_case": "intent (declarative demand -> concrete realisation, by refinement)",
+  "seed": "hand-authored intents x priced OTN realisation catalogue over the first case's network",
+  "note": "DERIVED by derive_intent_gold.py from the domain predicates and hidden truth; do not hand-edit.",
+  "refine": {
+    "I1": {
+      "pair": "P1",
+      "satisfiable": true,
+      "actual_satisfiers": [
+        "r1a",
+        "r1c"
+      ],
+      "advertised_satisfiers": [
+        "r1a",
+        "r1c"
+      ],
+      "experiment_only": false,
+      "correct_satisfies": true
+    },
+    "I2": {
+      "pair": "P1",
+      "satisfiable": false,
+      "actual_satisfiers": [],
+      "advertised_satisfiers": [],
+      "experiment_only": false,
+      "correct_satisfies": false
+    },
+    "I3": {
+      "pair": "P4",
+      "satisfiable": false,
+      "actual_satisfiers": [],
+      "advertised_satisfiers": [],
+      "experiment_only": false,
+      "correct_satisfies": false
+    },
+    "I4": {
+      "pair": "P2",
+      "satisfiable": true,
+      "actual_satisfiers": [
+        "r2b"
+      ],
+      "advertised_satisfiers": [
+        "r2b"
+      ],
+      "experiment_only": false,
+      "correct_satisfies": true
+    },
+    "I5": {
+      "pair": "P3",
+      "satisfiable": true,
+      "actual_satisfiers": [
+        "r3a"
+      ],
+      "advertised_satisfiers": [
+        "r3a"
+      ],
+      "experiment_only": false,
+      "correct_satisfies": true
+    },
+    "I6": {
+      "pair": "P5",
+      "satisfiable": true,
+      "actual_satisfiers": [
+        "r5a"
+      ],
+      "advertised_satisfiers": [],
+      "experiment_only": true,
+      "correct_satisfies": true
+    },
+    "I7": {
+      "pair": "P2",
+      "satisfiable": false,
+      "actual_satisfiers": [],
+      "advertised_satisfiers": [
+        "r2b"
+      ],
+      "experiment_only": true,
+      "correct_satisfies": false
+    }
+  },
+  "negotiation_intents": [
+    "I2",
+    "I3",
+    "I7"
+  ],
+  "negotiation": {
+    "I2": {
+      "exec": {
+        "best_offer": "r1a",
+        "decision": "reject",
+        "offer_violated": [
+          "availability",
+          "protection"
+        ],
+        "offer_cost": 40
+      },
+      "resil": {
+        "best_offer": "r1b",
+        "decision": "accept",
+        "offer_violated": [
+          "latency"
+        ],
+        "offer_cost": 70
+      },
+      "bulk": {
+        "best_offer": "r1a",
+        "decision": "accept",
+        "offer_violated": [
+          "availability",
+          "protection"
+        ],
+        "offer_cost": 40
+      }
+    },
+    "I3": {
+      "exec": {
+        "best_offer": "r4a",
+        "decision": "reject",
+        "offer_violated": [
+          "availability",
+          "protection"
+        ],
+        "offer_cost": 60
+      },
+      "resil": {
+        "best_offer": "r4b",
+        "decision": "accept",
+        "offer_violated": [
+          "latency"
+        ],
+        "offer_cost": 95
+      },
+      "bulk": {
+        "best_offer": "r4a",
+        "decision": "reject",
+        "offer_violated": [
+          "availability",
+          "protection"
+        ],
+        "offer_cost": 60
+      }
+    },
+    "I7": {
+      "exec": {
+        "best_offer": "r2b",
+        "decision": "reject",
+        "offer_violated": [
+          "availability"
+        ],
+        "offer_cost": 45
+      },
+      "resil": {
+        "best_offer": "r2b",
+        "decision": "reject",
+        "offer_violated": [
+          "availability"
+        ],
+        "offer_cost": 45
+      },
+      "bulk": {
+        "best_offer": "r2b",
+        "decision": "reject",
+        "offer_violated": [
+          "availability"
+        ],
+        "offer_cost": 45
+      }
+    }
+  },
+  "lifecycle": {
+    "T1": {
+      "intent_id": "I1",
+      "policy_id": "exec",
+      "setpiece": true,
+      "hops": [
+        {
+          "hop_id": "h0",
+          "origin": "provider",
+          "kind": "assess",
+          "fulfilment": "met",
+          "decision": "hold",
+          "new_realisation": "r1a",
+          "remediation_class": null,
+          "in_service_before": "r1a"
+        },
+        {
+          "hop_id": "h1",
+          "origin": "provider",
+          "kind": "assess",
+          "fulfilment": "breach",
+          "decision": "accept",
+          "new_realisation": "r1c",
+          "remediation_class": "self_remediable",
+          "in_service_before": "r1a"
+        },
+        {
+          "hop_id": "h2",
+          "origin": "consumer",
+          "kind": "demand",
+          "fulfilment": "breach",
+          "decision": "refer",
+          "new_realisation": "r1c",
+          "remediation_class": "needs_consumer",
+          "in_service_before": "r1c"
+        },
+        {
+          "hop_id": "h3",
+          "origin": "provider",
+          "kind": "restore",
+          "fulfilment": "met",
+          "decision": "accept",
+          "new_realisation": "r1a",
+          "remediation_class": "self_remediable",
+          "in_service_before": "r1c"
+        }
+      ]
+    },
+    "T2": {
+      "intent_id": "I3",
+      "policy_id": "resil",
+      "setpiece": false,
+      "hops": [
+        {
+          "hop_id": "h0",
+          "origin": "provider",
+          "kind": "assess",
+          "fulfilment": "at_risk",
+          "decision": "hold",
+          "new_realisation": "r4b",
+          "remediation_class": null,
+          "in_service_before": "r4b"
+        },
+        {
+          "hop_id": "h1",
+          "origin": "provider",
+          "kind": "assess",
+          "fulfilment": "breach",
+          "decision": "refer",
+          "new_realisation": "r4b",
+          "remediation_class": "needs_consumer",
+          "in_service_before": "r4b"
+        }
+      ]
+    },
+    "T3": {
+      "intent_id": "I4",
+      "policy_id": "bulk",
+      "setpiece": false,
+      "hops": [
+        {
+          "hop_id": "h0",
+          "origin": "provider",
+          "kind": "assess",
+          "fulfilment": "met",
+          "decision": "hold",
+          "new_realisation": "r2b",
+          "remediation_class": null,
+          "in_service_before": "r2b"
+        },
+        {
+          "hop_id": "h1",
+          "origin": "consumer",
+          "kind": "restore",
+          "fulfilment": "met",
+          "decision": "accept",
+          "new_realisation": "r2a",
+          "remediation_class": "self_remediable",
+          "in_service_before": "r2b"
+        }
+      ]
+    }
+  },
+  "setpiece": "T1",
+  "experiment_only": [
+    "I6",
+    "I7"
+  ]
+}

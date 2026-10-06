@@ -1,0 +1,145 @@
+{
+  "system": "Agent F - legacy fault manager",
+  "dialect": "RFC 8632 / syslog / SNMP / X.733 (routing)",
+  "modules": [
+    "x733-probable-cause",
+    "rfc8632-alarms"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-mini from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case obs_routing, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/obs_routing/model_a*.json.",
+  "concepts": [
+    {
+      "id": "f.node",
+      "label": "managed-object",
+      "synonyms": [
+        "resource",
+        "router",
+        "BGP session"
+      ],
+      "kind": "resource",
+      "gloss": "A managed resource in the monitored infrastructure, either a physical device or a logical entity (e.g., a router or a session) that is the subject of events and alarms.",
+      "example": "R7 is a managed router; bgp-R7-AS64500 is the BGP session resource on R7 toward AS64500 — both are f.node instances to which traps and alarms are attached.",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "R7",
+        "bgp-R7-AS64500"
+      ]
+    },
+    {
+      "id": "f.event",
+      "label": "event",
+      "synonyms": [
+        "syslog",
+        "trap"
+      ],
+      "kind": "event",
+      "gloss": "A discrete notification (such as a syslog message or SNMP trap) reporting a state change or condition observed on a specific managed node.",
+      "example": "trap-bgp-R7-t0 is an SNMP trap event emitted on node R7 (or its BGP session bgp-R7-AS64500) indicating a BGP state change; it is an f.event 'on' that f.node.",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        }
+      ],
+      "instances": [
+        "trap-bgp-R7-t0"
+      ]
+    },
+    {
+      "id": "f.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "fault alarm",
+        "alarm condition"
+      ],
+      "kind": "alarm",
+      "gloss": "A reported fault condition tied to a managed node that carries structured attributes describing its perceived impact and the probable cause of the fault.",
+      "example": "alarm-bgp-R7-down is an alarm raised on the BGP session resource of R7 which carries a severity level (e.g., critical) and a probable_cause such as bgpConnectionLost.",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        },
+        {
+          "rel": "carries",
+          "target": "f.severity"
+        },
+        {
+          "rel": "carries",
+          "target": "f.probable_cause"
+        }
+      ],
+      "instances": [
+        "alarm-bgp-R7-down"
+      ]
+    },
+    {
+      "id": "f.severity",
+      "label": "severity",
+      "synonyms": [
+        "perceived severity",
+        "alarm level"
+      ],
+      "kind": "severity",
+      "gloss": "The perceived impact level assigned to an alarm (the alarm's urgency or priority), used to triage and route responses to the fault.",
+      "example": "critical is an f.severity value; for example, the alarm-bgp-R7-down alarm may carry severity = critical to indicate immediate attention is required.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "critical",
+        "major",
+        "minor",
+        "warning"
+      ]
+    },
+    {
+      "id": "f.probable_cause",
+      "label": "probable-cause",
+      "synonyms": [
+        "X.733 cause",
+        "cause code"
+      ],
+      "kind": "cause-code",
+      "gloss": "A standardized cause code describing the likely reason for an alarm (an X.733–style coded cause attached to a fault condition).",
+      "example": "bgpConnectionLost is an f.probable_cause; for example, alarm-bgp-R7-down can carry probable_cause = bgpConnectionLost to indicate the BGP adjacency on R7 was lost.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "bgpConnectionLost",
+        "holdTimerExpired"
+      ]
+    },
+    {
+      "id": "f.clear",
+      "label": "clear",
+      "synonyms": [
+        "alarm clear"
+      ],
+      "kind": "clear",
+      "gloss": "A clear notification that marks a previously reported alarm as resolved or no longer present, referencing the alarm it clears.",
+      "example": "clear-alarm-bgp-R7-down is a clear record that 'clears' the alarm-bgp-R7-down alarm, indicating the earlier BGP-down condition on R7 has been resolved.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "clears",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "clear-alarm-bgp-R7-down"
+      ]
+    }
+  ]
+}

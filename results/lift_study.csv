@@ -1,0 +1,33 @@
+case,setting,arm,model,uses_reference,trial,precision,resolved_fraction,surviving_false_cognates,residual,turns,total_tokens,reasoning_tokens,latency_s,lift_reasoning_tokens,lift_coverage,gloss_fidelity
+config_tapi_teas,1 · configuration (flagship),fixture,gpt-5.6-sol,False,0,1.0,0.556,0,10,4,23080,2844,112.41,,,
+config_tapi_teas,1 · configuration (flagship),agent-lift,gpt-5.6-sol,False,0,1.0,0.556,0,10,6,37094,2228,104.66,353,1.0,0.23
+config_tapi_teas,1 · configuration (flagship),fixture,gpt-5.6-sol,True,0,1.0,1.0,0,2,4,20724,593,59.31,,,
+config_tapi_teas,1 · configuration (flagship),agent-lift,gpt-5.6-sol,True,0,1.0,1.0,0,2,4,23952,613,61.8,278,1.0,0.232
+config_big_hard,1 · configuration (hard),fixture,gpt-5.6-sol,False,0,1.0,0.833,0,11,4,27111,1837,90.3,,,
+config_big_hard,1 · configuration (hard),agent-lift,gpt-5.6-sol,False,0,1.0,0.75,0,13,4,34329,2599,125.3,209,1.0,0.232
+config_big_hard,1 · configuration (hard),fixture,gpt-5.6-sol,True,0,1.0,1.0,0,7,4,28407,855,70.16,,,
+config_big_hard,1 · configuration (hard),agent-lift,gpt-5.6-sol,True,0,1.0,1.0,0,7,6,57720,1156,101.19,209,1.0,0.232
+config_cross_domain,3 · cross-domain,fixture,gpt-5.6-sol,False,0,1.0,0.2,0,13,4,16192,563,44.08,,,
+config_cross_domain,3 · cross-domain,agent-lift,gpt-5.6-sol,False,0,0.0,0.0,0,15,4,16903,1145,53.57,143,1.0,0.182
+config_cross_domain,3 · cross-domain,fixture,gpt-5.6-sol,True,0,1.0,1.0,0,5,4,17109,621,50.02,,,
+config_cross_domain,3 · cross-domain,agent-lift,gpt-5.6-sol,True,0,1.0,1.0,0,5,4,17842,492,43.88,143,1.0,0.182
+config_observability,4 · observability,fixture,gpt-5.6-sol,False,0,1.0,0.25,0,15,4,17783,1124,58.74,,,
+config_observability,4 · observability,agent-lift,gpt-5.6-sol,False,0,1.0,0.5,0,13,4,20088,1410,75.75,346,1.0,0.146
+config_observability,4 · observability,fixture,gpt-5.6-sol,True,0,1.0,0.75,0,11,4,17612,652,43.89,,,
+config_observability,4 · observability,agent-lift,gpt-5.6-sol,True,0,1.0,0.75,0,11,6,31034,1953,70.33,346,1.0,0.146
+config_tapi_teas,1 · configuration (flagship),fixture,gpt-5-mini,False,0,0.9,1.0,0,1,8,94095,16256,269.8,,,
+config_tapi_teas,1 · configuration (flagship),agent-lift,gpt-5-mini,False,0,1.0,0.778,0,6,4,45553,10816,181.12,2560,1.0,0.196
+config_tapi_teas,1 · configuration (flagship),fixture,gpt-5-mini,True,0,1.0,1.0,0,2,6,52020,16704,221.46,,,
+config_tapi_teas,1 · configuration (flagship),agent-lift,gpt-5-mini,True,0,1.0,0.778,0,6,4,43881,11264,165.95,2560,1.0,0.196
+config_big_hard,1 · configuration (hard),fixture,gpt-5-mini,False,0,0.923,1.0,0,5,2,17730,4672,83.38,,,
+config_big_hard,1 · configuration (hard),agent-lift,gpt-5-mini,False,0,0.857,1.0,0,4,4,54473,13824,193.21,2496,1.0,0.188
+config_big_hard,1 · configuration (hard),fixture,gpt-5-mini,True,0,1.0,0.917,0,9,4,49363,14720,187.83,,,
+config_big_hard,1 · configuration (hard),agent-lift,gpt-5-mini,True,0,0.917,0.917,0,7,4,54667,11264,196.27,2496,1.0,0.188
+config_cross_domain,3 · cross-domain,fixture,gpt-5-mini,False,0,1.0,1.0,0,5,4,24578,8576,99.62,,,
+config_cross_domain,3 · cross-domain,agent-lift,gpt-5-mini,False,0,0.8,0.8,1,5,4,30789,8512,116.64,1472,1.0,0.191
+config_cross_domain,3 · cross-domain,fixture,gpt-5-mini,True,0,1.0,0.8,0,7,4,30656,9088,125.19,,,
+config_cross_domain,3 · cross-domain,agent-lift,gpt-5-mini,True,0,0.833,1.0,1,3,4,34508,10432,138.54,1472,1.0,0.191
+config_observability,4 · observability,fixture,gpt-5-mini,False,0,1.0,0.5,0,13,6,58686,16192,225.66,,,
+config_observability,4 · observability,agent-lift,gpt-5-mini,False,0,1.0,0.75,0,11,6,59197,15424,168.95,2240,1.0,0.133
+config_observability,4 · observability,fixture,gpt-5-mini,True,0,1.0,0.75,0,11,4,31853,9600,135.47,,,
+config_observability,4 · observability,agent-lift,gpt-5-mini,True,0,1.0,0.75,0,11,4,37134,10048,151.32,2240,1.0,0.133

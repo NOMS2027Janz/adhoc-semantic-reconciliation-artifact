@@ -1,0 +1,7 @@
+case,phase,model,placement,trial,precision,recall,experiment_only_recall,residual,interrogate_calls,reasoning_tokens,latency_s
+obs_instance,coref,gpt-5.6-sol,both_cognitive,0,1.0,0.5,0.0,4,4,117,7.68
+obs_instance,coref,gpt-5.6-sol,both_cognitive,1,1.0,0.5,0.0,4,8,107,8.2
+obs_instance,coref,gpt-5.6-sol,one_inert,0,1.0,0.5,0.0,4,0,57,2.62
+obs_instance,coref,gpt-5.6-sol,one_inert,1,1.0,0.5,0.0,4,0,49,3.18
+obs_instance,coref,gpt-5.6-sol,both_inert,0,1.0,0.5,0.0,4,0,44,2.66
+obs_instance,coref,gpt-5.6-sol,both_inert,1,1.0,0.5,0.0,4,0,60,3.48

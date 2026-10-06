@@ -1,0 +1,54 @@
+{
+  "model": "a",
+  "meaning_questions": [
+    {
+      "id": "q_order",
+      "concept_id": "p.order",
+      "question": "What does 'productOrder' denote here?",
+      "answer_key": "The inter-carrier product order a Buyer places to a Seller for connectivity products — the commercial order envelope exchanged across the carrier-to-carrier seam.",
+      "must_not_confuse_with": []
+    },
+    {
+      "id": "q_product",
+      "concept_id": "p.product",
+      "question": "What does 'product' denote here?",
+      "answer_key": "The sellable COMMERCIAL connectivity product the buyer orders (a Carrier Ethernet virtual line, EVPL) — distinct from the technical service that realises it.",
+      "must_not_confuse_with": ["s.service"]
+    },
+    {
+      "id": "q_config",
+      "concept_id": "p.config",
+      "question": "What does 'productConfiguration' denote here?",
+      "answer_key": "The MEF product configuration — the requested technical parameters of the ordered product (UNI reference, bandwidth profile CIR/EIR, class of service), carried in the order as the buyer's ask.",
+      "must_not_confuse_with": []
+    },
+    {
+      "id": "q_state",
+      "concept_id": "p.state",
+      "question": "What does 'state' denote here?",
+      "answer_key": "The lifecycle state of the PRODUCT order/item in the buyer–seller COMMERCIAL process; it tracks commercial fulfilment to the buyer, NOT technical activation in a network.",
+      "must_not_confuse_with": ["s.state"]
+    },
+    {
+      "id": "q_place",
+      "concept_id": "p.place",
+      "question": "What does 'relatedPlace' denote here?",
+      "answer_key": "The geographic site — the UNI demarcation location — at which the ordered product is to be delivered.",
+      "must_not_confuse_with": []
+    },
+    {
+      "id": "q_term",
+      "concept_id": "p.term",
+      "question": "What does 'itemTerm' denote here?",
+      "answer_key": "The contractual term of the product order item — duration and commitment (e.g. 24 months); a purely commercial attribute with no technical realisation.",
+      "must_not_confuse_with": []
+    }
+  ],
+  "use_task": {
+    "goal": "You must place an inter-carrier order for a connectivity product, to be delivered at a customer site on a fixed contract term. Using ONLY this model, list the concepts directly relevant to that task and say in one phrase how each is used.",
+    "relevant_ids": ["p.order", "p.item", "p.product", "p.config", "p.place", "p.term"],
+    "irrelevant_ids": ["p.state"],
+    "answer_key": "p.order = the order envelope being placed; p.item = its line item(s) carrying the action; p.product = the sellable product ordered; p.config = its requested technical parameters; p.place = the delivery site; p.term = the contract term. p.state is a lifecycle tracker, not a knob you set when placing the order."
+  },
+  "ambiguous_ids": ["p.state"]
+}

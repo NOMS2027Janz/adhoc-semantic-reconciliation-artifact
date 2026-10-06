@@ -1,0 +1,16 @@
+{
+  "operational_case": "configuration",
+  "seed": "hand-authored (breadth case: carrier-Ethernet VPN, MEF service vs IETF EVPN)",
+  "false_cognates": [
+    {"a": "m.seg", "b": "e.esi", "why": "network-segment vs ethernet-segment: both carry 'segment', but a customer VLAN broadcast domain vs an Ethernet Segment (ESI) that bundles a multi-homed site's links; m.seg's true partner is e.vlan and e.esi is a native gap."},
+    {"a": "m.maclearn", "b": "e.macmob", "why": "MAC-learning vs MAC-mobility: both carry 'MAC-', but learning source MACs at a UNI vs handling a MAC that moves between PEs; m.maclearn's true partner is e.maclearn and e.macmob is a native gap."}
+  ],
+  "opaque": ["m.vendor", "e.vendor"],
+  "invariants": ["broadcast-domain-integrity", "mac-learning-consistency", "uni-attachment", "bandwidth-profile-enforcement", "vlan-mapping", "frame-mtu-consistency"],
+  "residual_by_placement": {"both_cognitive": 3, "one_inert": 4, "both_inert": 5},
+  "verification_by_placement": {
+    "both_cognitive": "closed-loop worked exchange, self-certifying",
+    "one_inert": "evidence and round-trip on invariants",
+    "both_inert": "external adjudication or downstream test"
+  }
+}

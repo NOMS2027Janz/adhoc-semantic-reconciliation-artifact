@@ -1,0 +1,10 @@
+{
+  "note": "Pragmatics gold for the cross-domain case: the authoritative SOURCE OF TRUTH (realm) for each shared requirement field at the seam. X = Meridian (transport), Y = Cascade (IP), shared = a co-owned demarcation. Semantic correspondence is necessary but not sufficient; provisioning across the seam also requires respecting whose realm owns each field's value, and the characteristic pragmatic error is letting the wrong realm govern (a requirer claiming a value the other realm realises, or transport claiming everything it carries).",
+  "fields": [
+    {"id": "latency-realized", "ref": "latency-bound", "pins": {"a": "m.latency", "b": "c.latency"}, "authority": "X", "realm": "transport", "why": "the realised one-way latency is a physical property of the transport path; the IP side states only a tier requirement"},
+    {"id": "path-protection", "ref": "protection-requirement", "pins": {"a": "m.protection", "b": "c.protection"}, "authority": "X", "realm": "transport", "why": "protection is realised by the transport path (the diverse route); the IP side requires it but does not own its realisation"},
+    {"id": "service-class", "ref": null, "pins": {"a": "m.grade", "b": "c.grade"}, "authority": "Y", "realm": "IP", "why": "the class of service is scheduling in the IP routers, owned by the IP realm; the transport 'grade' is an unrelated transport class and must not claim authority here"},
+    {"id": "committed-rate", "ref": "service-rate", "pins": {"a": "m.rate", "b": "c.rate"}, "authority": "Y", "realm": "IP", "why": "the committed information rate is the customer's IP-service SLA commitment; transport must carry it, but the authoritative committed value is the IP side's, not the bearer line rate"},
+    {"id": "demarcation", "ref": "demarcation", "pins": {"a": "m.handoff", "b": "c.attachment"}, "authority": "shared", "realm": "both", "why": "the hand-off and the attachment are one co-owned demarcation; neither side's local naming overrides the other, they must agree it is the same point"}
+  ]
+}

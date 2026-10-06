@@ -1,0 +1,5 @@
+case,setting,stack,model,uses_reference,trial,precision,resolved_fraction,surviving_false_cognates,residual,turns,total_tokens,reasoning_tokens,latency_s
+config_tapi_teas,1 · configuration (flagship),two-agent,gpt-5.6-sol,False,0,1.0,0.333,0,14,6,34637,2299,94.78
+config_big_hard,1 · configuration (hard),two-agent,gpt-5.6-sol,False,0,1.0,0.583,0,17,4,29649,2973,115.37
+config_cross_domain,3 · cross-domain,two-agent,gpt-5.6-sol,False,0,1.0,0.2,0,13,4,15620,909,49.52
+config_observability,4 · observability,two-agent,gpt-5.6-sol,False,0,1.0,0.25,0,15,4,18408,1472,69.12

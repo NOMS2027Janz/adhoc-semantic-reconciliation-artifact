@@ -1,0 +1,110 @@
+{
+  "system": "Agent N",
+  "dialect": "MEF metro-Ethernet service catalogue",
+  "realisations": [
+    {
+      "id": "m1a",
+      "pair": "M1",
+      "path": "direct",
+      "capacity": "1GbE",
+      "advertised": {
+        "bw_gbps": 1.0,
+        "latency_ms": 8,
+        "availability": 0.999,
+        "protection": "none",
+        "cost": 20
+      }
+    },
+    {
+      "id": "m1b",
+      "pair": "M1",
+      "path": "protected",
+      "capacity": "1GbE",
+      "advertised": {
+        "bw_gbps": 1.0,
+        "latency_ms": 10,
+        "availability": 0.9999,
+        "protection": "1+1",
+        "cost": 40
+      }
+    },
+    {
+      "id": "m2a",
+      "pair": "M2",
+      "path": "direct",
+      "capacity": "10GbE",
+      "advertised": {
+        "bw_gbps": 10.0,
+        "latency_ms": 4,
+        "availability": 0.9999,
+        "protection": "none",
+        "cost": 50
+      }
+    },
+    {
+      "id": "m2b",
+      "pair": "M2",
+      "path": "protected",
+      "capacity": "10GbE",
+      "advertised": {
+        "bw_gbps": 10.0,
+        "latency_ms": 6,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 80
+      }
+    },
+    {
+      "id": "m2c",
+      "pair": "M2",
+      "path": "protected-fast",
+      "capacity": "10GbE",
+      "advertised": {
+        "bw_gbps": 10.0,
+        "latency_ms": 5,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 95
+      }
+    },
+    {
+      "id": "m3a",
+      "pair": "M3",
+      "path": "direct",
+      "capacity": "1GbE",
+      "advertised": {
+        "bw_gbps": 1.0,
+        "latency_ms": 7,
+        "availability": 0.999,
+        "protection": "none",
+        "cost": 18
+      }
+    },
+    {
+      "id": "m4a",
+      "pair": "M4",
+      "path": "direct",
+      "capacity": "2GbE",
+      "advertised": {
+        "bw_gbps": 2.0,
+        "latency_ms": 12,
+        "availability": 0.999,
+        "protection": "none",
+        "cost": 30
+      }
+    },
+    {
+      "id": "m4b",
+      "pair": "M4",
+      "path": "protected",
+      "capacity": "2GbE",
+      "advertised": {
+        "bw_gbps": 2.0,
+        "latency_ms": 14,
+        "availability": 0.9999,
+        "protection": "1+1",
+        "cost": 55
+      }
+    }
+  ]
+}

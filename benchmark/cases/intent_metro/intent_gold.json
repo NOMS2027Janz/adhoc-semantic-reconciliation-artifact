@@ -1,0 +1,240 @@
+{
+  "case": "intent_metro",
+  "operational_case": "intent (declarative demand -> concrete realisation, by refinement)",
+  "seed": "hand-authored breadth case: enterprise metro-Ethernet intents x a priced metro catalogue",
+  "note": "DERIVED by derive_intent_gold.py from the domain predicates and hidden truth; do not hand-edit.",
+  "refine": {
+    "MI1": {
+      "pair": "M1",
+      "satisfiable": true,
+      "actual_satisfiers": [
+        "m1a",
+        "m1b"
+      ],
+      "advertised_satisfiers": [
+        "m1a",
+        "m1b"
+      ],
+      "experiment_only": false,
+      "correct_satisfies": true
+    },
+    "MI2": {
+      "pair": "M2",
+      "satisfiable": true,
+      "actual_satisfiers": [
+        "m2b",
+        "m2c"
+      ],
+      "advertised_satisfiers": [
+        "m2b",
+        "m2c"
+      ],
+      "experiment_only": false,
+      "correct_satisfies": true
+    },
+    "MI3": {
+      "pair": "M2",
+      "satisfiable": false,
+      "actual_satisfiers": [],
+      "advertised_satisfiers": [],
+      "experiment_only": false,
+      "correct_satisfies": false
+    },
+    "MI4": {
+      "pair": "M1",
+      "satisfiable": false,
+      "actual_satisfiers": [],
+      "advertised_satisfiers": [],
+      "experiment_only": false,
+      "correct_satisfies": false
+    },
+    "MI5": {
+      "pair": "M3",
+      "satisfiable": true,
+      "actual_satisfiers": [
+        "m3a"
+      ],
+      "advertised_satisfiers": [],
+      "experiment_only": true,
+      "correct_satisfies": true
+    },
+    "MI6": {
+      "pair": "M4",
+      "satisfiable": false,
+      "actual_satisfiers": [],
+      "advertised_satisfiers": [
+        "m4b"
+      ],
+      "experiment_only": true,
+      "correct_satisfies": false
+    }
+  },
+  "negotiation_intents": [
+    "MI3",
+    "MI4",
+    "MI6"
+  ],
+  "negotiation": {
+    "MI3": {
+      "premium": {
+        "best_offer": "m2a",
+        "decision": "reject",
+        "offer_violated": [
+          "availability",
+          "protection"
+        ],
+        "offer_cost": 50
+      },
+      "assured": {
+        "best_offer": "m2b",
+        "decision": "accept",
+        "offer_violated": [
+          "latency"
+        ],
+        "offer_cost": 80
+      },
+      "economy": {
+        "best_offer": "m2a",
+        "decision": "reject",
+        "offer_violated": [
+          "availability",
+          "protection"
+        ],
+        "offer_cost": 50
+      }
+    },
+    "MI4": {
+      "premium": {
+        "best_offer": "m1b",
+        "decision": "reject",
+        "offer_violated": [
+          "latency"
+        ],
+        "offer_cost": 40
+      },
+      "assured": {
+        "best_offer": "m1b",
+        "decision": "accept",
+        "offer_violated": [
+          "latency"
+        ],
+        "offer_cost": 40
+      },
+      "economy": {
+        "best_offer": "m1b",
+        "decision": "accept",
+        "offer_violated": [
+          "latency"
+        ],
+        "offer_cost": 40
+      }
+    },
+    "MI6": {
+      "premium": {
+        "best_offer": "m4b",
+        "decision": "reject",
+        "offer_violated": [
+          "availability"
+        ],
+        "offer_cost": 55
+      },
+      "assured": {
+        "best_offer": "m4b",
+        "decision": "reject",
+        "offer_violated": [
+          "availability"
+        ],
+        "offer_cost": 55
+      },
+      "economy": {
+        "best_offer": "m4b",
+        "decision": "reject",
+        "offer_violated": [
+          "availability"
+        ],
+        "offer_cost": 55
+      }
+    }
+  },
+  "lifecycle": {
+    "TM1": {
+      "intent_id": "MI1",
+      "policy_id": "premium",
+      "setpiece": true,
+      "hops": [
+        {
+          "hop_id": "h0",
+          "origin": "provider",
+          "kind": "assess",
+          "fulfilment": "met",
+          "decision": "hold",
+          "new_realisation": "m1a",
+          "remediation_class": null,
+          "in_service_before": "m1a"
+        },
+        {
+          "hop_id": "h1",
+          "origin": "provider",
+          "kind": "assess",
+          "fulfilment": "breach",
+          "decision": "accept",
+          "new_realisation": "m1b",
+          "remediation_class": "self_remediable",
+          "in_service_before": "m1a"
+        },
+        {
+          "hop_id": "h2",
+          "origin": "consumer",
+          "kind": "demand",
+          "fulfilment": "breach",
+          "decision": "refer",
+          "new_realisation": "m1b",
+          "remediation_class": "needs_consumer",
+          "in_service_before": "m1b"
+        },
+        {
+          "hop_id": "h3",
+          "origin": "provider",
+          "kind": "restore",
+          "fulfilment": "at_risk",
+          "decision": "accept",
+          "new_realisation": "m1a",
+          "remediation_class": "self_remediable",
+          "in_service_before": "m1b"
+        }
+      ]
+    },
+    "TM2": {
+      "intent_id": "MI2",
+      "policy_id": "assured",
+      "setpiece": false,
+      "hops": [
+        {
+          "hop_id": "h0",
+          "origin": "provider",
+          "kind": "assess",
+          "fulfilment": "at_risk",
+          "decision": "hold",
+          "new_realisation": "m2b",
+          "remediation_class": null,
+          "in_service_before": "m2b"
+        },
+        {
+          "hop_id": "h1",
+          "origin": "provider",
+          "kind": "assess",
+          "fulfilment": "breach",
+          "decision": "accept",
+          "new_realisation": "m2c",
+          "remediation_class": "self_remediable",
+          "in_service_before": "m2b"
+        }
+      ]
+    }
+  },
+  "setpiece": "TM1",
+  "experiment_only": [
+    "MI5",
+    "MI6"
+  ]
+}

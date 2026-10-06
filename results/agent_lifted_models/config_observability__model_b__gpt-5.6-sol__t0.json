@@ -1,0 +1,226 @@
+{
+  "system": "Agent G — IETF NMOP agent",
+  "dialect": "RFC 9940 + anomaly-semantics + incident-yang",
+  "modules": [
+    "rfc9940-terminology",
+    "nmop-anomaly-semantics",
+    "nmop-network-incident-yang"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5.6-sol from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case config_observability, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_observability/model_b*.json.",
+  "concepts": [
+    {
+      "id": "g.node",
+      "label": "resource",
+      "synonyms": [
+        "managed resource",
+        "node"
+      ],
+      "kind": "resource",
+      "gloss": "A resource is an identifiable physical, logical, or service-level entity that is managed and on which operational events, anomalies, faults, or alarms can occur.",
+      "example": "R1 is a managed router, while lambda1 is a managed optical wavelength whose bit-error behavior is monitored.",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "R1",
+        "lambda1"
+      ]
+    },
+    {
+      "id": "g.event",
+      "label": "event",
+      "synonyms": [
+        "value variation"
+      ],
+      "kind": "event",
+      "gloss": "An event is a time-specific observation or value variation associated with a managed resource, without by itself implying abnormality or failure.",
+      "example": "ber-sample-lambda1-t0 records the bit-error-rate value observed on lambda1 at time t0.",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "ber-sample-lambda1-t0"
+      ]
+    },
+    {
+      "id": "g.anomaly",
+      "label": "anomaly",
+      "synonyms": [
+        "deviation",
+        "outlier"
+      ],
+      "kind": "anomaly",
+      "gloss": "An anomaly is an observed deviation or outlier in the expected behavior of a managed resource, regardless of whether its underlying cause or service impact has been established.",
+      "example": "anom-ber-lambda1 identifies that the measured bit-error rate on lambda1 deviates materially from its learned normal range.",
+      "ref": "anomaly",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "anom-ber-lambda1"
+      ]
+    },
+    {
+      "id": "g.symptom",
+      "label": "symptom",
+      "synonyms": [
+        "indication"
+      ],
+      "kind": "symptom",
+      "gloss": "A symptom is an observable indication that provides evidence of a problem but is not necessarily the problem itself or its root cause.",
+      "example": "sym-ber-lambda1 uses the abnormal bit-error behavior on lambda1 as evidence indicating problem-svc-degrade.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "indicates",
+          "target": "g.problem"
+        }
+      ],
+      "instances": [
+        "sym-ber-lambda1"
+      ]
+    },
+    {
+      "id": "g.fault",
+      "label": "fault",
+      "synonyms": [
+        "defect"
+      ],
+      "kind": "fault",
+      "gloss": "A fault is a defect or malfunction present on a managed resource that impairs, or can impair, the resource's intended operation.",
+      "example": "fault-lambda1-degrade represents a degradation defect on lambda1 that causes its optical transmission quality to fall below the intended level.",
+      "ref": "fault",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "fault-lambda1-degrade"
+      ]
+    },
+    {
+      "id": "g.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "alarm state"
+      ],
+      "kind": "alarm",
+      "gloss": "An alarm is maintained management state on a resource that signals a detected condition requiring awareness or action, typically persisting until the condition clears or is administratively handled.",
+      "example": "alarm-state-lambda1 is raised when lambda1 enters a bit-error degradation condition and remains active until that condition clears.",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "alarm-state-lambda1"
+      ]
+    },
+    {
+      "id": "g.problem",
+      "label": "problem",
+      "synonyms": [
+        "undesirable state"
+      ],
+      "kind": "problem",
+      "gloss": "A problem is an undesirable operational or service state to be diagnosed or resolved and may be evidenced by one or more symptoms and explained by a cause.",
+      "example": "problem-svc-degrade denotes degraded service performance inferred from indications such as sym-ber-lambda1.",
+      "ref": null,
+      "relations": [],
+      "instances": [
+        "problem-svc-degrade"
+      ]
+    },
+    {
+      "id": "g.cause",
+      "label": "cause",
+      "synonyms": [
+        "root cause"
+      ],
+      "kind": "cause",
+      "gloss": "A cause is the condition, mechanism, or originating factor determined to produce or sustain a particular problem.",
+      "example": "cause-optical-ber identifies excessive optical bit errors as the root cause of problem-svc-degrade.",
+      "ref": "cause",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "g.problem"
+        }
+      ],
+      "instances": [
+        "cause-optical-ber"
+      ]
+    },
+    {
+      "id": "g.incident",
+      "label": "incident",
+      "synonyms": [
+        "correlated incident"
+      ],
+      "kind": "incident",
+      "gloss": "An incident is a correlated operational case that groups related symptoms into one managed episode for investigation, tracking, and resolution.",
+      "example": "incident-0042 correlates sym-ber-lambda1 with other contemporaneous service-degradation indications and tracks them as a single episode.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "correlates",
+          "target": "g.symptom"
+        }
+      ],
+      "instances": [
+        "incident-0042"
+      ]
+    },
+    {
+      "id": "g.concern",
+      "label": "concern-score",
+      "synonyms": [
+        "concern",
+        "significance"
+      ],
+      "kind": "concern",
+      "gloss": "A concern score is an annotation expressing how operationally significant or worthy of attention an anomaly is, independently of certainty that the anomaly was detected correctly.",
+      "example": "concern-78 assigns an operational-significance score of 78 to anom-ber-lambda1, indicating that the deviation merits relatively high attention.",
+      "ref": "concern",
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "concern-78"
+      ]
+    },
+    {
+      "id": "g.confidence",
+      "label": "confidence-score",
+      "synonyms": [
+        "confidence"
+      ],
+      "kind": "confidence",
+      "gloss": "A confidence score is an annotation expressing the degree of certainty that an identified anomaly is a valid anomalous observation rather than noise or detection error.",
+      "example": "confidence-82 assigns 82% confidence to anom-ber-lambda1, indicating strong evidence that the bit-error deviation is genuinely anomalous.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "confidence-82"
+      ]
+    }
+  ]
+}

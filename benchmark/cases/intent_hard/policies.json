@@ -1,0 +1,51 @@
+{
+  "policies": [
+    {
+      "id": "exec",
+      "flow_class": "order-execution",
+      "priority": [
+        "latency",
+        "availability",
+        "protection",
+        "bandwidth"
+      ],
+      "hard_bounds": [
+        "latency",
+        "availability"
+      ],
+      "affordability_floor": 90,
+      "note": "latency-first: hold latency and availability, degrade protection/bandwidth if forced"
+    },
+    {
+      "id": "resil",
+      "flow_class": "market-data",
+      "priority": [
+        "availability",
+        "protection",
+        "latency",
+        "bandwidth"
+      ],
+      "hard_bounds": [
+        "availability",
+        "protection"
+      ],
+      "affordability_floor": 100,
+      "note": "resilience-first: hold availability and protection, tolerate a slower path"
+    },
+    {
+      "id": "bulk",
+      "flow_class": "bulk",
+      "priority": [
+        "bandwidth",
+        "latency",
+        "availability",
+        "protection"
+      ],
+      "hard_bounds": [
+        "bandwidth"
+      ],
+      "affordability_floor": 40,
+      "note": "cost-sensitive: hold only a bandwidth floor and step aside (a tight budget) to save money"
+    }
+  ]
+}

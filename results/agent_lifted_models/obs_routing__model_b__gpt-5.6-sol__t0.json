@@ -1,0 +1,231 @@
+{
+  "system": "Agent G - NMOP agent",
+  "dialect": "IETF NMOP (RFC 9940 + anomaly-semantics / incident-yang)",
+  "modules": [
+    "rfc9940-anomaly",
+    "nmop-anomaly-semantics",
+    "nmop-incident"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5.6-sol from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case obs_routing, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/obs_routing/model_b*.json.",
+  "concepts": [
+    {
+      "id": "g.node",
+      "label": "resource",
+      "synonyms": [
+        "managed object",
+        "network element"
+      ],
+      "kind": "resource",
+      "gloss": "A resource is a physical or logical managed entity in the network whose state or behavior can be observed and managed, such as a router or one of its protocol sessions.",
+      "example": "R7 is a managed router resource, while bgp-R7-AS64500 is the BGP-session resource on R7 for peer AS64500.",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "R7",
+        "bgp-R7-AS64500"
+      ]
+    },
+    {
+      "id": "g.event",
+      "label": "event",
+      "synonyms": [
+        "notification"
+      ],
+      "kind": "event",
+      "gloss": "An event is a discrete, time-associated occurrence reported for a resource, without by itself implying that the occurrence is abnormal or service-affecting.",
+      "example": "trap-bgp-R7-t0 is a notification emitted at time t0 for the BGP resource on R7 when its session state changes.",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "trap-bgp-R7-t0"
+      ]
+    },
+    {
+      "id": "g.anomaly",
+      "label": "anomaly",
+      "synonyms": [
+        "deviation"
+      ],
+      "kind": "anomaly",
+      "gloss": "An anomaly is an observed or inferred deviation of a resource's behavior or state from an expected baseline or pattern.",
+      "example": "churn-R7-rising represents the detected deviation that BGP route churn on R7 is rising beyond its expected pattern.",
+      "ref": "anomaly",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "churn-R7-rising"
+      ]
+    },
+    {
+      "id": "g.symptom",
+      "label": "symptom",
+      "synonyms": [
+        "manifestation"
+      ],
+      "kind": "symptom",
+      "gloss": "A symptom is a concrete observable manifestation or item of evidence through which an anomaly presents itself.",
+      "example": "symptom-1 is the repeated sequence of BGP update bursts observed as evidence of the churn-R7-rising anomaly.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "symptom-1"
+      ]
+    },
+    {
+      "id": "g.fault",
+      "label": "fault",
+      "synonyms": [
+        "failure occurrence"
+      ],
+      "kind": "fault",
+      "gloss": "A fault is an occurrence on a resource in which the resource is unable, or at risk of being unable, to perform a required function correctly.",
+      "example": "fault-1 records that the BGP session resource on R7 repeatedly fails to maintain stable route exchange.",
+      "ref": "fault",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "fault-1"
+      ]
+    },
+    {
+      "id": "g.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "alarm state"
+      ],
+      "kind": "alarm",
+      "gloss": "An alarm is a maintained operational indication that a resource is in a detected undesirable condition requiring awareness or action, typically persisting until the condition is cleared.",
+      "example": "alarm-1 is raised on R7 when BGP session instability crosses the configured threshold and remains active until stability is restored.",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "alarm-1"
+      ]
+    },
+    {
+      "id": "g.problem",
+      "label": "problem",
+      "synonyms": [
+        "diagnosis"
+      ],
+      "kind": "problem",
+      "gloss": "A problem is a diagnostic account that explains one or more fault occurrences rather than merely reporting their observable effects.",
+      "example": "problem-1 diagnoses fault-1 as repeated BGP session resets caused by unstable peer connectivity.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "explains",
+          "target": "g.fault"
+        }
+      ],
+      "instances": [
+        "problem-1"
+      ]
+    },
+    {
+      "id": "g.cause",
+      "label": "cause",
+      "synonyms": [
+        "root cause"
+      ],
+      "kind": "cause",
+      "gloss": "A cause is the underlying condition, action, or mechanism identified as producing a diagnosed problem.",
+      "example": "cause-1 identifies an intermittently failing interface on R7 as the root cause of problem-1.",
+      "ref": "cause",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "g.problem"
+        }
+      ],
+      "instances": [
+        "cause-1"
+      ]
+    },
+    {
+      "id": "g.incident",
+      "label": "incident",
+      "synonyms": [
+        "grouping"
+      ],
+      "kind": "incident",
+      "gloss": "An incident is a correlated operational episode that groups related anomalies so they can be assessed and handled as one case.",
+      "example": "incident-1 groups rising route churn, BGP session instability, and abnormal update-rate anomalies observed around the same time on R7.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "groups",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "incident-1"
+      ]
+    },
+    {
+      "id": "g.concern",
+      "label": "concern-score",
+      "synonyms": [
+        "concern"
+      ],
+      "kind": "concern",
+      "gloss": "A concern score is a quantitative annotation of an anomaly expressing how operationally significant or worthy of attention that anomaly is judged to be.",
+      "example": "Assigning concern 0.9 to churn-R7-rising indicates that the anomaly is considered highly important for operators to investigate.",
+      "ref": "concern",
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "0.8",
+        "0.9"
+      ]
+    },
+    {
+      "id": "g.confidence",
+      "label": "confidence-score",
+      "synonyms": [
+        "confidence"
+      ],
+      "kind": "confidence",
+      "gloss": "A confidence score is a quantitative annotation of an anomaly expressing the strength or certainty of the evidence that the asserted anomaly is genuine.",
+      "example": "Assigning confidence 0.7 to churn-R7-rising indicates moderately strong certainty that the observed behavior is a real deviation rather than noise.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "0.6",
+        "0.7"
+      ]
+    }
+  ]
+}

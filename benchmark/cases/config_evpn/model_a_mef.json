@@ -1,0 +1,28 @@
+{
+  "system": "Agent M",
+  "dialect": "MEF carrier-Ethernet service model",
+  "modules": ["mef-services", "mef-uni", "mef-bwp"],
+  "note": "Configuration case, carrier-Ethernet VPN, MEF service side. One multipoint (E-LAN) Ethernet service over three UNIs, described in the MEF service view. Carries two false-cognate traps (network-segment vs ethernet-segment; MAC-learning vs MAC-mobility) and one opaque vendor attribute. ref=null marks an opaque item or native gap.",
+  "concepts": [
+    {"id": "m.ethsvc", "label": "ethernet-service", "synonyms": ["EVC", "E-LAN", "ethernet virtual connection"], "kind": "service", "gloss": "the multipoint Ethernet service connecting the customer's UNIs", "example": "the ACME E-LAN across three sites", "ref": "eth-vpn",
+     "relations": [{"rel": "connects", "target": "m.uni"}], "instances": ["ACME-ELAN (3 UNIs, any-to-any)"]},
+    {"id": "m.uni", "label": "UNI", "synonyms": ["user-network-interface"], "kind": "access", "gloss": "the physical demarcation where a customer site attaches to the carrier network", "example": "UNI at the ACME headquarters, 1 GbE", "ref": "uni",
+     "relations": [{"rel": "of", "target": "m.ethsvc"}], "instances": ["UNI-HQ", "UNI-DC", "UNI-Branch"]},
+    {"id": "m.ep", "label": "EVC-endpoint", "synonyms": ["service-endpoint", "EP"], "kind": "endpoint", "gloss": "the endpoint of the Ethernet service at one UNI", "example": "the ACME E-LAN endpoint at UNI-HQ", "ref": "svc-endpoint",
+     "relations": [{"rel": "at", "target": "m.uni"}], "instances": ["EP-HQ", "EP-DC", "EP-Branch"]},
+    {"id": "m.seg", "label": "network-segment", "synonyms": ["vlan-segment", "broadcast segment"], "kind": "l2-domain", "gloss": "the customer VLAN broadcast segment carried by the service", "example": "customer VLAN 200, one broadcast domain across the E-LAN", "ref": "vlan",
+     "relations": [{"rel": "carried-by", "target": "m.ethsvc"}], "instances": ["CE-VLAN 200"]},
+    {"id": "m.bwp", "label": "bandwidth-profile", "synonyms": ["rate-profile", "BWP"], "kind": "rate", "gloss": "the ingress rate profile (CIR/EIR) policed at a UNI", "example": "CIR 200 Mbit/s, EIR 50 Mbit/s at UNI-HQ", "ref": "bw-profile",
+     "relations": [{"rel": "at", "target": "m.uni"}], "instances": ["BWP-200/50", "BWP-100/0"]},
+    {"id": "m.cos", "label": "class-of-service", "synonyms": ["CoS", "service class"], "kind": "cos", "gloss": "the class-of-service forwarding treatment for frames on the service", "example": "the real-time CoS mapped from customer PCP 5", "ref": "cos",
+     "relations": [{"rel": "on", "target": "m.ethsvc"}], "instances": ["CoS-H (real-time)", "CoS-L (best-effort)"]},
+    {"id": "m.maclearn", "label": "MAC-learning", "synonyms": ["source-MAC learning"], "kind": "l2-control", "gloss": "how the service learns customer source-MAC addresses at a UNI to build its forwarding", "example": "dynamic learning enabled at UNI-HQ", "ref": "mac-learning",
+     "relations": [{"rel": "at", "target": "m.uni"}], "instances": ["dynamic learning @UNI-HQ"]},
+    {"id": "m.mtu", "label": "service-mtu", "synonyms": ["MTU"], "kind": "framing", "gloss": "the maximum service frame size carried end to end", "example": "9100-byte jumbo frames on the ACME E-LAN", "ref": "mtu",
+     "relations": [{"rel": "of", "target": "m.ethsvc"}], "instances": ["MTU 9100"]},
+    {"id": "m.sla", "label": "service-availability", "synonyms": ["availability objective"], "kind": "assurance", "gloss": "the availability objective for the service (service-view self-extension; no network-model counterpart)", "example": "99.99% monthly availability objective", "ref": "svc-availability",
+     "relations": [{"rel": "of", "target": "m.ethsvc"}], "instances": ["99.99% objective"]},
+    {"id": "m.vendor", "label": "x-mef-attr-5", "synonyms": ["proprietary attr 5"], "kind": "opaque", "gloss": "", "example": "", "ref": null,
+     "relations": [{"rel": "at", "target": "m.uni"}], "instances": ["x-mef-attr-5=0x3 at UNI-HQ"]}
+  ]
+}

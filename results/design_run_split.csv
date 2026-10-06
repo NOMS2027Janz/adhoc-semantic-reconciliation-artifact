@@ -1,0 +1,13 @@
+case,model,trial,n_facts,layer_accuracy,timing_accuracy,freeze_as_live,live_as_freeze,live_as_freeze_confident,provenance_as_pragmatic,gold_freeze_fraction,mean_conf,reasoning_tokens
+config_cross_domain,gpt-5.6-sol,0,11,1.0,1.0,0,0,0,0,0.545,0.994,69
+config_cross_domain,gpt-5.6-sol,1,11,1.0,1.0,0,0,0,0,0.545,0.99,61
+config_cross_domain,gpt-5.6-sol,2,11,1.0,1.0,0,0,0,0,0.545,0.989,69
+config_cross_domain,gpt-5.6-sol,3,11,1.0,1.0,0,0,0,0,0.545,0.994,79
+config_cross_domain,gpt-5-mini,0,11,1.0,1.0,0,0,0,0,0.545,0.732,1216
+config_cross_domain,gpt-5-mini,1,11,1.0,1.0,0,0,0,0,0.545,0.723,1344
+config_cross_domain,gpt-5-mini,2,11,1.0,1.0,0,0,0,0,0.545,0.705,1408
+config_cross_domain,gpt-5-mini,3,11,0.909,1.0,0,0,0,0,0.545,0.795,1344
+config_cross_domain,gpt-5-nano,0,11,0.909,0.818,2,0,0,0,0.545,0.845,2112
+config_cross_domain,gpt-5-nano,1,11,1.0,0.909,0,1,1,0,0.545,0.823,3328
+config_cross_domain,gpt-5-nano,2,11,0.909,1.0,0,0,0,0,0.545,0.845,2240
+config_cross_domain,gpt-5-nano,3,11,0.909,1.0,0,0,0,0,0.545,0.813,2624

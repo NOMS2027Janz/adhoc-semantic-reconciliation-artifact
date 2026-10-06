@@ -1,0 +1,16 @@
+{
+  "id": "ref.xdom-dc.constructed.v1",
+  "kind": "constructed",
+  "note": "The thin shared reference the two agents construct for the DC underlay/overlay seam. Identity-only entries for the seam concepts, plus the native-only concepts named apart so the 'zone' trap binds correctly. No entry for opaque vendor tags. Crucially, avail-zone and sec-zone are DISTINCT entries, so two concepts both labelled 'zone' bind apart rather than merging.",
+  "entries": [
+    {"id": "underlay-binding", "label": "underlay binding", "synonyms": ["fabric-attachment", "vtep-binding", "encap binding"], "class": "attachment", "definition": "The point where an overlay segment is bound onto the underlay on a leaf/VTEP for local delivery.", "example": "the binding of tenant-blue on leaf-3"},
+    {"id": "segment-id", "label": "tenant segment", "synonyms": ["fabric-vlan", "overlay-segment", "VNI", "VLAN"], "class": "l2-domain", "definition": "One tenant broadcast domain at the seam, carried as a local VLAN in the fabric and identified as a VNI in the overlay.", "example": "tenant-blue's segment (VLAN 1201 / VNI 50201)"},
+    {"id": "edge-device", "label": "fabric edge device", "synonyms": ["leaf-switch", "vtep-node", "ToR", "VTEP"], "class": "node", "definition": "The leaf switch (and its co-located VTEP) where servers and overlay bindings meet the fabric.", "example": "leaf-3 and its VTEP"},
+    {"id": "mtu", "label": "fabric MTU", "synonyms": ["underlay mtu", "overlay-mtu"], "class": "framing", "definition": "The MTU carried across the fabric, sized so encapsulated overlay frames are not fragmented.", "example": "9216 bytes for VXLAN"},
+    {"id": "default-gateway", "label": "tenant default gateway", "synonyms": ["svi-gateway", "anycast-gateway", "SVI"], "class": "l3-gateway", "definition": "The L3 default gateway for a tenant segment, realised as an SVI in the fabric or a distributed anycast gateway in the overlay.", "example": "10.20.1.1 for tenant-blue"},
+    {"id": "fabric-spine", "label": "spine switch", "synonyms": ["spine", "fabric core"], "class": "node", "definition": "A spine switch forming the fabric backbone; a fabric-internal concept with no overlay counterpart.", "example": "spine-1"},
+    {"id": "avail-zone", "label": "availability zone", "synonyms": ["fault domain"], "class": "fault-domain", "definition": "A physical fault domain of the fabric (power/cooling/pod boundary); a fabric-internal 'zone', unrelated to a policy grouping.", "example": "AZ-1 on independent power"},
+    {"id": "microseg", "label": "micro-segmentation policy", "synonyms": ["group policy"], "class": "policy", "definition": "A policy controlling which workloads may communicate within and across overlay segments; an overlay-internal concept with no fabric counterpart.", "example": "allow web->app, deny app->db"},
+    {"id": "sec-zone", "label": "security zone", "synonyms": ["policy zone"], "class": "policy-group", "definition": "A named grouping of workloads to which micro-segmentation rules attach; an overlay-internal 'zone', unrelated to a physical fault domain.", "example": "the 'dmz' zone of internet-facing workloads"}
+  ]
+}

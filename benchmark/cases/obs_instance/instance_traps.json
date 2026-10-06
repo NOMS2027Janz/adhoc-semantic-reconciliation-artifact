@@ -1,0 +1,38 @@
+{
+  "case": "obs_instance",
+  "operational_case": "observability (alarm/anomaly co-reference)",
+  "seed": "hand-authored alarm-vs-anomaly co-reference sub-case",
+  "false_cognates": [],
+  "experiment_only": [
+    "c3",
+    "c4"
+  ],
+  "oracle": {
+    "interrogate": {
+      "f.al3": {
+        "correlation_id": "CID-3A"
+      },
+      "g.an3": {
+        "correlation_id": "CID-3A"
+      },
+      "f.al4": {
+        "correlation_id": "CID-3B"
+      },
+      "g.an4": {
+        "correlation_id": "CID-3B"
+      }
+    },
+    "invariants": {}
+  },
+  "residual_by_placement": {
+    "both_cognitive": 0,
+    "one_inert": 2,
+    "both_inert": 2
+  },
+  "invariants": [],
+  "verification_by_placement": {
+    "both_cognitive": "interrogate the correlation-id",
+    "one_inert": "live side only",
+    "both_inert": "static evidence only"
+  }
+}

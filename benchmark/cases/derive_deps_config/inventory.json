@@ -1,0 +1,26 @@
+{
+  "case": "derive_deps_config",
+  "note": "E8 (Brad pt 12). Raw structural inventory from which the resource-dependency (underlies) map used by correlation must be DERIVED, not hand-fed. The map is not stated; it follows from a multi-hop join: an optical line 'lights' a (router, port); an IP link sits on a (router, port) either directly or via a LAG bundle that must be resolved to its member port(s); a service runs 'over' named IP links. underlies(optical, ip) holds when they meet at the same (router, port); underlies(ip, service) holds when the service runs over that IP link. Deliberate difficulty: a LAG-bundle indirection (ip-le7 -> bnd-7 -> port p7) and a NAME LURE (otu5b resembles otu5 but lights a different, unused port). Gold is DERIVED by benchmark/derive_deps_gold.py from these facts; do not hand-edit.",
+
+  "optical_lines": [
+    {"id": "otu2",  "router": "R1", "port": "p3"},
+    {"id": "otu5",  "router": "R2", "port": "p7"},
+    {"id": "otu9",  "router": "R1", "port": "p9"},
+    {"id": "otu5b", "router": "R2", "port": "p8"}
+  ],
+
+  "ip_links": [
+    {"id": "ip-le3", "router": "R1", "port": "p3"},
+    {"id": "ip-le7", "router": "R2", "bundle": "bnd-7"},
+    {"id": "ip-le9", "router": "R1", "port": "p9"}
+  ],
+
+  "bundles": [
+    {"id": "bnd-7", "router": "R2", "members": ["p7"]}
+  ],
+
+  "services": [
+    {"id": "l3vpn-acme",   "over": ["ip-le3"]},
+    {"id": "evpn-globex",  "over": ["ip-le7"]}
+  ]
+}

@@ -1,0 +1,362 @@
+{
+  "arm": "catalogue",
+  "trial": 0,
+  "confirmed": [
+    [
+      "i.stp",
+      "t.translink"
+    ],
+    [
+      "i.tcep",
+      "t.cep"
+    ],
+    [
+      "i.tetopo",
+      "t.topo"
+    ],
+    [
+      "i.tenode",
+      "t.node"
+    ],
+    [
+      "i.telink",
+      "t.link"
+    ],
+    [
+      "i.tp",
+      "t.ltp"
+    ],
+    [
+      "i.cmatrix",
+      "t.nrg"
+    ]
+  ],
+  "residual_a": [
+    "t.sip",
+    "t.cs",
+    "t.lpq"
+  ],
+  "residual_b": [
+    "i.ttp",
+    "i.tunnel",
+    "i.otnlabel"
+  ],
+  "work": {
+    "candidates": 7,
+    "turns": 6,
+    "bilateral_checks": 5,
+    "experiments": 2
+  },
+  "transcript": [
+    {
+      "from": "A",
+      "answers": [],
+      "questions": [
+        {
+          "their_id": "i.stp",
+          "ask": "Please give its gloss, an example, and relations summary. Is it itself an adaptation link, a lower-layer termination point supporting another TP, or a relationship between TPs?"
+        },
+        {
+          "their_id": "i.ttp",
+          "ask": "Please give its gloss, an example, and relations summary, especially whether it represents external service access or the endpoint/termination of a TE tunnel."
+        },
+        {
+          "their_id": "i.tunnel",
+          "ask": "Please give its gloss, an example, and relations summary. Does it denote an externally requested end-to-end connectivity service, an internal traffic-engineered path, or both?"
+        },
+        {
+          "their_id": "i.otnlabel",
+          "ask": "Please give its gloss, an example, and relations summary. Does it express layer/multiplex structure such as ODU2-in-OTU4, or identify an allocated switching resource such as a tributary slot?"
+        },
+        {
+          "their_id": "i.tcep",
+          "ask": "Please give its gloss, an example, and relations summary, including whether it is part of a tunnel, a service, or both."
+        }
+      ],
+      "proposals": [
+        {
+          "my_id": "t.node",
+          "their_id": "i.tenode",
+          "confidence": 0.92,
+          "rationale": "Both catalogue entries denote topology-domain forwarding/traffic-engineering nodes."
+        },
+        {
+          "my_id": "t.ltp",
+          "their_id": "i.tp",
+          "confidence": 0.9,
+          "rationale": "Both appear to denote node-owned termination points at which topological links terminate."
+        },
+        {
+          "my_id": "t.nrg",
+          "their_id": "i.cmatrix",
+          "confidence": 0.84,
+          "rationale": "A node rule group and a connectivity matrix both encode the permitted internal cross-connections among a node's ports."
+        },
+        {
+          "my_id": "t.link",
+          "their_id": "i.telink",
+          "confidence": 0.94,
+          "rationale": "Both denote a traffic-engineering/topological link between nodes, terminated at node edge points."
+        },
+        {
+          "my_id": "t.topo",
+          "their_id": "i.tetopo",
+          "confidence": 0.94,
+          "rationale": "Both denote the topology container holding the network's TE nodes and links."
+        }
+      ],
+      "ratifications": [],
+      "experiments": [
+        {
+          "my_id": "t.translink",
+          "their_id": "i.stp",
+          "question": "Does B's supporting-TP preserve the same adaptation-link identity and inter-layer relationship as A's transitional link, including being an at-node adaptation construct rather than merely a termination point?"
+        }
+      ],
+      "no_counterpart": [],
+      "done": false,
+      "plan": {
+        "situation": "No correspondences have yet been settled. The node, ordinary termination point, switching-constraint construct, link, and topology pairs are strong catalogue-level matches. The adaptation, service-access, service/tunnel, multiplex qualifier/label, and connection-endpoint concepts remain semantically ambiguous, and A's service-interface point has no obvious advertised access-kind counterpart.",
+        "need": "I most need to determine whether i.stp is truly an adaptation link or merely a supporting termination point, because its advertised kind suggests a match to t.translink while its label suggests a potentially important false cognate.",
+        "strategy": "I will propose the five strong structural correspondences now. I will ask for precise meanings of i.stp, i.ttp, i.tunnel, i.otnlabel, and i.tcep to resolve the remaining endpoint, service, adaptation, and multiplexing ambiguities. I will also run the decisive experiment on t.translink versus i.stp because endpoint identity and layer-relationship invariants can distinguish an adaptation link from a supporting TP. There are no outstanding B proposals to ratify and no B questions to answer.",
+        "closeness": 0.48,
+        "next_step": "After receiving B's definitions and the experiment verdict, I will settle or reject the remaining candidate pairs, identify t.sip or any other genuinely unmatched A concepts, and ratify any incoming proposals.",
+        "decision": "continue"
+      },
+      "experiment_results": [
+        {
+          "a": "t.translink",
+          "b": "i.stp",
+          "ok": true,
+          "confirmed": true,
+          "relation": "identity"
+        }
+      ]
+    },
+    {
+      "from": "B",
+      "answers": [
+        {
+          "my_id": "i.stp",
+          "gloss": "A supporting-TP is the adaptation/support relationship by which a client-layer TP is supported by a server-layer TP; it is not merely the lower-layer TP itself.",
+          "example": "An OTN termination point at R1 supported by an optical-layer termination point at R1.",
+          "relations": "It relates client and server termination points across adjacent layers and supports i.tp. The decisive experiment confirmed that it preserves the same adaptation-link identity and inter-layer relationship as t.translink."
+        },
+        {
+          "my_id": "i.ttp",
+          "gloss": "A tunnel termination point is the point where a TE tunnel originates or terminates\u2014a trail head\u2014not a generic external service-access point.",
+          "example": "The A1 trail head of the A1\u2013A3 ODU2 tunnel.",
+          "relations": "It is located on i.tenode and originates or terminates i.tunnel; it identifies a tunnel endpoint at its head node."
+        },
+        {
+          "my_id": "i.tunnel",
+          "gloss": "A TE tunnel is an end-to-end traffic-engineered path that realizes a service. It denotes the engineered tunnel itself, rather than the external service request, although it serves that request.",
+          "example": "The A1\u2013A3 ODU2 tunnel engineered across the OTN topology.",
+          "relations": "It runs between i.ttp endpoints, traverses i.tetopo, contains or associates with i.tcep endpoints within nodes, and may be labeled by i.otnlabel."
+        },
+        {
+          "my_id": "i.otnlabel",
+          "gloss": "An OTN label represents the tributary-slot and tributary-port-number multiplexing allocation used to carry a lower-rate ODU within a higher-rate OTN container.",
+          "example": "The TS/TPN allocation carrying an ODU2 inside an OTU4.",
+          "relations": "It labels i.tunnel and expresses both the OTN multiplex structure and the concrete allocated switching resources, such as tributary slots."
+        },
+        {
+          "my_id": "i.tcep",
+          "gloss": "A tunnel connection endpoint is an endpoint of the tunnel's connection inside a node.",
+          "example": "The connection endpoint belonging to the A1\u2013A3 tunnel on R1.",
+          "relations": "It is located on i.tenode and is part of i.tunnel. It is tunnel-specific, not a generic external service interface."
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Please give its gloss, example, and relations. Is it an external/client-facing service access point, a tunnel trail head, or both?"
+        },
+        {
+          "their_id": "t.cs",
+          "ask": "Please give its gloss, example, and relations. Does it denote an externally requested connectivity service, its realized TE path/tunnel, or a combined service-and-path object?"
+        },
+        {
+          "their_id": "t.lpq",
+          "ask": "Please give its gloss, example, and relations. Does it identify only a layer protocol/type such as ODU2, or also a specific tributary-slot/TPN multiplex allocation?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "Please give its gloss, example, and relations. Is it a generic internal connection endpoint, specifically part of a connectivity service, or specifically part of a TE tunnel?"
+        }
+      ],
+      "proposals": [],
+      "ratifications": [
+        {
+          "their_id": "t.node",
+          "my_id": "i.tenode",
+          "accept": true,
+          "reason": "Both denote a node participating in a per-layer traffic-engineering topology."
+        },
+        {
+          "their_id": "t.ltp",
+          "my_id": "i.tp",
+          "accept": true,
+          "reason": "Both denote a node-owned termination point at which a topology/TE link terminates."
+        },
+        {
+          "their_id": "t.nrg",
+          "my_id": "i.cmatrix",
+          "accept": true,
+          "reason": "Given A's stated meaning, both represent node-local rules or constraints defining permitted internal connectivity among termination points."
+        },
+        {
+          "their_id": "t.link",
+          "my_id": "i.telink",
+          "accept": true,
+          "reason": "Both denote a layer-specific topological/traffic-engineering link between nodes and terminated at node termination points."
+        },
+        {
+          "their_id": "t.topo",
+          "my_id": "i.tetopo",
+          "accept": true,
+          "reason": "Both denote the per-layer topology container comprising the relevant nodes and links."
+        }
+      ],
+      "experiments": [],
+      "no_counterpart": [],
+      "done": false,
+      "plan": {
+        "situation": "Five structural pairs are now accepted: node, ordinary link termination point, internal connectivity constraints, link, and topology. The decisive experiment also settles i.stp as corresponding to t.translink. The remaining possible alignments involve tunnel heads versus service interfaces, TE tunnels versus connectivity services, OTN labels versus layer-protocol qualifiers, and tunnel connection endpoints versus generic connection endpoints.",
+        "need": "I most need precise definitions of t.sip, t.cs, t.lpq, and t.cep because their catalogue labels leave unresolved whether they preserve the endpoint identity, service/path distinction, and concrete multiplex-allocation semantics of my remaining concepts.",
+        "strategy": "I will answer all five outstanding questions about my concepts, explicitly distinguishing tunnel objects from external services and tunnel endpoints from service access. I will ratify A's five proposals because they match my authoritative meanings. I will rely on the decisive confirmed result for i.stp and t.translink without duplicating it as a proposal. I will ask targeted questions about A's four ambiguous concepts before proposing or rejecting the remaining candidate correspondences.",
+        "closeness": 0.72,
+        "next_step": "After A defines the four ambiguous concepts, I will propose exact remaining matches where meanings coincide, use decisive experiments for any material service/endpoint ambiguity, and identify i.ttp, i.tunnel, i.otnlabel, or i.tcep as unmatched where A's concepts differ.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "A",
+      "answers": [
+        {
+          "my_id": "t.sip",
+          "gloss": "An external, client-facing point where a requested service accesses the network; it is not a tunnel trail head.",
+          "example": "The ODU2 client hand-off at access node A1 for the A1\u2013A3 service.",
+          "relations": "It is on t.node, provides access to t.cs, and marks the client/network boundary. It does not originate or terminate an internal TE tunnel as such."
+        },
+        {
+          "my_id": "t.cs",
+          "gloss": "An externally meaningful end-to-end connectivity service, distinct from the engineered path or tunnel that realizes it.",
+          "example": "The requested A1\u2013A3 ODU2 connectivity service.",
+          "relations": "It uses t.sip access points, is realized internally by connection endpoints t.cep, and operates over t.topo. It is the service object, not a combined service-and-path object."
+        },
+        {
+          "my_id": "t.lpq",
+          "gloss": "A qualifier describing the signal's layer and multiplexing structure, such as how a client ODU is mapped into a server container.",
+          "example": "ODU2 mapped into an OTU4 server signal.",
+          "relations": "It qualifies t.cs and expresses layer/multiplex structure. It does not identify a particular allocated tributary-slot or tributary-port-number resource."
+        },
+        {
+          "my_id": "t.cep",
+          "gloss": "An endpoint of a service-realizing connection within a node.",
+          "example": "The connection endpoint for the A1\u2013A3 service on R1.",
+          "relations": "It is located on t.node and is part of, or realizes, t.cs. It is connection-specific, but model A associates it directly with the connectivity service rather than explicitly with a separately represented TE tunnel."
+        }
+      ],
+      "questions": [],
+      "proposals": [],
+      "ratifications": [],
+      "experiments": [
+        {
+          "my_id": "t.cep",
+          "their_id": "i.tcep",
+          "question": "Does translating A's service-associated connection endpoint to B's tunnel-associated connection endpoint preserve endpoint identity, connectivity, and ownership when B's tunnel realizes A's service, or does the service-versus-tunnel distinction make them different objects?"
+        }
+      ],
+      "no_counterpart": [
+        "t.sip",
+        "t.cs",
+        "t.lpq"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "The five structural correspondences are mutually accepted, and the decisive experiment has confirmed t.translink with i.stp. B's definitions show that i.ttp is a tunnel trail head rather than A's external t.sip, i.tunnel is an engineered realizing path rather than A's t.cs service object, and i.otnlabel includes a concrete TS/TPN allocation absent from t.lpq. The only material ambiguity left is whether t.cep and i.tcep retain the same endpoint identity despite being related respectively to a service and its realizing tunnel.",
+        "need": "I most need to settle t.cep versus i.tcep, because their intrinsic endpoint meanings and examples align closely while their immediate parent objects differ.",
+        "strategy": "I will first answer all four outstanding questions with explicit service/path, access/trail-head, and qualifier/allocation distinctions. I will mark t.sip, t.cs, and t.lpq as having no true counterpart. I will use the decisive experiment on t.cep and i.tcep rather than infer identity from similar labels. There are no B proposals awaiting ratification and no further definitions I need to request.",
+        "closeness": 0.92,
+        "next_step": "After the experiment verdict, I will record t.cep as settled if confirmed or unmatched if refuted, then verify that every A concept is either paired or declared unmatched and close the reconciliation.",
+        "decision": "continue"
+      },
+      "experiment_results": [
+        {
+          "a": "t.cep",
+          "b": "i.tcep",
+          "ok": true,
+          "confirmed": true,
+          "relation": "identity"
+        }
+      ]
+    },
+    {
+      "from": "B",
+      "answers": [],
+      "questions": [],
+      "proposals": [],
+      "ratifications": [],
+      "experiments": [],
+      "no_counterpart": [
+        "i.ttp",
+        "i.tunnel",
+        "i.otnlabel"
+      ],
+      "done": true,
+      "plan": {
+        "situation": "The reconciliation is complete. Five structural pairs were mutually accepted: i.tenode\u2194t.node, i.tp\u2194t.ltp, i.cmatrix\u2194t.nrg, i.telink\u2194t.link, and i.tetopo\u2194t.topo. Decisive experiments confirmed i.stp\u2194t.translink and i.tcep\u2194t.cep. The remaining concepts differ materially: i.ttp is an internal tunnel trail head rather than t.sip's external service interface; i.tunnel is the engineered realizing path rather than t.cs's externally meaningful service; and i.otnlabel identifies concrete TS/TPN resources whereas t.lpq only describes layer and multiplex structure.",
+        "need": "Nothing further needs to be learned or settled; every concept in my model is either matched decisively or identified as lacking a counterpart.",
+        "strategy": "I will record i.ttp, i.tunnel, and i.otnlabel as having no counterparts. I will not issue duplicate proposals for experiment-confirmed pairs, and there are no outstanding questions or proposals to answer or ratify.",
+        "closeness": 1.0,
+        "next_step": "No next step is required.",
+        "decision": "stop"
+      }
+    },
+    {
+      "from": "A",
+      "answers": [],
+      "questions": [],
+      "proposals": [],
+      "ratifications": [],
+      "experiments": [],
+      "no_counterpart": [
+        "t.sip",
+        "t.cs",
+        "t.lpq"
+      ],
+      "done": true,
+      "plan": {
+        "situation": "The reconciliation is complete. Five structural correspondences were proposed and accepted: t.node\u2194i.tenode, t.ltp\u2194i.tp, t.nrg\u2194i.cmatrix, t.link\u2194i.telink, and t.topo\u2194i.tetopo. Decisive experiments confirmed t.translink\u2194i.stp and t.cep\u2194i.tcep. The remaining A concepts have no true counterparts: t.sip is an external service-access point rather than i.ttp's tunnel trail head; t.cs is an external connectivity service rather than i.tunnel's engineered path; and t.lpq describes multiplex structure without i.otnlabel's concrete TS/TPN allocation.",
+        "need": "Nothing further needs to be learned or settled because every A concept is either matched, decisively confirmed, or identified as unmatched, and no questions or proposals remain outstanding.",
+        "strategy": "I will close without duplicating previously issued proposals or experiment-confirmed correspondences. I record t.sip, t.cs, and t.lpq as lacking counterparts; there are no answers, questions, experiments, or ratifications still required.",
+        "closeness": 1.0,
+        "next_step": "No next step is required.",
+        "decision": "stop"
+      }
+    },
+    {
+      "from": "B",
+      "answers": [],
+      "questions": [],
+      "proposals": [],
+      "ratifications": [],
+      "experiments": [],
+      "no_counterpart": [
+        "i.ttp",
+        "i.tunnel",
+        "i.otnlabel"
+      ],
+      "done": true,
+      "plan": {
+        "situation": "The reconciliation is complete. The mutually settled correspondences are i.tenode\u2194t.node, i.tp\u2194t.ltp, i.cmatrix\u2194t.nrg, i.telink\u2194t.link, and i.tetopo\u2194t.topo. Decisive experiments confirmed i.stp\u2194t.translink and i.tcep\u2194t.cep. My remaining concepts differ materially from A's superficially related concepts.",
+        "need": "Nothing remains to learn or settle; all concepts have been matched or identified as having no counterpart, and no proposals or questions are outstanding.",
+        "strategy": "I will preserve the completed result without duplicating proposals or experiments and record i.ttp, i.tunnel, and i.otnlabel as unmatched.",
+        "closeness": 1.0,
+        "next_step": "No next step is required.",
+        "decision": "stop"
+      }
+    }
+  ]
+}

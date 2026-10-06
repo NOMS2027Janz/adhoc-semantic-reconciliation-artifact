@@ -1,0 +1,145 @@
+{
+  "system": "Agent F - legacy fault manager",
+  "dialect": "RFC 8632 / syslog / SNMP / X.733 (routing)",
+  "modules": [
+    "x733-probable-cause",
+    "rfc8632-alarms"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5.6-sol from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case obs_routing, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/obs_routing/model_a*.json.",
+  "concepts": [
+    {
+      "id": "f.node",
+      "label": "managed-object",
+      "synonyms": [
+        "resource",
+        "router",
+        "BGP session"
+      ],
+      "kind": "resource",
+      "gloss": "A managed object is an identifiable physical or logical network resource whose operational state is monitored and against which events and alarms are raised.",
+      "example": "R7 is a managed router, while bgp-R7-AS64500 is the logical BGP session on R7 toward autonomous system 64500.",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "R7",
+        "bgp-R7-AS64500"
+      ]
+    },
+    {
+      "id": "f.event",
+      "label": "event",
+      "synonyms": [
+        "syslog",
+        "trap"
+      ],
+      "kind": "event",
+      "gloss": "An event is a point-in-time notification, such as a syslog message or SNMP trap, reporting an occurrence observed on a managed object without necessarily representing an enduring fault condition.",
+      "example": "trap-bgp-R7-t0 is an SNMP trap emitted at time t0 to report an occurrence on the bgp-R7-AS64500 session.",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        }
+      ],
+      "instances": [
+        "trap-bgp-R7-t0"
+      ]
+    },
+    {
+      "id": "f.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "fault alarm",
+        "alarm condition"
+      ],
+      "kind": "alarm",
+      "gloss": "An alarm is a managed indication of an active or tracked fault condition on a resource, annotated with a perceived severity and a standardized probable-cause code and remaining in scope until cleared.",
+      "example": "alarm-bgp-R7-down represents the tracked failure of bgp-R7-AS64500 and may carry severity critical and probable cause bgpConnectionLost.",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        },
+        {
+          "rel": "carries",
+          "target": "f.severity"
+        },
+        {
+          "rel": "carries",
+          "target": "f.probable_cause"
+        }
+      ],
+      "instances": [
+        "alarm-bgp-R7-down"
+      ]
+    },
+    {
+      "id": "f.severity",
+      "label": "severity",
+      "synonyms": [
+        "perceived severity",
+        "alarm level"
+      ],
+      "kind": "severity",
+      "gloss": "Severity is the perceived operational impact or urgency level assigned to an alarm, using ranked values such as critical, major, minor, or warning.",
+      "example": "alarm-bgp-R7-down carries severity critical when the lost BGP session causes an immediate, service-affecting routing failure.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "critical",
+        "major",
+        "minor",
+        "warning"
+      ]
+    },
+    {
+      "id": "f.probable_cause",
+      "label": "probable-cause",
+      "synonyms": [
+        "X.733 cause",
+        "cause code"
+      ],
+      "kind": "cause-code",
+      "gloss": "A probable cause is the standardized diagnostic code carried by an alarm to classify the condition believed to have produced the fault, rather than identifying a definitively proven root cause.",
+      "example": "alarm-bgp-R7-down carries holdTimerExpired when R7 declares the BGP session down because no keepalive or update arrived before the hold timer elapsed.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "bgpConnectionLost",
+        "holdTimerExpired"
+      ]
+    },
+    {
+      "id": "f.clear",
+      "label": "clear",
+      "synonyms": [
+        "alarm clear"
+      ],
+      "kind": "clear",
+      "gloss": "A clear is the lifecycle notification or action that resolves a specific outstanding alarm and marks its fault condition as no longer active.",
+      "example": "clear-alarm-bgp-R7-down clears alarm-bgp-R7-down after the BGP session to AS64500 is re-established.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "clears",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "clear-alarm-bgp-R7-down"
+      ]
+    }
+  ]
+}

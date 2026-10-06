@@ -1,0 +1,25 @@
+readout,model,condition,placement,recall,experiment_only_recall,probes_per_run,turns,n
+trigger,gpt-5.6-sol,key present,both_cognitive,1.0,1.0,10.33,2.06,18
+trigger,gpt-5.6-sol,key absent,both_cognitive,0.97,1.0,28.06,3.56,18
+trigger,gpt-5.6-sol,key present,one_inert,0.656,0.056,2.78,2.0,18
+trigger,gpt-5.6-sol,key absent,one_inert,0.646,0.25,4.67,2.33,18
+trigger,gpt-5-mini,key present,both_cognitive,0.828,0.528,6.11,2.89,18
+trigger,gpt-5-mini,key absent,both_cognitive,0.631,0.444,10.28,4.56,18
+trigger,gpt-5-mini,key present,one_inert,0.727,0.25,1.0,1.61,18
+trigger,gpt-5-mini,key absent,one_inert,0.596,0.417,2.17,2.28,18
+trigger,gpt-5-nano,key present,both_cognitive,0.788,0.694,12.39,5.61,18
+trigger,gpt-5-nano,key absent,both_cognitive,0.46,0.472,13.33,6.72,18
+trigger,gpt-5-nano,key present,one_inert,0.763,0.667,3.28,2.94,18
+trigger,gpt-5-nano,key absent,one_inert,0.555,0.556,4.28,3.89,18
+payoff,gpt-5.6-sol,budget=0,both_cognitive,0.636,0,0.0,2.0,6
+payoff,gpt-5.6-sol,budget=3,both_cognitive,0.772,0.375,3.0,2.0,6
+payoff,gpt-5.6-sol,budget=unbounded,both_cognitive,1.0,1.0,11.0,2.0,6
+payoff,gpt-5.6-sol,budget=0,one_inert,0.636,0,0.0,2.0,6
+payoff,gpt-5.6-sol,budget=3,one_inert,0.636,0,3.0,2.0,6
+payoff,gpt-5.6-sol,budget=unbounded,one_inert,0.666,0.083,2.83,2.0,6
+payoff,gpt-5-mini,budget=0,both_cognitive,0.788,0.417,0.0,1.83,6
+payoff,gpt-5-mini,budget=3,both_cognitive,0.788,0.417,2.17,1.83,6
+payoff,gpt-5-mini,budget=unbounded,both_cognitive,0.909,0.75,7.17,5.33,6
+payoff,gpt-5-mini,budget=0,one_inert,0.757,0.333,0.0,1.5,6
+payoff,gpt-5-mini,budget=3,one_inert,0.848,0.583,0.67,1.67,6
+payoff,gpt-5-mini,budget=unbounded,one_inert,0.818,0.5,1.83,1.83,6

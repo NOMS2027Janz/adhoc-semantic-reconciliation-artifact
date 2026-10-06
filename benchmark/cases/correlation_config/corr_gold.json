@@ -1,0 +1,78 @@
+{
+  "case": "correlation_config",
+  "note": "Correlation gold DERIVED by derive_correlation_config_gold.py from reconcile.observability.correlate; do not hand-edit.",
+  "incidents": {
+    "C1": [
+      {
+        "symptoms": [
+          "s1",
+          "s2",
+          "s3"
+        ],
+        "cause": "s1",
+        "layers": [
+          "ip",
+          "optical",
+          "service"
+        ]
+      },
+      {
+        "symptoms": [
+          "s4"
+        ],
+        "cause": "s4",
+        "layers": [
+          "service"
+        ]
+      }
+    ],
+    "C2": [
+      {
+        "symptoms": [
+          "s1",
+          "s2"
+        ],
+        "cause": "s1",
+        "layers": [
+          "ip",
+          "optical"
+        ]
+      },
+      {
+        "symptoms": [
+          "s3",
+          "s4",
+          "s5"
+        ],
+        "cause": "s3",
+        "layers": [
+          "ip",
+          "optical",
+          "service"
+        ]
+      }
+    ],
+    "C3": [
+      {
+        "symptoms": [
+          "s1",
+          "s2"
+        ],
+        "cause": "s1",
+        "layers": [
+          "ip",
+          "optical"
+        ]
+      },
+      {
+        "symptoms": [
+          "s3"
+        ],
+        "cause": "s3",
+        "layers": [
+          "service"
+        ]
+      }
+    ]
+  }
+}

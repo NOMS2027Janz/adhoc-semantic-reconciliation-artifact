@@ -1,0 +1,301 @@
+{
+  "system": "Agent N",
+  "dialect": "IETF L3NM (RFC 9182)",
+  "modules": [
+    "ietf-l3vpn-ntw",
+    "ietf-vpn-common"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-nano from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_l3vpn, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_l3vpn/model_a*.json.",
+  "concepts": [
+    {
+      "id": "n.vpnsvc",
+      "label": "vpn-service",
+      "synonyms": [
+        "l3vpn",
+        "vpn-instance"
+      ],
+      "kind": "service",
+      "gloss": "A logical service representing a layer-3 VPN instance spanning multiple sites and realized on one or more vpn-nodes.",
+      "example": "ACME-L3VPN (3 sites, hub-and-spoke)",
+      "ref": "l3vpn-instance",
+      "relations": [
+        {
+          "rel": "realized-on",
+          "target": "n.vpnnode"
+        }
+      ],
+      "instances": [
+        "ACME-L3VPN (3 sites, hub-and-spoke)"
+      ]
+    },
+    {
+      "id": "n.vpnnode",
+      "label": "vpn-node",
+      "synonyms": [
+        "per-PE vpn instance"
+      ],
+      "kind": "instance",
+      "gloss": "A concrete VPN edge node that participates in a VPN service by hosting VPN attachments and is hosted on a provider-edge device.",
+      "example": "vpn-node@PE2",
+      "ref": "vrf",
+      "relations": [
+        {
+          "rel": "part-of",
+          "target": "n.vpnsvc"
+        },
+        {
+          "rel": "on-device",
+          "target": "n.pe"
+        }
+      ],
+      "instances": [
+        "vpn-node@PE1",
+        "vpn-node@PE2",
+        "vpn-node@PE3"
+      ]
+    },
+    {
+      "id": "n.access",
+      "label": "vpn-network-access",
+      "synonyms": [
+        "network access",
+        "attachment"
+      ],
+      "kind": "access",
+      "gloss": "An access attachment binding a VPN node to a customer edge, providing a customer-facing interface into the VPN.",
+      "example": "access-PE1-CEA",
+      "ref": "network-access",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "n.vpnnode"
+        },
+        {
+          "rel": "faces",
+          "target": "n.ce"
+        }
+      ],
+      "instances": [
+        "access-PE1-CEA",
+        "access-PE2-CEB",
+        "access-PE3-CEC"
+      ]
+    },
+    {
+      "id": "n.ce",
+      "label": "ce",
+      "synonyms": [
+        "ce-neighbor",
+        "customer edge"
+      ],
+      "kind": "peer",
+      "gloss": "A customer-edge device (CE) that peers with provider-edge devices to terminate VPN paths.",
+      "example": "CE-A",
+      "ref": "customer-edge",
+      "relations": [
+        {
+          "rel": "peers-with",
+          "target": "n.pe"
+        }
+      ],
+      "instances": [
+        "CE-A",
+        "CE-B",
+        "CE-C"
+      ]
+    },
+    {
+      "id": "n.rd",
+      "label": "route-distinguisher",
+      "synonyms": [
+        "rd"
+      ],
+      "kind": "identifier",
+      "gloss": "An identifier (route-distinguisher) used to distinguish routes for a VPN node's VRF, preventing overlap between VPNs.",
+      "example": "65000:101",
+      "ref": "route-distinguisher",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "n.vpnnode"
+        }
+      ],
+      "instances": [
+        "65000:101",
+        "65000:102",
+        "65000:103"
+      ]
+    },
+    {
+      "id": "n.rt",
+      "label": "vpn-target",
+      "synonyms": [
+        "route-target",
+        "rt"
+      ],
+      "kind": "policy-value",
+      "gloss": "A route-target policy value used to control the import and export of routes for VPN nodes.",
+      "example": "rt 65000:1 (hub)",
+      "ref": "route-target",
+      "relations": [
+        {
+          "rel": "controls",
+          "target": "n.vpnnode"
+        }
+      ],
+      "instances": [
+        "rt 65000:1 (hub)",
+        "rt 65000:2 (spoke)"
+      ]
+    },
+    {
+      "id": "n.ipconn",
+      "label": "ip-connection",
+      "synonyms": [
+        "addressing"
+      ],
+      "kind": "addressing",
+      "gloss": "An IP prefix allocated to an access attachment, representing the IP connectivity within the VPN.",
+      "example": "10.0.1.0/30",
+      "ref": "ip-addressing",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "n.access"
+        }
+      ],
+      "instances": [
+        "10.0.1.0/30",
+        "10.0.2.0/30",
+        "10.0.3.0/30"
+      ]
+    },
+    {
+      "id": "n.qos",
+      "label": "qos-profile",
+      "synonyms": [
+        "service qos"
+      ],
+      "kind": "qos",
+      "gloss": "A QoS profile applied to an access to govern traffic handling within the VPN.",
+      "example": "gold-200M",
+      "ref": "qos-profile",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "n.access"
+        }
+      ],
+      "instances": [
+        "gold-200M",
+        "silver-50M"
+      ]
+    },
+    {
+      "id": "n.pe",
+      "label": "ne",
+      "synonyms": [
+        "provider edge",
+        "network element"
+      ],
+      "kind": "node",
+      "gloss": "A provider-edge network element that hosts VPN nodes.",
+      "example": "PE1",
+      "ref": "pe-device",
+      "relations": [
+        {
+          "rel": "hosts",
+          "target": "n.vpnnode"
+        }
+      ],
+      "instances": [
+        "PE1",
+        "PE2",
+        "PE3"
+      ]
+    },
+    {
+      "id": "n.protocol",
+      "label": "routing-protocol",
+      "synonyms": [
+        "ce-pe protocol"
+      ],
+      "kind": "protocol",
+      "gloss": "Routing protocol configuration (eBGP, OSPF, or static) used on an access attachment between a CE and a PE.",
+      "example": "eBGP PE1-CEA",
+      "ref": "ce-pe-protocol",
+      "relations": [
+        {
+          "rel": "runs-on",
+          "target": "n.access"
+        }
+      ],
+      "instances": [
+        "eBGP PE1-CEA",
+        "OSPF PE2-CEB",
+        "static PE3-CEC"
+      ]
+    },
+    {
+      "id": "n.rtpolicy",
+      "label": "routing-policy",
+      "synonyms": [
+        "import/export policy"
+      ],
+      "kind": "policy",
+      "gloss": "A routing policy applied at a VPN node to govern how routes are imported or exported.",
+      "example": "ACME-import-policy",
+      "ref": "route-policy",
+      "relations": [
+        {
+          "rel": "applied-at",
+          "target": "n.vpnnode"
+        }
+      ],
+      "instances": [
+        "ACME-import-policy",
+        "ACME-export-policy"
+      ]
+    },
+    {
+      "id": "n.slareport",
+      "label": "sla-report",
+      "synonyms": [
+        "service report"
+      ],
+      "kind": "assurance",
+      "gloss": "An assurance report describing the service level agreement for the VPN service.",
+      "example": "ACME monthly SLA report",
+      "ref": "sla-report",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "n.vpnsvc"
+        }
+      ],
+      "instances": [
+        "ACME monthly SLA report"
+      ]
+    },
+    {
+      "id": "n.vendor",
+      "label": "x-op-tag-91",
+      "synonyms": [
+        "proprietary attr 91"
+      ],
+      "kind": "opaque",
+      "gloss": "An opaque, vendor-specific attribute attached to a VPN node.",
+      "example": "x-op-tag-91=A7 on vpn-node@PE1",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on",
+          "target": "n.vpnnode"
+        }
+      ],
+      "instances": [
+        "x-op-tag-91=A7 on vpn-node@PE1"
+      ]
+    }
+  ]
+}

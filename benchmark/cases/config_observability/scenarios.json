@@ -1,0 +1,97 @@
+{
+  "scenarios": [
+    {
+      "id": "S1",
+      "note": "an optical degradation and the IP loss it causes should be ONE incident, with an unrelated management symptom left separate",
+      "deps": {
+        "lambda1": [
+          "L1"
+        ]
+      },
+      "symptoms": [
+        {
+          "id": "s1",
+          "label": "pre-FEC BER rising",
+          "resource": "lambda1",
+          "layer": "optical",
+          "t": 0
+        },
+        {
+          "id": "s2",
+          "label": "IP packet loss",
+          "resource": "L1",
+          "layer": "ip",
+          "t": 2
+        },
+        {
+          "id": "s3",
+          "label": "mgmt CPU drift",
+          "resource": "R9",
+          "layer": "management",
+          "t": 1
+        }
+      ]
+    },
+    {
+      "id": "S2",
+      "note": "two IP symptoms on independent links sharing no underlay should be TWO incidents",
+      "deps": {
+        "lambdaA": [
+          "LA"
+        ],
+        "lambdaB": [
+          "LB"
+        ]
+      },
+      "symptoms": [
+        {
+          "id": "s1",
+          "label": "loss on LA",
+          "resource": "LA",
+          "layer": "ip",
+          "t": 0
+        },
+        {
+          "id": "s2",
+          "label": "loss on LB",
+          "resource": "LB",
+          "layer": "ip",
+          "t": 1
+        }
+      ]
+    },
+    {
+      "id": "S3",
+      "note": "an optical degradation under two IP links it carries should be ONE incident of three, rooted at the optical symptom",
+      "deps": {
+        "lambda3": [
+          "L3a",
+          "L3b"
+        ]
+      },
+      "symptoms": [
+        {
+          "id": "s1",
+          "label": "pre-FEC BER rising",
+          "resource": "lambda3",
+          "layer": "optical",
+          "t": 0
+        },
+        {
+          "id": "s2",
+          "label": "loss on L3a",
+          "resource": "L3a",
+          "layer": "ip",
+          "t": 2
+        },
+        {
+          "id": "s3",
+          "label": "loss on L3b",
+          "resource": "L3b",
+          "layer": "ip",
+          "t": 3
+        }
+      ]
+    }
+  ]
+}

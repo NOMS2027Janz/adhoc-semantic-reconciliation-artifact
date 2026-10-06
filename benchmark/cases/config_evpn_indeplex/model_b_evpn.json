@@ -1,0 +1,243 @@
+{
+  "system": "Agent E",
+  "dialect": "IETF EVPN (RFC 7432 / RFC 8365)",
+  "modules": [
+    "ietf-evpn",
+    "ietf-bgp-l2vpn-evpn"
+  ],
+  "note": "config_evpn side B, rebound to the independent EVPN lexicon (lb.*) for E1.",
+  "concepts": [
+    {
+      "id": "e.evi",
+      "label": "evpn-instance",
+      "synonyms": [
+        "EVI",
+        "MAC-VRF"
+      ],
+      "kind": "service",
+      "gloss": "the EVPN instance (MAC-VRF) realising the customer's Ethernet service across the PEs",
+      "example": "EVI 5000 (MAC-VRF ACME) on PE1, PE2, PE3",
+      "ref": "lb.evi",
+      "relations": [
+        {
+          "rel": "realized-on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "EVI-5000 (MAC-VRF ACME)"
+      ]
+    },
+    {
+      "id": "e.ac",
+      "label": "attachment-circuit",
+      "synonyms": [
+        "AC",
+        "access-interface"
+      ],
+      "kind": "access",
+      "gloss": "the interface on a PE where a customer site attaches to the EVI",
+      "example": "ge-0/0/4 on PE1 bound to EVI 5000",
+      "ref": "lb.acif",
+      "relations": [
+        {
+          "rel": "into",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "AC-PE1",
+        "AC-PE2",
+        "AC-PE3"
+      ]
+    },
+    {
+      "id": "e.access",
+      "label": "vpn-network-access",
+      "synonyms": [
+        "endpoint",
+        "access-endpoint"
+      ],
+      "kind": "endpoint",
+      "gloss": "the per-PE endpoint of the EVI at an attachment circuit",
+      "example": "the EVI-5000 endpoint on PE1",
+      "ref": "lb.vna",
+      "relations": [
+        {
+          "rel": "at",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "ep-PE1",
+        "ep-PE2",
+        "ep-PE3"
+      ]
+    },
+    {
+      "id": "e.vlan",
+      "label": "bridge-domain",
+      "synonyms": [
+        "bridge-vlan",
+        "vlan"
+      ],
+      "kind": "l2-domain",
+      "gloss": "the bridge domain (VLAN) of the MAC-VRF, one broadcast domain across the EVI",
+      "example": "bridge-domain for VLAN 200 in EVI 5000",
+      "ref": "lb.bd",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "bd-vlan-200"
+      ]
+    },
+    {
+      "id": "e.policer",
+      "label": "ingress-policer",
+      "synonyms": [
+        "rate-limiter"
+      ],
+      "kind": "rate",
+      "gloss": "the ingress policer applied on an attachment circuit to enforce the committed rate",
+      "example": "policer 200m/50m on AC-PE1",
+      "ref": "lb.policer",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "policer-200/50",
+        "policer-100/0"
+      ]
+    },
+    {
+      "id": "e.tc",
+      "label": "traffic-class",
+      "synonyms": [
+        "forwarding-class",
+        "class"
+      ],
+      "kind": "cos",
+      "gloss": "the forwarding class applied to frames in the EVI",
+      "example": "the expedited-forwarding class from PCP 5",
+      "ref": "lb.tclass",
+      "relations": [
+        {
+          "rel": "in",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "EF-class",
+        "BE-class"
+      ]
+    },
+    {
+      "id": "e.maclearn",
+      "label": "mac-vrf-learning",
+      "synonyms": [
+        "local MAC learning"
+      ],
+      "kind": "l2-control",
+      "gloss": "how the MAC-VRF learns local customer MACs on an attachment circuit before advertising them in BGP",
+      "example": "local learning on AC-PE1, then EVPN type-2 advertisement",
+      "ref": "lb.macl",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "local learning @AC-PE1"
+      ]
+    },
+    {
+      "id": "e.mtu",
+      "label": "interface-mtu",
+      "synonyms": [
+        "MTU"
+      ],
+      "kind": "framing",
+      "gloss": "the L2 MTU enforced on the attachment circuit and core",
+      "example": "9100-byte MTU on AC-PE1",
+      "ref": "lb.mtu",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "MTU 9100"
+      ]
+    },
+    {
+      "id": "e.esi",
+      "label": "ethernet-segment",
+      "synonyms": [
+        "ESI",
+        "segment"
+      ],
+      "kind": "multihoming",
+      "gloss": "the Ethernet Segment: the set of links by which a multi-homed site attaches to more than one PE, identified by an ESI (network-side self-extension; no single-homed MEF counterpart)",
+      "example": "ESI 00:11:...:01 for a dual-homed site on PE2 and PE3",
+      "ref": "lb.eseg",
+      "relations": [
+        {
+          "rel": "spans",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "ESI-0011 (dual-homed)"
+      ]
+    },
+    {
+      "id": "e.macmob",
+      "label": "MAC-mobility",
+      "synonyms": [
+        "MAC-move"
+      ],
+      "kind": "l2-control",
+      "gloss": "the EVPN mechanism handling a customer MAC that moves between attachment points, using a sequence number (network-side self-extension)",
+      "example": "sequence bump when a MAC moves from PE1 to PE2",
+      "ref": "lb.macmob",
+      "relations": [
+        {
+          "rel": "in",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "mobility seq=3 for a moved MAC"
+      ]
+    },
+    {
+      "id": "e.vendor",
+      "label": "vendor-evi-tag",
+      "synonyms": [
+        "proprietary evi tag"
+      ],
+      "kind": "opaque",
+      "gloss": "",
+      "example": "",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "vendor-evi-tag on EVI-5000"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,188 @@
+{
+  "system": "Agent Y — Cascade",
+  "dialect": "Cascade (bespoke IP/VPN controller)",
+  "modules": [
+    "cascade-services",
+    "cascade-endpoints"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5.6-sol from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case config_cross_domain, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_cross_domain/model_b*.json.",
+  "concepts": [
+    {
+      "id": "c.underlay",
+      "label": "underlay",
+      "synonyms": [
+        "service underlay"
+      ],
+      "kind": "underlay-binding",
+      "gloss": "A service underlay is the controller binding to the lower-layer transport resource over which an IP/VPN service is carried.",
+      "example": "Underlay binding U-7 supplies the transport path used to carry service SVC-42 between New York and Frankfurt.",
+      "ref": "transport-underlay",
+      "relations": [
+        {
+          "rel": "carries-service",
+          "target": "c.service"
+        }
+      ],
+      "instances": [
+        "U-7 (under SVC-42)"
+      ],
+      "evidence": "Read from kind “underlay-binding,” relation “carries-service” to c.service, and instance “U-7 (under SVC-42)”; ruled out c.service because this is the supporting transport binding rather than the customer-facing IP/VPN service."
+    },
+    {
+      "id": "c.attachment",
+      "label": "attachment",
+      "synonyms": [
+        "attachment point"
+      ],
+      "kind": "attachment-point",
+      "gloss": "An attachment is a service-specific endpoint where an IP/VPN service connects to an access site or interface and carries that endpoint’s VLAN encapsulation.",
+      "example": "SVC-42 has attachment att-NY-SVC42 in New York, with C-VLAN 100 borne on that attachment.",
+      "ref": "demarcation",
+      "relations": [
+        {
+          "rel": "of-service",
+          "target": "c.service"
+        },
+        {
+          "rel": "bears",
+          "target": "c.vlan"
+        }
+      ],
+      "instances": [
+        "att-NY-SVC42",
+        "att-FRA-SVC42"
+      ],
+      "evidence": "Read from kind “attachment-point,” relations “of-service” to c.service and “bears” c.vlan, plus instances “att-NY-SVC42” and “att-FRA-SVC42”; ruled out c.vlan because an attachment is the service endpoint on which encapsulation is configured, not the encapsulation identifier itself."
+    },
+    {
+      "id": "c.rate",
+      "label": "rate",
+      "synonyms": [
+        "CIR"
+      ],
+      "kind": "rate",
+      "gloss": "The rate is the committed information rate allocated to a service, expressed as a bandwidth value.",
+      "example": "SVC-42 is provisioned with a CIR of 5 Gbit/s.",
+      "ref": "service-rate",
+      "relations": [
+        {
+          "rel": "of-service",
+          "target": "c.service"
+        }
+      ],
+      "instances": [
+        "5 Gbit/s CIR"
+      ],
+      "evidence": "Read from kind “rate,” synonym “CIR,” relation “of-service” to c.service, and instance “5 Gbit/s CIR”; ruled out c.grade because this is a quantified committed bandwidth rather than a named service class."
+    },
+    {
+      "id": "c.latency",
+      "label": "latency",
+      "synonyms": [
+        "tier"
+      ],
+      "kind": "latency",
+      "gloss": "Latency is the service’s delay objective, represented by a named tier associated with a maximum permitted latency.",
+      "example": "SVC-42 uses latency tier T2, requiring latency no greater than 8 ms.",
+      "ref": "latency-bound",
+      "relations": [
+        {
+          "rel": "of-service",
+          "target": "c.service"
+        }
+      ],
+      "instances": [
+        "tier T2 (<=8ms)"
+      ],
+      "evidence": "Read from kind “latency,” synonym “tier,” relation “of-service” to c.service, and instance “tier T2 (<=8ms)”; ruled out c.grade because the tier denotes a bounded delay objective rather than a general gold/silver/bronze class."
+    },
+    {
+      "id": "c.protection",
+      "label": "protection",
+      "synonyms": [],
+      "kind": "protection",
+      "gloss": "Protection is the resilience requirement specifying which transport failures a service must continue operating through.",
+      "example": "SVC-42 is configured to remain available after the failure of any one carrying path.",
+      "ref": "protection-requirement",
+      "relations": [
+        {
+          "rel": "of-service",
+          "target": "c.service"
+        }
+      ],
+      "instances": [
+        "survive one path failure"
+      ],
+      "evidence": "Read from kind “protection,” relation “of-service” to c.service, and instance “survive one path failure”; ruled out c.underlay because protection states the required failure resilience, not the transport resource carrying the service."
+    },
+    {
+      "id": "c.grade",
+      "label": "grade",
+      "synonyms": [],
+      "kind": "service-class",
+      "gloss": "A grade is a named service class, such as gold, silver, or bronze, used to select a predefined overall treatment or quality level for a service.",
+      "example": "SVC-42 is assigned the gold grade, selecting the controller’s gold-class service treatment.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of-service",
+          "target": "c.service"
+        }
+      ],
+      "instances": [
+        "gold",
+        "silver",
+        "bronze"
+      ],
+      "evidence": "Read from kind “service-class,” relation “of-service” to c.service, and ordered-looking instances “gold,” “silver,” and “bronze”; ruled out c.latency because grade is a broad named service class rather than a delay tier with an explicit millisecond bound."
+    },
+    {
+      "id": "c.vlan",
+      "label": "vlan",
+      "synonyms": [
+        "c-tag",
+        "encapsulation"
+      ],
+      "kind": "encapsulation",
+      "gloss": "A VLAN is the customer VLAN tag used as the layer-2 encapsulation that identifies service traffic on a particular attachment.",
+      "example": "Attachment att-NY-SVC42 identifies SVC-42 traffic using customer VLAN tag C-VLAN 100.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on-attachment",
+          "target": "c.attachment"
+        }
+      ],
+      "instances": [
+        "C-VLAN 100"
+      ],
+      "evidence": "Read from kind “encapsulation,” synonyms “c-tag” and “encapsulation,” relation “on-attachment” to c.attachment, and instance “C-VLAN 100”; ruled out c.attachment because this is the VLAN tag carried at an endpoint rather than the endpoint itself."
+    },
+    {
+      "id": "c.service",
+      "label": "service",
+      "synonyms": [
+        "vpn service",
+        "ip service"
+      ],
+      "kind": "ip-service",
+      "gloss": "A service is a provisioned IP/VPN connectivity instance that joins its attachments and is carried over an assigned transport underlay.",
+      "example": "SVC-42 provides IP/VPN connectivity between its New York and Frankfurt attachments while riding underlay U-7.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "rides",
+          "target": "c.underlay"
+        },
+        {
+          "rel": "attaches-at",
+          "target": "c.attachment"
+        }
+      ],
+      "instances": [
+        "SVC-42 (NY-FRA)"
+      ],
+      "evidence": "Read from kind “ip-service,” synonyms “vpn service” and “ip service,” relations “rides” c.underlay and “attaches-at” c.attachment, plus instance “SVC-42 (NY-FRA)”; ruled out c.underlay because this is the provisioned IP/VPN connectivity offering rather than its supporting transport binding."
+    }
+  ]
+}

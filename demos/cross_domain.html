@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Non-standard Cross-domain Provisioning — Meridian (transport) ↔ Cascade (IP), no shared standard</title>
+<style>
+  :root{
+    --bg:#0c1018; --panel:#121826; --panel2:#0f1420; --edge:#243049;
+    --ink:#e7edf7; --dim:#8da0bf; --faint:#5d6e8c;
+    --x:#36c2a8; --x2:#0e3a33;          /* Agent X — Meridian, transport */
+    --y:#7aa2ff; --y2:#172447;          /* Agent Y — Cascade, IP/VPN */
+    --bus:#c9a227; --lex:#b98bd6; --lex2:#2a1c3a; --seam:#ffae57; --seam2:#3a2a12;
+    --think:#9aa7c0; --action:#ffd166; --result:#5fd38d; --warn:#ff8b6b; --plan:#b98bd6;
+    --gold:#ffd166;
+    --ok:#5fd38d; --amber:#ffd166; --bad:#ff8b6b;
+    --heavy:#ff8b6b; --med:#ffd166; --cheap:#36c2a8; --mech:#8da0bf;
+    --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.45}
+  h1{font-size:17px;margin:0}
+  .sub{color:var(--dim);font-size:12.5px;max-width:1180px}
+  .toolbar{position:sticky;top:0;z-index:100;background:#0c1018;border-bottom:1px solid var(--edge);padding:10px 20px 11px;box-shadow:0 6px 16px rgba(0,0,0,.45)}
+  .tbar-title{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .author{color:var(--bus);font-size:13px;font-weight:600;white-space:nowrap}
+  .author .lbl{color:var(--faint);font-weight:400;font-size:11px;margin-right:5px;text-transform:uppercase;letter-spacing:.5px}
+  .wrap{padding:14px 16px;max-width:1520px;margin:0 auto}
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+  button{background:#1b2540;color:var(--ink);border:1px solid var(--edge);border-radius:7px;padding:7px 13px;font-size:13px;cursor:pointer;font-family:var(--sans)}
+  button:hover{background:#243151}
+  button.primary{background:var(--bus);color:#1b1500;border-color:#e2bd3b;font-weight:600}
+  button:disabled{opacity:.4;cursor:default}
+  .speed{color:var(--dim);font-size:12px;margin-left:6px}
+  select{background:#1b2540;color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:5px 8px}
+  .modewrap{display:inline-flex;align-items:center;gap:8px;margin-left:14px;padding:4px 10px;border:1px solid var(--edge);border-radius:8px;background:#0f1626}
+  .modewrap .ml{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+  .toggle-sw{position:relative;width:46px;height:22px;border-radius:12px;background:#33261c;border:1px solid #5a4a2a;cursor:pointer;transition:.2s}
+  .toggle-sw.on{background:var(--lex2);border-color:#5a3d78}
+  .toggle-sw .knob{position:absolute;top:1px;left:1px;width:18px;height:18px;border-radius:50%;background:var(--warn);transition:.2s}
+  .toggle-sw.on .knob{left:25px;background:var(--lex)}
+  .modeval{font-size:12px;font-weight:700;min-width:34px}
+  .modeval.on{color:var(--lex)} .modeval.off{color:var(--warn)}
+
+  .phases{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}
+  .phase{font-size:11px;padding:4px 9px;border-radius:20px;border:1px solid var(--edge);color:var(--faint);background:#0f1626;white-space:nowrap}
+  .phase.active{color:#1b1500;background:var(--bus);border-color:#e2bd3b;font-weight:600}
+  .phase.done{color:var(--result);border-color:#27543c}
+  .phase.skip{opacity:.4;text-decoration:line-through}
+
+  header{padding:10px 20px;border-bottom:1px solid var(--edge);background:linear-gradient(180deg,#10182a,#0c1018)}
+
+  .stagenote{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(90deg,#16213c,#0f1626);border:1px solid var(--edge);border-left:3px solid var(--bus);border-radius:8px;padding:11px 15px;margin-top:13px}
+  .stagenote .lab{color:var(--bus);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;padding-top:2px;min-width:132px}
+  .stagenote .txt{font-size:12.8px;line-height:1.5;color:#d4deef}
+  .stagenote .txt b{color:#fff}
+  .instr{display:grid;grid-template-columns:200px 1fr 1fr;gap:10px;margin-top:10px}
+  .icard{background:var(--panel);border:1px solid var(--edge);border-radius:8px;padding:9px 12px}
+  .icard .h{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin-bottom:4px}
+  .icard .v{font-size:12px;color:#d4deef;line-height:1.4}
+  .cogrow{display:flex;align-items:center;gap:9px}
+  .cogbadge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:2px 8px;border-radius:10px}
+  .cog-heavy{background:#3a221c;color:var(--heavy)} .cog-med{background:#3a2f12;color:var(--med)}
+  .cog-cheap{background:#0e3a33;color:var(--cheap)} .cog-mech{background:#232b38;color:var(--mech)}
+  .meter{display:inline-flex;gap:3px}
+  .meter i{width:7px;height:13px;border-radius:2px;background:#243049;display:inline-block}
+  .meter i.on.h{background:var(--heavy)} .meter i.on.m{background:var(--med)} .meter i.on.c{background:var(--cheap)}
+  .measure{color:var(--result);font-family:var(--mono);font-size:11.5px}
+
+  .agents{display:grid;grid-template-columns:1fr 0.92fr 1fr;gap:12px;margin-top:14px}
+  .col{background:var(--panel);border:1px solid var(--edge);border-radius:10px;display:flex;flex-direction:column;min-height:300px}
+  .col.x{border-top:3px solid var(--x)}
+  .col.y{border-top:3px solid var(--y)}
+  .col.bus{border-top:3px solid var(--bus)}
+  .col h2{font-size:13px;margin:0;padding:10px 12px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center}
+  .tag{font-size:10.5px;font-weight:400;color:var(--dim)}
+  .log{flex:1;overflow-y:auto;padding:8px 10px;font-family:var(--mono);font-size:11.8px;max-height:330px}
+  .line{margin:0 0 6px;padding-left:15px;position:relative;white-space:pre-wrap;word-break:break-word;animation:fade .35s ease}
+  .line::before{position:absolute;left:0;top:0}
+  .line.think{color:var(--think)} .line.think::before{content:'·';color:var(--faint)}
+  .line.action{color:var(--action)} .line.action::before{content:'▸'}
+  .line.result{color:var(--result)} .line.result::before{content:'✓'}
+  .line.warn{color:var(--warn)} .line.warn::before{content:'!'}
+  .line.plan{color:var(--plan)} .line.plan::before{content:'✎'}
+  .line.replan{color:var(--plan)} .line.replan::before{content:'↻'}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+
+  .msg{border:1px solid var(--edge);border-radius:8px;margin:0 0 9px;overflow:hidden;animation:fade .35s ease;background:var(--panel2)}
+  .msg .mh{display:flex;justify-content:space-between;align-items:center;padding:6px 9px;font-size:11px;border-bottom:1px solid var(--edge)}
+  .msg.fromX .mh{background:linear-gradient(90deg,var(--x2),transparent)}
+  .msg.fromY .mh{background:linear-gradient(270deg,var(--y2),transparent)}
+  .msg.fromV .mh{background:linear-gradient(90deg,#2a2140,transparent)}
+  .dir{font-weight:700;letter-spacing:.3px}
+  .dir.x{color:var(--x)} .dir.y{color:var(--y)} .dir.v{color:var(--lex)}
+  .method{color:var(--bus);font-family:var(--mono);font-size:10.5px}
+  .msg .summary{padding:6px 9px;font-size:11.5px;color:var(--ink)}
+  .msg pre{margin:0;padding:8px 9px;background:#0a0e16;border-top:1px solid var(--edge);font-family:var(--mono);font-size:10.3px;color:#bcd0ee;overflow-x:auto;max-height:200px;overflow-y:auto}
+  .msg .toggle{cursor:pointer;color:var(--faint);font-size:10px;padding:4px 9px;user-select:none}
+  .msg .toggle:hover{color:var(--dim)}
+
+  .tabs{margin-top:16px;border:1px solid var(--edge);border-radius:10px;background:var(--panel);overflow:hidden}
+  .tabbar{display:flex;border-bottom:1px solid var(--edge);flex-wrap:wrap}
+  .tabbtn{padding:10px 14px;font-size:12.5px;cursor:pointer;color:var(--dim);border-right:1px solid var(--edge);background:var(--panel2);position:relative}
+  .tabbtn.active{color:var(--ink);background:var(--panel);font-weight:600}
+  .tabbtn .badge{display:inline-block;min-width:16px;text-align:center;background:var(--bus);color:#1b1500;border-radius:9px;font-size:10px;padding:0 5px;margin-left:6px;font-weight:700}
+  .tabpane{display:none;padding:14px 16px;max-height:580px;overflow-y:auto}
+  .tabpane.active{display:block}
+
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--edge);vertical-align:top}
+  th{color:var(--dim);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  .pill{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;white-space:nowrap}
+  .pill.rate{background:#3a2f12;color:#ffd166}
+  .pill.prot{background:#3a1a2a;color:#ff8fb0}
+  .pill.lat{background:#13314a;color:#7cc6ff}
+  .pill.endp{background:#222b16;color:#bfe06a}
+  .pill.units{background:#2a1c3a;color:#c9a3e6}
+  .pill.seam{background:var(--seam2);color:var(--seam)}
+  .conf{font-family:var(--mono);font-size:11px}
+  .conf.hi{color:var(--result)} .conf.med{color:var(--action)} .conf.lo{color:var(--warn)}
+  .muted{color:var(--faint)}
+  .empty{color:var(--faint);font-style:italic;padding:20px;text-align:center}
+  .note{font-size:12px;color:var(--dim);margin-bottom:6px}
+  .okmark{font-family:var(--mono);font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:8px;background:#0e2a1c;color:var(--ok)}
+
+  .lexgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:8px}
+  .lexcard{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--faint);border-radius:7px;padding:8px 10px;font-size:11px;opacity:.45;transition:opacity .3s,border-color .3s}
+  .lexcard.agreed{opacity:1;border-left-color:var(--lex)}
+  .lexcard.seam.agreed{border-left-color:var(--seam)}
+  .lexcard .lid{font-family:var(--mono);font-size:10.5px;color:var(--lex);font-weight:700}
+  .lexcard.seam .lid{color:var(--seam)}
+  .lexcard .lkind{font-size:8.5px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;float:right;color:var(--faint)}
+  .lexcard.agreed .lkind{color:var(--result)}
+  .lexcard .lnm{font-weight:700;color:var(--ink)}
+  .lexcard .lcls{color:var(--faint);font-style:italic;font-size:10px}
+  .lexcard .lrow{margin-top:3px;color:var(--dim);font-size:10.5px}
+  .lexcard .lk{color:var(--faint);text-transform:uppercase;letter-spacing:.3px;font-size:9px}
+  .bindX{color:var(--x)} .bindY{color:var(--y)} .bindV{color:var(--lex)}
+  .lexcard .gapmark{color:var(--faint);font-style:italic}
+
+  .apass{margin-bottom:16px}
+  .apass h3{font-size:12.5px;margin:0 0 8px;color:var(--ink)}
+  .arow{display:grid;grid-template-columns:1fr 210px 1fr;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--edge)}
+  .aterm{font-family:var(--mono);font-size:11.5px}
+  .aterm.x{color:var(--x);text-align:right} .aterm.y{color:var(--y)}
+  .aterm.struck{text-decoration:line-through;color:var(--faint)}
+  .averd{text-align:center;font-size:10.5px;border-radius:8px;padding:4px 6px;border:1px dashed var(--faint);color:var(--dim)}
+  .averd.cand{border-style:dashed;border-color:#5a4a2a;color:var(--action);background:#221a0c}
+  .averd.hi{border-style:solid;border-color:#27543c;color:var(--result);background:#0e2a1c}
+  .averd.med{border-style:solid;border-color:#4a3f1a;color:var(--action);background:#221c0c}
+  .averd.rej{border-style:solid;border-color:#5a2626;color:var(--warn);background:#2a1414}
+  .averd.gap{border-style:solid;border-color:#5a2640;color:#ff8fb0;background:#2a1420}
+  .averd .vt{font-weight:700;display:block}
+  .averd .vs{font-size:9px;opacity:.8}
+
+  .trans-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .trans-grid h3{font-size:13px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--edge)}
+  .trans-grid h3.x{color:var(--x)} .trans-grid h3.y{color:var(--y)}
+  pre.code{background:#0a0e16;border:1px solid var(--edge);border-radius:8px;padding:11px;font-family:var(--mono);font-size:11px;color:#c7d6f0;overflow-x:auto;white-space:pre}
+  .trace{border:1px solid var(--edge);border-radius:8px;margin-bottom:14px;overflow:hidden}
+  .trace .th{padding:8px 11px;font-weight:600;font-size:12.5px;border-bottom:1px solid var(--edge)}
+  .trace.dirYX .th{background:linear-gradient(90deg,var(--y2),var(--x2))}
+  .trace.dirXY .th{background:linear-gradient(90deg,var(--x2),var(--y2))}
+  .trace .body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0}
+  .trace .cell{padding:10px 11px;border-right:1px solid var(--edge);font-size:11px}
+  .trace .cell:last-child{border-right:none}
+  .trace .cell h4{margin:0 0 6px;font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.4px}
+  .trace .cell pre{margin:0;font-family:var(--mono);font-size:10.2px;color:#bcd0ee;white-space:pre-wrap;word-break:break-word}
+  .rule{font-family:var(--mono);font-size:10.5px;color:#d3c08a;margin:0 0 5px;padding-left:13px;position:relative}
+  .rule::before{content:'→';position:absolute;left:0;color:var(--faint)}
+  .readback{padding:9px 12px;border-top:1px solid var(--edge);font-size:11px;background:#0b1a12}
+  .readback b{color:var(--ok)}
+  .kgcol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .kgcol h3{font-size:13px;margin:0 0 8px}
+  .kgcol h3.x{color:var(--x)} .kgcol h3.y{color:var(--y)}
+  .kgbox{font-family:var(--mono);font-size:11px;color:#c2d2ee;white-space:pre-wrap;background:#0a0e16;border:1px solid var(--edge);border-radius:8px;padding:11px;min-height:60px}
+
+  .ledger{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  .ledger .lc{border:1px solid var(--edge);border-radius:9px;overflow:hidden}
+  .ledger .lc.off{border-top:3px solid var(--warn)} .ledger .lc.on{border-top:3px solid var(--lex)}
+  .ledger .lc.active{box-shadow:0 0 0 2px rgba(185,139,214,.4)}
+  .ledger .lch{padding:8px 12px;font-weight:700;font-size:12.5px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center}
+  .ledger .lc.off .lch{background:#2a1414;color:var(--warn)} .ledger .lc.on .lch{background:var(--lex2);color:var(--lex)}
+  .ledger .lr{display:flex;justify-content:space-between;padding:6px 12px;border-bottom:1px solid var(--edge);font-size:11.5px}
+  .ledger .lr .k{color:var(--dim)} .ledger .lr .v{font-family:var(--mono);font-weight:700}
+  .ledger .lr .v.good{color:var(--result)} .ledger .lr .v.bad{color:var(--warn)}
+  .savings{margin-top:12px;background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--result);border-radius:8px;padding:10px 13px;font-size:12px;color:#d4deef}
+
+  .semhead{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin:14px 0 7px}
+  .semchips{display:flex;gap:6px;flex-wrap:wrap}
+  .semchip{font-family:var(--mono);font-size:10.5px;color:var(--lex);background:var(--lex2);border:1px solid #5a3d78;border-radius:20px;padding:3px 9px}
+  .semchip.seam{color:var(--seam);background:var(--seam2);border-color:#6a4a1a}
+  .semcard{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--result);border-radius:9px;padding:11px 13px;margin-top:8px}
+  .semcard h4{margin:0 0 3px;font-size:13px;color:var(--result)}
+  .semcard .rel{font-family:var(--mono);font-size:11px;color:#c2d2ee;margin:2px 0}
+  .semcard .rel .k{color:var(--faint)}
+  .pragrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .prag{background:#0f1626;border:1px solid var(--edge);border-radius:7px;padding:7px 10px}
+  .prag .pl{font-size:9.5px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;margin-bottom:3px}
+  .prag .pv{font-size:11px;color:#d4deef;line-height:1.4}
+  .prag.use{border-left:3px solid var(--gold)} .prag.use .pl{color:var(--gold)}
+  .prag.realm{border-left:3px solid var(--x)} .prag.realm .pl{color:var(--x)}
+  .prag.state{border-left:3px solid var(--y)} .prag.state .pl{color:var(--y)}
+  .prag.auth{border-left:3px solid var(--lex)} .prag.auth .pl{color:var(--lex)}
+  .prag.purpose{border-left:3px solid var(--result)} .prag.purpose .pl{color:var(--result)}
+  .prag.prov{border-left:3px solid var(--warn)} .prag.prov .pl{color:var(--warn)}
+  .semaff{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .semaff button:hover{background:#243151;border-color:var(--lex)}
+  #semOut{margin-top:10px;background:#0a0e16;border:1px solid var(--edge);border-radius:8px;padding:11px;font-family:var(--mono);font-size:11px;color:#bcd0ee;white-space:pre-wrap;min-height:30px;display:none}
+  #semOut.show{display:block}
+  #semOut .qa{color:var(--result)}
+
+  .mtab td.cog span{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:1px 6px;border-radius:8px}
+  .corefnote{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--lex);border-radius:8px;padding:9px 12px;font-size:11.5px;color:#d4deef;margin-bottom:10px}
+  .pinnote{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--seam);border-radius:8px;padding:9px 12px;font-size:11.5px;color:#d4deef;margin:6px 0 10px}
+
+  .topo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .topo .col{min-height:0}
+  .topo svg{width:100%;height:auto;display:block;background:radial-gradient(circle at 50% 35%,#0f1726,#0b0f18)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;padding:8px 12px;font-size:11px;color:var(--dim);border-top:1px solid var(--edge)}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .sw{width:14px;height:4px;border-radius:2px;display:inline-block}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .foot{color:var(--faint);font-size:11px;margin-top:18px;border-top:1px solid var(--edge);padding-top:12px}
+  .flash{animation:flashglow 1.6s ease}
+  @keyframes flashglow{0%{box-shadow:0 0 0 0 rgba(201,162,39,0)}
+    15%{box-shadow:0 0 0 3px rgba(201,162,39,.75)}
+    55%{box-shadow:0 0 0 3px rgba(201,162,39,.55)}
+    100%{box-shadow:0 0 0 0 rgba(201,162,39,0)}}
+  .col.flashcol{animation:flashcol 1.6s ease}
+  @keyframes flashcol{0%{box-shadow:0 0 0 0 rgba(201,162,39,0)}
+    15%{box-shadow:0 0 0 3px rgba(201,162,39,.8)}
+    100%{box-shadow:0 0 0 0 rgba(201,162,39,0)}}
+  .about{background:var(--panel);border:1px solid var(--edge);border-radius:10px;margin-top:14px;overflow:hidden}
+  .about>h2{font-size:14px;margin:0;padding:11px 14px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,#13203a,transparent)}
+  .about .body{padding:14px 18px;max-width:1200px}
+  .about .body.collapsed{display:none}
+  .about .body p{margin:0 0 10px;font-size:12.5px;line-height:1.55;color:#d4deef}
+  .about .body code{font-family:var(--mono);font-size:11px;color:#bcd0ee;background:#0a0e16;border:1px solid var(--edge);padding:1px 4px;border-radius:3px}
+  .about-toggle{background:#1b2540;color:var(--dim);border:1px solid var(--edge);border-radius:6px;padding:4px 10px;font-size:11.5px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="tbar-title">
+    <h1>Non-standard Cross-domain Provisioning — cognitive agent-to-agent live demo</h1>
+    <span class="author"><span class="lbl">demo by</span>Christopher Janz</span>
+  </div>
+  <div class="controls">
+    <button id="play" class="primary">▶ Play</button>
+    <button id="step">Step ▸</button>
+    <button id="reset">⟲ Reset</button>
+    <span class="speed">speed</span>
+    <select id="speed">
+      <option value="1500">slow</option>
+      <option value="850" selected>normal</option>
+      <option value="350">fast</option>
+    </select>
+    <span class="modewrap">
+      <span class="ml">Ad-hoc reference</span>
+      <span class="toggle-sw on" id="modeSw"><span class="knob"></span></span>
+      <span class="modeval on" id="modeVal">ON</span>
+    </span>
+    <span class="speed" id="counter" style="margin-left:14px"></span>
+  </div>
+  <div class="phases" id="phases"></div>
+</div>
+
+<header>
+  <div class="sub">
+    Two systems with <b>no standard in common</b> must exchange provisioning requirements <b>unambiguously</b>.
+    <b style="color:var(--x)">Agent&nbsp;X — Meridian</b> is a bespoke <b>transport</b> OSS (circuits, bearers, wavelengths, grades);
+    <b style="color:var(--y)">Agent&nbsp;Y — Cascade</b> is a bespoke <b>IP/VPN</b> controller (services, endpoints, VLANs, throughput).
+    Cascade's service rides Meridian's circuit as its <b style="color:var(--seam)">underlay</b> — the one seam their worlds must meet at.
+    They <b>construct</b> a minimal shared reference between themselves and <b>pin</b> every requirement to a canonical example, then validate by <b>worked provisioning &amp; read-back</b>.
+    Toggle the ad-hoc reference <b>ON/OFF</b> to compare the work.
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="about">
+    <h2><span>About this demo — what you're looking at</span>
+        <button class="about-toggle" id="aboutToggle">Hide ▲</button></h2>
+    <div class="body" id="aboutBody">
+      <p>The first two demos let each agent <i>recognise a standard</i> — TAPI, IETF, TM Forum — and lean on a reference that already mapped to it. Here that crutch is gone. <b style="color:var(--x)">Meridian</b> and <b style="color:var(--y)">Cascade</b> are wholly home-grown, and they are in <b>different domains</b>: one provisions optical transport, the other IP/VPN services. Their models overlap only where a Cascade service must ride a Meridian circuit. Neither can name a standard to disambiguate; both are competent, interrogable agents that must find common ground from first principles.</p>
+      <p><b>Two things have to happen, and both are shown.</b> First, the agents <b>construct an ad-hoc reference</b> between just the two of them — the minimal set of categories the exchange needs (endpoint, committed rate, protection, latency, and the cross-domain <b style="color:var(--seam)">transport-underlay</b> seam), each <i>defined by a canonical example</i> they can both instantiate. It is deliberately small and <b>ad hoc, not universal</b>. Second, they <b>pin every provisioning requirement</b> so it cannot be misread: is a rate a line rate or a committed payload? protection against <i>which</i> failure? a latency <i>tier</i> or a <i>number</i>? These are exactly the ambiguities that silently mis-provision across domains.</p>
+      <p><b>Verification is a worked provisioning, read back.</b> With no standard and two different domains, round-trip identity is meaningless — nothing looks alike. So the test is concrete: run one real order through the exchange, have the receiving side provision it and <b>read the instance back</b>, and confirm every pinned requirement is honoured. Watch the cognition meter (heaviest at <b style="color:var(--heavy)">planning</b>, the standard-free <b style="color:var(--heavy)">lift</b>, <b style="color:var(--heavy)">constructing the reference</b>, and <b style="color:var(--heavy)">pinning the requirements</b>), and the pragmatics — <b>realm</b> (transport vs IP ownership) and <b>authority</b> (who is source of truth for each field).</p>
+    </div>
+  </div>
+
+  <div class="stagenote">
+    <span class="lab" id="stageLab">Stage</span>
+    <span class="txt" id="stageTxt">Press <b>▶ Play</b> to begin. The agents will plan, lift with no standard to lean on, construct a shared reference by example, bind, align, pin every requirement unambiguously, co-refer endpoints, build the exchange mapping, and validate by worked provisioning and read-back.</span>
+  </div>
+
+  <div class="instr">
+    <div class="icard"><div class="h">Cognition load</div>
+      <div class="cogrow"><span class="cogbadge cog-mech" id="cogBadge">—</span>
+        <span class="meter" id="cogMeter"><i></i><i></i><i></i></span></div></div>
+    <div class="icard"><div class="h">Gap closed by</div><div class="v" id="mechTxt">—</div></div>
+    <div class="icard"><div class="h">Verified by · measure</div><div class="v" id="verifyTxt">—</div>
+      <div class="measure" id="measureTxt" style="margin-top:4px"></div></div>
+  </div>
+
+  <div class="agents" id="agentsRow">
+    <div class="col x">
+      <h2><span>🟢 Agent&nbsp;X — Meridian (transport OSS)</span><span class="tag">bespoke · circuits / bearers</span></h2>
+      <div class="log" id="logX"></div>
+    </div>
+    <div class="col bus">
+      <h2><span>🟡 A2A message bus</span><span class="tag">TMF Agentic / JSON-RPC</span></h2>
+      <div class="log" id="bus"></div>
+    </div>
+    <div class="col y">
+      <h2><span>🔵 Agent&nbsp;Y — Cascade (IP/VPN controller)</span><span class="tag">bespoke · services / endpoints</span></h2>
+      <div class="log" id="logY"></div>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabsBox">
+    <div class="tabbar" id="tabbar">
+      <div class="tabbtn active" data-tab="lex">Ad-hoc reference <span class="badge" id="lexBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="align">Alignment <span class="badge" id="alignBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="kg">Knowledge graphs &amp; instances</div>
+      <div class="tabbtn" data-tab="pin">Pin requirements <span class="badge" id="pinBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="tr">Exchange mappings <span class="badge" id="trBadge" style="display:none">!</span></div>
+      <div class="tabbtn" data-tab="trace">Provisioning &amp; read-back <span class="badge" id="traceBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="meas">Measures &amp; cognition <span class="badge" id="measBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="ledger">Work ledger · with vs without</div>
+      <div class="tabbtn" data-tab="semodel">Semantic model <span class="badge" id="semBadge" style="display:none">shelf</span></div>
+    </div>
+
+    <div class="tabpane active" id="pane-lex">
+      <div class="note">This reference is <b>not adopted from a standard — it is built here</b>, between just these two agents, for just this exchange. Each category is <b>proposed</b>, then <b>defined by a canonical example</b> both can instantiate, then <b>agreed</b>. It is minimal and <b>ad hoc, not universal</b>. The amber entry is the cross-domain <b style="color:var(--seam)">seam</b>. <span id="lexModeNote"></span></div>
+      <div class="lexgrid" id="lexGrid"></div>
+    </div>
+
+    <div class="tabpane" id="pane-align">
+      <div class="note">Two passes. <b>Pass 1 — label:</b> cheap candidates on names alone. <b>Pass 2 — gloss + example:</b> the definition and canonical example confirm, reject, or refer to pinning. With no standard, the trap is worse: the same word (<code>grade</code>) means unrelated things in the two systems.</div>
+      <div id="alignBody"><div class="empty">No alignment yet — press Play.</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-kg">
+      <div class="note">The lift makes each implicit ontology explicit — and here there is <b>no standard to recognise</b>, so it is recovered from instances and explanations alone (heavier, lower initial confidence). Endpoint co-reference — a separate step — settles which hand-off and which attachment are the same demarcation.</div>
+      <div class="kgcol" style="margin-top:6px">
+        <div><h3 class="x">Agent X — lifted Meridian ontology</h3><div class="kgbox" id="kgX"><span class="muted">— not yet lifted —</span></div></div>
+        <div><h3 class="y">Agent Y — lifted Cascade ontology</h3><div class="kgbox" id="kgY"><span class="muted">— not yet lifted —</span></div></div>
+      </div>
+      <h3 style="font-size:12.5px;color:var(--ink);margin:16px 0 6px">Endpoint co-reference <span class="muted" style="font-weight:400">— which physical hand-off and which logical attachment are the same demarcation (the IP-over-transport seam)</span></h3>
+      <div id="corefBody"><div class="empty">Endpoints co-refer in stage 8.</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-pin">
+      <div class="pinnote">The crux of unambiguous exchange. Each provisioning requirement is <b>probed and pinned to a canonical example</b> both agents instantiate and agree — so it cannot be silently misread. These are the errors that would otherwise slip through: a line rate taken for a committed payload, protection against the wrong failure, a tier read as a number.</div>
+      <table style="margin-top:8px"><thead><tr>
+        <th>Requirement</th><th>Meridian says</th><th>Cascade says</th><th>Ambiguity → pinned meaning (by canonical example)</th><th>✓</th>
+      </tr></thead><tbody id="pinBody">
+        <tr><td colspan="5" class="empty">No requirements pinned yet.</td></tr>
+      </tbody></table>
+    </div>
+
+    <div class="tabpane" id="pane-tr">
+      <div class="note">The negotiated artefact: two directional exchange mappings. <b>Y→X</b> — a Cascade service request yields a Meridian work order for the <b style="color:var(--seam)">underlay</b> circuit. <b>X→Y</b> — a Meridian circuit event updates the Cascade service. Cross-domain, so not inverses; each carries the pinned meanings and the co-referred endpoints. Cognition spent once; runtime is deterministic.</div>
+      <div class="trans-grid" style="margin-top:8px">
+        <div><h3 class="y">Y→X — Cascade service ▶ Meridian work order</h3><pre class="code" id="transYX"><span class="muted">— generated after mediation —</span></pre></div>
+        <div><h3 class="x">X→Y — Meridian circuit event ▶ Cascade service</h3><pre class="code" id="transXY"><span class="muted">— generated after mediation —</span></pre></div>
+      </div>
+    </div>
+
+    <div class="tabpane" id="pane-trace">
+      <div class="note">The right test with no standard and two domains: run a real order through the exchange, provision it, and <b>read the instance back</b> to confirm every pinned requirement is honoured. Ambiguity would surface here as a read-back mismatch — not as a schema error.</div>
+      <div id="traceBody" style="margin-top:8px"><div class="empty">No provisioning exchanges yet.</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-meas">
+      <div class="note">The per-stage ledger. Note the verification story with no standard: reference categories agreed <b>by canonical example</b>, requirements pinned <b>by canonical instance</b>, and the exchange validated by <b>worked provisioning + read-back</b>.</div>
+      <table class="mtab" style="margin-top:8px"><thead><tr>
+        <th>Stage</th><th>Cognition</th><th>Closed by</th><th>Verified by</th><th>Measure</th>
+      </tr></thead><tbody id="measBody">
+        <tr><td colspan="5" class="empty">Fills in as stages complete.</td></tr>
+      </tbody></table>
+    </div>
+
+    <div class="tabpane" id="pane-ledger">
+      <div class="note">Same reconciliation, both ways. With no standard, the honest cost of the reference is that it must be <b>built</b>, not adopted — a couple of turns up front. That cost is paid once and reused; without it, the two bespoke models are aligned pairwise, the <code>grade</code> cognate must be caught by conversation, and every requirement's ambiguity is re-litigated per pair.</div>
+      <div id="scaleViz" class="scaleviz"></div>
+      <div class="ledger" id="ledgerBody"></div>
+      <div class="savings" id="ledgerSavings"></div>
+    </div>
+
+    <div class="tabpane" id="pane-semodel">
+      <div class="note">The <b>form-independent semantic model</b> — meaning (semantics <i>and</i> pragmatics) lifted clear of both bespoke forms, with provenance. It is <b>ad hoc, not universal</b>: built for this pair and this exchange, anchored to the reference they constructed. An agent consumes this <b>directly</b>; the Meridian and Cascade forms are projections of it.</div>
+      <div id="semBody"><div class="empty">Assembled at the final stage — press Play, or jump with Step.</div></div>
+    </div>
+  </div>
+
+  <div class="topo" id="topoBox">
+    <div class="col x">
+      <h2><span>Meridian view — transport circuits (optical)</span><span class="tag" id="xStat"></span></h2>
+      <svg id="svgX" viewBox="0 0 520 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="legend">
+        <span><span class="dot" style="background:#7aa2ff"></span>site / ROADM</span>
+        <span><span class="sw" style="background:#5d6e8c"></span>fiber span</span>
+        <span><span class="sw" style="background:#36c2a8"></span>circuit (bearer)</span>
+      </div>
+    </div>
+    <div class="col y">
+      <h2><span>Cascade view — IP/VPN services (logical)</span><span class="tag" id="yStat"></span></h2>
+      <svg id="svgY" viewBox="0 0 520 380" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="legend">
+        <span><span class="dot" style="background:#5fd38d"></span>honoured</span>
+        <span><span class="dot" style="background:#ffd166"></span>margin / advisory</span>
+        <span><span class="sw" style="background:#7aa2ff"></span>service (pipe)</span>
+        <span><span class="sw" style="background:#ffae57;height:2px;border-radius:0"></span>underlay → circuit</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Staged demonstration — the conversation is scripted for legibility; a code-backed run is scaffolded separately. Both data models are deliberately non-standard (bespoke to each system). No published standard is used or recognised; the shared reference is constructed ad hoc between the two agents. A2A envelopes follow the TM Forum Agentic (A2A) JSON-RPC <code>message/send</code> shape.
+  </div>
+</div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+
+/* ===== the shared physical network — Meridian's substrate ===== */
+const POS_X={A1:[92,72],A3:[260,72],A2:[428,72],R1:[120,300],R2:[400,300],R3:[260,330]};
+const FIBER=[['R1','R2'],['R1','R3'],['R2','R3']];
+const DROP=[['A1','R1'],['A2','R2'],['A3','R3']];
+const SVC_COLORS={svc0:'#36c2a8',svc1:'#5fd38d',svc2:'#ffae57'};
+
+/* a service carries a Cascade (IP) request and its Meridian (transport) realization */
+const INITIAL_SERVICES=[{
+  id:'svc0',label:'A1 ↔ A2',color:SVC_COLORS.svc0,
+  ip:{cir:'CIR ≥ 8G',guard:'protected',lat:'≤ 5 ms',vlan:'VLAN 100'},
+  ckt:{id:'ckt-1',grade:'G3 (10G)',resil:'gold (1+1)',bearer:'λ1',route:'A1▸R1▸R2▸A2'},
+  status:'ok', otnPair:['A1','A2'],optPath:['R1','R2']
+}];
+let state={services:JSON.parse(JSON.stringify(INITIAL_SERVICES))};
+
+function el(t,a,c){const e=document.createElementNS('http://www.w3.org/2000/svg',t);for(const k in a)e.setAttribute(k,a[k]);if(c)(Array.isArray(c)?c:[c]).forEach(x=>e.appendChild(x));return e;}
+function line(x1,y1,x2,y2,a){return el('line',Object.assign({x1,y1,x2,y2},a));}
+function txt(x,y,s,a){const t=el('text',Object.assign({x,y},a));t.textContent=s;return t;}
+function path(pts,a){let d='M'+pts[0][0]+' '+pts[0][1];for(let i=1;i<pts.length;i++)d+=' L'+pts[i][0]+' '+pts[i][1];return el('path',Object.assign({d,fill:'none'},a));}
+function curveOffset(pts,off){return pts.map(p=>[p[0],p[1]+off]);}
+
+const STATUS_COLOR={ok:'#5fd38d',margin:'#ffd166',bad:'#ff8b6b'};
+/* Meridian transport view — the optical network + provisioned circuits */
+function renderTransport(){const svg=$('svgX');svg.innerHTML='';
+  svg.appendChild(txt(260,20,'circuits & bearers — the transport realm',{fill:'#8da0bf','font-size':10,'text-anchor':'middle'}));
+  FIBER.forEach(([a,b])=>svg.appendChild(line(...POS_X[a],...POS_X[b],{stroke:'#5d6e8c','stroke-width':2})));
+  DROP.forEach(([a,b])=>svg.appendChild(line(...POS_X[a],...POS_X[b],{stroke:'#5d6e8c','stroke-width':1.4,'stroke-dasharray':'3 3',opacity:.5})));
+  state.services.forEach((s,idx)=>{const off=(idx-1)*5;
+    const pts=[POS_X[s.otnPair[0]],...s.optPath.map(n=>POS_X[n]),POS_X[s.otnPair[1]]];
+    svg.appendChild(path(curveOffset(pts,off),{stroke:s.color,'stroke-width':3.3,'stroke-linecap':'round',opacity:.95}));});
+  for(const n in POS_X){const [x,y]=POS_X[n];const roadm=n[0]==='R';
+    svg.appendChild(el('circle',{cx:x,cy:y,r:13,fill:roadm?'#16223f':'#12261f',stroke:roadm?'#7aa2ff':'#36c2a8','stroke-width':1.8}));
+    svg.appendChild(txt(x,y+4,n,{fill:'#e7edf7','font-size':11,'font-weight':700,'text-anchor':'middle'}));}
+  state.services.forEach(s=>{const m=POS_X[s.optPath[0]],m2=POS_X[s.optPath[s.optPath.length-1]];
+    svg.appendChild(txt((m[0]+m2[0])/2,(m[1]+m2[1])/2-6,s.ckt.id+' · '+s.ckt.bearer,{fill:s.color,'font-size':8.5,'text-anchor':'middle'}));});
+  $('xStat').textContent=`${state.services.length} circuit(s) · grades/bearers`;}
+
+/* Cascade IP view — logical services as pipes with requirement chips + underlay seam */
+function renderIP(){const svg=$('svgY');svg.innerHTML='';
+  svg.appendChild(txt(260,22,'services & requirements — the IP realm',{fill:'#8da0bf','font-size':10,'text-anchor':'middle'}));
+  const rowH=118, top=52;
+  state.services.forEach((s,idx)=>{const y=top+idx*rowH;const sc=STATUS_COLOR[s.status]||'#5fd38d';
+    const ax=70,bx=450;
+    [s.otnPair[0],s.otnPair[1]].forEach((site,i)=>{const x=i?bx:ax;
+      svg.appendChild(el('rect',{x:x-30,y:y-16,width:60,height:32,rx:7,fill:'#101a30',stroke:s.color,'stroke-width':1.8}));
+      svg.appendChild(txt(x,y+5,site,{fill:'#e7edf7','font-size':11,'font-weight':700,'text-anchor':'middle'}));});
+    svg.appendChild(line(ax+32,y,bx-32,y,{stroke:s.color,'stroke-width':3,opacity:.85}));
+    svg.appendChild(el('circle',{cx:260,cy:y,r:7,fill:sc,stroke:'#0c1018','stroke-width':2}));
+    svg.appendChild(txt(260,y-13,s.label+'  ·  '+({ok:'honoured',margin:'honoured · advisory',bad:'breach'}[s.status]),{fill:sc,'font-size':10,'font-weight':700,'text-anchor':'middle'}));
+    const chips=[s.ip.cir,s.ip.guard,s.ip.lat,s.ip.vlan];
+    const cw=104,startx=260-(chips.length*cw)/2;
+    chips.forEach((c,i)=>{const cx=startx+i*cw;
+      svg.appendChild(el('rect',{x:cx+4,y:y+20,width:cw-8,height:20,rx:5,fill:'#0f1626',stroke:'#2a3550'}));
+      svg.appendChild(txt(cx+cw/2,y+34,c,{fill:'#bcd0ee','font-size':9.3,'text-anchor':'middle'}));});
+    // underlay seam
+    svg.appendChild(txt(260,y+56,'underlay ▸ '+s.ckt.id+' ('+s.ckt.grade+' · '+s.ckt.resil+' · '+s.ckt.bearer+')',{fill:'#ffae57','font-size':9,'text-anchor':'middle'}));
+  });
+  $('yStat').textContent=`${state.services.length} service(s) · logical`;}
+function renderTopo(){renderTransport();renderIP();}
+
+/* ===== ad-hoc reference (constructed between the two agents) ===== */
+// kind label; x/y = each system's bespoke term (null = out of scope for the exchange); seam = cross-domain link
+const LEXICON=[
+ {id:'ref:service',nm:'Provisioned service',cls:'Service',kind:'demand',def:'the unit of provisioning the two exchange about',ex:'"connect A1 and A2 for the customer"',x:'work order / circuit',y:'service request'},
+ {id:'ref:endpoint',nm:'Service endpoint',cls:'Endpoint',kind:'endpoint',def:'a point where the service is delivered at a site',ex:'the hand-off at site A1',x:'aEnd / zEnd (port @ site)',y:'endpoint (attachment @ site)'},
+ {id:'ref:committed-rate',nm:'Committed rate',cls:'Requirement',kind:'rate',def:'the guaranteed usable PAYLOAD rate (not line rate)',ex:'"≥ 8 Gbit/s of customer payload, guaranteed"',x:'grade (rate tier — pin to payload)',y:'throughput (CIR)'},
+ {id:'ref:protection',nm:'Protection requirement',cls:'Requirement',kind:'prot',def:'survivability, WITH the failure it must survive named',ex:'"survive any single transport-path failure"',x:'resiliency class',y:'guard'},
+ {id:'ref:latency',nm:'Latency requirement',cls:'Requirement',kind:'lat',def:'an upper bound on one-way delay, as a number',ex:'"one-way ≤ 5 ms"',x:'latencyClass (tier)',y:'sla.latency (number)'},
+ {id:'ref:transport-underlay',nm:'Transport underlay',cls:'Relation',kind:'seam',def:'the transport circuit an IP service rides on — the cross-domain seam',ex:'service A1↔A2 rides circuit ckt-1',x:'circuit (provides it)',y:'underlay (references it)',seam:true},
+ {id:'ref:availability',nm:'Availability requirement',cls:'Requirement',kind:'prot',def:'a lower bound on availability over a period',ex:'"≥ 99.99% monthly"',x:'part of resiliency class',y:'sla.availability'}
+];
+// out-of-scope (each system's internals the other does not need for the exchange)
+const OUT_OF_SCOPE={x:['bearer / wavelength','span / fiber grade','optical power budget'],y:['VPN id / route-target','VLAN & IP addressing','medium grade (fiber class)']};
+let lexAgreed=0;
+function buildLexGrid(){const g=$('lexGrid');g.innerHTML='';
+  LEXICON.forEach((e,i)=>{const d=document.createElement('div');d.className='lexcard'+(e.seam?' seam':'');d.id='lex'+i;
+    d.innerHTML=`<div><span class="lid">${e.id}</span><span class="lkind" id="kind${i}">proposed</span></div><div class="lnm">${e.nm} <span class="lcls">· ${e.cls}</span></div>`+
+      `<div class="lrow" id="def${i}"><span class="lk">def</span> <span class="muted">— to be defined by example —</span></div>`+
+      `<div class="lrow" id="ex${i}"></div>`+
+      `<div class="lrow" id="bind${i}"></div>`;
+    g.appendChild(d);});}
+function constructReference(){lexAgreed=0;
+  LEXICON.forEach((e,i)=>{const d=$('lex'+i);d.classList.add('agreed');
+    $('kind'+i).textContent='agreed by example';
+    $('def'+i).innerHTML=`<span class="lk">def</span> ${e.def}`;
+    $('ex'+i).innerHTML=`<span class="lk">canonical ex</span> ${e.ex}`;
+    lexAgreed++;});
+  const b=$('lexBadge');b.style.display='inline-block';b.textContent=LEXICON.length;
+}
+function bindLexicon(){
+  LEXICON.forEach((e,i)=>{let s='';
+    if(e.x)s+=`<span class="bindX">X ${e.x}</span>`; else s+=`<span class="gapmark">X —</span>`;
+    s+=' · ';
+    if(e.y)s+=`<span class="bindY">Y ${e.y}</span>`; else s+=`<span class="gapmark">Y —</span>`;
+    $('bind'+i).innerHTML=s;});
+}
+
+/* ===== alignment two-pass ===== */
+const ALIGN_CANDS=[
+ {x:'meridian:circuit',y:'cascade:service',verd:'med',vt:'related · cross-layer',vs:'gloss: circuit is the underlay of the service, not the same thing',},
+ {x:'meridian:aEnd/zEnd',y:'cascade:endpoint',verd:'med',vt:'closeMatch · med',vs:'gloss: same demarcation, physical vs logical — co-refer',},
+ {x:'meridian:grade',y:'cascade:grade',verd:'rej',vt:'✗ rejected',vs:'gloss: rate tier vs FIBER MEDIUM class — unrelated, same word',falseCognate:true},
+ {x:'meridian:grade',y:'cascade:throughput',verd:'gap',vt:'refer to pinning',vs:'both about rate, but line-tier vs committed payload — pin it',},
+ {x:'meridian:resiliency',y:'cascade:guard',verd:'gap',vt:'refer to pinning',vs:'both about survivability, but scope differs — pin it',},
+ {x:'meridian:latencyClass',y:'cascade:sla.latency',verd:'gap',vt:'refer to pinning',vs:'tier vs number — pin it',}
+];
+function renderAlign(mode,pass){
+  const body=$('alignBody');
+  let h='';
+  h+='<div class="apass"><h3>Pass 1 · label — candidates by name alone'+(mode==='with'?' <span class="muted" style="font-weight:400">(grounded in the constructed reference)</span>':'')+'</h3>';
+  if(mode==='with'){
+    h+='<div class="corefnote">Because both sides bound to the <b>constructed reference</b> first, the label pass proposes <b>0 false cognates</b>: Meridian <span class="aterm x">grade</span> bound to <span class="bindV">ref:committed-rate</span>, while Cascade <span class="aterm y">grade</span> (fiber class) bound to <b>nothing</b> — it is out of scope. The two "grades" were never equated. The genuine correspondences and the requirements-to-pin are what remain.</div>';
+  } else {
+    ALIGN_CANDS.forEach(c=>{h+=`<div class="arow"><div class="aterm x">${c.x}</div><div class="averd cand"><span class="vt">≈ candidate</span><span class="vs">by label — unconfirmed</span></div><div class="aterm y">${c.y}</div></div>`;});
+  }
+  h+='</div>';
+  if(pass>=2){
+    h+='<div class="apass"><h3>Pass 2 · gloss + example — confirm / reject / refer to pinning</h3>';
+    ALIGN_CANDS.forEach(c=>{
+      const struck=c.verd==='rej'?' struck':'';
+      h+=`<div class="arow"><div class="aterm x${struck}">${c.x}</div><div class="averd ${c.verd}"><span class="vt">${c.vt}</span><span class="vs">${c.vs}</span></div><div class="aterm y${struck}">${c.y}</div></div>`;});
+    h+='<div class="corefnote" style="border-left-color:var(--seam);margin-top:10px">With no standard to disambiguate, the <code>grade</code>/<code>grade</code> cognate is the dangerous one — two unrelated meanings under one word. It is rejected by example. The three "refer to pinning" rows are genuine but <b>ambiguous</b> — they go to the next stage to be pinned, not renamed.</div>';
+    h+='</div>';
+  }
+  body.innerHTML=h;
+  const b=$('alignBadge');b.style.display='inline-block';b.textContent=(mode==='with'?3:ALIGN_CANDS.length);
+}
+
+/* ===== pin requirements (the disambiguation crux) ===== */
+const PINS=[
+ {kind:'rate',req:'Rate',x:'grade G3 (10G LINE rate)',y:'throughput 8000 Mbit/s (CIR)',amb:'Line rate vs committed payload; Gbit tier vs Mbit. Pinned by example — "a 10G-line circuit carries ≤ 9.95G payload". Agreed: committed PAYLOAD ≥ 8G; G3 satisfies (9.95 ≥ 8).',c:'hi'},
+ {kind:'prot',req:'Protection',x:'resiliency "gold" = 1+1 on the bearer',y:'guard "protected" = path protection',amb:'Protect against WHAT? Pinned by example — "cut one fiber span". Agreed: survive a single transport-path failure; gold 1+1 bearer satisfies it. IP-layer guard is Cascade-internal — out of scope for this exchange.',c:'hi'},
+ {kind:'lat',req:'Latency',x:'latencyClass "L-tight" (a tier)',y:'sla.latency = 5 ms (a number)',amb:'Tier vs number. Pinned by example — "L-tight ≡ one-way ≤ 5 ms". Agreed: ≤ 5 ms; L-tight satisfies it.',c:'hi'},
+ {kind:'endp',req:'Endpoint',x:'aEnd = port P3 @ site A1',y:'endpoint = attachment @ A1 (VLAN 100)',amb:'Physical port vs logical attachment; same site? Pinned by co-reference on site + hand-off id. Agreed: the physical hand-off carries the logical attachment at A1.',c:'hi'},
+ {kind:'units',req:'Units & granularity',x:'Gbit/s discrete tiers {G1,G2,G3}',y:'Mbit/s continuous',amb:'Different unit and granularity. Pinned by conversion + the tier ladder. Agreed: Mbit/s ↔ least satisfying tier, with the payload rule above.',c:'hi'}
+];
+function revealPin(idx){const tb=$('pinBody');if(tb.querySelector('.empty'))tb.innerHTML='';
+  const x=PINS[idx];const nm={rate:'rate',prot:'protection',lat:'latency',endp:'endpoint',units:'units'}[x.kind];
+  const tr=document.createElement('tr');tr.style.animation='fade .4s ease';
+  tr.innerHTML=`<td><span class="pill ${x.kind}">${nm}</span></td><td><code>${x.x}</code></td><td><code>${x.y}</code></td><td>${x.amb}</td><td><span class="okmark">pinned</span></td>`;
+  tb.appendChild(tr);const b=$('pinBadge');b.style.display='inline-block';b.textContent=tb.querySelectorAll('tr').length;}
+
+/* ===== endpoint co-reference ===== */
+const COREF=[
+ {el:'Site A1 demarcation',x:'aEnd port P3 @ A1',y:'endpoint attach @ A1 (VLAN 100)',ev:'shared hand-off id HO-A1-3 on the order',c:'hi'},
+ {el:'Site A2 demarcation',x:'zEnd port P7 @ A2',y:'endpoint attach @ A2 (VLAN 100)',ev:'shared hand-off id HO-A2-7 on the order',c:'hi'},
+ {el:'Site A3 demarcation',x:'aEnd port P2 @ A3',y:'endpoint attach @ A3 (VLAN 110)',ev:'hand-off id HO-A3-2 (near-miss vs A2 same metro, resolved by hand-off id)',c:'hi'}
+];
+function renderCoref(){const b=$('corefBody');
+  let h='<div class="corefnote">The reference settled which <b>kinds</b> correspond; this settles which <b>individuals</b> are the same demarcation — a physical hand-off on Meridian\'s side, a logical attachment on Cascade\'s. Evidence: the shared hand-off id on the order, then site, then metro. The A2/A3 same-metro near-miss resolves by hand-off id.</div>';
+  h+='<table><thead><tr><th>Demarcation</th><th>Meridian handle</th><th>Cascade handle</th><th>Matched on</th><th>Conf.</th></tr></thead><tbody>';
+  COREF.forEach(r=>{h+=`<tr><td><b>${r.el}</b></td><td><code>${r.x}</code></td><td><code>${r.y}</code></td><td>${r.ev}</td><td class="conf ${r.c}">HIGH</td></tr>`;});
+  h+='</tbody></table>';b.innerHTML=h;}
+
+/* ===== exchange mappings ===== */
+const TRANS_YX=`Y→X   (Cascade service ▶ Meridian work order)   v1 · for the underlay circuit
+ENDPOINTS (co-referred)
+  endpoint @A1 (VLAN100)  → aEnd  port P3 @ A1   [ref:endpoint]
+  endpoint @A2 (VLAN100)  → zEnd  port P7 @ A2
+REQUIREMENTS (pinned)
+  throughput CIR ≥ 8G     → grade = least tier with payload ≥ 8G = G3   [pinned: payload]
+  guard: protected        → resiliency = gold (1+1 bearer)  [pinned: single transport-path]
+  sla.latency ≤ 5 ms      → latencyClass = L-tight           [pinned: L-tight ≡ ≤5ms]
+SEAM
+  underlay(service)       → circuit(work order)              [ref:transport-underlay]
+OUT OF SCOPE (not sent)  VPN id, VLAN/IP addressing, medium grade
+VERIFY  provision, then READ BACK every pinned requirement`;
+const TRANS_XY=`X→Y   (Meridian circuit event ▶ Cascade service update)   v1
+CIRCUIT STATE → SERVICE
+  circuit id              → underlay handle on the service   [ref:transport-underlay]
+  re-groom bearer λi→λj   → underlay changed (opaque to Cascade), requirements re-checked
+  protection switch       → advisory; resiliency still = gold → protection requirement still met
+  measured delay          → check against pinned latency (≤5ms)
+ROLL-UP
+  all pinned requirements still honoured → service unaffected
+  any not honoured                       → raise to Cascade
+VERIFY  re-read the pinned requirements against the new circuit state`;
+function revealMappings(){$('transYX').textContent=TRANS_YX;$('transXY').textContent=TRANS_XY;
+  const b=$('trBadge');b.style.display='inline-block';b.textContent='✓';b.style.background='var(--result)';b.style.color='#06210f';}
+
+/* ===== traces (worked provisioning + read-back) ===== */
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function addTrace(tr){const box=$('traceBody');if(box.querySelector('.empty'))box.innerHTML='';
+  const d=document.createElement('div');d.className='trace dir'+tr.dir;
+  d.innerHTML=`<div class="th">${tr.title}</div><div class="body">`+
+    `<div class="cell"><h4>inbound (native)</h4><pre>${esc(tr.input)}</pre></div>`+
+    `<div class="cell"><h4>rule firings</h4>${tr.rules.map(r=>`<div class="rule">${esc(r)}</div>`).join('')}</div>`+
+    `<div class="cell"><h4>emitted (native)</h4><pre>${esc(tr.output)}</pre></div></div>`+
+    (tr.readback?`<div class="readback">🔎 <b>read-back:</b> ${tr.readback}</div>`:'');
+  box.appendChild(d);const b=$('traceBadge');b.style.display='inline-block';b.textContent=box.querySelectorAll('.trace').length;}
+
+/* ===== measures ledger ===== */
+const COGCLS={heavy:'cog-heavy',med:'cog-med',cheap:'cog-cheap',mech:'cog-mech'};
+const COGLABEL={heavy:'Heavy',med:'Medium',cheap:'Cheap',mech:'Mechanical'};
+function addMeasure(stage,cog,closed,verify,measure){const tb=$('measBody');if(tb.querySelector('.empty'))tb.innerHTML='';
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td><b>${stage}</b></td><td class="cog"><span class="${COGCLS[cog]}" style="background:${cogBg(cog)};color:${cogFg(cog)}">${COGLABEL[cog]}</span></td><td>${closed}</td><td>${verify}</td><td class="measure">${measure||'—'}</td>`;
+  tb.appendChild(tr);const b=$('measBadge');b.style.display='inline-block';b.textContent=tb.querySelectorAll('tr').length;}
+function cogBg(c){return {heavy:'#3a221c',med:'#3a2f12',cheap:'#0e3a33',mech:'#232b38'}[c];}
+function cogFg(c){return {heavy:'#ff8b6b',med:'#ffd166',cheap:'#36c2a8',mech:'#8da0bf'}[c];}
+
+/* ===== work ledger ===== */
+const LEDGER={
+  without:{turns:17,cands:6,checks:6,verif:'6 gloss+example + 5 requirement pins re-litigated + worked read-back',fc:'1 (grade/grade) — caught by conversation',build:'n/a — no shared reference',scale:'N² · each pair aligned & pinned separately'},
+  with:{turns:11,cands:3,checks:3,verif:'7 categories agreed by example + 5 pins (once, reused) + worked read-back',fc:'1 (grade/grade) — pre-empted (out of scope)',build:'+2 turns up front to construct the reference',scale:'N · construct once, compose pairs'}
+};
+function renderLedger(mode){const b=$('ledgerBody');
+  const row=(k,v,cls)=>`<div class="lr"><span class="k">${k}</span><span class="v ${cls||''}">${v}</span></div>`;
+  const col=(id,d,active)=>`<div class="lc ${id} ${active?'active':''}"><div class="lch"><span>Ad-hoc reference ${id==='on'?'ON':'OFF'}</span>${active?'<span style="font-size:10px">▶ active</span>':''}</div>`+
+    row('Reference build cost',d.build,id==='on'?'':'')+
+    row('Conversation turns',d.turns,id==='on'?'good':'bad')+
+    row('Candidates to check',d.cands,id==='on'?'good':'bad')+
+    row('Requirement pins',id==='on'?'5 · once, reused':'5 · per pair',id==='on'?'good':'bad')+
+    row('grade/grade cognate',d.fc,id==='on'?'good':'bad')+
+    row('Scaling',d.scale)+'</div>';
+  b.innerHTML=col('off',LEDGER.without,mode==='without')+col('on',LEDGER.with,mode==='with');
+  $('ledgerSavings').innerHTML='<b>The honest trade-off with no standard:</b> the reference is not free — it costs a couple of turns to <b>construct</b> up front. But it is built once and reused: the <code>grade</code>/<code>grade</code> cognate is pre-empted (one "grade" is simply out of scope), the five requirements are pinned once against canonical examples rather than re-litigated for every pair, and a third system binds to the same reference (N, not N²). Verification throughout is <b>agreement on canonical examples</b> and a <b>worked read-back</b> — the only ground truth available when nothing standard exists to appeal to.';
+}
+
+/* ===== scaling: bind once, compose pairs ===== */
+const SCALE_MODELS=[
+ {id:'X',nm:'Meridian',color:'#36c2a8'},
+ {id:'Y',nm:'Cascade',color:'#7aa2ff'},
+ {id:'W',nm:'µ-wave access',color:'#ffae57'},
+ {id:'Z',nm:'SD-WAN overlay',color:'#b98bd6'}
+];
+function renderScaling(n){
+  const wrap=$('scaleViz'); if(!wrap) return;
+  const cx=190,cy=150,R=108;
+  const models=SCALE_MODELS.slice(0,n);
+  const pos=models.map((m,i)=>{const a=-Math.PI/2 + i*2*Math.PI/n; return [cx+R*Math.cos(a), cy+R*Math.sin(a)];});
+  let svg=`<svg viewBox="0 0 380 300" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;background:#0a0e16;border:1px solid var(--edge);border-radius:8px">`;
+  for(let i=0;i<n;i++)for(let j=i+1;j<n;j++){
+    svg+=`<line x1="${pos[i][0].toFixed(1)}" y1="${pos[i][1].toFixed(1)}" x2="${pos[j][0].toFixed(1)}" y2="${pos[j][1].toFixed(1)}" stroke="#3a4763" stroke-width="1" stroke-dasharray="3 3"/>`;
+  }
+  models.forEach((m,i)=>{svg+=`<line x1="${cx}" y1="${cy}" x2="${pos[i][0].toFixed(1)}" y2="${pos[i][1].toFixed(1)}" stroke="${m.color}" stroke-width="2.2"/>`;});
+  svg+=`<circle cx="${cx}" cy="${cy}" r="30" fill="#2a1c3a" stroke="#b98bd6" stroke-width="2"/>`;
+  svg+=`<text x="${cx}" y="${cy-2}" fill="#b98bd6" font-size="10" font-weight="700" text-anchor="middle">ad-hoc</text>`;
+  svg+=`<text x="${cx}" y="${cy+10}" fill="#b98bd6" font-size="10" font-weight="700" text-anchor="middle">reference</text>`;
+  models.forEach((m,i)=>{const x=pos[i][0],y=pos[i][1];
+    svg+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="19" fill="#101a24" stroke="${m.color}" stroke-width="2"/>`;
+    svg+=`<text x="${x.toFixed(1)}" y="${(y+4).toFixed(1)}" fill="#e7edf7" font-size="11" font-weight="700" text-anchor="middle">${m.id}</text>`;
+    svg+=`<text x="${x.toFixed(1)}" y="${(y+33).toFixed(1)}" fill="${m.color}" font-size="8.5" text-anchor="middle">${m.nm}</text>`;
+  });
+  svg+=`<text x="190" y="292" fill="#5d6e8c" font-size="9" text-anchor="middle">solid = one binding to the reference · dashed = composed pairwise mapping</text>`;
+  svg+='</svg>';
+  const pairs=n*(n-1)/2;
+  const row=(k,v,cls)=>`<div style="display:flex;justify-content:space-between;gap:12px;padding:5px 0;border-bottom:1px solid var(--edge)"><span style="color:var(--dim)">${k}</span><span style="font-family:var(--mono);font-weight:700;color:${cls==='good'?'var(--result)':cls==='bad'?'var(--warn)':'#e7edf7'}">${v}</span></div>`;
+  wrap.innerHTML='<div class="semhead" style="margin-top:14px">Scaling — bind once, compose pairs (N, not N²)</div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:center">'+
+    '<div>'+svg+'</div>'+
+    '<div style="font-size:12px;color:#d4deef">'+
+    row('Models bound to the reference',n,'good')+
+    row('Bindings authored',n+' · one each','good')+
+    row('Pairwise mappings available',pairs+' · composed')+
+    row('If authored pairwise instead',pairs+' negotiated pairs ('+(n*(n-1))+' directional)','bad')+
+    '<div style="margin-top:9px;color:var(--dim);font-size:11.5px">Meridian and Cascade built the reference; each further system pays <b>one</b> binding, and every pair it needs is <b>composed</b>, not negotiated. The saving is the gap between <b>N</b> bindings and <b>C(N,2)</b> pairs — it widens with every model: at N=10, that is 10 bindings versus 45 pairs.</div>'+
+    '</div></div>';
+}
+
+/* ===== semantic model (shelf hub) ===== */
+const SEM_TYPES=['service','endpoint','committed-rate','protection','latency','transport-underlay','availability'];
+const SEM_SEAM=['transport-underlay'];
+const SEM_SERVICE={
+  id:'svc:A1-A2', label:'Provisioned service — A1 ↔ A2 (IP service over transport circuit)',
+  rels:[['type','service (ref) — Cascade service riding a Meridian circuit'],
+        ['endpoints','endpoint @A1, @A2 (co-referred to hand-offs P3, P7)'],
+        ['committed-rate','≥ 8 Gbit/s payload (pinned: payload, not line)'],
+        ['protection','survive a single transport-path failure (pinned scope)'],
+        ['latency','≤ 5 ms (pinned: L-tight ≡ ≤5ms)'],
+        ['underlay','circuit ckt-1 · G3 · gold 1+1 · bearer λ1'],
+        ['state','provisioned & honoured']],
+  prag:{
+    use:'A provisioning agreement, not a shared schema: what each side must guarantee the other, pinned unambiguously. The bespoke forms (grades, VLANs, bearers) are how each side realizes it, not the meaning.',
+    realm:'Transport realm (Meridian) = {grade, bearer, wavelength, span}. IP realm (Cascade) = {VPN, VLAN, IP, medium grade}. They meet only at the transport-underlay seam; everything else is each side\'s own business.',
+    state:'Requested = the pinned requirements; Provisioned = the circuit that satisfies them, read back; Operational = live state. A re-groom changes the underlay without changing what was requested — the read-back re-confirms it.',
+    auth:'Committed rate, protection scope, latency → the agreed pins (neither side alone). Bearer/wavelength & routing → Meridian. VPN/VLAN/IP → Cascade. Governs whose value is source of truth for each field.',
+    purpose:'Adequacy to purpose: for the exchange, only the pinned requirements and the seam are load-bearing; each side\'s internals are deliberately out of scope. Minimal by design — ad hoc, not universal.',
+    prov:'Every category agreed by a canonical example; every requirement pinned by a canonical instance; asserted by both agents and reconciled; confidence HIGH; PROV-O who/when on every fact.'
+  }
+};
+function renderSemodel(){
+  const b=$('semBody');
+  let h='';
+  h+='<div class="semhead">Types — the ad-hoc reference the two agents constructed (minimal, not universal)</div><div class="semchips">';
+  SEM_TYPES.forEach(t=>{const seam=SEM_SEAM.includes(t);h+=`<span class="semchip${seam?' seam':''}">ref:${t}${seam?' · cross-domain seam':''}</span>`;});
+  h+='</div>';
+  h+='<div class="semhead">Instances — keyed on the order hand-off ids</div>';
+  h+='<div class="rel" style="font-family:var(--mono);font-size:11px;color:#c2d2ee">demarcations @A1,A2,A3 — hand-off ⇄ attachment co-referred by hand-off id</div>';
+  const s=SEM_SERVICE;
+  h+=`<div class="semcard"><h4>${s.label}</h4>`;
+  s.rels.forEach(([k,v])=>{h+=`<div class="rel"><span class="k">${k}:</span> ${v}</div>`;});
+  h+='<div class="semhead" style="margin-top:11px">Pragmatics — carried as first-class annotations</div>';
+  const P=s.prag;
+  const pcard=(cls,lab,val)=>`<div class="prag ${cls}"><div class="pl">${lab}</div><div class="pv">${val}</div></div>`;
+  h+='<div class="pragrid">'+
+     pcard('use','Use · provisioning agreement',P.use)+
+     pcard('realm','Realm · transport vs IP',P.realm)+
+     pcard('state','State · requested / provisioned / operational',P.state)+
+     pcard('auth','Authority · source of truth',P.auth)+
+     pcard('purpose','Purpose · adequacy (minimal)',P.purpose)+
+     pcard('prov','Provenance · meta band',P.prov)+
+     '</div></div>';
+  h+='<div class="semaff">'+
+     '<button onclick="semProject(\'meridian\')">Project → Meridian</button>'+
+     '<button onclick="semProject(\'cascade\')">Project → Cascade</button>'+
+     '<button onclick="semAgentQuery()">Agent query</button></div>';
+  h+='<div id="semOut"></div>';
+  b.innerHTML=h;
+  const bd=$('semBadge');bd.style.display='inline-block';
+}
+function semShow(txt){const o=$('semOut');o.classList.add('show');o.innerHTML=txt;}
+function semProject(which){
+  if(which==='meridian') semShow('project → Meridian (native work order)\n\nwork-order WO-3391\n  circuit ckt-1\n    aEnd: port P3 @ A1   zEnd: port P7 @ A2\n    grade: G3            (payload ≥ 8G — pinned)\n    resiliency: gold     (1+1 bearer — single transport-path)\n    latencyClass: L-tight (≤ 5 ms)\n    bearer: λ1           (Meridian realm)\n\n<span class="qa">Form projected from the model; the pinned meanings drive the grade/resiliency/class choices, and bearer is Meridian-internal.</span>');
+  else if(which==='cascade') semShow('project → Cascade (native service request)\n\nservice SR-7741\n  endpoint @A1 { attach VLAN 100 }   endpoint @A2 { attach VLAN 100 }\n  throughput: CIR 8000 Mbit/s        (committed payload)\n  guard: protected                   (single transport-path)\n  sla.latency: 5 ms\n  underlay: ckt-1                     (opaque handle → Meridian)\n\n<span class="qa">Same meaning, a different bespoke form — the underlay handle is all Cascade needs to know of the transport realm.</span>');
+  else semShow('');
+}
+function semAgentQuery(){
+  semShow('agent query (read directly from the model, no translator)\n\nQ: Is the A1↔A2 committed rate a line rate or a payload rate, and is it met?\nA: Payload rate — pinned. ≥ 8 Gbit/s of customer payload is required; circuit ckt-1 (G3, 10G line) carries ≤ 9.95G payload, so it is met.\n\nQ: What does "protected" protect against here?\nA: A single transport-path failure — pinned by the "cut one fiber span" example. Meridian gold 1+1 on the bearer satisfies it. IP-layer protection is a separate, out-of-scope concern.\n\nQ: If Meridian re-grooms the bearer to another wavelength, does the service change?\nA: No. Bearer is in Meridian\'s realm; the underlay handle is unchanged and the pinned requirements are re-read and still honoured.\n\n<span class="qa">The agent consumes the pinned meaning directly; neither bespoke form was parsed, and the realm boundary is explicit.</span>');
+}
+
+/* ===== A2A envelopes ===== */
+function env(id,from,intent,text,data){return {jsonrpc:"2.0",id:String(id),method:"message/send",
+  params:{message:{role:"agent",messageId:"m-"+id,contextId:"xdomain-provisioning",
+    metadata:{"a2a-profile":"TMF-Agentic-A2A-Telecom",sender:from,intent},
+    parts:[{kind:"text",text},...(data?[{kind:"data",data}]:[])]}}};}
+function addMsg(m){const box=$('bus');const cls=m.from==='X'?'fromX':m.from==='Y'?'fromY':'fromV';
+  const d=document.createElement('div');d.className='msg '+cls;
+  const arrow=m.from==='X'?'Meridian ──▶ Cascade':m.from==='Y'?'Cascade ──▶ Meridian':((m.who||'Agent W')+' ──▶ all');
+  const dcls=m.from==='X'?'x':m.from==='Y'?'y':'v';
+  const json=JSON.stringify(m.body,null,2);
+  d.innerHTML=`<div class="mh"><span class="dir ${dcls}">${arrow}</span><span class="method">${m.body.params.message.metadata.intent}</span></div>`+
+    `<div class="summary">${m.summary}</div><div class="toggle">▸ show A2A envelope</div><pre style="display:none"></pre>`;
+  d.querySelector('pre').textContent=json;
+  const tg=d.querySelector('.toggle'),pre=d.querySelector('pre');
+  tg.onclick=()=>{const open=pre.style.display!=='none';pre.style.display=open?'none':'block';tg.textContent=(open?'▸ show':'▾ hide')+' A2A envelope';};
+  box.appendChild(d);box.scrollTop=box.scrollHeight;}
+
+/* ===== phases + instrumentation meta ===== */
+const PHASES=['Scenario','Plan','Lift · no standard','Construct reference','Bind','Align · label','Align · gloss+ex','Pin requirements','Endpoint co-ref','Construct mapping','Validate · read-back','Provision Y→X','Report X→Y','Scale','Semantic model'];
+const META=[
+ {cog:'mech',mech:'agents agree the method; neither model is standard, neither is merged',verify:'—',measure:''},
+ {cog:'heavy',mech:'each forms an approach with no standard to lean on: lift from instances, CONSTRUCT a reference by example, pin every requirement, validate by worked read-back',verify:'each step\'s expected outcome stated in advance, so a miss is visible',measure:'planned steps: 8'},
+ {cog:'heavy',mech:'recover each implicit ontology from instances + explanations — no standard to recognise, so more weight on examples',verify:'lift-fidelity round-trip per model; confidence tempered, cross-checked by example',measure:'fidelity 100% · X 8 / Y 8 concepts · standard: none'},
+ {cog:'heavy',mech:'negotiate a minimal shared reference: propose categories, define each by a canonical example both can instantiate, agree ids',verify:'each category agreed only when both instantiate the SAME canonical example',measure:'7 categories agreed by example · 1 cross-domain seam'},
+ {cog:'med',mech:'each binds its bespoke terms to the constructed reference; internals flagged out of scope',verify:'binding checked against the reference definition + example',measure:m=>m==='with'?'bound to 7 · out-of-scope: X 3 / Y 3':'skipped — no reference built'},
+ {cog:'cheap',mech:'propose candidate correspondences on names alone',verify:'none yet — candidates unconfirmed by design',measure:m=>m==='with'?'3 candidates (grounded by reference)':'6 candidates · incl. grade/grade cognate'},
+ {cog:'med',mech:'confirm / reject / refer-to-pinning each candidate by definition + example',verify:'grade/grade cognate killed by example (rate tier vs fiber class)',measure:m=>m==='with'?'confirmed by reference · 0 to reject':'confirmed 2 · rejected 1 · to-pin 3'},
+ {cog:'heavy',mech:'pin each provisioning requirement to a canonical example: rate (line vs payload), protection (scope), latency (tier vs number), endpoint, units',verify:'both agents instantiate the SAME canonical instance and agree — the anti-ambiguity check',measure:'5 requirements pinned · 0 residual ambiguity'},
+ {cog:'med',mech:'co-refer hand-offs and attachments from evidence: hand-off id → site → metro',verify:'compare instance handles; confirm the demarcation is the same',measure:'3 demarcations · 1 near-miss resolved by hand-off id'},
+ {cog:'mech',mech:'generate the two directional exchange mappings from the reference, pins and co-references',verify:'generation (validated next by worked read-back)',measure:'Y→X + X→Y mappings emitted'},
+ {cog:'med',mech:'run one order through the exchange; the receiving side provisions and reads the instance back',verify:'read-back: every pinned requirement honoured (not round-trip identity — nothing looks alike)',measure:'5/5 pinned requirements honoured on read-back'},
+ {cog:'mech',mech:'a new Cascade service arrives; apply Y→X; Meridian provisions the underlay circuit',verify:'read-back confirms payload/protection/latency honoured; both views converge',measure:'read-back ✓ · circuit provisioned'},
+ {cog:'mech',mech:'a Meridian bearer re-groom + protection event; apply X→Y; Cascade re-checks the service',verify:'pinned requirements re-read against new circuit state; advisory if margin moves',measure:'requirements still honoured · underlay changed · advisory logged'},
+ {cog:'cheap',mech:'further bespoke systems bind once each to the constructed reference; every pairwise mapping is composed, not authored',verify:'—',measure:'4 models · 4 bindings · 6 pairwise mappings composed (would be 6 authored)'},
+ {cog:'med',mech:'assemble the form-independent semantic model (semantics + pragmatics), anchored to the ad-hoc reference, with provenance',verify:'project to either bespoke form and read back; answer agent queries directly',measure:'1 shelf model · ad hoc, not universal · projects to both forms'}
+];
+const PHASE_NOTES=[
+ ["Stage 0 · Scenario","Two bespoke systems, <b>no standard in common</b>, in <b>different domains</b>. <b>Meridian</b> provisions transport circuits; <b>Cascade</b> provisions IP/VPN services that ride those circuits. They must exchange provisioning requirements <b>unambiguously</b>, with nothing standard to appeal to."],
+ ["Stage 1 · Plan","<b>Planning is cognition.</b> With no standard, each agent plans to lift from instances, <b>construct a shared reference by example</b>, <b>pin every requirement</b>, and validate by a <b>worked provisioning read back</b>. They will re-plan on ambiguity."],
+ ["Stage 2 · Lift · no standard","Each agent recovers the ontology its model only implies — and here there is <b>no standard to recognise</b>, so it leans harder on instances and explanations, with confidence tempered. Verified by a lift-fidelity round-trip. Open <b>Knowledge graphs</b>."],
+ ["Stage 3 · Construct reference","The agents <b>build</b> a minimal shared reference between themselves: propose the categories the exchange needs, and agree each only when both can instantiate the <b>same canonical example</b>. It is ad hoc, not universal. Open <b>Ad-hoc reference</b>."],
+ ["Stage 4 · Bind","Each binds its bespoke terms to the constructed reference. Meridian's bearer/wavelength and Cascade's VPN/VLAN/IP are flagged <b>out of scope</b> — the other side does not need them for the exchange."],
+ ["Stage 5 · Align · label","Cheap candidates by name alone. Grounded by the reference this is small; <b>without</b> it, the label pass proposes six candidates — including the dangerous <code>grade</code>/<code>grade</code> cognate, two unrelated meanings under one word. Open <b>Alignment</b>."],
+ ["Stage 6 · Align · gloss + example","The definition and example decide. The <code>grade</code> cognate is <b>rejected</b> (rate tier vs fiber class); three genuine-but-ambiguous pairs are <b>referred to pinning</b>, not renamed."],
+ ["Stage 7 · Pin requirements","The crux of unambiguous exchange. Each requirement is <b>pinned to a canonical example</b> both agents instantiate: rate (line vs payload), protection (against what?), latency (tier vs number), endpoint, units. Open <b>Pin requirements</b>."],
+ ["Stage 8 · Endpoint co-reference","A separate problem: which physical hand-off and which logical attachment are the <b>same demarcation</b> — the IP-over-transport seam. Settled from evidence: hand-off id → site → metro. Open <b>Knowledge graphs &amp; instances</b>."],
+ ["Stage 9 · Construct mapping","The agents generate the two directional exchange mappings from the reference, the pins and the co-references. Cross-domain, so not inverses. Open <b>Exchange mappings</b>."],
+ ["Stage 10 · Validate · read-back","Run one order through and <b>read the provisioned instance back</b>: is every pinned requirement honoured? All five → yes. This is the right test with no standard — <b>not</b> round-trip identity. Open <b>Provisioning &amp; read-back</b>."],
+ ["Stage 11 · Provision (Y→X)","A new Cascade service — A1↔A3, CIR ≥ 8G payload, protected, ≤5ms. Apply Y→X: Meridian provisions circuit ckt-2 (G3, gold, L-tight, bearer λ2) and reads it back. Watch both views converge. Open <b>Provisioning &amp; read-back</b>."],
+ ["Stage 12 · Report (X→Y)","Meridian re-grooms the bearer under A1↔A2 (λ1→λ1b) after a fault and protection-switches. Apply X→Y: Cascade re-reads the pinned requirements — still honoured; the underlay changed opaquely, an advisory is logged. Open <b>Provisioning &amp; read-back</b>."],
+ ["Stage 13 · Scale","Two more bespoke systems — a microwave-access provisioner, then an SD-WAN overlay — each bind <b>once</b> to the constructed reference. Every pairwise mapping is <b>composed</b>, not authored: four models, four bindings, six pairs. Watch the hub grow in the <b>Work ledger</b> — the gap between N and C(N,2) is the saving."],
+ ["Stage 14 · Semantic model","The artefact on the <b>shelf</b>: the reconciled provisioning meaning, lifted clear of both bespoke forms, with realm and authority pragmatics and provenance. <b>Ad hoc, not universal.</b> An agent consumes it directly; the two forms are projections. Open <b>Semantic model</b>."]
+];
+
+/* ===== the scripted timeline (mode-aware) ===== */
+const KG_X=`Meridian (bespoke transport)
+ ├─ work order
+ │   └─ circuit
+ │       ├─ aEnd / zEnd  (port @ site)
+ │       ├─ grade        (rate tier: G1,G2,G3)
+ │       ├─ resiliency   (gold | silver)
+ │       ├─ latencyClass (L-tight | L-std)
+ │       └─ bearer       (wavelength / fiber)   ← realm-internal
+ └─ span / optical budget                        ← realm-internal`;
+const KG_Y=`Cascade (bespoke IP/VPN)
+ ├─ service request
+ │   ├─ endpoint (attachment @ site, VLAN)
+ │   ├─ throughput (CIR, Mbit/s)
+ │   ├─ guard      (protection)
+ │   ├─ sla        (latency, availability)
+ │   └─ underlay   (opaque transport handle)     ← the seam
+ └─ VPN id / VLAN / IP addressing                 ← realm-internal
+    medium grade (fiber class)                    ← realm-internal, DISTINCT from Meridian "grade"`;
+
+const STEPS=[
+/* 0 scenario */
+{p:0,x:['think','Boot. I am Meridian, a home-grown transport OSS. I provision circuits: aEnd/zEnd, grade, resiliency, latencyClass, bearer. No standard model — my own.']},
+{p:0,y:['think','Boot. I am Cascade, a home-grown IP/VPN controller. I provision services: endpoints, throughput, guard, SLA, and an opaque underlay handle. Also no standard model.']},
+{p:0,y:['action','Goal: I must order the transport my services ride on, and state my requirements so you provision exactly what I mean — with no standard between us.'],
+  msg:{from:'Y',intent:'session-open',summary:'Open an A2A session; propose to find common ground by conversation — no standard, no shared schema.',body:env(101,'Cascade','session-open','Opening a session. My services need transport underlays from you. We have no standard in common; propose we build just enough shared meaning to exchange provisioning requirements unambiguously.',{proposal:'build-common-ground'})}},
+{p:0,x:['action','Agreed. Our models are bespoke and in different domains; we will not merge them. We will construct only what the exchange needs, and pin it by example.'],
+  msg:{from:'X',intent:'session-ack',summary:'Acknowledge; construct a minimal shared reference, pin requirements by example.',body:env(102,'Meridian','session-ack','Acknowledged. Bespoke models, different domains, not merged. Let us construct a minimal shared reference and pin each requirement to a canonical example so nothing is misread.',{ack:true})}},
+/* 1 plan */
+{p:1,y:['plan','Planning: (1) lift my model from instances — no standard to name; (2) CONSTRUCT a shared reference with you, by example; (3) bind; (4) align, then (5) PIN every requirement to a canonical example; (6) co-refer endpoints; (7) validate by a worked order + read-back.'],
+  msg:{from:'Y',intent:'method-proposal',summary:'Propose: lift, construct reference by example, bind, align, pin requirements, co-refer, worked read-back.',body:env(103,'Cascade','method-proposal','Method: lift from instances; construct a shared reference by canonical example; bind; align; pin every requirement to an example; co-refer endpoints; validate by a worked provisioning + read-back.',{steps:['lift','construct-ref','bind','align','pin','endpoints','read-back']})}},
+{p:1,x:['plan','Same shape. Because there is no standard, I will treat a category as agreed only when we both instantiate the SAME example, and I will read back every order to prove the requirements landed.'],
+  msg:{from:'X',intent:'method-ack',summary:'Agree; category agreed only on a shared example; read back every order.',body:env(104,'Meridian','method-ack','Agreed. A category counts as shared only when we both instantiate the same canonical example. I will read back every provisioned order against the pinned requirements.',{ack:true})}},
+{p:1,y:['plan','Ad-hoc reference is ON — we build the shared reference first, so terms ground to it and the grade/grade trap is pre-empted.'],mode:'with'},
+{p:1,y:['plan','Ad-hoc reference is OFF — no shared reference. I align to your model directly and pin each requirement per pair. Expect the grade/grade cognate to bite, and more re-litigation.'],mode:'without'},
+/* 2 lift */
+{p:2,x:['action','Lifting: recovering entities and relations my schema only implies. No standard to recognise — I lean on my instances and explain each with an example.'],kg:{side:'x',html:KG_X},
+  msg:{from:'X',intent:'model-disclosure',summary:'Disclose the (non-standard) Meridian model and lifted-ontology sketch, with examples.',body:env(105,'Meridian','model-disclosure','My model is bespoke: work order → circuit with aEnd/zEnd, grade, resiliency, latencyClass, bearer. No standard. Sharing my lifted sketch and an example circuit.',{framework:'bespoke (Meridian)',ontology:'workorder/circuit/aEnd-zEnd/grade/resiliency/latencyClass/bearer'})}},
+{p:2,x:['result','Lift-fidelity round-trip clean, but I hold confidence lower than usual — with no standard, meaning rests on the examples. 8 concepts.']},
+{p:2,y:['action','Lifting mine similarly, from instances and explanations. Note two of my terms are internal and one word — "grade" — I use for fiber class, unrelated to any rate.'],kg:{side:'y',html:KG_Y},
+  msg:{from:'Y',intent:'model-disclosure',summary:'Disclose the (non-standard) Cascade model; flag "grade" means fiber medium class, not rate.',body:env(106,'Cascade','model-disclosure','My model is bespoke: service request with endpoints, throughput, guard, SLA, underlay. Caution: my "grade" is a fiber medium class, internal — not a rate. Sharing my lifted sketch.',{framework:'bespoke (Cascade)',ontology:'service/endpoint/throughput/guard/sla/underlay',caution:'grade=fiber-class'})}},
+{p:2,y:['result','Lift-fidelity round-trip clean. 8 concepts distilled.']},
+/* 3 construct reference */
+{p:3,y:['action','No reference exists to adopt — so we build one. Proposing the minimal categories the exchange needs, each to be agreed by a canonical example.'],mode:'with',lexbuild:true},
+{p:3,x:['result','Agreed, one by one, only where we both instantiate the same example. Seven categories, including the cross-domain seam: transport-underlay. It is deliberately minimal — ad hoc, not universal.'],mode:'with'},
+{p:3,msg:{from:'X',intent:'reference-constructed',summary:'Shared ad-hoc reference constructed by example — 7 categories, incl. the transport-underlay seam.',body:env(1,'Meridian','reference-constructed','We built a shared reference: service, endpoint, committed-rate, protection, latency, availability, and the transport-underlay seam. Each agreed by a canonical example. Ad hoc for this exchange, not universal.',{categories:7,seam:'transport-underlay'})},mode:'with'},
+{p:3,y:['warn','Ad-hoc reference OFF — no reference built. Proceeding to align model-to-model.'],mode:'without'},
+/* 4 bind */
+{p:4,y:['action','Binding my bespoke terms to the constructed reference; flagging my internals — VPN, VLAN, IP, and my fiber "grade" — as out of scope.'],mode:'with',lexbind:true},
+{p:4,x:['result','Likewise. My bearer, wavelength and optical budget are out of scope for the exchange. Bound to 7; the grade/grade trap cannot arise — my grade→committed-rate, your grade→nothing.'],mode:'with'},
+/* 5 align label */
+{p:5,y:['action','Alignment, pass 1 — label. Proposing candidates on names alone.'],align:{pass:1}},
+{p:5,x:['think','Grounded by the reference, the label pass has little to add and proposes no false cognate.'],mode:'with'},
+{p:5,x:['think','Label matching over- and under-proposes. Six candidates — and the trap: your "grade" and my "grade" label-match, though they mean unrelated things.'],mode:'without'},
+/* 6 align gloss */
+{p:6,x:['action','Pass 2 — gloss + example. Deciding each candidate by its definition and a canonical example.'],align:{pass:2}},
+{p:6,x:['result','circuit↔service related but cross-layer (I underlie you). aEnd↔endpoint: same demarcation, physical vs logical — co-refer.'],mode:'without'},
+{p:6,x:['replan','grade≈grade REJECTED — mine is a rate tier, yours a fiber class. Unrelated. Re-plan: three genuine pairs (rate, protection, latency) are ambiguous — pin them, do not rename.'],mode:'without'},
+{p:6,y:['result','Under the reference these were settled at bind time; the grade trap never arose. The three ambiguous requirements go to pinning.'],mode:'with'},
+/* 7 pin */
+{p:7,y:['action','Pinning the requirements — the part that makes the exchange unambiguous. Rate first: I mean committed payload, you quote a line-rate tier.'],pins:[0,4]},
+{p:7,x:['result','Pinned by example: a 10G-line circuit carries ≤ 9.95G payload, so G3 satisfies your CIR ≥ 8G payload. Units reconciled: Mbit/s ↔ the tier ladder.']},
+{p:7,y:['action','Protection next: "protected" against what? And latency — your tier vs my number.'],pins:[1,2]},
+{p:7,x:['replan','Pinned by example: "cut one fiber span" → survive a single transport-path failure; my gold 1+1 bearer satisfies it. Your IP-layer guard is your own concern, out of scope. L-tight ≡ ≤ 5 ms.']},
+{p:7,y:['result','Endpoints pinned to the physical hand-off. Five requirements pinned, each to a shared canonical instance — no residual ambiguity.'],pins:[3]},
+/* 8 endpoint coref */
+{p:8,y:['action','Type-level meaning is pinned. Now which individual hand-off is which attachment — from evidence, not names.'],coref:true},
+{p:8,x:['result','Three demarcations co-referred by the shared hand-off id on the order; the A2/A3 same-metro near-miss resolves by hand-off id.']},
+/* 9 construct mapping */
+{p:9,y:['action','Enough is pinned. Generating the two directional exchange mappings from the reference, the pins and the co-references.'],trans:true},
+{p:9,x:['result','Both mappings emitted, v1. Y→X turns a service request into a work order for the underlay; X→Y turns a circuit event into a service update. Cognition spent here, once.']},
+{p:9,msg:{from:'X',intent:'mapping-agreement',summary:'Artefact agreed: Y→X + X→Y exchange mappings, reference-anchored, pins embedded, v1.',body:env(2,'Meridian','mapping-agreement','Mediation complete. 7 reference categories, 5 pins, 3 co-references, 0 escalations. Mappings carry the pinned meanings and are validated by worked read-back.',{artefact:'mapping-pair@v1',pins:5})}},
+/* 10 validate read-back */
+{p:10,y:['action','Validate: send the existing A1↔A2 order through and read the provisioned circuit back — is every pinned requirement honoured?']},
+{p:10,x:['result','Read-back: G3 payload 9.95G ≥ 8G ✓ · gold 1+1 survives single transport-path ✓ · L-tight ≤ 5 ms ✓ · hand-offs P3/P7 = your attachments ✓. All five honoured. Not a round trip — a satisfaction read-back.'],
+  trace:{dir:'YX',title:'Validate · A1↔A2 — worked order, read back',
+   input:`service SR-7741 (Cascade)\n endpoint@A1 VLAN100 · endpoint@A2 VLAN100\n throughput CIR 8000 Mbit/s\n guard protected · sla.latency 5 ms`,
+   rules:['endpoints → aEnd P3@A1, zEnd P7@A2 (co-referred)','CIR≥8G payload → grade G3 (payload 9.95G ≥ 8G) [pinned]','guard protected → resiliency gold (single transport-path) [pinned]','sla.latency ≤5ms → latencyClass L-tight [pinned]','underlay → circuit ckt-1'],
+   output:`work-order WO-7741 (Meridian)\n circuit ckt-1 · aEnd P3@A1 · zEnd P7@A2\n grade G3 · resiliency gold · L-tight\n bearer λ1`,
+   readback:'payload 9.95G ≥ 8G <b>✓</b> · gold 1+1 = single-path survivable <b>✓</b> · L-tight ≤5ms <b>✓</b> · P3/P7 ⇄ your attachments <b>✓</b> — <b>all 5 pinned requirements honoured</b>'}},
+{p:10,x:['result','Mappings accepted. Cognition leaves the data path; runtime is deterministic.']},
+/* 11 provision Y->X */
+{p:11,y:['action','New service: A1↔A3, CIR ≥ 8G payload, protected (single transport-path), ≤ 5 ms. Emitting my native service request.']},
+{p:11,msg:{from:'Y',intent:'service-request',summary:'service SR-8802: A1↔A3, CIR ≥ 8G payload, protected, ≤5ms, VLAN 110.',body:env(3,'Cascade','service-request','New service SR-8802: endpoints @A1 and @A3 (VLAN 110), throughput CIR 8000 Mbit/s (payload), guard protected, sla.latency 5 ms, underlay to be provisioned.',{service:{id:'SR-8802',endpoints:['A1','A3'],cir:'8000Mbit/s',guard:'protected',latency:'5ms'}})},
+  trace:{dir:'YX',title:'Provision · Y→X · Meridian applies the exchange mapping',
+   input:`service SR-8802 (Cascade)\n endpoint@A1 · endpoint@A3 (VLAN110)\n CIR 8000 Mbit/s · protected · 5 ms`,
+   rules:['endpoints → aEnd P3@A1, zEnd P2@A3 (co-referred)','CIR≥8G payload → grade G3 [pinned payload rule]','protected → resiliency gold (single transport-path)','≤5ms → latencyClass L-tight','provision circuit ckt-2, bearer λ2, route A1▸R1▸R3▸A3'],
+   output:`work-order WO-8802 (Meridian)\n circuit ckt-2 · aEnd P3@A1 · zEnd P2@A3\n grade G3 · resiliency gold · L-tight\n bearer λ2 · route A1▸R1▸R3▸A3`,
+   readback:'payload 9.95G ≥ 8G <b>✓</b> · gold single-path survivable <b>✓</b> · L-tight ≤5ms (measured 3.6ms) <b>✓</b> · P3/P2 ⇄ attachments <b>✓</b> — <b>provisioned, all honoured</b>'},
+  x:['result','Provisioned circuit ckt-2 on bearer λ2, read back clean.']},
+{p:11,addService:{id:'svc1',label:'A1 ↔ A3',color:SVC_COLORS.svc1,
+  ip:{cir:'CIR ≥ 8G',guard:'protected',lat:'≤ 5 ms',vlan:'VLAN 110'},
+  ckt:{id:'ckt-2',grade:'G3 (10G)',resil:'gold (1+1)',bearer:'λ2',route:'A1▸R1▸R3▸A3'},
+  status:'ok',otnPair:['A1','A3'],optPath:['R1','R3']},
+  y:['result','Reflected. Both views carry A1↔A3, provisioned and honoured. ✓']},
+/* 12 report X->Y */
+{p:12,x:['action','An operational change on ckt-1 under A1↔A2: a fault on bearer λ1. I re-groom to λ1b and protection-switches hold. Reporting the circuit event.']},
+{p:12,msg:{from:'X',intent:'circuit-event',summary:'ckt-1 re-groomed λ1→λ1b after a fault; protection held. Underlay changed opaquely.',body:env(4,'Meridian','circuit-event','ckt-1 (under A1↔A2) had a fault on bearer λ1; re-groomed to λ1b, 1+1 protection held. The underlay handle is unchanged; grade/resiliency/latencyClass unchanged.',{circuit:'ckt-1',event:'re-groom+switch',bearer:'λ1→λ1b'})},
+  trace:{dir:'XY',title:'Report · X→Y · Cascade applies the exchange mapping',
+   input:`circuit-event ckt-1 (Meridian)\n fault on bearer λ1 → re-groom λ1b\n 1+1 protection held\n grade/resiliency/latencyClass unchanged`,
+   rules:['circuit id ckt-1 → underlay handle on service A1↔A2 (unchanged)','bearer λ1→λ1b → underlay changed opaquely (Meridian realm)','resiliency still gold → protection requirement still honoured','re-read pinned: payload ✓ · single-path ✓ · latency re-measured ≤5ms ✓'],
+   output:`service SR-7741 (Cascade)\n underlay: ckt-1 (bearer changed, opaque)\n requirements: all still honoured\n advisory: transport re-groom event logged`,
+   readback:'payload <b>✓</b> · protection (single-path) <b>✓</b> · latency ≤5ms <b>✓</b> — <b>service unaffected; advisory logged</b>'},
+  y:['result','Re-read the pinned requirements against the new circuit state — all still honoured. The bearer change is your realm; I log an advisory, no service change.']},
+{p:12,setStatus:{id:'svc0',status:'margin'},y:['result','Service gauge for A1↔A2 goes amber: honoured, with a transport-event advisory. No breach, no re-order.']},
+/* 13 scale */
+{p:13,v:['plan','A third bespoke system (a microwave-access provisioner) joins. It binds once to the reference we constructed.']},
+{p:13,msg:{from:'V',who:'Agent W (µ-wave)',intent:'reference-binding',summary:'Agent W (microwave access) binds to the constructed reference — one binding, reused against X and Y.',body:env(5,'Agent-W','reference-binding','Bound my microwave-access terms to your constructed reference: link→service, tail→endpoint, capacity→committed-rate, resilience→protection. One binding, reused.',{bound:6})},ledger:true,scale:3},
+{p:13,x:['result','W bound with a single binding set. W↔X and W↔Y compose from it — not authored. Three models, three bindings, three pairs.']},
+{p:13,v:['plan','And a fourth — an SD-WAN overlay controller — binds once too, to the same reference.']},
+{p:13,msg:{from:'V',who:'Agent Z (SD-WAN)',intent:'reference-binding',summary:'Agent Z (SD-WAN overlay) binds to the constructed reference — one more binding, all pairs compose.',body:env(6,'Agent-Z','reference-binding','Bound my overlay terms to your constructed reference: overlay-path→service, site-attach→endpoint, class→committed-rate/latency, failover→protection. One binding.',{bound:5})},scale:4},
+{p:13,y:['result','Four models now, four bindings — and all six pairwise mappings are composed, none authored. Authoring pairwise would have cost six negotiated pairs; the gap widens with every model. Ad hoc, built once, reused — N, not N². See the Work ledger.']},
+/* 14 semantic model */
+{p:14,x:['think','Everything we pinned is meaning — the requirements, the seam, who owns what — lifted clear of both bespoke forms. Rather than discard it, we keep it: the semantic model.']},
+{p:14,y:['action','Assembling the form-independent semantic model — semantics and pragmatics both, anchored to the reference we constructed, with provenance on every fact.'],semodel:true},
+{p:14,x:['result','Pragmatics carried as first-class annotations: use (a provisioning agreement), realm (transport vs IP — meeting only at the seam), state (requested/provisioned/operational), authority (source of truth per field), adequacy, provenance.']},
+{p:14,y:['result','The two exchange mappings are now just projections from this hub; a new bespoke system binds to it (N, not N²); and a reasoning agent consumes it directly. Ad hoc, not universal — the artefact on the shelf.']}
+];
+
+/* ===== player ===== */
+let MODE='with', cursor=0, playing=false, timer=null, activeSteps=[];
+function stepsForMode(){return STEPS.filter(s=>!s.mode||s.mode===MODE);}
+
+function setPhase(p){
+  PHASES.forEach((_,i)=>{const e=$('ph'+i);if(!e)return;
+    let c='phase'+(i<p?' done':i===p?' active':'');
+    if((i===3||i===4)&&MODE==='without')c+=' skip';
+    e.className=c;});
+  const n=PHASE_NOTES[p];if(n){$('stageLab').innerHTML=n[0].split(' · ')[0];$('stageTxt').innerHTML=n[1];}
+  const m=META[p];if(m){
+    $('cogBadge').className='cogbadge '+COGCLS[m.cog];$('cogBadge').textContent=COGLABEL[m.cog];
+    const lvl={heavy:3,med:2,cheap:1,mech:0}[m.cog];const kind={heavy:'h',med:'m',cheap:'c',mech:'c'}[m.cog];
+    $('cogMeter').innerHTML=[0,1,2].map(i=>`<i class="${i<lvl?'on '+kind:''}"></i>`).join('');
+    $('mechTxt').textContent=m.mech;
+    $('verifyTxt').textContent=m.verify;
+    const meas=typeof m.measure==='function'?m.measure(MODE):m.measure;
+    $('measureTxt').textContent=meas;
+  }
+}
+function addLine(where,kind,text){const box=$(where);const d=document.createElement('div');d.className='line '+kind;d.textContent=text;box.appendChild(d);box.scrollTop=box.scrollHeight;}
+let measuresLogged={};
+function logMeasureFor(p){ if(measuresLogged[p])return; measuresLogged[p]=true;
+  const m=META[p];const meas=typeof m.measure==='function'?m.measure(MODE):m.measure;
+  const nm=PHASES[p];
+  if(p===0)return;
+  addMeasure(p+' · '+nm,m.cog,m.mech,m.verify,meas);
+}
+function pulse(){['svgX','svgY'].forEach(id=>{const e=$(id);e.style.transition='filter .15s';e.style.filter='brightness(1.5)';setTimeout(()=>e.style.filter='',260);});}
+function updateCounter(){$('counter').textContent=`step ${Math.min(cursor,activeSteps.length)} / ${activeSteps.length} · reference ${MODE==='with'?'ON':'OFF'}`;}
+
+function activateTab(name){
+  document.querySelectorAll('.tabbtn').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tabpane').forEach(x=>x.classList.remove('active'));
+  const btn=document.querySelector('.tabbtn[data-tab="'+name+'"]');if(btn)btn.classList.add('active');
+  const pane=$('pane-'+name);if(pane)pane.classList.add('active');
+}
+function flashEl(el,cls){cls=cls||'flash';if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),1700);}
+function focusForStep(s){
+  let tab=null,target=null,col=null;
+  if(s.semodel) tab='semodel';
+  else if(s.addService||s.setStatus) target=$('topoBox');
+  else if(s.trace) tab='trace';
+  else if(s.ledger) tab='ledger';
+  else if(s.scale) tab='ledger';
+  else if(s.trans) tab='tr';
+  else if(s.coref) tab='kg';
+  else if(s.pins) tab='pin';
+  else if(s.align) tab='align';
+  else if(s.lexbuild||s.lexbind) tab='lex';
+  else if(s.kg) tab='kg';
+  else if(s.msg){ target=$('agentsRow'); col=$('bus').closest('.col'); }
+  else { target=$('agentsRow'); col = s.x?$('logX').closest('.col') : s.y?$('logY').closest('.col') : s.v?$('bus').closest('.col') : null; }
+  if(tab){ activateTab(tab); target=$('tabsBox'); }
+  if(target&&target.scrollIntoView) target.scrollIntoView({behavior:'smooth',block:'center'});
+  if(col) flashEl(col,'flashcol'); else flashEl(target,'flash');
+}
+
+function applyStep(s){
+  setPhase(s.p);
+  if(s.x)addLine('logX',s.x[0],s.x[1]);
+  if(s.y)addLine('logY',s.y[0],s.y[1]);
+  if(s.v)addLine('bus','plan','Agent W · '+s.v[1]);
+  if(s.msg)addMsg(s.msg);
+  if(s.lexbuild)constructReference();
+  if(s.lexbind)bindLexicon();
+  if(s.align)renderAlign(MODE,s.align.pass);
+  if(s.pins)s.pins.forEach(revealPin);
+  if(s.kg)$(s.kg.side==='x'?'kgX':'kgY').textContent=s.kg.html;
+  if(s.coref)renderCoref();
+  if(s.trans)revealMappings();
+  if(s.trace)addTrace(s.trace);
+  if(s.ledger)renderLedger(MODE);
+  if(s.scale)renderScaling(s.scale);
+  if(s.semodel)renderSemodel();
+  if(s.addService){state.services.push(s.addService);renderTopo();pulse();}
+  if(s.setStatus){const sv=state.services.find(x=>x.id===s.setStatus.id);if(sv){sv.status=s.setStatus.status;if(s.setStatus.bearer&&sv.ckt)sv.ckt.bearer=s.setStatus.bearer;}renderTopo();pulse();}
+  logMeasureFor(s.p);
+  updateCounter();
+  focusForStep(s);
+}
+function step(){if(cursor>=activeSteps.length){stop();return;}applyStep(activeSteps[cursor]);cursor++;
+  if(cursor>=activeSteps.length){setPhase(PHASES.length-1);renderLedger(MODE);$('play').disabled=true;$('step').disabled=true;stop();}}
+function play(){if(playing){stop();return;}playing=true;$('play').textContent='⏸ Pause';
+  const tick=()=>{if(!playing)return;step();if(cursor<activeSteps.length)timer=setTimeout(tick,+$('speed').value);else stop();};tick();}
+function stop(){playing=false;clearTimeout(timer);$('play').textContent='▶ Play';}
+
+function buildPhases(){const c=$('phases');c.innerHTML='';PHASES.forEach((p,i)=>{const d=document.createElement('div');d.className='phase';d.id='ph'+i;d.textContent=i+'. '+p;c.appendChild(d);});}
+function reset(){stop();cursor=0;measuresLogged={};lexAgreed=0;
+  state={services:JSON.parse(JSON.stringify(INITIAL_SERVICES))};
+  activeSteps=stepsForMode();
+  ['logX','logY','bus'].forEach(id=>$(id).innerHTML='');
+  buildLexGrid();$('lexBadge').style.display='none';
+  $('alignBody').innerHTML='<div class="empty">No alignment yet — press Play.</div>';$('alignBadge').style.display='none';
+  $('pinBody').innerHTML='<tr><td colspan="5" class="empty">No requirements pinned yet.</td></tr>';$('pinBadge').style.display='none';
+  $('transYX').innerHTML='<span class="muted">— generated after mediation —</span>';$('transXY').innerHTML='<span class="muted">— generated after mediation —</span>';$('trBadge').style.display='none';
+  $('traceBody').innerHTML='<div class="empty">No provisioning exchanges yet.</div>';$('traceBadge').style.display='none';
+  $('semBody').innerHTML='<div class="empty">Assembled at the final stage — press Play, or jump with Step.</div>';$('semBadge').style.display='none';
+  $('measBody').innerHTML='<tr><td colspan="5" class="empty">Fills in as stages complete.</td></tr>';$('measBadge').style.display='none';
+  $('kgX').innerHTML='<span class="muted">— not yet lifted —</span>';$('kgY').innerHTML='<span class="muted">— not yet lifted —</span>';
+  $('corefBody').innerHTML='<div class="empty">Endpoints co-refer in stage 8.</div>';
+  $('lexModeNote').innerHTML=MODE==='with'?'':'<b style="color:var(--warn)">Reference OFF: no shared reference is built; alignment runs model-to-model and the grade/grade cognate is caught by conversation.</b>';
+  renderLedger(MODE);$('scaleViz').innerHTML='';
+  $('play').disabled=false;$('step').disabled=false;
+  buildPhases();setPhase(0);renderTopo();updateCounter();
+}
+function setMode(on){MODE=on?'with':'without';
+  $('modeSw').className='toggle-sw'+(on?' on':'');
+  $('modeVal').className='modeval'+(on?' on':' off');$('modeVal').textContent=on?'ON':'OFF';
+  reset();
+}
+
+/* wiring */
+$('tabbar').addEventListener('click',e=>{const b=e.target.closest('.tabbtn');if(!b)return;
+  document.querySelectorAll('.tabbtn').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.tabpane').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');$('pane-'+b.dataset.tab).classList.add('active');});
+$('play').onclick=play;$('step').onclick=()=>{stop();step();};$('reset').onclick=reset;
+$('modeSw').onclick=()=>setMode(MODE!=='with');
+$('aboutToggle').onclick=()=>{const b=$('aboutBody');const c=b.classList.toggle('collapsed');$('aboutToggle').textContent=c?'Show ▼':'Hide ▲';};
+
+/* init + optional auto-advance for screenshots: ?mode=without&auto=N */
+(function(){const q=new URLSearchParams(location.search);
+  if(q.get('mode')==='without'){MODE='without';$('modeSw').className='toggle-sw';$('modeVal').className='modeval off';$('modeVal').textContent='OFF';}
+  reset();
+  const a=parseInt(q.get('auto'),10);if(a>0){for(let k=0;k<a&&cursor<activeSteps.length;k++)step();}
+})();
+</script>
+</body>
+</html>

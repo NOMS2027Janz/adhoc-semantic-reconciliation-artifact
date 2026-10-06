@@ -1,0 +1,254 @@
+{
+  "system": "Agent T",
+  "dialect": "ONF TAPI",
+  "modules": [
+    "tapi-topology@2018-12-10 (TR-547)",
+    "tapi-connectivity"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-nano from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_tapi_teas, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_tapi_teas/model_a*.json.",
+  "concepts": [
+    {
+      "id": "t.node",
+      "label": "node",
+      "synonyms": [
+        "forwarding domain"
+      ],
+      "kind": "node",
+      "gloss": "A node is a forwarding element that belongs to a topology and hosts termination points and links.",
+      "example": "R1 is a node in the topology 'the OTN-over-optical domain' (t.topo).",
+      "ref": "forwarding-node",
+      "relations": [
+        {
+          "rel": "part-of",
+          "target": "t.topo"
+        }
+      ],
+      "instances": [
+        "R1",
+        "R2",
+        "R3",
+        "A1",
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "id": "t.ltp",
+      "label": "link-termination-point",
+      "synonyms": [
+        "owned-node-edge-point",
+        "nep"
+      ],
+      "kind": "termination",
+      "gloss": "A link-termination-point is a termination point on a node where a link ends and attaches.",
+      "example": "nep-R1-R2 is a link-termination-point on node R1 that terminates the link link-R1-R2.",
+      "ref": "link-termination",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "t.node"
+        },
+        {
+          "rel": "terminates",
+          "target": "t.link"
+        }
+      ],
+      "instances": [
+        "nep-R1-R2",
+        "nep-R2-R3",
+        "nep-A1-R1"
+      ]
+    },
+    {
+      "id": "t.translink",
+      "label": "transitional-link",
+      "synonyms": [
+        "adaptation link"
+      ],
+      "kind": "adaptation",
+      "gloss": "A transitional-link (adaptation link) is an adaptation connection at a node that connects to a layer-protocol-qualifier.",
+      "example": "OTU4/ODU2 adaptation at R1 is a transitional-link at node R1 that adapts to the layer-protocol-qualifier 'ODU2 mapped into OTU4'.",
+      "ref": "layer-adaptation",
+      "relations": [
+        {
+          "rel": "at-node",
+          "target": "t.node"
+        },
+        {
+          "rel": "adapts",
+          "target": "t.lpq"
+        }
+      ],
+      "instances": [
+        "OTU4/ODU2 adaptation at R1"
+      ]
+    },
+    {
+      "id": "t.sip",
+      "label": "service-interface-point",
+      "synonyms": [
+        "sip"
+      ],
+      "kind": "access",
+      "gloss": "A service-interface-point is an access point on a node that provides access to a connectivity-service.",
+      "example": "sip-A1-odu is a SIP on node A1 that accesses connectivity-service cs-a1a3-odu2.",
+      "ref": "client-svc-access",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "t.node"
+        },
+        {
+          "rel": "accesses",
+          "target": "t.cs"
+        }
+      ],
+      "instances": [
+        "sip-A1-odu",
+        "sip-A3-odu"
+      ]
+    },
+    {
+      "id": "t.cs",
+      "label": "connectivity-service",
+      "synonyms": [
+        "service"
+      ],
+      "kind": "service",
+      "gloss": "A connectivity-service is a service realized over a topology by using SIPs and CEPs; it represents a customer-facing connection through the network.",
+      "example": "cs-a1a3-odu2 (ODU2, A1 to A3) is a connectivity-service that uses sip and is realized by cep-a1a3-R1 within the topology.",
+      "ref": "connection-service",
+      "relations": [
+        {
+          "rel": "uses",
+          "target": "t.sip"
+        },
+        {
+          "rel": "realized-by",
+          "target": "t.cep"
+        },
+        {
+          "rel": "over",
+          "target": "t.topo"
+        }
+      ],
+      "instances": [
+        "cs-a1a3-odu2 (ODU2, A1 to A3)"
+      ]
+    },
+    {
+      "id": "t.lpq",
+      "label": "layer-protocol-qualifier",
+      "synonyms": [
+        "layer qualifier"
+      ],
+      "kind": "multiplex",
+      "gloss": "A layer-protocol-qualifier is a multiplex that qualifies a connectivity-service by mapping one layer protocol to another within the topology.",
+      "example": "ODU2 mapped into OTU4 qualifies the connectivity-service cs.",
+      "ref": "multiplex-structure",
+      "relations": [
+        {
+          "rel": "qualifies",
+          "target": "t.cs"
+        }
+      ],
+      "instances": [
+        "ODU2 mapped into OTU4"
+      ]
+    },
+    {
+      "id": "t.nrg",
+      "label": "node-rule-group",
+      "synonyms": [
+        "rule group"
+      ],
+      "kind": "switching",
+      "gloss": "A node-rule-group is a grouping of switching rules on a specific node used to implement cross-connect behavior.",
+      "example": "R2 cross-connect rule group is a node-rule-group on node R2.",
+      "ref": "switching-constraint",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "t.node"
+        }
+      ],
+      "instances": [
+        "R2 cross-connect rule group"
+      ]
+    },
+    {
+      "id": "t.link",
+      "label": "link",
+      "synonyms": [],
+      "kind": "link",
+      "gloss": "A link is a connection between two nodes that is terminated by link-termination-points on its ends.",
+      "example": "link-R1-R2 is a link between node R1 and R2 terminated by nep-R1-R2.",
+      "ref": "topo-link",
+      "relations": [
+        {
+          "rel": "between",
+          "target": "t.node"
+        },
+        {
+          "rel": "terminated-by",
+          "target": "t.ltp"
+        }
+      ],
+      "instances": [
+        "link-R1-R2",
+        "link-R2-R3",
+        "link-R1-R3",
+        "link-A1-R1"
+      ]
+    },
+    {
+      "id": "t.topo",
+      "label": "topology",
+      "synonyms": [
+        "multi-layer topology"
+      ],
+      "kind": "topology",
+      "gloss": "A topology is a collection that contains nodes and links forming a multi-layer network domain.",
+      "example": "the OTN-over-optical domain is a topology containing the nodes R1, R2, R3, A1, A2, A3 and the links such as link-R1-R2.",
+      "ref": "topology",
+      "relations": [
+        {
+          "rel": "contains",
+          "target": "t.node"
+        },
+        {
+          "rel": "contains",
+          "target": "t.link"
+        }
+      ],
+      "instances": [
+        "the OTN-over-optical domain"
+      ]
+    },
+    {
+      "id": "t.cep",
+      "label": "connection-end-point",
+      "synonyms": [
+        "cep"
+      ],
+      "kind": "endpoint",
+      "gloss": "A connection-end-point is an endpoint on a node that is part of a connectivity-service, serving as one end of a realization of the service.",
+      "example": "cep-a1a3-R1 is a connection-end-point on node R1 that is part of connectivity-service cs-a1a3-odu2.",
+      "ref": "conn-endpoint",
+      "relations": [
+        {
+          "rel": "on-node",
+          "target": "t.node"
+        },
+        {
+          "rel": "part-of",
+          "target": "t.cs"
+        }
+      ],
+      "instances": [
+        "cep-a1a3-R1",
+        "cep-a1a3-R3"
+      ]
+    }
+  ]
+}

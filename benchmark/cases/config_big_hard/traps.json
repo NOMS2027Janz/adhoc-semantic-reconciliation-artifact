@@ -1,0 +1,17 @@
+{
+  "operational_case": "configuration",
+  "seed": "hand-authored (bigger, harder)",
+  "false_cognates": [
+    {"a": "t.ltp", "b": "i.ttp", "why": "link-termination-point vs tunnel-termination-point: same '-termination-point' shape, but a link end vs a trail head; different reference entries."},
+    {"a": "t.sgrade", "b": "i.sclass", "why": "signal-grade vs service-grade: both carry 'grade', but an optical signal quality vs a commercial service class; both are in fact residual."},
+    {"a": "t.pgroup", "b": "i.prole", "why": "protection-group vs protection-role: both carry 'protection', but a 1+1 group vs a working/protect role; t.pgroup's true partner is i.pgroup."}
+  ],
+  "opaque": ["t.vendor", "i.exttlv"],
+  "invariants": ["endpoint-identity", "connectivity", "capacity", "layer-relationships", "switching-constraints", "odu-multiplexing", "optical-channel-continuity", "protection-integrity"],
+  "residual_by_placement": {"both_cognitive": 2, "one_inert": 3, "both_inert": 4},
+  "verification_by_placement": {
+    "both_cognitive": "closed-loop worked exchange, self-certifying",
+    "one_inert": "evidence and round-trip on invariants",
+    "both_inert": "external adjudication or downstream test"
+  }
+}

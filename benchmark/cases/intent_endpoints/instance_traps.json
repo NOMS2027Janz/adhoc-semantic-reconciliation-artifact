@@ -1,0 +1,38 @@
+{
+  "case": "intent_endpoints",
+  "operational_case": "intent (endpoint co-reference)",
+  "seed": "hand-authored endpoint co-reference sub-case for the intent setting",
+  "false_cognates": [],
+  "experiment_only": [
+    "u4",
+    "u5"
+  ],
+  "oracle": {
+    "interrogate": {
+      "o.ep4": {
+        "fibre_id": "FIB-L4"
+      },
+      "n.uni4": {
+        "fibre_id": "FIB-L4"
+      },
+      "o.ep5": {
+        "fibre_id": "FIB-L5"
+      },
+      "n.uni5": {
+        "fibre_id": "FIB-L5"
+      }
+    },
+    "invariants": {}
+  },
+  "residual_by_placement": {
+    "both_cognitive": 0,
+    "one_inert": 2,
+    "both_inert": 2
+  },
+  "invariants": [],
+  "verification_by_placement": {
+    "both_cognitive": "interrogation of the authoritative fibre-id",
+    "one_inert": "interrogation on the live side only",
+    "both_inert": "static evidence only"
+  }
+}

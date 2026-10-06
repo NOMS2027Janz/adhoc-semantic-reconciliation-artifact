@@ -1,0 +1,144 @@
+{
+  "system": "Agent F — legacy fault manager",
+  "dialect": "RFC 8632 / syslog / SNMP / X.733",
+  "modules": [
+    "x733-probable-cause",
+    "rfc8632-alarms"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-mini from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_observability, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_observability/model_a*.json.",
+  "concepts": [
+    {
+      "id": "f.node",
+      "label": "managed-object",
+      "synonyms": [
+        "resource",
+        "network element"
+      ],
+      "kind": "resource",
+      "gloss": "A managed-object is the monitored network resource or network element (physical or logical) on which events and alarms are reported; it is the primary target of fault management operations.",
+      "example": "'lambda1' is a managed-object representing an optical wavelength interface on device 'R1'; both 'trap-lambda1-t0' (an incoming trap) and 'alarm-lambda1-SD' are reported on this managed-object.",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "R1",
+        "lambda1"
+      ]
+    },
+    {
+      "id": "f.event",
+      "label": "event",
+      "synonyms": [
+        "syslog",
+        "trap"
+      ],
+      "kind": "event",
+      "gloss": "An event is an incoming notification (e.g., syslog message or SNMP trap) observed on a managed-object that the fault manager processes and that can lead to generating or updating alarms; it is related 'on' a f.node.",
+      "example": "'trap-lambda1-t0' is an SNMP trap received from managed-object 'lambda1' indicating a signal loss condition that the manager uses to create or correlate to 'alarm-lambda1-SD'.",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        }
+      ],
+      "instances": [
+        "trap-lambda1-t0"
+      ]
+    },
+    {
+      "id": "f.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "fault alarm",
+        "alarm condition"
+      ],
+      "kind": "alarm",
+      "gloss": "An alarm is a recorded fault condition tied to a specific managed-object that carries descriptive attributes (such as perceived severity and probable-cause) used to characterize and act on the fault.",
+      "example": "'alarm-lambda1-SD' is an alarm on node 'lambda1' that carries probable-cause 'lossOfSignal' and a perceived severity (for example 'major') to indicate a signal-down fault requiring remediation.",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        },
+        {
+          "rel": "carries",
+          "target": "f.severity"
+        },
+        {
+          "rel": "carries",
+          "target": "f.probable_cause"
+        }
+      ],
+      "instances": [
+        "alarm-lambda1-SD"
+      ]
+    },
+    {
+      "id": "f.severity",
+      "label": "severity",
+      "synonyms": [
+        "perceived severity",
+        "alarm level"
+      ],
+      "kind": "severity",
+      "gloss": "Perceived severity is the alarm-level attribute assigned to an alarm that indicates the relative seriousness or urgency of the alarm (common values: critical, major, minor, warning).",
+      "example": "The severity value 'major' attached to 'alarm-lambda1-SD' signals that the detected fault is of high importance but not necessarily the highest ('critical').",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "critical",
+        "major",
+        "minor",
+        "warning"
+      ]
+    },
+    {
+      "id": "f.probable_cause",
+      "label": "probable-cause",
+      "synonyms": [
+        "X.733 cause",
+        "cause code"
+      ],
+      "kind": "cause-code",
+      "gloss": "Probable-cause is the X.733-style cause code carried by an alarm that identifies the likely root cause category of the fault (e.g., lossOfSignal, degradedSignal) attributed to the alarmed managed-object.",
+      "example": "The probable-cause 'lossOfSignal' on 'alarm-lambda1-SD' indicates the alarm's likely root cause is that the optical signal on 'lambda1' was lost.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "lossOfSignal",
+        "degradedSignal"
+      ]
+    },
+    {
+      "id": "f.clear",
+      "label": "clear",
+      "synonyms": [
+        "alarm clear"
+      ],
+      "kind": "clear",
+      "gloss": "A clear is a notification whose purpose is to clear or cancel a previously raised alarm on a managed-object; it is explicitly related to the alarm it clears.",
+      "example": "'clear-lambda1-SD' is a clear message for 'alarm-lambda1-SD' on managed-object 'lambda1', indicating the signal-down condition has been resolved and the alarm should be closed.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "clears",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "clear-lambda1-SD"
+      ]
+    }
+  ]
+}

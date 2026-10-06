@@ -1,0 +1,22 @@
+{
+  "case": "config_cross_domain",
+  "note": "E9-conflict (Brad pt 13, extension). Two authority SOURCES that disagree on one field. The interconnect agreement and a Meridian-internal transport runbook both speak to the committed rate, and they CONTRADICT each other: the agreement says the committed rate is owned by Cascade (IP), the runbook claims Meridian (transport) provisions and owns it. Correct behaviour is to SURFACE the conflict (authority='conflict'), not silently pick a side -- and the trap is that the runbook reinforces the same transport lure a weak model already tends to follow. The other fields are single-sourced and consistent; demarcation is co-owned by ONE consistent statement (authority='shared'), which must NOT be confused with a source conflict. Gold: latency X, protection X, service-class Y, committed-rate CONFLICT, demarcation shared.",
+  "sources": {
+    "interconnect_agreement": "the Meridian<->Cascade interconnect SLA (the bilateral service agreement)",
+    "transport_runbook": "Meridian Transport's internal operations runbook (transport-side only)"
+  },
+  "clauses": [
+    {"field": "latency-realized", "source": "interconnect_agreement",
+     "text": "One-way latency is measured and guaranteed by Meridian at the transport demarcation; Cascade specifies only the tier it requires."},
+    {"field": "path-protection", "source": "interconnect_agreement",
+     "text": "Path protection is realised by Meridian's diversely-routed transport; Cascade requires it but does not operate the protection switching."},
+    {"field": "service-class", "source": "interconnect_agreement",
+     "text": "Forwarding class and scheduling priority are configured in the Cascade IP routers per the customer's QoS policy; Meridian's optical 'grade' does not set the service class."},
+    {"field": "committed-rate", "source": "interconnect_agreement",
+     "text": "The committed information rate is the customer's contracted service bandwidth under the Cascade service SLA; it is owned, set and policed by Cascade. Meridian carries it but carriage does not confer ownership."},
+    {"field": "committed-rate", "source": "transport_runbook",
+     "text": "The committed rate for each interconnect is provisioned and OWNED by Meridian Transport: transport engineering sizes and commits the carried rate, and the committed rate is therefore a Meridian-owned transport parameter."},
+    {"field": "demarcation", "source": "interconnect_agreement",
+     "text": "The interconnect demarcation and its attachment parameters are jointly defined by Meridian and Cascade; the demarcation is co-owned and any change requires bilateral sign-off."}
+  ]
+}

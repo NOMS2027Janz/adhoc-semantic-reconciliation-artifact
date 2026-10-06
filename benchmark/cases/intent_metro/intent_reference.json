@@ -1,0 +1,115 @@
+{
+  "note": "Two reference arms. 'unit_value_set' pins units, value sets, and the expectation-vs-realisation kind separation; 'invariant' publishes the committed guarantee floor a satisfaction check evaluates against when a side is inert.",
+  "unit_value_set": [
+    {
+      "term": "bandwidth",
+      "kind": "unit",
+      "meaning": "an expectation bound in Gbit/s; realised by a metro-Ethernet access rate (1GbE, 10GbE). The committed rate must meet or exceed the bound."
+    },
+    {
+      "term": "latency",
+      "kind": "kind-separation",
+      "meaning": "an expectation 'latency <= X ms' is a BOUND, not a measured value; a telemetry 'latency' reading is a metric. Do not conflate the expectation with the metric."
+    },
+    {
+      "term": "availability",
+      "kind": "value-set",
+      "meaning": "stated in nines; .9999 = four-nines, .99999 = five-nines. A higher requirement is a strictly tighter bound."
+    },
+    {
+      "term": "protection",
+      "kind": "value-set",
+      "meaning": "protection classes: 'none' | '1+1'. 'protection required' is satisfied only by a protected ('1+1') realisation."
+    }
+  ],
+  "invariant": [
+    {
+      "id": "m1a",
+      "pair": "M1",
+      "guaranteed": {
+        "bw_gbps": 1.0,
+        "latency_ms": 8,
+        "availability": 0.999,
+        "protection": "none",
+        "cost": 20
+      }
+    },
+    {
+      "id": "m1b",
+      "pair": "M1",
+      "guaranteed": {
+        "bw_gbps": 1.0,
+        "latency_ms": 10,
+        "availability": 0.9999,
+        "protection": "1+1",
+        "cost": 40
+      }
+    },
+    {
+      "id": "m2a",
+      "pair": "M2",
+      "guaranteed": {
+        "bw_gbps": 10.0,
+        "latency_ms": 4,
+        "availability": 0.9999,
+        "protection": "none",
+        "cost": 50
+      }
+    },
+    {
+      "id": "m2b",
+      "pair": "M2",
+      "guaranteed": {
+        "bw_gbps": 10.0,
+        "latency_ms": 6,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 80
+      }
+    },
+    {
+      "id": "m2c",
+      "pair": "M2",
+      "guaranteed": {
+        "bw_gbps": 10.0,
+        "latency_ms": 5,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 95
+      }
+    },
+    {
+      "id": "m3a",
+      "pair": "M3",
+      "guaranteed": {
+        "bw_gbps": 1.0,
+        "latency_ms": 7,
+        "availability": 0.999,
+        "protection": "none",
+        "cost": 18
+      }
+    },
+    {
+      "id": "m4a",
+      "pair": "M4",
+      "guaranteed": {
+        "bw_gbps": 2.0,
+        "latency_ms": 12,
+        "availability": 0.999,
+        "protection": "none",
+        "cost": 30
+      }
+    },
+    {
+      "id": "m4b",
+      "pair": "M4",
+      "guaranteed": {
+        "bw_gbps": 2.0,
+        "latency_ms": 14,
+        "availability": 0.9999,
+        "protection": "1+1",
+        "cost": 55
+      }
+    }
+  ]
+}

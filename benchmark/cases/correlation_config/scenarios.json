@@ -1,0 +1,42 @@
+{
+  "case": "correlation_config",
+  "note": "E7b -- the composition & correlation operation ported to the CONFIGURATION/transport domain (Brad pt 6, generalisation). Symptoms are service- and config-plane operational events over the same layered network the configuration setting models -- an OTN line (optical) underlies an IP link (ip) which underlies an L3VPN/EVPN service (service) -- but posed as a correlation problem, which the configuration setting never performs. Resource ids are the configuration domain's own entities. deps: x -> [resources x underlies/carries]. Two independent transport->IP->service chains: {otu2, ip-le3, l3vpn-acme} and {otu5, ip-le7, evpn-globex}. Gold is DERIVED by correlate() in benchmark/derive_correlation_config_gold.py; do not hand-edit incident groupings.",
+  "scenarios": [
+    {
+      "id": "C1",
+      "window": 5.0,
+      "note": "A cross-layer causal chain in one transport->IP->service component should form ONE incident rooted at the optical symptom, with an unrelated symptom on the OTHER service left separate. 2 incidents.",
+      "deps": {"otu2": ["ip-le3"], "ip-le3": ["l3vpn-acme"], "otu5": ["ip-le7"], "ip-le7": ["evpn-globex"]},
+      "symptoms": [
+        {"id": "s1", "label": "OTU2 pre-FEC BER rising", "layer": "optical", "resource": "otu2", "t": 0},
+        {"id": "s2", "label": "IS-IS adjacency flap on link le3", "layer": "ip", "resource": "ip-le3", "t": 2},
+        {"id": "s3", "label": "L3VPN ACME latency-SLA breach", "layer": "service", "resource": "l3vpn-acme", "t": 3},
+        {"id": "s4", "label": "EVPN Globex CE reachability loss", "layer": "service", "resource": "evpn-globex", "t": 2}
+      ]
+    },
+    {
+      "id": "C2",
+      "window": 5.0,
+      "note": "Two independent cross-layer incidents that must stay SEPARATE (different transport components), testing that correlation does not over-merge. 2 incidents.",
+      "deps": {"otu2": ["ip-le3"], "ip-le3": ["l3vpn-acme"], "otu5": ["ip-le7"], "ip-le7": ["evpn-globex"]},
+      "symptoms": [
+        {"id": "s1", "label": "OTU2 loss of signal", "layer": "optical", "resource": "otu2", "t": 0},
+        {"id": "s2", "label": "link le3 down", "layer": "ip", "resource": "ip-le3", "t": 1},
+        {"id": "s3", "label": "OTU5 pre-FEC BER rising", "layer": "optical", "resource": "otu5", "t": 1},
+        {"id": "s4", "label": "IS-IS adjacency flap on link le7", "layer": "ip", "resource": "ip-le7", "t": 2},
+        {"id": "s5", "label": "EVPN Globex SLA breach", "layer": "service", "resource": "evpn-globex", "t": 3}
+      ]
+    },
+    {
+      "id": "C3",
+      "window": 5.0,
+      "note": "Same transport->IP->service component, but a later service symptom falls OUTSIDE the time window of the optical/IP pair, so it must NOT be merged into the same incident -- testing the time gate, not just the dependency graph. 2 incidents.",
+      "deps": {"otu2": ["ip-le3"], "ip-le3": ["l3vpn-acme"]},
+      "symptoms": [
+        {"id": "s1", "label": "OTU2 pre-FEC BER rising", "layer": "optical", "resource": "otu2", "t": 0},
+        {"id": "s2", "label": "IS-IS adjacency flap on link le3", "layer": "ip", "resource": "ip-le3", "t": 2},
+        {"id": "s3", "label": "L3VPN ACME SLA breach during a later change window", "layer": "service", "resource": "l3vpn-acme", "t": 30}
+      ]
+    }
+  ]
+}

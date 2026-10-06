@@ -1,0 +1,31 @@
+cff-version: 1.2.0
+message: "If you use this software, benchmark, or data, please cite it as below."
+title: "Ad Hoc Semantic Reconciliation: Benchmark, Harness, and Validated Keys"
+type: software
+authors:
+  - family-names: Janz
+    given-names: Christopher
+  - family-names: Peters
+    given-names: Bradley
+year: 2026
+doi: 10.5281/zenodo.XXXXXXXX
+url: "https://doi.org/10.5281/zenodo.XXXXXXXX"
+license: Apache-2.0
+references:
+  - type: report
+    title: "Ad Hoc Semantic Reconciliation"
+    notes: "IETF Network Management Research Group (NMRG) Internet-Draft"
+    authors:
+      - family-names: Janz
+        given-names: Christopher
+      - family-names: Peters
+        given-names: Bradley
+    year: 2026
+  - type: conference-paper
+    title: "Portable Semantic Models and Ad Hoc Reconciliation by Cognitive Agents"
+    authors:
+      - family-names: Janz
+        given-names: Christopher
+      - family-names: Peters
+        given-names: Bradley
+    year: 2026

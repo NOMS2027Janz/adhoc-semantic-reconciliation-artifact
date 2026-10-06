@@ -1,0 +1,171 @@
+{
+  "system": "IETF-L3NM",
+  "dialect": "ietf-l3vpn-svc",
+  "modules": [
+    "ietf-l3vpn-svc"
+  ],
+  "note": "Clean IETF-style L3VPN service model (side A) for the vendor-messiness case (E11).",
+  "concepts": [
+    {
+      "id": "s.vpnsvc",
+      "label": "vpn-service",
+      "kind": "service",
+      "ref": "vpn-service",
+      "synonyms": [
+        "l3vpn",
+        "vpn-instance"
+      ],
+      "gloss": "one L3VPN service instance across the network",
+      "example": "the ACME L3VPN",
+      "relations": [
+        {
+          "rel": "has-access",
+          "target": "s.vpnaccess"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "s.rd",
+      "label": "route-distinguisher",
+      "kind": "identifier",
+      "ref": "route-distinguisher",
+      "synonyms": [
+        "RD"
+      ],
+      "gloss": "the 8-byte value making VPN routes globally unique",
+      "example": "64512:100",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "s.vpnsvc"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "s.importrt",
+      "label": "import-route-target",
+      "kind": "policy-value",
+      "ref": "import-rt",
+      "synonyms": [
+        "import-RT"
+      ],
+      "gloss": "the route-target value on which routes are imported into the VRF",
+      "example": "target:64512:100",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "s.vpnsvc"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "s.exportrt",
+      "label": "export-route-target",
+      "kind": "policy-value",
+      "ref": "export-rt",
+      "synonyms": [
+        "export-RT"
+      ],
+      "gloss": "the route-target value attached to routes exported from the VRF",
+      "example": "target:64512:100",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "s.vpnsvc"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "s.vpnaccess",
+      "label": "vpn-network-access",
+      "kind": "access",
+      "ref": "vpn-access",
+      "synonyms": [
+        "site-network-access",
+        "attachment"
+      ],
+      "gloss": "the customer attachment to the VPN at a PE",
+      "example": "the ACME site attachment on PE1",
+      "relations": [
+        {
+          "rel": "carries",
+          "target": "s.bgpneighbor"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "s.bgpneighbor",
+      "label": "pe-ce-bgp-neighbor",
+      "kind": "protocol",
+      "ref": "bgp-neighbor",
+      "synonyms": [
+        "bgp-peer"
+      ],
+      "gloss": "the PE-CE BGP peering that exchanges customer routes",
+      "example": "neighbor 10.0.0.2",
+      "relations": [
+        {
+          "rel": "has-timer",
+          "target": "s.bgpka"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "s.bgpka",
+      "label": "bgp-keepalive",
+      "kind": "parameter",
+      "ref": "bgp-keepalive",
+      "synonyms": [
+        "keepalive-interval"
+      ],
+      "gloss": "the BGP keepalive interval for the PE-CE peer",
+      "example": "30 seconds",
+      "relations": [],
+      "instances": []
+    },
+    {
+      "id": "s.ipconn",
+      "label": "ip-connection",
+      "kind": "addressing",
+      "ref": "ip-connection",
+      "synonyms": [
+        "ip-address",
+        "prefix"
+      ],
+      "gloss": "the IP addressing on the customer attachment",
+      "example": "10.0.0.1/30",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "s.vpnaccess"
+        }
+      ],
+      "instances": []
+    },
+    {
+      "id": "s.svcbw",
+      "label": "service-bandwidth",
+      "kind": "rate",
+      "ref": "service-bandwidth",
+      "synonyms": [
+        "svc-bw",
+        "guaranteed-bandwidth"
+      ],
+      "gloss": "the contracted service bandwidth (no vendor counterpart)",
+      "example": "200 Mbit/s",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "s.vpnsvc"
+        }
+      ],
+      "instances": []
+    }
+  ]
+}

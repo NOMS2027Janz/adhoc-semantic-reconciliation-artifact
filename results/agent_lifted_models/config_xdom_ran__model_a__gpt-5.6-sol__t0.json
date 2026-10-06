@@ -1,0 +1,181 @@
+{
+  "system": "Agent X — Beacon",
+  "dialect": "Beacon (bespoke RAN OSS)",
+  "modules": [
+    "beacon-radio",
+    "beacon-backhaul"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5.6-sol from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_xdom_ran, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_xdom_ran/model_a*.json.",
+  "concepts": [
+    {
+      "id": "x.backhaul",
+      "label": "backhaul-link",
+      "synonyms": [
+        "transport link",
+        "site uplink"
+      ],
+      "kind": "transport",
+      "gloss": "A transport connection carrying traffic between a radio site and the core network, presented through the site's gateway and providing uplink service for one or more radio cells.",
+      "example": "bh-441 is the site-to-core transport link presented at csg-441 and carries traffic for cells 441-A and 441-B.",
+      "ref": "up-transport",
+      "relations": [
+        {
+          "rel": "presents-at",
+          "target": "x.sitegw"
+        },
+        {
+          "rel": "serves",
+          "target": "x.cell"
+        }
+      ],
+      "instances": [
+        "bh-441 (site-to-core)"
+      ]
+    },
+    {
+      "id": "x.sitegw",
+      "label": "site-gateway",
+      "synonyms": [
+        "cell-site gateway",
+        "CSG"
+      ],
+      "kind": "demarcation",
+      "gloss": "The cell-site network demarcation device or logical endpoint at which a site's backhaul link is presented.",
+      "example": "csg-441 terminates or presents the site-facing end of backhaul link bh-441.",
+      "ref": "transport-demarc",
+      "relations": [
+        {
+          "rel": "on-link",
+          "target": "x.backhaul"
+        }
+      ],
+      "instances": [
+        "csg-441"
+      ]
+    },
+    {
+      "id": "x.dscp",
+      "label": "backhaul-marking",
+      "synonyms": [
+        "transport marking",
+        "diffserv"
+      ],
+      "kind": "qos-marking",
+      "gloss": "A DiffServ QoS traffic-class marking applied to packets on a backhaul link so that the transport network can give them differentiated forwarding treatment.",
+      "example": "On bh-441, latency-sensitive packets are marked EF, selected high-priority traffic is marked AF41, and ordinary traffic uses the default class.",
+      "ref": "transport-qos",
+      "relations": [
+        {
+          "rel": "on-link",
+          "target": "x.backhaul"
+        }
+      ],
+      "instances": [
+        "EF / AF41 / default"
+      ]
+    },
+    {
+      "id": "x.cap",
+      "label": "backhaul-capacity",
+      "synonyms": [
+        "transport capacity"
+      ],
+      "kind": "rate",
+      "gloss": "The committed traffic-carrying rate provisioned for a particular backhaul link.",
+      "example": "bh-441 has a committed backhaul capacity of 8 Gbit/s for the aggregate traffic it transports.",
+      "ref": "transport-capacity",
+      "relations": [
+        {
+          "rel": "of-link",
+          "target": "x.backhaul"
+        }
+      ],
+      "instances": [
+        "8 Gbit/s committed"
+      ]
+    },
+    {
+      "id": "x.mtu",
+      "label": "backhaul-mtu",
+      "synonyms": [
+        "transport mtu"
+      ],
+      "kind": "framing",
+      "gloss": "The configured maximum packet size, in octets, that a backhaul link can carry as one transport unit without requiring fragmentation.",
+      "example": "With bh-441 configured to MTU 1600, it can carry packets of up to 1600 octets as single units.",
+      "ref": "transport-mtu",
+      "relations": [
+        {
+          "rel": "of-link",
+          "target": "x.backhaul"
+        }
+      ],
+      "instances": [
+        "MTU 1600"
+      ]
+    },
+    {
+      "id": "x.cell",
+      "label": "radio-cell",
+      "synonyms": [
+        "cell",
+        "sector"
+      ],
+      "kind": "radio",
+      "gloss": "A radio access service area or sector whose user and control-plane traffic is carried over an associated backhaul link.",
+      "example": "Radio cells 441-A and 441-B are both served by backhaul link bh-441.",
+      "ref": "radio-cell",
+      "relations": [
+        {
+          "rel": "served-by",
+          "target": "x.backhaul"
+        }
+      ],
+      "instances": [
+        "cell 441-A",
+        "cell 441-B"
+      ]
+    },
+    {
+      "id": "x.rrc",
+      "label": "rrc-session",
+      "synonyms": [
+        "session",
+        "radio connection"
+      ],
+      "kind": "radio-state",
+      "gloss": "An individual Radio Resource Control connection state or session established within a specific radio cell for a device's radio signaling context.",
+      "example": "rrc-session #55 is an active radio connection context associated with cell 441-A.",
+      "ref": "radio-session",
+      "relations": [
+        {
+          "rel": "in",
+          "target": "x.cell"
+        }
+      ],
+      "instances": [
+        "rrc-session #55 (cell 441-A)"
+      ]
+    },
+    {
+      "id": "x.vendor",
+      "label": "beacon-tag-7",
+      "synonyms": [
+        "proprietary attr 7"
+      ],
+      "kind": "opaque",
+      "gloss": "An opaque Beacon-proprietary attribute numbered 7 that is attached to a backhaul link and whose encoded value has no defined semantics in this schema.",
+      "example": "bh-441 carries beacon-tag-7 with the raw value 0x2, which is retained as a vendor-specific link attribute without interpreting what 0x2 means.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on-link",
+          "target": "x.backhaul"
+        }
+      ],
+      "instances": [
+        "beacon-tag-7=0x2 on bh-441"
+      ]
+    }
+  ]
+}

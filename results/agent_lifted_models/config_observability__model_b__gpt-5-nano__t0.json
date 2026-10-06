@@ -1,0 +1,226 @@
+{
+  "system": "Agent G — IETF NMOP agent",
+  "dialect": "RFC 9940 + anomaly-semantics + incident-yang",
+  "modules": [
+    "rfc9940-terminology",
+    "nmop-anomaly-semantics",
+    "nmop-network-incident-yang"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-nano from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case config_observability, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_observability/model_b*.json.",
+  "concepts": [
+    {
+      "id": "g.node",
+      "label": "resource",
+      "synonyms": [
+        "managed resource",
+        "node"
+      ],
+      "kind": "resource",
+      "gloss": "A managed resource (node) is a physical or virtual host within the system that can host or run other components and is the primary unit under management.",
+      "example": "R1",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "R1",
+        "lambda1"
+      ]
+    },
+    {
+      "id": "g.event",
+      "label": "event",
+      "synonyms": [
+        "value variation"
+      ],
+      "kind": "event",
+      "gloss": "An event is a discrete observation or value change detected on a node, representing that something noteworthy occurred.",
+      "example": "ber-sample-lambda1-t0",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "ber-sample-lambda1-t0"
+      ]
+    },
+    {
+      "id": "g.anomaly",
+      "label": "anomaly",
+      "synonyms": [
+        "deviation",
+        "outlier"
+      ],
+      "kind": "anomaly",
+      "gloss": "An anomaly is an observed deviation from normal or expected behavior on a node, indicating something irregular.",
+      "example": "anom-ber-lambda1",
+      "ref": "anomaly",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "anom-ber-lambda1"
+      ]
+    },
+    {
+      "id": "g.symptom",
+      "label": "symptom",
+      "synonyms": [
+        "indication"
+      ],
+      "kind": "symptom",
+      "gloss": "A symptom is an observable indication pointing to a problem, used to infer the underlying issue.",
+      "example": "sym-ber-lambda1",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "indicates",
+          "target": "g.problem"
+        }
+      ],
+      "instances": [
+        "sym-ber-lambda1"
+      ]
+    },
+    {
+      "id": "g.fault",
+      "label": "fault",
+      "synonyms": [
+        "defect"
+      ],
+      "kind": "fault",
+      "gloss": "A fault is a tangible defect or failure on a node that degrades its ability to operate.",
+      "example": "fault-lambda1-degrade",
+      "ref": "fault",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "fault-lambda1-degrade"
+      ]
+    },
+    {
+      "id": "g.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "alarm state"
+      ],
+      "kind": "alarm",
+      "gloss": "An alarm is a stateful notice on a node signifying a condition requiring attention, typically tied to a fault or anomaly.",
+      "example": "alarm-state-lambda1",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "alarm-state-lambda1"
+      ]
+    },
+    {
+      "id": "g.problem",
+      "label": "problem",
+      "synonyms": [
+        "undesirable state"
+      ],
+      "kind": "problem",
+      "gloss": "A problem is an undesirable system state affecting a resource or service that may require remediation.",
+      "example": "problem-svc-degrade",
+      "ref": null,
+      "relations": [],
+      "instances": [
+        "problem-svc-degrade"
+      ]
+    },
+    {
+      "id": "g.cause",
+      "label": "cause",
+      "synonyms": [
+        "root cause"
+      ],
+      "kind": "cause",
+      "gloss": "A cause is the underlying reason (root cause) for a problem, describing what created the undesirable state.",
+      "example": "cause-optical-ber",
+      "ref": "cause",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "g.problem"
+        }
+      ],
+      "instances": [
+        "cause-optical-ber"
+      ]
+    },
+    {
+      "id": "g.incident",
+      "label": "incident",
+      "synonyms": [
+        "correlated incident"
+      ],
+      "kind": "incident",
+      "gloss": "An incident is a set of correlated events or symptoms that together indicate a disruption or degradation.",
+      "example": "incident-0042",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "correlates",
+          "target": "g.symptom"
+        }
+      ],
+      "instances": [
+        "incident-0042"
+      ]
+    },
+    {
+      "id": "g.concern",
+      "label": "concern-score",
+      "synonyms": [
+        "concern",
+        "significance"
+      ],
+      "kind": "concern",
+      "gloss": "A concern is a numeric concern-score that annotates an anomaly with a measure of significance or risk.",
+      "example": "concern-78",
+      "ref": "concern",
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "concern-78"
+      ]
+    },
+    {
+      "id": "g.confidence",
+      "label": "confidence-score",
+      "synonyms": [
+        "confidence"
+      ],
+      "kind": "confidence",
+      "gloss": "A confidence score annotates an anomaly with the degree of trust in its significance or in the underlying diagnosis.",
+      "example": "confidence-82",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "confidence-82"
+      ]
+    }
+  ]
+}

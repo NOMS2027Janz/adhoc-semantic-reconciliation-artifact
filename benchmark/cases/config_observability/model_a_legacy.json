@@ -1,0 +1,144 @@
+{
+  "system": "Agent F \u2014 legacy fault manager",
+  "dialect": "RFC 8632 / syslog / SNMP / X.733",
+  "modules": [
+    "x733-probable-cause",
+    "rfc8632-alarms"
+  ],
+  "note": "Lifted legacy model. An alarm is a catch-all, bundling an event, an undesirable state, a fixed severity and a static probable-cause, all hard-coded at emission. Fields: label, synonyms, kind, gloss, example, the ad-hoc reference entry bound (ref; null = native/no shared category), relations, instances.",
+  "concepts": [
+    {
+      "id": "f.node",
+      "label": "managed-object",
+      "synonyms": [
+        "resource",
+        "network element"
+      ],
+      "kind": "resource",
+      "gloss": "a managed network element the fault manager watches",
+      "example": "router R1; wavelength lambda1",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "R1",
+        "lambda1"
+      ]
+    },
+    {
+      "id": "f.event",
+      "label": "event",
+      "synonyms": [
+        "syslog",
+        "trap"
+      ],
+      "kind": "event",
+      "gloss": "a syslog message or SNMP trap: something happened on a resource at a moment",
+      "example": "a threshold-crossing trap on lambda1 at t0",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        }
+      ],
+      "instances": [
+        "trap-lambda1-t0"
+      ]
+    },
+    {
+      "id": "f.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "fault alarm",
+        "alarm condition"
+      ],
+      "kind": "alarm",
+      "gloss": "an emitted alarm: an undesirable condition (a state) on a resource that also implies a fault occurrence, carrying a fixed severity and a probable cause; the catch-all that bundles what NMOP separates",
+      "example": "a MAJOR 'signal-degrade' alarm on lambda1",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        },
+        {
+          "rel": "carries",
+          "target": "f.severity"
+        },
+        {
+          "rel": "carries",
+          "target": "f.probable_cause"
+        }
+      ],
+      "instances": [
+        "alarm-lambda1-SD"
+      ]
+    },
+    {
+      "id": "f.severity",
+      "label": "severity",
+      "synonyms": [
+        "perceived severity",
+        "alarm level"
+      ],
+      "kind": "severity",
+      "gloss": "the fixed severity label assigned at emission: critical, major, minor or warning \u2014 static, not recomputed from context",
+      "example": "MAJOR",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "critical",
+        "major",
+        "minor",
+        "warning"
+      ]
+    },
+    {
+      "id": "f.probable_cause",
+      "label": "probable-cause",
+      "synonyms": [
+        "X.733 cause",
+        "cause code"
+      ],
+      "kind": "cause-code",
+      "gloss": "a static probable-cause code from the X.733 dictionary, fixed at emission \u2014 not derived by correlating events",
+      "example": "X.733 'lossOfSignal'",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "lossOfSignal",
+        "degradedSignal"
+      ]
+    },
+    {
+      "id": "f.clear",
+      "label": "clear",
+      "synonyms": [
+        "alarm clear"
+      ],
+      "kind": "clear",
+      "gloss": "a notification that a previously raised alarm condition has cleared",
+      "example": "clear for alarm-lambda1-SD",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "clears",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "clear-lambda1-SD"
+      ]
+    }
+  ]
+}

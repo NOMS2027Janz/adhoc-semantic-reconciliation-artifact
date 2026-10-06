@@ -1,0 +1,61 @@
+{
+  "system": "Agent N",
+  "dialect": "IETF L1CSM (UNIs)",
+  "individuals": [
+    {
+      "id": "n.uni1",
+      "type": "client-svc-access",
+      "name": "uni-1",
+      "key": "so-501",
+      "attrs": {
+        "site": "NY-DC1"
+      },
+      "rels": [],
+      "_truth": "u1"
+    },
+    {
+      "id": "n.uni2",
+      "type": "client-svc-access",
+      "name": "uni-2",
+      "key": "so-502",
+      "attrs": {
+        "site": "CHI-DC1"
+      },
+      "rels": [],
+      "_truth": "u2"
+    },
+    {
+      "id": "n.uni3",
+      "type": "client-svc-access",
+      "name": "uni-3",
+      "key": "so-503",
+      "attrs": {
+        "site": "FRA-DC1"
+      },
+      "rels": [],
+      "_truth": "u3"
+    },
+    {
+      "id": "n.uni4",
+      "type": "client-svc-access",
+      "name": "uni-4",
+      "key": null,
+      "attrs": {
+        "site": "LDN-DC2"
+      },
+      "rels": [],
+      "_truth": "u4"
+    },
+    {
+      "id": "n.uni5",
+      "type": "client-svc-access",
+      "name": "uni-5",
+      "key": null,
+      "attrs": {
+        "site": "LDN-DC2"
+      },
+      "rels": [],
+      "_truth": "u5"
+    }
+  ]
+}

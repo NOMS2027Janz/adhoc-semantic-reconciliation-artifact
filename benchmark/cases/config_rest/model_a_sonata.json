@@ -1,0 +1,22 @@
+{
+  "system": "Agent P — Sonata",
+  "dialect": "MEF LSO Sonata (REST/JSON product ordering, buyer–seller)",
+  "modules": ["sonata-product-order", "sonata-product-inventory"],
+  "note": "Lifted semantic model, MEF LSO Sonata (product ordering) side. A REST/OpenAPI interface: the payload field names are present but their meaning is implicit in the MEF standard and the inter-carrier operational context. Sonata is the BUYER/SELLER product-ordering interface between two carriers; it orders commercial connectivity PRODUCTS, distinct from the technical service that realises them. A live side volunteers gloss/example; an inert side exposes only label, kind, relations, and instances, so its meaning must be reconstructed from the REST surface with no shared standard to lean on.",
+  "concepts": [
+    {"id": "p.order", "label": "productOrder", "synonyms": ["order"], "kind": "order", "gloss": "the inter-carrier product order a Buyer places to a Seller for connectivity products; the commercial order envelope exchanged across the carrier-to-carrier seam", "example": "PO-88, buyer=AcmeCarrier seller=NetCo, one EVPL between two UNIs", "ref": "order-envelope",
+     "relations": [{"rel": "contains", "target": "p.item"}, {"rel": "has", "target": "p.state"}], "instances": ["PO-88 (AcmeCarrier->NetCo)"]},
+    {"id": "p.item", "label": "orderItem", "synonyms": ["productOrderItem"], "kind": "order-item", "gloss": "one line of the product order carrying an action (add/modify/delete) on a single ordered product", "example": "item-1, action=add, one EVPL product", "ref": "orderable-item",
+     "relations": [{"rel": "of-order", "target": "p.order"}, {"rel": "targets", "target": "p.product"}], "instances": ["item-1 (add)"]},
+    {"id": "p.product", "label": "product", "synonyms": ["orderedProduct", "MEF product"], "kind": "ordered-product", "gloss": "the sellable connectivity product the buyer orders from the seller — a Carrier Ethernet virtual line (EVPL); the COMMERCIAL construct, distinct from the technical service that realises it", "example": "an EVPL product ordered between UNI-NY and UNI-FRA", "ref": "delivered-construct",
+     "relations": [{"rel": "configured-by", "target": "p.config"}, {"rel": "at", "target": "p.place"}], "instances": ["EVPL product (NY-FRA)"]},
+    {"id": "p.config", "label": "productConfiguration", "synonyms": ["productCharacteristic"], "kind": "product-configuration", "gloss": "the MEF product configuration — the requested technical parameters of the ordered product: UNI reference, bandwidth profile (CIR/EIR) and class of service, carried in the product order as the buyer's ask", "example": "CIR 100 Mbps, class of service 'Gold', UNI 10GbE", "ref": "technical-parameters",
+     "relations": [{"rel": "of-product", "target": "p.product"}], "instances": ["CIR 100M / CoS Gold / UNI 10GbE"]},
+    {"id": "p.place", "label": "relatedPlace", "synonyms": ["UNI location", "site"], "kind": "place", "gloss": "the geographic site — the UNI demarcation location — at which the ordered product is to be delivered", "example": "UNI at 350 E St, New York", "ref": "service-site",
+     "relations": [{"rel": "of-product", "target": "p.product"}], "instances": ["UNI @ 350 E St NY"]},
+    {"id": "p.state", "label": "state", "synonyms": ["orderState", "status"], "kind": "order-state", "gloss": "the lifecycle state of the PRODUCT order/item in the buyer–seller COMMERCIAL process; tracks commercial fulfilment to the buyer, not technical activation in a network", "example": "state=inProgress (enum: acknowledged, rejected, pending, held, inProgress, completed, failed, cancelled)", "ref": null,
+     "relations": [{"rel": "of-order", "target": "p.order"}], "instances": ["inProgress", "completed", "acknowledged"]},
+    {"id": "p.term", "label": "itemTerm", "synonyms": ["term", "contractTerm"], "kind": "commercial-term", "gloss": "the contractual term of the product order item — duration and commitment (e.g. 24 months); a purely commercial attribute with no technical realisation", "example": "24 months, auto-renew", "ref": null,
+     "relations": [{"rel": "of-item", "target": "p.item"}], "instances": ["24 months"]}
+  ]
+}

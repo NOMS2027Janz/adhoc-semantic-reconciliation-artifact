@@ -1,0 +1,9 @@
+{
+  "note": "Pragmatics gold for the DC underlay/overlay cross-domain case: the authoritative SOURCE OF TRUTH (realm) for each shared field at the binding seam. X = Lattice (fabric/underlay), Y = Vertex (overlay), shared = a co-owned binding. Semantic correspondence at the seam is necessary but not sufficient; provisioning also requires respecting whose realm owns each field's value, and the characteristic pragmatic error is letting the wrong realm govern.",
+  "fields": [
+    {"id": "segment-id", "ref": "segment-id", "pins": {"a": "x.vlan", "b": "y.vni"}, "authority": "Y", "realm": "overlay", "why": "the tenant segment's identity is owned by the overlay (the VNI is fabric-wide and stable); the fabric picks a LOCAL VLAN to carry it on a given leaf, so the authoritative segment identity is the overlay's, not the local VLAN number"},
+    {"id": "default-gateway", "ref": "default-gateway", "pins": {"a": "x.gw", "b": "y.gw"}, "authority": "Y", "realm": "overlay", "why": "the tenant's default-gateway address and its distributed (anycast) placement are programmed by the overlay controller; the fabric realises an SVI but does not choose the address"},
+    {"id": "mtu", "ref": "mtu", "pins": {"a": "x.mtu", "b": "y.mtu"}, "authority": "X", "realm": "fabric", "why": "the MTU actually carried is a physical property of the fabric; the overlay states a minimum for its encapsulation, but the authoritative realised value is the fabric side's"},
+    {"id": "underlay-binding", "ref": "underlay-binding", "pins": {"a": "x.bind", "b": "y.bind"}, "authority": "shared", "realm": "both", "why": "the fabric attachment and the VTEP binding are two names for one co-owned binding point; neither side's local naming overrides the other, they must agree it is the same point"}
+  ]
+}

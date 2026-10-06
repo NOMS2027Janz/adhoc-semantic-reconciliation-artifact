@@ -1,0 +1,7 @@
+# Core runtime for the cognitive-agent stack (openai pulls in pydantic).
+openai>=1.40
+# Figure generation and tests.
+matplotlib>=3.7
+numpy>=1.24
+pytest>=7
+# Or, equivalently:  pip install -e ".[openai,dev]"

@@ -1,0 +1,231 @@
+{
+  "system": "Agent G - NMOP agent",
+  "dialect": "IETF NMOP (RFC 9940 + anomaly-semantics / incident-yang)",
+  "modules": [
+    "rfc9940-anomaly",
+    "nmop-anomaly-semantics",
+    "nmop-incident"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-mini from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case obs_compute, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/obs_compute/model_b*.json.",
+  "concepts": [
+    {
+      "id": "g.node",
+      "label": "resource",
+      "synonyms": [
+        "managed object",
+        "network element"
+      ],
+      "kind": "resource",
+      "gloss": "A managed resource in the network/service domain (a managed object or network element) that is the locus of monitoring, configuration and operational state.",
+      "example": "node-14 — a managed network element (hostname node-14) that is monitored for metrics and receives configuration; another instance is ctr-app-node14 which is a controller/application process running on that resource.",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "node-14",
+        "ctr-app-node14"
+      ]
+    },
+    {
+      "id": "g.event",
+      "label": "event",
+      "synonyms": [
+        "notification"
+      ],
+      "kind": "event",
+      "gloss": "A discrete notification produced by the system about an observation or state change that is tied to a specific resource (an occurrence 'on' a g.node).",
+      "example": "trap-cpu-node14-t0 — an SNMP/trap-style notification emitted on node-14 at time t0 indicating the device reported a CPU threshold crossing.",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "trap-cpu-node14-t0"
+      ]
+    },
+    {
+      "id": "g.anomaly",
+      "label": "anomaly",
+      "synonyms": [
+        "deviation"
+      ],
+      "kind": "anomaly",
+      "gloss": "An automatically or analytically detected deviation from expected behavior that is associated with a particular resource (an anomaly 'on' a g.node).",
+      "example": "cpu-node14-rising — an anomaly detected on node-14 representing a rising CPU utilization pattern that departs from its historical baseline.",
+      "ref": "anomaly",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "cpu-node14-rising"
+      ]
+    },
+    {
+      "id": "g.symptom",
+      "label": "symptom",
+      "synonyms": [
+        "manifestation"
+      ],
+      "kind": "symptom",
+      "gloss": "A concrete observable manifestation that is a consequence or indicator 'of' a higher-level anomaly (a symptom describes how the anomaly presents itself operationally).",
+      "example": "symptom-1 — a logged manifestation (e.g., HTTP request latency >500 ms) recorded as a symptom of the anomaly cpu-node14-rising.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "symptom-1"
+      ]
+    },
+    {
+      "id": "g.fault",
+      "label": "fault",
+      "synonyms": [
+        "failure occurrence"
+      ],
+      "kind": "fault",
+      "gloss": "A realized failure condition occurring on a resource (a failure occurrence 'on' a g.node) that represents an operational defect or outage state.",
+      "example": "fault-1 — a failure occurrence on node-14 such as the routing process unexpectedly crashing, documented as an observed fault on that node.",
+      "ref": "fault",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "fault-1"
+      ]
+    },
+    {
+      "id": "g.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "alarm state"
+      ],
+      "kind": "alarm",
+      "gloss": "A tracked alarm state associated with a resource (an alarm 'on' a g.node) representing an escalation-worthy condition derived from events, anomalies, or faults.",
+      "example": "alarm-1 — an active alarm on node-14 raised when CPU utilization exceeded its critical threshold, generating operator-facing alerts.",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "alarm-1"
+      ]
+    },
+    {
+      "id": "g.problem",
+      "label": "problem",
+      "synonyms": [
+        "diagnosis"
+      ],
+      "kind": "problem",
+      "gloss": "An identified diagnosis or explanation that accounts for one or more faults (a problem that 'explains' a g.fault), used to capture the likely technical issue to remedy.",
+      "example": "problem-1 — the diagnosis that excessive background telemetry processes caused resource exhaustion, offered as the explanation for fault-1 on node-14.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "explains",
+          "target": "g.fault"
+        }
+      ],
+      "instances": [
+        "problem-1"
+      ]
+    },
+    {
+      "id": "g.cause",
+      "label": "cause",
+      "synonyms": [
+        "root cause"
+      ],
+      "kind": "cause",
+      "gloss": "The inferred root cause entity that is the origin 'of' a problem (a root-cause attribution used to justify the problem-level diagnosis).",
+      "example": "cause-1 — the root cause identified as a memory leak in the telemetry agent, cited as the cause of problem-1.",
+      "ref": "cause",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "g.problem"
+        }
+      ],
+      "instances": [
+        "cause-1"
+      ]
+    },
+    {
+      "id": "g.incident",
+      "label": "incident",
+      "synonyms": [
+        "grouping"
+      ],
+      "kind": "incident",
+      "gloss": "A grouping construct that aggregates related anomalies (an incident 'groups' multiple g.anomaly instances) into a single operational ticket or investigation scope.",
+      "example": "incident-1 — an incident record that groups cpu-node14-rising and any sibling CPU anomalies on related nodes during the same time window for a single investigation.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "groups",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "incident-1"
+      ]
+    },
+    {
+      "id": "g.concern",
+      "label": "concern-score",
+      "synonyms": [
+        "concern"
+      ],
+      "kind": "concern",
+      "gloss": "A numeric concern-score annotation applied to an anomaly that quantifies the level of operational worry or impact (a concern that 'annotates' a g.anomaly).",
+      "example": "0.8 — a concern-score assigned to cpu-node14-rising indicating a high (80%) concern level that the anomaly warrants immediate attention.",
+      "ref": "concern",
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "0.8",
+        "0.9"
+      ]
+    },
+    {
+      "id": "g.confidence",
+      "label": "confidence-score",
+      "synonyms": [
+        "confidence"
+      ],
+      "kind": "confidence",
+      "gloss": "A numeric confidence-score annotation attached to an anomaly that expresses the model/system confidence in the anomaly's correctness (a confidence that 'annotates' a g.anomaly).",
+      "example": "0.6 — a confidence-score applied to cpu-node14-rising meaning the detection algorithm is 60% confident this deviation is a true anomaly.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "0.6",
+        "0.7"
+      ]
+    }
+  ]
+}

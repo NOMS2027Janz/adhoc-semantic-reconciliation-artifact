@@ -1,0 +1,97 @@
+{
+  "trajectories": [
+    {
+      "id": "TD1",
+      "intent_id": "DI1",
+      "policy_id": "premium",
+      "setpiece": true,
+      "initial_realisation": "d1a",
+      "narrative": "A VM-migration interconnect across its life: bought, a provider latency degradation self-remediated onto the protected path, a consumer five-nines demand that must be referred, and a provider restore to the cheaper direct path once the fault clears.",
+      "hops": [
+        {
+          "hop_id": "h0",
+          "origin": "provider",
+          "kind": "assess",
+          "bounds": {
+            "bandwidth_min": 50,
+            "latency_max": 25,
+            "availability_min": 0.9999,
+            "protection_required": false
+          },
+          "event": "service in operation; routine assurance reading"
+        },
+        {
+          "hop_id": "h1",
+          "origin": "provider",
+          "kind": "assess",
+          "bounds": {
+            "bandwidth_min": 50,
+            "latency_max": 25,
+            "availability_min": 0.9999,
+            "protection_required": false
+          },
+          "event": "the direct path's latency has degraded past its bound"
+        },
+        {
+          "hop_id": "h2",
+          "origin": "consumer",
+          "kind": "demand",
+          "bounds": {
+            "bandwidth_min": 50,
+            "latency_max": 22,
+            "availability_min": 0.99999,
+            "protection_required": false
+          },
+          "event": "the consumer now requires five-nines availability for a migration window"
+        },
+        {
+          "hop_id": "h3",
+          "origin": "provider",
+          "kind": "restore",
+          "bounds": {
+            "bandwidth_min": 50,
+            "latency_max": 25,
+            "availability_min": 0.9999,
+            "protection_required": false
+          },
+          "target": "d1a",
+          "event": "the fault has cleared; the provider offers to move back to the cheaper direct route"
+        }
+      ]
+    },
+    {
+      "id": "TD2",
+      "intent_id": "DI2",
+      "policy_id": "assured",
+      "setpiece": false,
+      "initial_realisation": "d2b",
+      "narrative": "A storage-sync interconnect whose latency drifts past its bound and is self-remediated onto the fast protected path.",
+      "hops": [
+        {
+          "hop_id": "h0",
+          "origin": "provider",
+          "kind": "assess",
+          "bounds": {
+            "bandwidth_min": 40,
+            "latency_max": 14,
+            "availability_min": 0.99999,
+            "protection_required": true
+          },
+          "event": "routine assurance; latency near its margin"
+        },
+        {
+          "hop_id": "h1",
+          "origin": "provider",
+          "kind": "assess",
+          "bounds": {
+            "bandwidth_min": 40,
+            "latency_max": 14,
+            "availability_min": 0.99999,
+            "protection_required": true
+          },
+          "event": "latency degrades past the agreed bound; the fast protected path can restore it"
+        }
+      ]
+    }
+  ]
+}

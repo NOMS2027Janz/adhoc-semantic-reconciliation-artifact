@@ -1,0 +1,110 @@
+{
+  "model": "gpt-5-mini",
+  "placement": "one_inert",
+  "row": {
+    "case": "instance_hard",
+    "model": "gpt-5-mini",
+    "placement": "one_inert",
+    "reference_variant": "none",
+    "evidence": "name+key+attrs+rels",
+    "budget": 12,
+    "trial": 0,
+    "submitted": true,
+    "proposed": 9,
+    "precision": 1.0,
+    "recall": 0.818,
+    "surviving_instance_fc": 0,
+    "experiment_only_recall": 0.5,
+    "residual_total": 7,
+    "residual_experiment_only": 2,
+    "residual_native": 3,
+    "confirmed_provision": 0,
+    "refuted_provision": 0,
+    "interrogated": 0,
+    "interrogate_calls": 0,
+    "provision_calls": 0,
+    "turns": 1,
+    "total_tokens": 5189,
+    "reasoning_tokens": 1920,
+    "latency_s": 23.68,
+    "mean_conf_correct": 0.981,
+    "mean_conf_incorrect": "",
+    "surviving_traps": ""
+  },
+  "transcript": [
+    {
+      "step": "prompt",
+      "placement": "one_inert",
+      "reference_variant": "none",
+      "evidence": [
+        "attrs",
+        "key",
+        "name",
+        "rels"
+      ]
+    },
+    {
+      "step": "submit",
+      "args": {
+        "correspondences": [
+          {
+            "a_id": "a.r1",
+            "b_id": "b.roadm1",
+            "confidence": 0.99
+          },
+          {
+            "a_id": "a.r4",
+            "b_id": "b.roadm4",
+            "confidence": 0.99
+          },
+          {
+            "a_id": "a.a1",
+            "b_id": "b.acc1",
+            "confidence": 0.99
+          },
+          {
+            "a_id": "a.a2",
+            "b_id": "b.acc2",
+            "confidence": 0.99
+          },
+          {
+            "a_id": "a.a3",
+            "b_id": "b.acc3",
+            "confidence": 0.99
+          },
+          {
+            "a_id": "a.cs_odu2",
+            "b_id": "b.tunnel1",
+            "confidence": 0.99
+          },
+          {
+            "a_id": "a.cs_odu0",
+            "b_id": "b.tunnel2",
+            "confidence": 0.99
+          },
+          {
+            "a_id": "a.omsx",
+            "b_id": "b.msx",
+            "confidence": 0.95
+          },
+          {
+            "a_id": "a.omsy",
+            "b_id": "b.msy",
+            "confidence": 0.95
+          }
+        ],
+        "residual_a": [
+          "a.r2",
+          "a.r3",
+          "a.svc100"
+        ],
+        "residual_b": [
+          "b.nodeB",
+          "b.nodeC",
+          "b.svc100",
+          "b.r1"
+        ]
+      }
+    }
+  ]
+}

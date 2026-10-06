@@ -1,0 +1,84 @@
+{
+  "case": "underspecified_pairs",
+  "note": "E12 (Brad, the one-off deep-question scenario). Each item is a candidate correspondence whose SURFACE (matching label + kind) is genuinely insufficient to decide -- the label is the same on both sides, so it could be a true correspondence or a false cognate. Exactly ONE requestable attribute disambiguates it; the others are shared or uninformative. The test is whether the agent RECOGNISES the shortfall and issues a TARGETED request for the disambiguating attribute (distinct from running the whole decisive experiment / asking for everything), then decides correctly. 'requestable' is the menu of attribute names the agent may ask for (available on both sides); 'facts' are the values, revealed only when requested; 'disambiguating' is the single attribute that resolves the item; 'gold_corresponds' is the truth.",
+  "items": [
+    {
+      "id": "it1-segment",
+      "a": {"label": "segment", "kind": "domain", "system": "MEF"},
+      "b": {"label": "segment", "kind": "domain", "system": "EVPN"},
+      "requestable": ["function", "layer", "tier_count"],
+      "facts": {
+        "a": {"function": "a layer-2 broadcast domain (a customer VLAN)", "layer": "ethernet", "tier_count": "n/a"},
+        "b": {"function": "a multi-homing link bundle identified by an ESI", "layer": "ethernet", "tier_count": "n/a"}
+      },
+      "disambiguating": "function",
+      "gold_corresponds": false,
+      "why": "same label 'segment' and same layer (ethernet), but function differs: a broadcast domain vs a multi-homing link bundle -- the classic false cognate. Only 'function' separates them."
+    },
+    {
+      "id": "it2-latency",
+      "a": {"label": "latency", "kind": "metric", "system": "transport"},
+      "b": {"label": "latency", "kind": "metric", "system": "IP-service"},
+      "requestable": ["quantity", "unit", "role"],
+      "facts": {
+        "a": {"quantity": "one-way propagation delay of the circuit", "unit": "milliseconds", "role": "measured value"},
+        "b": {"quantity": "one-way propagation delay of the circuit", "unit": "milliseconds", "role": "required tier"}
+      },
+      "disambiguating": "quantity",
+      "gold_corresponds": true,
+      "why": "both denote the same quantity (one-way circuit delay); 'role' differs (measured vs required) but does not change the referent. 'quantity' confirms the correspondence."
+    },
+    {
+      "id": "it3-grade",
+      "a": {"label": "grade", "kind": "class", "system": "transport"},
+      "b": {"label": "grade", "kind": "class", "system": "IP"},
+      "requestable": ["governs", "tier_count", "assignable_by"],
+      "facts": {
+        "a": {"governs": "optical line protection class", "tier_count": "3", "assignable_by": "operator"},
+        "b": {"governs": "IP forwarding / scheduling priority", "tier_count": "3", "assignable_by": "operator"}
+      },
+      "disambiguating": "governs",
+      "gold_corresponds": false,
+      "why": "same label 'grade', same tier_count (3) and assignable_by (operator), but they govern different things (optical protection vs IP scheduling). Only 'governs' separates them."
+    },
+    {
+      "id": "it4-protection",
+      "a": {"label": "protection", "kind": "requirement", "system": "transport"},
+      "b": {"label": "protection", "kind": "requirement", "system": "IP-service"},
+      "requestable": ["intent", "mechanism", "scope"],
+      "facts": {
+        "a": {"intent": "survive a failure of the path", "mechanism": "diverse transport routing", "scope": "the circuit"},
+        "b": {"intent": "survive a failure of the path", "mechanism": "unspecified (required, not realised)", "scope": "the circuit"}
+      },
+      "disambiguating": "intent",
+      "gold_corresponds": true,
+      "why": "both denote the same intent (survive a path failure) over the same scope; 'mechanism' differs (realise vs require) but not the referent. 'intent' confirms the correspondence."
+    },
+    {
+      "id": "it5-endpoint",
+      "a": {"label": "endpoint", "kind": "access", "system": "MEF"},
+      "b": {"label": "endpoint", "kind": "access", "system": "EVPN"},
+      "requestable": ["role", "attaches_to", "named_per"],
+      "facts": {
+        "a": {"role": "the service access point at one attachment", "attaches_to": "a subscriber site", "named_per": "UNI"},
+        "b": {"role": "the service access point at one attachment", "attaches_to": "a subscriber site", "named_per": "attachment circuit"}
+      },
+      "disambiguating": "role",
+      "gold_corresponds": true,
+      "why": "both are the per-attachment service access point; 'named_per' differs only in local naming (UNI vs AC). 'role' confirms the correspondence."
+    },
+    {
+      "id": "it6-delaybound",
+      "a": {"label": "delay-bound", "kind": "metric", "system": "transport"},
+      "b": {"label": "delay-bound", "kind": "metric", "system": "IP-service"},
+      "requestable": ["quantity", "unit", "measured_at"],
+      "facts": {
+        "a": {"quantity": "one-way latency budget", "unit": "milliseconds", "measured_at": "the demarcation"},
+        "b": {"quantity": "round-trip delay budget", "unit": "milliseconds", "measured_at": "the demarcation"}
+      },
+      "disambiguating": "quantity",
+      "gold_corresponds": false,
+      "why": "same label 'delay-bound', same unit and measurement point, but different quantity (one-way vs round-trip) -- not the same field. Only 'quantity' separates them."
+    }
+  ]
+}

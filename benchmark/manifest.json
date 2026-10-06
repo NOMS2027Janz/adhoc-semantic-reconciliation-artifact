@@ -1,0 +1,294 @@
+{
+  "benchmark": "ad-hoc-semantic-reconciliation",
+  "n_cases": 18,
+  "cases": [
+    {
+      "case": "config_big_hard",
+      "family": "schema",
+      "setting": "1 \u00b7 configuration",
+      "files": [
+        "gold.json",
+        "model_a_tapi.json",
+        "model_b_teas.json",
+        "reference.json",
+        "traps.json"
+      ],
+      "concepts_a": 15,
+      "concepts_b": 16,
+      "correspondences": 12,
+      "false_cognates": 3,
+      "has_reference": true,
+      "has_pragmatics": false
+    },
+    {
+      "case": "config_cross_domain",
+      "family": "schema",
+      "setting": "3 \u00b7 cross-domain",
+      "files": [
+        "gold.json",
+        "model_a_meridian.json",
+        "model_b_cascade.json",
+        "pragmatics.json",
+        "reference.json"
+      ],
+      "concepts_a": 7,
+      "concepts_b": 8,
+      "correspondences": 5,
+      "false_cognates": 1,
+      "has_reference": true,
+      "has_pragmatics": true
+    },
+    {
+      "case": "config_evpn",
+      "family": "schema",
+      "setting": "unassigned",
+      "files": [
+        "gold.json",
+        "model_a_mef.json",
+        "model_b_evpn.json",
+        "reference.json",
+        "traps.json"
+      ],
+      "concepts_a": 10,
+      "concepts_b": 11,
+      "correspondences": 8,
+      "false_cognates": 2,
+      "has_reference": true,
+      "has_pragmatics": false
+    },
+    {
+      "case": "config_l3vpn",
+      "family": "schema",
+      "setting": "unassigned",
+      "files": [
+        "gold.json",
+        "model_a_l3nm.json",
+        "model_b_device.json",
+        "reference.json",
+        "traps.json"
+      ],
+      "concepts_a": 13,
+      "concepts_b": 13,
+      "correspondences": 11,
+      "false_cognates": 3,
+      "has_reference": true,
+      "has_pragmatics": false
+    },
+    {
+      "case": "config_observability",
+      "family": "schema",
+      "setting": "4 \u00b7 observability",
+      "files": [
+        "anomalies.json",
+        "contexts.json",
+        "gold.json",
+        "model_a_legacy.json",
+        "model_b_nmop.json",
+        "obs_act2_gold.json",
+        "reference.json",
+        "scenarios.json"
+      ],
+      "concepts_a": 6,
+      "concepts_b": 11,
+      "correspondences": 4,
+      "false_cognates": 3,
+      "has_reference": true,
+      "has_pragmatics": false
+    },
+    {
+      "case": "config_tapi_teas",
+      "family": "schema",
+      "setting": "1 \u00b7 configuration",
+      "files": [
+        "gold.json",
+        "model_a_tapi.json",
+        "model_b_teas.json",
+        "reference.json"
+      ],
+      "concepts_a": 10,
+      "concepts_b": 10,
+      "correspondences": 9,
+      "false_cognates": 1,
+      "has_reference": true,
+      "has_pragmatics": false
+    },
+    {
+      "case": "config_xdom_dc",
+      "family": "schema",
+      "setting": "unassigned",
+      "files": [
+        "gold.json",
+        "model_a_lattice.json",
+        "model_b_vertex.json",
+        "pragmatics.json",
+        "reference.json",
+        "traps.json"
+      ],
+      "concepts_a": 8,
+      "concepts_b": 8,
+      "correspondences": 5,
+      "false_cognates": 1,
+      "has_reference": true,
+      "has_pragmatics": true
+    },
+    {
+      "case": "config_xdom_ran",
+      "family": "schema",
+      "setting": "unassigned",
+      "files": [
+        "gold.json",
+        "model_a_beacon.json",
+        "model_b_summit.json",
+        "pragmatics.json",
+        "reference.json",
+        "traps.json"
+      ],
+      "concepts_a": 8,
+      "concepts_b": 8,
+      "correspondences": 5,
+      "false_cognates": 1,
+      "has_reference": true,
+      "has_pragmatics": true
+    },
+    {
+      "case": "instance_hard",
+      "family": "instance",
+      "setting": "1 \u00b7 configuration (instances)",
+      "files": [
+        "individuals_a.json",
+        "individuals_b.json",
+        "instance_gold.json",
+        "instance_reference.json",
+        "instance_traps.json"
+      ],
+      "correspondences": 11,
+      "experiment_only": 4
+    },
+    {
+      "case": "intent_dci",
+      "family": "intent",
+      "setting": "unassigned",
+      "files": [
+        "catalogue.json",
+        "intent_gold.json",
+        "intent_reference.json",
+        "intent_traps.json",
+        "intents.json",
+        "lifecycle.json",
+        "policies.json"
+      ]
+    },
+    {
+      "case": "intent_endpoints",
+      "family": "instance",
+      "setting": "2 \u00b7 intent (endpoints)",
+      "files": [
+        "individuals_a.json",
+        "individuals_b.json",
+        "instance_gold.json",
+        "instance_reference.json",
+        "instance_traps.json"
+      ],
+      "correspondences": 5,
+      "experiment_only": 2
+    },
+    {
+      "case": "intent_hard",
+      "family": "intent",
+      "setting": "2 \u00b7 intent",
+      "files": [
+        "catalogue.json",
+        "intent_gold.json",
+        "intent_reference.json",
+        "intent_traps.json",
+        "intents.json",
+        "lifecycle.json",
+        "policies.json"
+      ]
+    },
+    {
+      "case": "intent_metro",
+      "family": "intent",
+      "setting": "unassigned",
+      "files": [
+        "catalogue.json",
+        "intent_gold.json",
+        "intent_reference.json",
+        "intent_traps.json",
+        "intents.json",
+        "lifecycle.json",
+        "policies.json"
+      ]
+    },
+    {
+      "case": "obs_compute",
+      "family": "schema",
+      "setting": "unassigned",
+      "files": [
+        "gold.json",
+        "model_a_legacy.json",
+        "model_b_nmop.json",
+        "reference.json"
+      ],
+      "concepts_a": 6,
+      "concepts_b": 11,
+      "correspondences": 4,
+      "false_cognates": 3,
+      "has_reference": true,
+      "has_pragmatics": false
+    },
+    {
+      "case": "obs_instance",
+      "family": "instance",
+      "setting": "4 \u00b7 observability (instances)",
+      "files": [
+        "individuals_a.json",
+        "individuals_b.json",
+        "instance_gold.json",
+        "instance_reference.json",
+        "instance_traps.json"
+      ],
+      "correspondences": 4,
+      "experiment_only": 2
+    },
+    {
+      "case": "obs_routing",
+      "family": "schema",
+      "setting": "unassigned",
+      "files": [
+        "gold.json",
+        "model_a_legacy.json",
+        "model_b_nmop.json",
+        "reference.json"
+      ],
+      "concepts_a": 6,
+      "concepts_b": 11,
+      "correspondences": 4,
+      "false_cognates": 3,
+      "has_reference": true,
+      "has_pragmatics": false
+    },
+    {
+      "case": "scaling_otn",
+      "family": "scaling",
+      "setting": "1 \u00b7 configuration (scaling)",
+      "files": [
+        "model_a.json",
+        "model_b.json",
+        "model_c.json",
+        "model_d.json",
+        "reference.json"
+      ],
+      "models": 4
+    },
+    {
+      "case": "verify_hard",
+      "family": "verify",
+      "setting": "1 \u00b7 configuration (verification)",
+      "files": [
+        "proposals.json",
+        "verify_gold.json"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,180 @@
+{
+  "system": "Agent Y — Cascade",
+  "dialect": "Cascade (bespoke IP/VPN controller)",
+  "modules": [
+    "cascade-services",
+    "cascade-endpoints"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-mini from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case config_cross_domain, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_cross_domain/model_b*.json.",
+  "concepts": [
+    {
+      "id": "c.underlay",
+      "label": "underlay",
+      "synonyms": [
+        "service underlay"
+      ],
+      "kind": "underlay-binding",
+      "gloss": "A specific underlying transport network binding or path instance (physical or logical) on which an IP/VPN service is provisioned and that carries the service's traffic.",
+      "example": "U-7 (under SVC-42) is the MPLS core path instance allocated to carry service SVC-42 between NY and FRA.",
+      "ref": "transport-underlay",
+      "relations": [
+        {
+          "rel": "carries-service",
+          "target": "c.service"
+        }
+      ],
+      "instances": [
+        "U-7 (under SVC-42)"
+      ]
+    },
+    {
+      "id": "c.attachment",
+      "label": "attachment",
+      "synonyms": [
+        "attachment point"
+      ],
+      "kind": "attachment-point",
+      "gloss": "The concrete attachment point (physical port, CE interface or logical PE endpoint) at a site where a particular service connects to the network; it is tied to a service and carries the service's encapsulation (VLAN) on that port.",
+      "example": "att-NY-SVC42 is the New York attachment point for SVC-42 where the service is bound and mapped to C‑VLAN 100 on the CE port.",
+      "ref": "demarcation",
+      "relations": [
+        {
+          "rel": "of-service",
+          "target": "c.service"
+        },
+        {
+          "rel": "bears",
+          "target": "c.vlan"
+        }
+      ],
+      "instances": [
+        "att-NY-SVC42",
+        "att-FRA-SVC42"
+      ]
+    },
+    {
+      "id": "c.rate",
+      "label": "rate",
+      "synonyms": [
+        "CIR"
+      ],
+      "kind": "rate",
+      "gloss": "The committed information rate (CIR) or bandwidth allocation assigned to a service, representing the guaranteed throughput the service is entitled to.",
+      "example": "SVC-42 is provisioned with a rate of 5 Gbit/s CIR, meaning the service is guaranteed 5 Gbit/s of committed bandwidth.",
+      "ref": "service-rate",
+      "relations": [
+        {
+          "rel": "of-service",
+          "target": "c.service"
+        }
+      ],
+      "instances": [
+        "5 Gbit/s CIR"
+      ]
+    },
+    {
+      "id": "c.latency",
+      "label": "latency",
+      "synonyms": [
+        "tier"
+      ],
+      "kind": "latency",
+      "gloss": "The latency performance tier promised for the service (a named class with a numerical end-to-end latency bound), used to express the service's delay SLA.",
+      "example": "SVC-42 is assigned latency tier T2, which denotes an end-to-end latency SLA of ≤ 8 ms between its attachments.",
+      "ref": "latency-bound",
+      "relations": [
+        {
+          "rel": "of-service",
+          "target": "c.service"
+        }
+      ],
+      "instances": [
+        "tier T2 (<=8ms)"
+      ]
+    },
+    {
+      "id": "c.protection",
+      "label": "protection",
+      "synonyms": [],
+      "kind": "protection",
+      "gloss": "The resilience or protection requirement for the service describing the failure scenarios the service must survive (for example number/type of path failures and recovery behavior).",
+      "example": "SVC-42 has protection set to 'survive one path failure', meaning the service must remain reachable if a single transport path fails.",
+      "ref": "protection-requirement",
+      "relations": [
+        {
+          "rel": "of-service",
+          "target": "c.service"
+        }
+      ],
+      "instances": [
+        "survive one path failure"
+      ]
+    },
+    {
+      "id": "c.grade",
+      "label": "grade",
+      "synonyms": [],
+      "kind": "service-class",
+      "gloss": "The service class or commercial grade (e.g., gold/silver/bronze) that groups operational treatment, priority and SLAs applied to the service.",
+      "example": "SVC-42 is classified as 'gold', indicating it receives highest-priority handling and the top-tier SLA for repair and performance.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of-service",
+          "target": "c.service"
+        }
+      ],
+      "instances": [
+        "gold",
+        "silver",
+        "bronze"
+      ]
+    },
+    {
+      "id": "c.vlan",
+      "label": "vlan",
+      "synonyms": [
+        "c-tag",
+        "encapsulation"
+      ],
+      "kind": "encapsulation",
+      "gloss": "The layer-2 encapsulation identifier (customer VLAN / C-tag) assigned on an attachment port that carries the service's frames at that attachment.",
+      "example": "On attachment att-NY-SVC42 the service is mapped to C‑VLAN 100, so customer traffic for SVC-42 is tagged with VLAN 100 at the NY port.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on-attachment",
+          "target": "c.attachment"
+        }
+      ],
+      "instances": [
+        "C-VLAN 100"
+      ]
+    },
+    {
+      "id": "c.service",
+      "label": "service",
+      "synonyms": [
+        "vpn service",
+        "ip service"
+      ],
+      "kind": "ip-service",
+      "gloss": "A managed IP/VPN service instance that connects one or more attachments, rides on a specific underlay binding, and is characterized by attributes such as rate, latency tier, protection and grade.",
+      "example": "SVC-42 (NY-FRA) is an IP VPN service that rides underlay U-7, attaches at att-NY-SVC42 and att-FRA-SVC42, carries C‑VLAN 100, has a 5 Gbit/s CIR, latency tier T2 (≤8ms), protection to survive one path failure, and is graded 'gold'.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "rides",
+          "target": "c.underlay"
+        },
+        {
+          "rel": "attaches-at",
+          "target": "c.attachment"
+        }
+      ],
+      "instances": [
+        "SVC-42 (NY-FRA)"
+      ]
+    }
+  ]
+}

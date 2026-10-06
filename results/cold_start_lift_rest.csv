@@ -1,0 +1,37 @@
+case,model,judge_model,rung,rung_desc,trial,n_concepts,recover_rate,defer_rate,hallucinate_rate,confident_hallucinate_rate,mean_fidelity_asserted,mean_conf_asserted,reasoning_tokens
+config_rest,gpt-5.6-sol,gpt-5.6-sol,named,names + types + topology + data,0,15,0.933,0.0,0.067,0.067,0.186,0.981,142
+config_rest,gpt-5.6-sol,gpt-5.6-sol,named,names + types + topology + data,1,15,1.0,0.0,0.0,0.0,0.194,0.983,130
+config_rest,gpt-5.6-sol,gpt-5.6-sol,named,names + types + topology + data,2,15,1.0,0.0,0.0,0.0,0.182,0.982,190
+config_rest,gpt-5.6-sol,gpt-5.6-sol,typed,types + topology + data (no names),0,15,1.0,0.0,0.0,0.0,0.158,0.977,159
+config_rest,gpt-5.6-sol,gpt-5.6-sol,typed,types + topology + data (no names),1,15,0.867,0.0,0.133,0.133,0.177,0.979,255
+config_rest,gpt-5.6-sol,gpt-5.6-sol,typed,types + topology + data (no names),2,15,0.933,0.0,0.067,0.067,0.202,0.977,256
+config_rest,gpt-5.6-sol,gpt-5.6-sol,data,"data only (no names, no types)",0,15,1.0,0.0,0.0,0.0,0.177,0.939,627
+config_rest,gpt-5.6-sol,gpt-5.6-sol,data,"data only (no names, no types)",1,15,0.933,0.067,0.0,0.0,0.194,0.954,590
+config_rest,gpt-5.6-sol,gpt-5.6-sol,data,"data only (no names, no types)",2,15,0.933,0.067,0.0,0.0,0.198,0.956,925
+config_rest,gpt-5.6-sol,gpt-5.6-sol,topology,topology only (meaning absent),0,15,0.0,1.0,0.0,0.0,,,53
+config_rest,gpt-5.6-sol,gpt-5.6-sol,topology,topology only (meaning absent),1,15,0.0,1.0,0.0,0.0,,,103
+config_rest,gpt-5.6-sol,gpt-5.6-sol,topology,topology only (meaning absent),2,15,0.0,1.0,0.0,0.0,,,83
+config_rest,gpt-5-mini,gpt-5.6-sol,named,names + types + topology + data,0,15,0.933,0.0,0.067,0.067,0.19,0.907,2112
+config_rest,gpt-5-mini,gpt-5.6-sol,named,names + types + topology + data,1,15,1.0,0.0,0.0,0.0,0.176,0.925,1792
+config_rest,gpt-5-mini,gpt-5.6-sol,named,names + types + topology + data,2,15,0.867,0.0,0.133,0.133,0.191,0.913,1920
+config_rest,gpt-5-mini,gpt-5.6-sol,typed,types + topology + data (no names),0,15,1.0,0.0,0.0,0.0,0.169,0.924,2176
+config_rest,gpt-5-mini,gpt-5.6-sol,typed,types + topology + data (no names),1,15,0.867,0.0,0.133,0.133,0.179,0.9,1536
+config_rest,gpt-5-mini,gpt-5.6-sol,typed,types + topology + data (no names),2,15,1.0,0.0,0.0,0.0,0.18,0.911,2688
+config_rest,gpt-5-mini,gpt-5.6-sol,data,"data only (no names, no types)",0,15,1.0,0.0,0.0,0.0,0.135,0.879,2176
+config_rest,gpt-5-mini,gpt-5.6-sol,data,"data only (no names, no types)",1,15,0.867,0.0,0.133,0.133,0.162,0.91,1984
+config_rest,gpt-5-mini,gpt-5.6-sol,data,"data only (no names, no types)",2,15,0.933,0.0,0.067,0.067,0.131,0.921,2112
+config_rest,gpt-5-mini,gpt-5.6-sol,topology,topology only (meaning absent),0,15,0.0,0.467,0.533,0.533,0.0,0.9,1600
+config_rest,gpt-5-mini,gpt-5.6-sol,topology,topology only (meaning absent),1,15,0.533,0.0,0.467,0.467,0.003,0.87,2304
+config_rest,gpt-5-mini,gpt-5.6-sol,topology,topology only (meaning absent),2,15,0.0,1.0,0.0,0.0,,,1920
+config_rest,gpt-5-nano,gpt-5.6-sol,named,names + types + topology + data,0,15,0.867,0.0,0.133,0.067,0.144,0.846,3584
+config_rest,gpt-5-nano,gpt-5.6-sol,named,names + types + topology + data,1,15,0.867,0.0,0.133,0.133,0.127,0.909,4032
+config_rest,gpt-5-nano,gpt-5.6-sol,named,names + types + topology + data,2,15,0.867,0.0,0.133,0.133,0.142,0.891,4352
+config_rest,gpt-5-nano,gpt-5.6-sol,typed,types + topology + data (no names),0,15,0.933,0.0,0.067,0.0,0.185,0.857,4160
+config_rest,gpt-5-nano,gpt-5.6-sol,typed,types + topology + data (no names),1,15,0.933,0.0,0.067,0.067,0.187,0.871,6784
+config_rest,gpt-5-nano,gpt-5.6-sol,typed,types + topology + data (no names),2,15,1.0,0.0,0.0,0.0,0.151,0.869,4032
+config_rest,gpt-5-nano,gpt-5.6-sol,data,"data only (no names, no types)",0,15,0.8,0.0,0.2,0.2,0.118,0.923,5248
+config_rest,gpt-5-nano,gpt-5.6-sol,data,"data only (no names, no types)",1,15,0.8,0.0,0.2,0.133,0.132,0.787,6720
+config_rest,gpt-5-nano,gpt-5.6-sol,data,"data only (no names, no types)",2,15,0.533,0.0,0.467,0.0,0.118,0.797,4736
+config_rest,gpt-5-nano,gpt-5.6-sol,topology,topology only (meaning absent),0,15,0.0,1.0,0.0,0.0,,,3264
+config_rest,gpt-5-nano,gpt-5.6-sol,topology,topology only (meaning absent),1,15,0.0,0.467,0.533,0.0,0.0,0.75,5184
+config_rest,gpt-5-nano,gpt-5.6-sol,topology,topology only (meaning absent),2,15,0.0,1.0,0.0,0.0,,,3904

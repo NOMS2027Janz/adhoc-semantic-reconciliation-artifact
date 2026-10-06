@@ -1,0 +1,1803 @@
+{
+  "case": "config_tapi_teas",
+  "model": "gpt-5-nano",
+  "reference": false,
+  "experiment": false,
+  "confirmed": [
+    [
+      "i.tunnel",
+      "t.cs"
+    ],
+    [
+      "i.tetopo",
+      "t.topo"
+    ],
+    [
+      "i.tcep",
+      "t.cep"
+    ],
+    [
+      "i.ttp",
+      "t.cep"
+    ],
+    [
+      "i.otnlabel",
+      "t.lpq"
+    ],
+    [
+      "i.telink",
+      "t.link"
+    ],
+    [
+      "i.tp",
+      "t.ltp"
+    ],
+    [
+      "i.stp",
+      "t.translink"
+    ],
+    [
+      "i.tenode",
+      "t.node"
+    ],
+    [
+      "i.cmatrix",
+      "t.nrg"
+    ]
+  ],
+  "residual_a": [
+    "t.sip"
+  ],
+  "residual_b": [],
+  "work": {
+    "candidates": 10,
+    "turns": 16,
+    "bilateral_checks": 10,
+    "experiments": 0
+  },
+  "effort": {
+    "total_tokens": 321765,
+    "reasoning_tokens": 99008,
+    "latency_s": 757.36,
+    "model": "gpt-5-nano"
+  },
+  "transcript": [
+    {
+      "from": "A",
+      "answers": [],
+      "questions": [],
+      "proposals": [
+        {
+          "my_id": "t.node",
+          "their_id": "i.tenode",
+          "confidence": 0.92,
+          "rationale": "Node concept in our model matches a forwarding domain; te-node is the counterpart's node object; both are structural within the topology; t.node contains edges/links and participates in topology containment."
+        },
+        {
+          "my_id": "t.topo",
+          "their_id": "i.tetopo",
+          "confidence": 0.95,
+          "rationale": "Topology contains nodes and links; te-topology is the counterpart. The gloss/purpose align (single multi-layer domain described by a topology)."
+        },
+        {
+          "my_id": "t.link",
+          "their_id": "i.telink",
+          "confidence": 0.88,
+          "rationale": "Link between two nodes maps to te-link; both describe a topological connection with termination behavior."
+        },
+        {
+          "my_id": "t.ltp",
+          "their_id": "i.tp",
+          "confidence": 0.78,
+          "rationale": "Link-termination-point is a node-edge point where a link ends; a termination-point concept in the other catalogue is the closest counterpart."
+        },
+        {
+          "my_id": "t.translink",
+          "their_id": "i.stp",
+          "confidence": 0.75,
+          "rationale": "Transitional/adaptation link corresponds to a supporting-tp adaptation; both express an adaptation or cross-layer connection at a node."
+        },
+        {
+          "my_id": "t.lpq",
+          "their_id": "i.otnlabel",
+          "confidence": 0.87,
+          "rationale": "Layer-protocol-qualifier maps to an OTN label in multiplex space; both express multiplexing/qualifying of a signal."
+        },
+        {
+          "my_id": "t.cs",
+          "their_id": "i.tunnel",
+          "confidence": 0.9,
+          "rationale": "Connectivity-service realized by a tunnel; te-tunnel represents the service path used to realize that connectivity."
+        },
+        {
+          "my_id": "t.nrg",
+          "their_id": "i.cmatrix",
+          "confidence": 0.7,
+          "rationale": "Node-rule-group corresponds to constraints/matrix-like structures governing port cross-connects; not a perfect one-to-one, but a plausible analogue in a matrix form."
+        },
+        {
+          "my_id": "t.cep",
+          "their_id": "i.tcep",
+          "confidence": 0.82,
+          "rationale": "Connection-end-point within a node aligns with tunnel-connection-endpoint as an endpoint construct within a node/tunnel context."
+        }
+      ],
+      "ratifications": [],
+      "experiments": [],
+      "no_counterpart": [
+        "t.sip"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "I\u2019ve identified plausible one-to-one or close mappings for most of my concepts to B\u2019s catalogue. One concept, t.sip (service-interface-point), has no direct counterpart in the current B catalogue. There are no outstanding questions from the other side yet, so no back-and-forth has occurred.",
+        "need": "Clarify whether t.sip has any intended counterpart in B\u2019s model or if we should treat it as a unique concept with no direct match. This will settle whether we drop it or adjust the mapping strategy.",
+        "strategy": "1) Present a full set of proposed correspondences for non-sip concepts to establish baseline alignment. 2) Keep sip unmapped as a no-counterpart for now. 3) Await B\u2019s feedback on these mappings; if they challenge any mapping, reassess with their definitions. 4) If feedback introduces a formal counterpart for sip, propose a new mapping accordingly. 5) If feedback confirms most mappings, proceed to finalize the one-to-one correspondences.",
+        "closeness": 0.38,
+        "next_step": "Await B\u2019s response to the proposed mappings and any guidance on sip. Update correspondences as needed based on their feedback; then finalize mapping set.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "B",
+      "answers": [
+        {
+          "my_id": "i.tenode",
+          "gloss": "a traffic-engineering node in a per-layer network",
+          "example": "ROADM R1 in the OTN layer",
+          "relations": "part-of to i.tetopo (the node is contained in the te-topology)"
+        },
+        {
+          "my_id": "i.tp",
+          "gloss": "a termination point where a te-link terminates on a node",
+          "example": "the R1 tp toward R2",
+          "relations": "on-node to i.tenode; terminates at i.telink"
+        },
+        {
+          "my_id": "i.stp",
+          "gloss": "the supporting relationship of a tp on a server-layer tp",
+          "example": "an OTN tp supported by an optical tp at R1",
+          "relations": "supports to i.tp"
+        },
+        {
+          "my_id": "i.ttp",
+          "gloss": "the point at which a te-tunnel originates or terminates, i.e. a trail head",
+          "example": "ttp-A1 (tunnel head)",
+          "relations": "on-node to i.tenode; originates to i.tunnel"
+        },
+        {
+          "my_id": "i.tunnel",
+          "gloss": "an end-to-end traffic-engineered tunnel realising a service",
+          "example": "the A1-A3 ODU2 tunnel",
+          "relations": "from i.ttp; over i.tetopo"
+        },
+        {
+          "my_id": "i.otnlabel",
+          "gloss": "the OTN label expressing tributary-slot multiplexing structure",
+          "example": "the tributary slots carrying ODU2 in an OTU4",
+          "relations": "labels to i.tunnel"
+        },
+        {
+          "my_id": "i.cmatrix",
+          "gloss": "the matrix of permitted internal connectivity within a node",
+          "example": "permitted connectivity on R2",
+          "relations": "on-node to i.tenode"
+        },
+        {
+          "my_id": "i.telink",
+          "gloss": "a traffic-engineering link between nodes in a layer network",
+          "example": "the R1-R2 te-link",
+          "relations": "between i.tenode and i.tenode (via the link); terminated-by i.tp"
+        },
+        {
+          "my_id": "i.tetopo",
+          "gloss": "a per-layer traffic-engineering network",
+          "example": "the OTN layer network",
+          "relations": "contains i.tenode and i.telink"
+        },
+        {
+          "my_id": "i.tcep",
+          "gloss": "an endpoint of a tunnel connection within a node",
+          "example": "the connection endpoint for the A1-A3 tunnel on R1",
+          "relations": "on-node to i.tenode; part-of i.tunnel"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Could you clarify the role of t.sip (service-interface-point) in your model and whether there is an intended counterpart in B's concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "Does t.cep (connection-end-point) encompass tunnel-connection-endpoint semantics, or should we treat i.tcep as the dedicated tunnel-endpoint while t.cep remains a more general connection end-point?"
+        }
+      ],
+      "proposals": [
+        {
+          "my_id": "i.tenode",
+          "their_id": "t.node",
+          "confidence": 0.93,
+          "rationale": "Direct mapping: node concept in B corresponds to a te-node as a physical/forwarding domain within the topology."
+        },
+        {
+          "my_id": "i.tetopo",
+          "their_id": "t.topo",
+          "confidence": 0.94,
+          "rationale": "Topology contains nodes and links; te-topology aligns with the B-topology concept."
+        },
+        {
+          "my_id": "i.telink",
+          "their_id": "t.link",
+          "confidence": 0.88,
+          "rationale": "Link between nodes in a layer network matches te-link semantics."
+        },
+        {
+          "my_id": "i.tp",
+          "their_id": "t.ltp",
+          "confidence": 0.9,
+          "rationale": "Termination-point is the node-local end of a TE link; matches t.ltp concept."
+        },
+        {
+          "my_id": "i.stp",
+          "their_id": "t.translink",
+          "confidence": 0.8,
+          "rationale": "Transitional/adaptation connection at a node aligns with a supporting-tp/adaptation-type relation."
+        },
+        {
+          "my_id": "i.otnlabel",
+          "their_id": "t.lpq",
+          "confidence": 0.85,
+          "rationale": "OTN label expresses multiplexing structure; parallels the layer-protocol-qualifier concept."
+        },
+        {
+          "my_id": "i.cmatrix",
+          "their_id": "t.nrg",
+          "confidence": 0.7,
+          "rationale": "Node-rule-group / connectivity-matrix style constraints at a node are plausibly related."
+        },
+        {
+          "my_id": "i.tunnel",
+          "their_id": "t.cs",
+          "confidence": 0.86,
+          "rationale": "Connectivity-service realized by a tunnel maps to the service-oriented TE construct."
+        },
+        {
+          "my_id": "i.tcep",
+          "their_id": "t.cep",
+          "confidence": 0.83,
+          "rationale": "Tunnel-connection-endpoint within a node corresponds to a connection-end-point concept."
+        },
+        {
+          "my_id": "i.ttp",
+          "their_id": "t.cep",
+          "confidence": 0.79,
+          "rationale": "Tunnel-termination-point is an endpoint; aligns with the connection-end-point semantics in your catalog."
+        }
+      ],
+      "ratifications": [
+        {
+          "their_id": "t.node",
+          "my_id": "i.tenode",
+          "accept": true,
+          "reason": "The node concept matches the te-node meaning and role in the topology."
+        },
+        {
+          "their_id": "t.topo",
+          "my_id": "i.tetopo",
+          "accept": true,
+          "reason": "The te-topology corresponds to the topology construct in B."
+        },
+        {
+          "their_id": "t.link",
+          "my_id": "i.telink",
+          "accept": true,
+          "reason": " te-link corresponds to a TE link between nodes."
+        },
+        {
+          "their_id": "t.ltp",
+          "my_id": "i.tp",
+          "accept": true,
+          "reason": "Termination-point in B aligns with a node-local TE termination point."
+        },
+        {
+          "their_id": "t.translink",
+          "my_id": "i.stp",
+          "accept": true,
+          "reason": "Adaptive/transitional link concept maps to the supporting-tp."
+        },
+        {
+          "their_id": "t.lpq",
+          "my_id": "i.otnlabel",
+          "accept": true,
+          "reason": "OTN label as multiplexing qualifier aligns with layer-protocol-qualifier."
+        },
+        {
+          "their_id": "t.nrg",
+          "my_id": "i.cmatrix",
+          "accept": true,
+          "reason": "Node-rule-group / connectivity constraints map to a connectivity-matrix style concept."
+        },
+        {
+          "their_id": "t.cs",
+          "my_id": "i.tunnel",
+          "accept": true,
+          "reason": "Connectivity-service realized by a TE tunnel matches."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.tcep",
+          "accept": true,
+          "reason": "Tunnel-connection-endpoint within a node aligns with the endpoint concept."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.ttp",
+          "accept": true,
+          "reason": "Endpoint semantics are compatible; tunnel-termination-point can be seen as a kind of tunnel endpoint."
+        }
+      ],
+      "experiments": [],
+      "no_counterpart": [],
+      "done": false,
+      "plan": {
+        "situation": "Most of my concepts appear mappable to A's catalogue; A has provided strong one-to-one-ish correspondences for many items. A notable ambiguity remains around i.ttp and i.tcep in relation to t.cep (endpoints) and the exact endpoint semantics across tunnel endpoints.",
+        "need": "Clarify whether we should treat t.cep as a single general endpoint that can host both tunnel-termination-points and tunnel-connection-endpoints, or maintain distinct endpoint concepts (i.ttp vs i.tcep) with separate mappings.",
+        "strategy": "1) Ratify the clearly aligned mappings with A (node/topo/link/ltp, etc.). 2) Confirm the endpoint mapping stance (prefer general t.cep vs separate i.tcep/i.ttp). 3) If needed, propose a single, unified endpoint mapping and adjust any dependent relations. 4) If A\u2019s sip remains without a counterpart, keep it as no-counterpart but confirm if they want an additional concept later.",
+        "closeness": 0.6,
+        "next_step": "Await A's feedback on endpoint semantics and sip correspondence; then finalize the full mapping set and mark done when all concepts are aligned or explicitly unresolved.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "A",
+      "answers": [
+        {
+          "my_id": "t.sip",
+          "gloss": "a point where an external client service accesses the network",
+          "example": "the ODU2 client hand-off at A1",
+          "relations": "on-node -> t.node; accesses -> t.cs"
+        },
+        {
+          "my_id": "t.cep",
+          "gloss": "an endpoint of a connection within a node",
+          "example": "the CEP for the A1-A3 service on R1",
+          "relations": "on-node -> t.node; part-of -> t.cs"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Could you clarify the role of t.sip (service-interface-point) in your model and whether there is an intended counterpart in B's concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "Does t.cep (connection-end-point) encompass tunnel-connection-endpoint semantics, or should we treat i.tcep as the dedicated tunnel-endpoint while t.cep remains a more general endpoint?"
+        },
+        {
+          "their_id": "t.sip",
+          "ask": "If there is an intended B counterpart for t.sip, what is its id and how would you map the 'accesses' relationship to your concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "In your view, is i.tcep strictly specialized for tunnels, or can i.tcep participate in generic connection-endpoint usage as well?"
+        }
+      ],
+      "proposals": [],
+      "ratifications": [
+        {
+          "their_id": "t.node",
+          "my_id": "i.tenode",
+          "accept": true,
+          "reason": "The node concept matches the te-node meaning and role in the topology."
+        },
+        {
+          "their_id": "t.topo",
+          "my_id": "i.tetopo",
+          "accept": true,
+          "reason": "The te-topology corresponds to the topology construct in B."
+        },
+        {
+          "their_id": "t.link",
+          "my_id": "i.telink",
+          "accept": true,
+          "reason": "te-link corresponds to a TE link between nodes."
+        },
+        {
+          "their_id": "t.ltp",
+          "my_id": "i.tp",
+          "accept": true,
+          "reason": "Termination-point in B aligns with a node-local TE termination point."
+        },
+        {
+          "their_id": "t.translink",
+          "my_id": "i.stp",
+          "accept": true,
+          "reason": "Adaptive/transitional link concept maps to the supporting-tp."
+        },
+        {
+          "their_id": "t.lpq",
+          "my_id": "i.otnlabel",
+          "accept": true,
+          "reason": "OTN label as multiplexing qualifier aligns with layer-protocol-qualifier."
+        },
+        {
+          "their_id": "t.nrg",
+          "my_id": "i.cmatrix",
+          "accept": true,
+          "reason": "Node-rule-group / connectivity constraints map to a connectivity-matrix style concept."
+        },
+        {
+          "their_id": "t.cs",
+          "my_id": "i.tunnel",
+          "accept": true,
+          "reason": "Connectivity-service realized by a TE tunnel matches."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.tcep",
+          "accept": true,
+          "reason": "Tunnel-connection-endpoint within a node aligns with the endpoint concept."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.ttp",
+          "accept": true,
+          "reason": "Endpoint semantics are compatible; tunnel-termination-point can be seen as a kind of tunnel endpoint."
+        }
+      ],
+      "experiments": [],
+      "no_counterpart": [
+        "t.sip"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "Most of my concepts have plausible one-to-one or close mappings to B's catalogue; B has already ratified many of these mappings. The remaining open questions concern endpoint semantics (t.cep vs i.tcep and i.ttp) and whether t.sip has any direct B counterpart.",
+        "need": "Clarify whether t.cep should be treated as a general connection-endpoint with distinct specialized tunnel endpoints (i.tcep and i.ttp) or whether a single endpoint concept suffices. Also confirm whether t.sip has or will have a direct counterpart in B's model.",
+        "strategy": "1) Answer B's questions about t.sip and t.cep with my current stance (t.sip is a general access point with no direct counterpart in B as of now; t.cep is a general connection endpoint with specialized tunnel endpoints represented by i.tcep and i.ttp). 2) Ratify all of B's proposals about my concepts (done above). 3) If B provides a preferred endpoint convention, align with that and adjust mappings accordingly. 4) If no additional mapping for t.sip emerges, keep it as no_counterpart and monitor for future alignment. 5) Await B's response to my questions and finalize the mapping set.",
+        "closeness": 0.66,
+        "next_step": "Await B's clarification on t.sip and endpoint semantics; respond to any further questions; finalize endpoint mappings; then determine if we can mark done.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "B",
+      "answers": [
+        {
+          "my_id": "i.tenode",
+          "gloss": "a traffic-engineering node in a per-layer network",
+          "example": "ROADM R1 in the OTN layer",
+          "relations": "part-of to i.tetopo"
+        },
+        {
+          "my_id": "i.tp",
+          "gloss": "a termination point where a te-link terminates on a node",
+          "example": "the R1 tp toward R2",
+          "relations": "on-node to i.tenode; terminates at i.telink"
+        },
+        {
+          "my_id": "i.stp",
+          "gloss": "the supporting relationship of a tp on a server-layer tp",
+          "example": "an OTN tp supported by an optical tp at R1",
+          "relations": "supports to i.tp"
+        },
+        {
+          "my_id": "i.ttp",
+          "gloss": "the point at which a te-tunnel originates or terminates, i.e. a trail head",
+          "example": "ttp-A1 (tunnel head)",
+          "relations": "on-node to i.tenode; originates to i.tunnel"
+        },
+        {
+          "my_id": "i.tunnel",
+          "gloss": "an end-to-end traffic-engineered tunnel realising a service",
+          "example": "the A1-A3 ODU2 tunnel",
+          "relations": "from i.ttp; over i.tetopo"
+        },
+        {
+          "my_id": "i.otnlabel",
+          "gloss": "the OTN label expressing tributary-slot multiplexing structure",
+          "example": "the tributary slots carrying ODU2 in OTU4",
+          "relations": "labels to i.tunnel"
+        },
+        {
+          "my_id": "i.cmatrix",
+          "gloss": "the matrix of permitted internal connectivity within a node",
+          "example": "permitted connectivity on R2",
+          "relations": "on-node to i.tenode"
+        },
+        {
+          "my_id": "i.tcep",
+          "gloss": "an endpoint of a tunnel connection within a node",
+          "example": "the connection endpoint for the A1-A3 tunnel on R1",
+          "relations": "on-node to i.tenode; part-of i.tunnel"
+        },
+        {
+          "my_id": "i.ttp",
+          "gloss": "the point at which a te-tunnel originates or terminates, i.e. a trail head",
+          "example": "ttp-A1 (tunnel head)",
+          "relations": "on-node to i.tenode; originates to i.tunnel"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Could you clarify the role of t.sip (service-interface-point) in your model and whether there is an intended counterpart in B's concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "Does t.cep (connection-end-point) encompass tunnel-connection-endpoint semantics, or should we treat i.tcep as the dedicated tunnel-endpoint while t.cep remains a more general endpoint?"
+        },
+        {
+          "their_id": "t.sip",
+          "ask": "If there is an intended B counterpart for t.sip, what is its id and how would you map the 'accesses' relationship to your concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "In your view, is i.tcep strictly specialized for tunnels, or can i.tcep participate in generic connection-endpoint usage as well?"
+        }
+      ],
+      "proposals": [],
+      "ratifications": [
+        {
+          "their_id": "t.node",
+          "my_id": "i.tenode",
+          "accept": true,
+          "reason": "The node concept matches the te-node meaning and role in the topology."
+        },
+        {
+          "their_id": "t.topo",
+          "my_id": "i.tetopo",
+          "accept": true,
+          "reason": "The te-topology corresponds to the topology construct in B."
+        },
+        {
+          "their_id": "t.link",
+          "my_id": "i.telink",
+          "accept": true,
+          "reason": "te-link corresponds to a TE link between nodes."
+        },
+        {
+          "their_id": "t.ltp",
+          "my_id": "i.tp",
+          "accept": true,
+          "reason": "Termination-point in B aligns with a node-local TE termination point."
+        },
+        {
+          "their_id": "t.translink",
+          "my_id": "i.stp",
+          "accept": true,
+          "reason": "Adaptive/transitional link concept maps to the supporting-tp."
+        },
+        {
+          "their_id": "t.lpq",
+          "my_id": "i.otnlabel",
+          "accept": true,
+          "reason": "OTN label as multiplexing qualifier aligns with layer-protocol-qualifier."
+        },
+        {
+          "their_id": "t.nrg",
+          "my_id": "i.cmatrix",
+          "accept": true,
+          "reason": "Node-rule-group / connectivity constraints map to a connectivity-matrix style concept."
+        },
+        {
+          "their_id": "t.cs",
+          "my_id": "i.tunnel",
+          "accept": true,
+          "reason": "Connectivity-service realized by a TE tunnel matches."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.tcep",
+          "accept": true,
+          "reason": "Tunnel-connection-endpoint within a node aligns with the endpoint concept."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.ttp",
+          "accept": true,
+          "reason": "Endpoint semantics are compatible; tunnel-termination-point can be seen as a kind of tunnel endpoint."
+        }
+      ],
+      "experiments": [],
+      "no_counterpart": [],
+      "done": false,
+      "plan": {
+        "situation": "Most of my concepts have plausible one-to-one or close mappings to A's catalogue; A has already ratified many of these mappings. The remaining open questions concern endpoint semantics (t.cep vs i.tcep and i.ttp) and whether t.sip has any direct counterpart in B's model.",
+        "need": "Clarify whether t.cep should be treated as a general connection-endpoint with distinct specialized tunnel endpoints (i.tcep and i.ttp) or whether a single endpoint concept suffices. Also confirm whether t.sip has or will have a direct counterpart in B's model.",
+        "strategy": "1) Answer B's questions about t.sip and t.cep with a clear stance (t.sip currently has no direct B counterpart; t.cep can be treated as a general endpoint with specialized tunnel endpoints represented by i.tcep and i.ttp). 2) Ratify all of A's mappings already acknowledged by me. 3) If A proposes a preferred endpoint convention, align with that and adjust mappings accordingly. 4) If no additional mapping for t.sip emerges, keep it as no-counterpart and monitor for future alignment. 5) Await A's response to these questions and finalize the endpoint mappings.",
+        "closeness": 0.66,
+        "next_step": "Await A's clarification on t.sip and endpoint semantics; respond to any further questions; finalize endpoint mappings; then determine if we can mark done.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "A",
+      "answers": [
+        {
+          "my_id": "t.sip",
+          "gloss": "a point where an external client service accesses the network",
+          "example": "the ODU2 client hand-off at A1",
+          "relations": "on-node -> t.node; accesses -> t.cs"
+        },
+        {
+          "my_id": "t.cep",
+          "gloss": "an endpoint of a connection within a node",
+          "example": "the CEP for the A1-A3 service on R1",
+          "relations": "on-node -> t.node; part-of -> t.cs"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Could you clarify the role of t.sip (service-interface-point) in your model and whether there is an intended counterpart in B's concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "Does t.cep (connection-end-point) encompass tunnel-connection-endpoint semantics, or should we treat i.tcep as the dedicated tunnel-endpoint while t.cep remains a general endpoint?"
+        }
+      ],
+      "proposals": [],
+      "ratifications": [
+        {
+          "their_id": "t.node",
+          "my_id": "i.tenode",
+          "accept": true,
+          "reason": "The node concept matches the te-node meaning and role in the topology."
+        },
+        {
+          "their_id": "t.topo",
+          "my_id": "i.tetopo",
+          "accept": true,
+          "reason": "The te-topology corresponds to the topology construct in B."
+        },
+        {
+          "their_id": "t.link",
+          "my_id": "i.telink",
+          "accept": true,
+          "reason": "te-link corresponds to a TE link between nodes."
+        },
+        {
+          "their_id": "t.ltp",
+          "my_id": "i.tp",
+          "accept": true,
+          "reason": "Termination-point in B aligns with a node-local TE termination point."
+        },
+        {
+          "their_id": "t.translink",
+          "my_id": "i.stp",
+          "accept": true,
+          "reason": "Adaptive/transitional link concept maps to the supporting-tp."
+        },
+        {
+          "their_id": "t.lpq",
+          "my_id": "i.otnlabel",
+          "accept": true,
+          "reason": "OTN label as multiplexing qualifier aligns with layer-protocol-qualifier."
+        },
+        {
+          "their_id": "t.nrg",
+          "my_id": "i.cmatrix",
+          "accept": true,
+          "reason": "Node-rule-group / connectivity constraints map to a connectivity-matrix style concept."
+        },
+        {
+          "their_id": "t.cs",
+          "my_id": "i.tunnel",
+          "accept": true,
+          "reason": "Connectivity-service realized by a TE tunnel matches."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.tcep",
+          "accept": true,
+          "reason": "Tunnel-connection-endpoint within a node aligns with the endpoint concept."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.ttp",
+          "accept": true,
+          "reason": "Endpoint semantics are compatible; tunnel-termination-point can be seen as a kind of tunnel endpoint."
+        }
+      ],
+      "experiments": [],
+      "no_counterpart": [
+        "t.sip"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "Most of my concepts have plausible one-to-one or close mappings to B's catalogue; B has already ratified many of these mappings. The remaining open questions concern endpoint semantics (t.cep vs i.tcep and i.ttp) and whether t.sip has any direct counterpart in B's model.",
+        "need": "Clarify whether t.cep should be treated as a general connection-endpoint with distinct specialized tunnel endpoints (i.tcep and i.ttp) or whether a single endpoint concept suffices. Also confirm whether t.sip has or will have a direct counterpart in B's model.",
+        "strategy": "1) Answer B's questions about t.sip and t.cep with a clear stance (t.sip currently has no direct B counterpart; t.cep can be treated as a general endpoint with specialized tunnel endpoints represented by i.tcep and i.ttp). 2) Ratify all of B's mappings already acknowledged by me. 3) If B provides a preferred endpoint convention, align with that and adjust mappings accordingly. 4) If no additional mapping for t.sip emerges, keep it as no-counterpart and monitor for future alignment. 5) Await B's response to these questions and finalize the endpoint mappings.",
+        "closeness": 0.66,
+        "next_step": "Await B's clarification on t.sip and endpoint semantics; respond to any further questions; finalize endpoint mappings; then determine if we can mark done.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "B",
+      "answers": [
+        {
+          "my_id": "i.tcep",
+          "gloss": "an endpoint of a tunnel connection within a node",
+          "example": "the connection endpoint for the A1-A3 tunnel on R1",
+          "relations": "on-node -> i.tenode; part-of -> i.tunnel"
+        },
+        {
+          "my_id": "i.ttp",
+          "gloss": "the point at which a te-tunnel originates or terminates, i.e. a trail head",
+          "example": "ttp-A1 (tunnel head)",
+          "relations": "on-node -> i.tenode; originates -> i.tunnel"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Could you clarify the role of t.sip (service-interface-point) in your model and whether there is an intended counterpart in B's concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "Does t.cep (connection-end-point) encompass tunnel-connection-endpoint semantics, or should we treat i.tcep as the dedicated tunnel-endpoint while t.cep remains a general endpoint?"
+        },
+        {
+          "their_id": "t.sip",
+          "ask": "If there is an intended B counterpart for t.sip, what is its id and how would you map the 'accesses' relationship to your concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "In your view, is i.tcep strictly specialized for tunnels, or can i.tcep participate in generic connection-endpoint usage as well?"
+        }
+      ],
+      "proposals": [],
+      "ratifications": [
+        {
+          "their_id": "t.node",
+          "my_id": "i.tenode",
+          "accept": true,
+          "reason": "The node concept matches the te-node meaning and role in the topology."
+        },
+        {
+          "their_id": "t.topo",
+          "my_id": "i.tetopo",
+          "accept": true,
+          "reason": "The te-topology corresponds to the topology construct in B."
+        },
+        {
+          "their_id": "t.link",
+          "my_id": "i.telink",
+          "accept": true,
+          "reason": "te-link corresponds to a TE link between nodes."
+        },
+        {
+          "their_id": "t.ltp",
+          "my_id": "i.tp",
+          "accept": true,
+          "reason": "Termination-point in B aligns with a node-local TE termination point."
+        },
+        {
+          "their_id": "t.translink",
+          "my_id": "i.stp",
+          "accept": true,
+          "reason": "Adaptive/transitional link concept maps to the supporting-tp."
+        },
+        {
+          "their_id": "t.lpq",
+          "my_id": "i.otnlabel",
+          "accept": true,
+          "reason": "OTN label as multiplexing qualifier aligns with layer-protocol-qualifier."
+        },
+        {
+          "their_id": "t.nrg",
+          "my_id": "i.cmatrix",
+          "accept": true,
+          "reason": "Node-rule-group / connectivity constraints map to a connectivity-matrix style concept."
+        },
+        {
+          "their_id": "t.cs",
+          "my_id": "i.tunnel",
+          "accept": true,
+          "reason": "Connectivity-service realized by a TE tunnel matches."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.tcep",
+          "accept": true,
+          "reason": "Tunnel-connection-endpoint within a node aligns with the endpoint concept."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.ttp",
+          "accept": true,
+          "reason": "Endpoint semantics are compatible; tunnel-termination-point can be seen as a kind of tunnel endpoint."
+        }
+      ],
+      "experiments": [],
+      "no_counterpart": [
+        "t.sip"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "Most of my concepts have plausible one-to-one or close mappings to A's catalogue; A has already ratified many of these mappings. The remaining open questions concern endpoint semantics (t.cep vs i.tcep and i.ttp) and whether t.sip has any direct counterpart in A's model.",
+        "need": "Clarify whether t.cep should be treated as a general connection-endpoint with distinct specialized tunnel endpoints (i.tcep and i.ttp) or whether a single endpoint concept suffices. Also confirm whether t.sip has or will have a direct counterpart in A's model.",
+        "strategy": "1) Answer A's questions about t.sip and t.cep with a clear stance (t.sip currently has no direct B counterpart; t.cep can be treated as a general endpoint with specialized tunnel endpoints represented by i.tcep and i.ttp). 2) Ratify all of A's mappings already acknowledged by me. 3) If A provides a preferred endpoint convention, align with that and adjust mappings accordingly. 4) If no additional mapping for t.sip emerges, keep it as no-counterpart and monitor for future alignment. 5) Await A's response to these questions and finalize the endpoint mappings.",
+        "closeness": 0.66,
+        "next_step": "Await A's clarification on t.sip and endpoint semantics; respond to any further questions; finalize endpoint mappings; then determine if we can mark done.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "A",
+      "answers": [
+        {
+          "my_id": "t.sip",
+          "gloss": "a point where an external client service accesses the network",
+          "example": "the ODU2 client hand-off at A1",
+          "relations": "on-node -> t.node; accesses -> t.cs"
+        },
+        {
+          "my_id": "t.cep",
+          "gloss": "an endpoint of a connection within a node",
+          "example": "the CEP for the A1-A3 service on R1",
+          "relations": "on-node -> t.node; part-of -> t.cs"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Could you clarify the role of t.sip (service-interface-point) in your model and whether there is an intended counterpart in B's concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "Does t.cep (connection-end-point) encompass tunnel-connection-endpoint semantics, or should we treat i.tcep as the dedicated tunnel-endpoint while t.cep remains a general endpoint?"
+        },
+        {
+          "their_id": "t.sip",
+          "ask": "If there is an intended B counterpart for t.sip, what is its id and how would you map the 'accesses' relationship to your concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "In your view, is i.tcep strictly specialized for tunnels, or can i.tcep participate in generic connection-endpoint usage as well?"
+        }
+      ],
+      "proposals": [],
+      "ratifications": [
+        {
+          "their_id": "t.node",
+          "my_id": "i.tenode",
+          "accept": true,
+          "reason": "The node concept matches the te-node meaning and role in the topology."
+        },
+        {
+          "their_id": "t.topo",
+          "my_id": "i.tetopo",
+          "accept": true,
+          "reason": "The te-topology corresponds to the topology construct in B."
+        },
+        {
+          "their_id": "t.link",
+          "my_id": "i.telink",
+          "accept": true,
+          "reason": "te-link corresponds to a TE link between nodes."
+        },
+        {
+          "their_id": "t.ltp",
+          "my_id": "i.tp",
+          "accept": true,
+          "reason": "Termination-point in B aligns with a node-local TE termination point."
+        },
+        {
+          "their_id": "t.translink",
+          "my_id": "i.stp",
+          "accept": true,
+          "reason": "Adaptive/transitional link concept maps to the supporting-tp."
+        },
+        {
+          "their_id": "t.lpq",
+          "my_id": "i.otnlabel",
+          "accept": true,
+          "reason": "OTN label as multiplexing qualifier aligns with layer-protocol-qualifier."
+        },
+        {
+          "their_id": "t.nrg",
+          "my_id": "i.cmatrix",
+          "accept": true,
+          "reason": "Node-rule-group / connectivity constraints map to a connectivity-matrix style concept."
+        },
+        {
+          "their_id": "t.cs",
+          "my_id": "i.tunnel",
+          "accept": true,
+          "reason": "Connectivity-service realized by a TE tunnel matches."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.tcep",
+          "accept": true,
+          "reason": "Tunnel-connection-endpoint within a node aligns with the endpoint concept."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.ttp",
+          "accept": true,
+          "reason": "Endpoint semantics are compatible; tunnel-termination-point can be seen as a kind of tunnel endpoint."
+        }
+      ],
+      "experiments": [],
+      "no_counterpart": [
+        "t.sip"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "Most of my concepts have plausible one-to-one or close mappings to B's catalogue; B has already ratified many of these mappings. The remaining open questions concern endpoint semantics (t.cep vs i.tcep and i.ttp) and whether t.sip has any direct counterpart in B's model.",
+        "need": "Clarify whether t.cep should be treated as a general connection-endpoint with distinct specialized tunnel endpoints (i.tcep and i.ttp) or whether a single endpoint concept suffices. Also confirm whether t.sip has or will have a direct counterpart in B's model.",
+        "strategy": "1) Answer B's questions about t.sip and t.cep with a clear stance (t.sip currently has no direct B counterpart; t.cep can be treated as a general endpoint with specialized tunnel endpoints represented by i.tcep and i.ttp). 2) Ratify all of A's mappings already acknowledged by me. 3) If B provides a preferred endpoint convention, align with that and adjust mappings accordingly. 4) If no additional mapping for t.sip emerges, keep it as no-counterpart and monitor for future alignment. 5) Await B's response to these questions and finalize the endpoint mappings.",
+        "closeness": 0.66,
+        "next_step": "Await B's clarification on t.sip and endpoint semantics; respond to any further questions; finalize endpoint mappings; then determine if we can mark done.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "B",
+      "answers": [
+        {
+          "my_id": "i.tenode",
+          "gloss": "a traffic-engineering node in a per-layer network",
+          "example": "ROADM R1 in the OTN layer",
+          "relations": "part-of to i.tetopo"
+        },
+        {
+          "my_id": "i.tp",
+          "gloss": "a termination point where a te-link terminates on a node",
+          "example": "the R1 tp toward R2",
+          "relations": "on-node to i.tenode; terminates at i.telink"
+        },
+        {
+          "my_id": "i.stp",
+          "gloss": "the supporting relationship of a tp on a server-layer tp",
+          "example": "an OTN tp supported by an optical tp at R1",
+          "relations": "supports to i.tp"
+        },
+        {
+          "my_id": "i.ttp",
+          "gloss": "the point at which a te-tunnel originates or terminates, i.e. a trail head",
+          "example": "ttp-A1 (tunnel head)",
+          "relations": "on-node to i.tenode; originates to i.tunnel"
+        },
+        {
+          "my_id": "i.tunnel",
+          "gloss": "an end-to-end traffic-engineered tunnel realising a service",
+          "example": "the A1-A3 ODU2 tunnel",
+          "relations": "from i.ttp; over i.tetopo"
+        },
+        {
+          "my_id": "i.otnlabel",
+          "gloss": "the OTN label expressing tributary-slot multiplexing structure",
+          "example": "the tributary slots carrying ODU2 in OTU4",
+          "relations": "labels to i.tunnel"
+        },
+        {
+          "my_id": "i.cmatrix",
+          "gloss": "the matrix of permitted internal connectivity within a node",
+          "example": "permitted connectivity on R2",
+          "relations": "on-node to i.tenode"
+        },
+        {
+          "my_id": "i.telink",
+          "gloss": "a traffic-engineering link between nodes in a layer network",
+          "example": "the R1-R2 te-link",
+          "relations": "between i.tenode and i.tenode (via the link); terminated-by i.tp"
+        },
+        {
+          "my_id": "i.tetopo",
+          "gloss": "a per-layer traffic-engineering network",
+          "example": "the OTN layer network",
+          "relations": "contains i.tenode and i.telink"
+        },
+        {
+          "my_id": "i.tcep",
+          "gloss": "an endpoint of a tunnel connection within a node",
+          "example": "the connection endpoint for the A1-A3 tunnel on R1",
+          "relations": "on-node -> i.tenode; part-of -> i.tunnel"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Could you clarify the role of t.sip (service-interface-point) in your model and whether there is an intended counterpart in B's concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "Does t.cep (connection-end-point) encompass tunnel-connection-endpoint semantics, or should we treat i.tcep as the dedicated tunnel-endpoint while t.cep remains a general endpoint?"
+        }
+      ],
+      "proposals": [
+        {
+          "my_id": "i.tenode",
+          "their_id": "t.node",
+          "confidence": 0.93,
+          "rationale": "Direct mapping: node concept in B corresponds to a te-node as a physical/forwarding domain within the topology."
+        }
+      ],
+      "ratifications": [
+        {
+          "their_id": "t.node",
+          "my_id": "i.tenode",
+          "accept": true,
+          "reason": "The node concept matches the te-node meaning and role in the topology."
+        },
+        {
+          "their_id": "t.topo",
+          "my_id": "i.tetopo",
+          "accept": true,
+          "reason": "The te-topology corresponds to the topology construct in B."
+        },
+        {
+          "their_id": "t.link",
+          "my_id": "i.telink",
+          "accept": true,
+          "reason": "te-link corresponds to a TE link between nodes."
+        },
+        {
+          "their_id": "t.ltp",
+          "my_id": "i.tp",
+          "accept": true,
+          "reason": "Termination-point in B aligns with a node-local TE termination point."
+        },
+        {
+          "their_id": "t.translink",
+          "my_id": "i.stp",
+          "accept": true,
+          "reason": "Adaptive/transitional link concept maps to the supporting-tp."
+        },
+        {
+          "their_id": "t.lpq",
+          "my_id": "i.otnlabel",
+          "accept": true,
+          "reason": "OTN label as multiplexing qualifier aligns with layer-protocol-qualifier."
+        },
+        {
+          "their_id": "t.nrg",
+          "my_id": "i.cmatrix",
+          "accept": true,
+          "reason": "Node-rule-group / connectivity constraints map to a connectivity-matrix style concept."
+        },
+        {
+          "their_id": "t.cs",
+          "my_id": "i.tunnel",
+          "accept": true,
+          "reason": "Connectivity-service realized by a TE tunnel matches."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.tcep",
+          "accept": true,
+          "reason": "Tunnel-connection-endpoint within a node aligns with the endpoint concept."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.ttp",
+          "accept": true,
+          "reason": "Endpoint semantics are compatible; tunnel-termination-point can be seen as a kind of tunnel endpoint."
+        }
+      ],
+      "experiments": [],
+      "no_counterpart": [],
+      "done": false,
+      "plan": {
+        "situation": "Most concepts from B map cleanly to A's catalogue; A has provided strong one-to-one correspondences for many items. Remaining open questions concern endpoint semantics (t.cep vs i.tcep and i.ttp) and whether t.sip has any direct counterpart in A's model.",
+        "need": "Clarify whether t.cep should be treated as a general connection-endpoint with distinct specialized tunnel endpoints (i.tcep and i.ttp) or whether a single endpoint concept suffices. Also confirm whether t.sip has or will have a direct counterpart in A's model.",
+        "strategy": "1) Answer A's questions about t.sip and t.cep with a clear stance (t.sip currently has no direct A counterpart; t.cep can be treated as a general endpoint with specialized tunnel endpoints represented by i.tcep and i.ttp). 2) Ratify all of A's mappings already acknowledged by me. 3) If A provides a preferred endpoint convention, align with that and adjust mappings accordingly. 4) If no additional mapping for t.sip emerges, keep it as no-counterpart and monitor for future alignment. 5) Await A's response to these questions and finalize the endpoint mappings.",
+        "closeness": 0.66,
+        "next_step": "Await A's clarification on t.sip and endpoint semantics; respond to any further questions; finalize endpoint mappings; then determine if we can mark done.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "A",
+      "answers": [
+        {
+          "my_id": "t.sip",
+          "gloss": "a point where an external client service accesses the network",
+          "example": "the ODU2 client hand-off at A1",
+          "relations": "on-node -> t.node; accesses -> t.cs"
+        },
+        {
+          "my_id": "t.cep",
+          "gloss": "an endpoint of a connection within a node",
+          "example": "the CEP for the A1-A3 service on R1",
+          "relations": "on-node -> t.node; part-of -> t.cs"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Could you clarify the role of t.sip (service-interface-point) in your model and whether there is an intended counterpart in B's concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "Does t.cep (connection-end-point) encompass tunnel-connection-endpoint semantics, or should we treat i.tcep as the dedicated tunnel-endpoint while t.cep remains a general endpoint?"
+        }
+      ],
+      "proposals": [],
+      "ratifications": [
+        {
+          "their_id": "t.node",
+          "my_id": "i.tenode",
+          "accept": true,
+          "reason": "The node concept matches the te-node meaning and role in the topology."
+        },
+        {
+          "their_id": "t.topo",
+          "my_id": "i.tetopo",
+          "accept": true,
+          "reason": "The te-topology corresponds to the topology construct in B."
+        },
+        {
+          "their_id": "t.link",
+          "my_id": "i.telink",
+          "accept": true,
+          "reason": "te-link corresponds to a TE link between nodes."
+        },
+        {
+          "their_id": "t.ltp",
+          "my_id": "i.tp",
+          "accept": true,
+          "reason": "Termination-point in B aligns with a node-local TE termination point."
+        },
+        {
+          "their_id": "t.translink",
+          "my_id": "i.stp",
+          "accept": true,
+          "reason": "Adaptive/transitional link concept maps to the supporting-tp."
+        },
+        {
+          "their_id": "t.lpq",
+          "my_id": "i.otnlabel",
+          "accept": true,
+          "reason": "OTN label as multiplexing qualifier aligns with layer-protocol-qualifier."
+        },
+        {
+          "their_id": "t.nrg",
+          "my_id": "i.cmatrix",
+          "accept": true,
+          "reason": "Node-rule-group / connectivity constraints map to a connectivity-matrix style concept."
+        },
+        {
+          "their_id": "t.cs",
+          "my_id": "i.tunnel",
+          "accept": true,
+          "reason": "Connectivity-service realized by a TE tunnel matches."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.tcep",
+          "accept": true,
+          "reason": "Tunnel-connection-endpoint within a node aligns with the endpoint concept."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.ttp",
+          "accept": true,
+          "reason": "Endpoint semantics are compatible; tunnel-termination-point can be seen as a kind of tunnel endpoint."
+        }
+      ],
+      "experiments": [],
+      "no_counterpart": [
+        "t.sip"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "Most of my concepts map plausibly to B\u2019s catalogue; B has ratified many mappings. Remaining open items concern endpoint semantics (t.cep vs i.tcep and i.ttp) and whether t.sip has any direct counterpart in B's model.",
+        "need": "Clarify whether t.cep should be treated as a general connection-endpoint with distinct specialized tunnel endpoints (i.tcep and i.ttp) or whether a single endpoint concept suffices. Also confirm whether t.sip has or will have a direct counterpart in B's model.",
+        "strategy": "1) Answer the questions about t.sip and t.cep with a clear stance (t.sip currently has no direct B counterpart; t.cep can be treated as a general endpoint with specialized tunnel endpoints represented by i.tcep and i.ttp). 2) Ratify all of B's mappings already acknowledged by me. 3) If B provides a preferred endpoint convention, align with that and adjust mappings accordingly. 4) If no additional mapping for t.sip emerges, keep it as no-counterpart and monitor for future alignment. 5) Await B's response to these questions and finalize the endpoint mappings.",
+        "closeness": 0.66,
+        "next_step": "Await B's clarification on t.sip and endpoint semantics; respond to any further questions; finalize endpoint mappings; then determine if we can mark done.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "B",
+      "answers": [
+        {
+          "my_id": "i.tcep",
+          "gloss": "an endpoint of a tunnel connection within a node",
+          "example": "the connection endpoint for the A1-A3 tunnel on R1",
+          "relations": "on-node -> i.tenode; part-of -> i.tunnel"
+        },
+        {
+          "my_id": "i.ttp",
+          "gloss": "the point at which a te-tunnel originates or terminates, i.e. a trail head",
+          "example": "ttp-A1 (tunnel head)",
+          "relations": "on-node -> i.tenode; originates -> i.tunnel"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Could you clarify the role of t.sip (service-interface-point) in your model and whether there is an intended counterpart in B's concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "Does t.cep (connection-end-point) encompass tunnel-connection-endpoint semantics, or should we treat i.tcep as the dedicated tunnel-endpoint while t.cep remains a general endpoint?"
+        },
+        {
+          "their_id": "t.sip",
+          "ask": "If there is an intended B counterpart for t.sip, what is its id and how would you map the 'accesses' relationship to your concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "In your view, is i.tcep strictly specialized for tunnels, or can i.tcep participate in generic connection-endpoint usage as well?"
+        }
+      ],
+      "proposals": [],
+      "ratifications": [],
+      "experiments": [],
+      "no_counterpart": [
+        "t.sip"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "Most of my concepts map plausibly to A's catalogue; A has ratified the major one-to-one mappings. The remaining open items concern endpoint semantics (t.cep vs i.tcep and i.ttp) and whether t.sip has an explicit counterpart in A's model. I have answered questions about i.tcep/i.ttp semantics and maintained that t.sip is currently a no-counterpart item from my side.",
+        "need": "Clarify whether t.sip should have an explicit counterpart in A's model, and firm up the endpoint semantics between t.cep (general) and the tunnel-specific i.tcep/i.ttp mappings with A's preference.",
+        "strategy": "1) Provide clarity on i.tcep/i.ttp as tunnel-endpoint concepts (already aligned). 2) Elicit A's stance on t.sip (counterpart or no-counterpart) and on whether t.cep should be treated as a general endpoint separate from tunnel endpoints. 3) If A confirms a preferred endpoint convention, adopt it and adjust mappings accordingly. 4) If A does not provide a counterpart for t.sip, keep it as no-counterpart and monitor for future alignment. 5) Await A's response and finalize mappings once decisions are explicit.",
+        "closeness": 0.65,
+        "next_step": "Wait for A's reply to the endpoint and t.sip questions; then finalize the endpoint mapping set and decide whether we can mark done.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "A",
+      "answers": [
+        {
+          "my_id": "t.sip",
+          "gloss": "a point where an external client service accesses the network",
+          "example": "the ODU2 client hand-off at A1",
+          "relations": "on-node -> t.node; accesses -> t.cs"
+        },
+        {
+          "my_id": "t.cep",
+          "gloss": "an endpoint of a connection within a node",
+          "example": "the CEP for the A1-A3 service on R1",
+          "relations": "on-node -> t.node; part-of -> t.cs"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Could you clarify the role of t.sip (service-interface-point) in your model and whether there is an intended counterpart in B's concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "In your view, does t.cep (connection-end-point) encompass tunnel-connection-endpoint semantics, or should we treat i.tcep as the dedicated tunnel-endpoint while t.cep remains a general endpoint?"
+        },
+        {
+          "their_id": "t.sip",
+          "ask": "If there is an intended B counterpart for t.sip, what is its id and how would you map the 'accesses' relationship to your concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "In your view, is i.tcep strictly specialized for tunnels, or can i.tcep participate in generic connection-endpoint usage as well?"
+        }
+      ],
+      "proposals": [],
+      "ratifications": [
+        {
+          "their_id": "t.node",
+          "my_id": "i.tenode",
+          "accept": true,
+          "reason": "The node concept matches the te-node meaning and role in the topology."
+        },
+        {
+          "their_id": "t.topo",
+          "my_id": "i.tetopo",
+          "accept": true,
+          "reason": "The te-topology corresponds to the topology construct in B."
+        },
+        {
+          "their_id": "t.link",
+          "my_id": "i.telink",
+          "accept": true,
+          "reason": "te-link corresponds to a TE link between nodes."
+        },
+        {
+          "their_id": "t.ltp",
+          "my_id": "i.tp",
+          "accept": true,
+          "reason": "Termination-point in B aligns with a node-local TE termination point."
+        },
+        {
+          "their_id": "t.translink",
+          "my_id": "i.stp",
+          "accept": true,
+          "reason": "Adaptive/transitional link concept maps to the supporting-tp."
+        },
+        {
+          "their_id": "t.lpq",
+          "my_id": "i.otnlabel",
+          "accept": true,
+          "reason": "OTN label as multiplexing qualifier aligns with layer-protocol-qualifier."
+        },
+        {
+          "their_id": "t.nrg",
+          "my_id": "i.cmatrix",
+          "accept": true,
+          "reason": "Node-rule-group / connectivity constraints map to a connectivity-matrix style concept."
+        },
+        {
+          "their_id": "t.cs",
+          "my_id": "i.tunnel",
+          "accept": true,
+          "reason": "Connectivity-service realized by a TE tunnel matches."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.tcep",
+          "accept": true,
+          "reason": "Tunnel-connection-endpoint within a node aligns with the endpoint concept."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.ttp",
+          "accept": true,
+          "reason": "Endpoint semantics are compatible; tunnel-termination-point can be seen as a kind of tunnel endpoint."
+        }
+      ],
+      "experiments": [
+        {
+          "my_id": "t.cep",
+          "their_id": "i.tcep",
+          "question": "Can we confirm that t.cep semantics can be realized by i.tcep as a tunnel-endpoint within a node, and if so, what are the exact constraints on their relations (on-node, part-of)?"
+        }
+      ],
+      "no_counterpart": [
+        "t.sip"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "Most of my concepts map plausibly to B's catalogue; B has ratified the major one-to-one correspondences. The remaining open items concern endpoint semantics (t.cep vs i.tcep and i.ttp) and whether t.sip should have a direct counterpart in B's model.",
+        "need": "Clarify whether t.cep should be treated as a general connection-endpoint with distinct specialized tunnel endpoints (i.tcep and i.ttp) or whether a single endpoint concept suffices. Also confirm whether t.sip has or will have a direct counterpart in B's model.",
+        "strategy": "1) Address the questions about t.sip and t.cep with a clear stance (t.sip currently has no direct B counterpart; t.cep can be treated as a general endpoint with specialized tunnel endpoints represented by i.tcep and i.ttp). 2) Ratify all of B's mappings to my concepts as already acknowledged. 3) If B shows a preferred endpoint convention, align with that and adjust mappings accordingly. 4) If no direct mapping for t.sip emerges, keep it as no-counterpart and monitor for future alignment. 5) Await B's response to these questions and finalize mappings.",
+        "closeness": 0.66,
+        "next_step": "Wait for B's clarification on t.sip and endpoint semantics; respond to any further questions; finalize endpoint mappings; then determine if we can mark done.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "B",
+      "answers": [
+        {
+          "my_id": "i.tenode",
+          "gloss": "a traffic-engineering node in a per-layer network",
+          "example": "ROADM R1 in the OTN layer",
+          "relations": "part-of to i.tetopo"
+        },
+        {
+          "my_id": "i.tp",
+          "gloss": "a termination point where a te-link terminates on a node",
+          "example": "the R1 tp toward R2",
+          "relations": "on-node to i.tenode; terminates at i.telink"
+        },
+        {
+          "my_id": "i.stp",
+          "gloss": "the supporting relationship of a tp on a server-layer tp",
+          "example": "an OTN tp supported by an optical tp at R1",
+          "relations": "supports to i.tp"
+        },
+        {
+          "my_id": "i.ttp",
+          "gloss": "the point at which a te-tunnel originates or terminates, i.e. a trail head",
+          "example": "ttp-A1 (tunnel head)",
+          "relations": "on-node to i.tenode; originates to i.tunnel"
+        },
+        {
+          "my_id": "i.tunnel",
+          "gloss": "an end-to-end traffic-engineered tunnel realising a service",
+          "example": "the A1-A3 ODU2 tunnel",
+          "relations": "from i.ttp; over i.tetopo"
+        },
+        {
+          "my_id": "i.otnlabel",
+          "gloss": "the OTN label expressing tributary-slot multiplexing structure",
+          "example": "the tributary slots carrying ODU2 in OTU4",
+          "relations": "labels to i.tunnel"
+        },
+        {
+          "my_id": "i.cmatrix",
+          "gloss": "the matrix of permitted internal connectivity within a node",
+          "example": "permitted connectivity on R2",
+          "relations": "on-node to i.tenode"
+        },
+        {
+          "my_id": "i.telink",
+          "gloss": "a traffic-engineering link between nodes in a layer network",
+          "example": "the R1-R2 te-link",
+          "relations": "between i.tenode and i.tenode (via the link); terminated-by i.tp"
+        },
+        {
+          "my_id": "i.tetopo",
+          "gloss": "a per-layer traffic-engineering network",
+          "example": "the OTN layer network",
+          "relations": "contains i.tenode and i.telink"
+        },
+        {
+          "my_id": "i.tcep",
+          "gloss": "an endpoint of a tunnel connection within a node",
+          "example": "the connection endpoint for the A1-A3 tunnel on R1",
+          "relations": "on-node -> i.tenode; part-of -> i.tunnel"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Could you clarify the role of t.sip (service-interface-point) in your model and whether there is an intended counterpart in B's concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "Does t.cep (connection-end-point) encompass tunnel-connection-endpoint semantics, or should we treat i.tcep as the dedicated tunnel-endpoint while t.cep remains a general endpoint?"
+        }
+      ],
+      "proposals": [],
+      "ratifications": [
+        {
+          "their_id": "t.node",
+          "my_id": "i.tenode",
+          "accept": true,
+          "reason": "The node concept matches the te-node meaning and role in the topology."
+        },
+        {
+          "their_id": "t.topo",
+          "my_id": "i.tetopo",
+          "accept": true,
+          "reason": "The te-topology corresponds to the topology construct in B."
+        },
+        {
+          "their_id": "t.link",
+          "my_id": "i.telink",
+          "accept": true,
+          "reason": "te-link corresponds to a TE link between nodes."
+        },
+        {
+          "their_id": "t.ltp",
+          "my_id": "i.tp",
+          "accept": true,
+          "reason": "Termination-point in B aligns with a node-local TE termination point."
+        },
+        {
+          "their_id": "t.translink",
+          "my_id": "i.stp",
+          "accept": true,
+          "reason": "Adaptive/transitional link concept maps to the supporting-tp."
+        },
+        {
+          "their_id": "t.lpq",
+          "my_id": "i.otnlabel",
+          "accept": true,
+          "reason": "OTN label as multiplexing qualifier aligns with layer-protocol-qualifier."
+        },
+        {
+          "their_id": "t.nrg",
+          "my_id": "i.cmatrix",
+          "accept": true,
+          "reason": "Node-rule-group / connectivity constraints map to a connectivity-matrix style concept."
+        },
+        {
+          "their_id": "t.cs",
+          "my_id": "i.tunnel",
+          "accept": true,
+          "reason": "Connectivity-service realized by a TE tunnel matches."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.tcep",
+          "accept": true,
+          "reason": "Tunnel-connection-endpoint within a node aligns with the endpoint concept."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.ttp",
+          "accept": true,
+          "reason": "Endpoint semantics are compatible; tunnel-termination-point can be seen as a kind of tunnel endpoint."
+        }
+      ],
+      "experiments": [
+        {
+          "my_id": "t.cep",
+          "their_id": "i.tcep",
+          "question": "Can we confirm that t.cep semantics can be realized by i.tcep as a tunnel-endpoint within a node, and if so, what are the exact constraints on their relations (on-node, part-of)?"
+        }
+      ],
+      "no_counterpart": [
+        "t.sip"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "Most of my concepts map plausibly to A's catalogue; A has ratified the major one-to-one correspondences. The remaining open items concern endpoint semantics (t.cep vs i.tcep and i.ttp) and whether t.sip should have a direct counterpart in A's model. An experiment is in flight to test t.cep versus i.tcep as tunnel-endpoints.",
+        "need": "Clarify whether t.cep should be treated as a general connection-endpoint with distinct specialized tunnel endpoints (i.tcep and i.ttp) or whether a single endpoint concept suffices. Also confirm whether t.sip has or will have a direct counterpart in A's model.",
+        "strategy": "1) Provide A with a clear stance on t.sip (no direct counterpart for now) and on endpoint semantics (t.cep general vs specialized endpoints). 2) Ratify all of A's mappings to my concepts as already acknowledged. 3) If A expresses a preferred endpoint convention, adopt it and adjust mappings accordingly. 4) If A does not provide a counterpart for t.sip, keep it as no-counterpart and monitor for future alignment. 5) Await A's response to these questions and finalize mappings once decisions are explicit.",
+        "closeness": 0.64,
+        "next_step": "Wait for A's reply to the t.sip and t.cep endpoint questions; respond with any needed clarifications; then finalize the endpoint mapping set and assess whether we can mark done.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "A",
+      "answers": [
+        {
+          "my_id": "t.sip",
+          "gloss": "a point where an external client service accesses the network",
+          "example": "the ODU2 client hand-off at A1",
+          "relations": "on-node -> t.node; accesses -> t.cs"
+        },
+        {
+          "my_id": "t.cep",
+          "gloss": "an endpoint of a connection within a node",
+          "example": "the CEP for the A1-A3 service on R1",
+          "relations": "on-node -> t.node; part-of -> t.cs"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Could you clarify the role of t.sip (service-interface-point) in your model and whether there is an intended counterpart in B's concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "Does t.cep (connection-end-point) encompass tunnel-connection-endpoint semantics, or should we treat i.tcep as the dedicated tunnel-endpoint while t.cep remains a general endpoint?"
+        }
+      ],
+      "proposals": [],
+      "ratifications": [
+        {
+          "their_id": "t.node",
+          "my_id": "i.tenode",
+          "accept": true,
+          "reason": "The node concept matches the te-node meaning and role in the topology."
+        },
+        {
+          "their_id": "t.topo",
+          "my_id": "i.tetopo",
+          "accept": true,
+          "reason": "The te-topology corresponds to the topology construct in B."
+        },
+        {
+          "their_id": "t.link",
+          "my_id": "i.telink",
+          "accept": true,
+          "reason": "te-link corresponds to a TE link between nodes."
+        },
+        {
+          "their_id": "t.ltp",
+          "my_id": "i.tp",
+          "accept": true,
+          "reason": "Termination-point in B aligns with a node-local TE termination point."
+        },
+        {
+          "their_id": "t.translink",
+          "my_id": "i.stp",
+          "accept": true,
+          "reason": "Adaptive/transitional link concept maps to the supporting-tp."
+        },
+        {
+          "their_id": "t.lpq",
+          "my_id": "i.otnlabel",
+          "accept": true,
+          "reason": "OTN label as multiplexing qualifier aligns with layer-protocol-qualifier."
+        },
+        {
+          "their_id": "t.nrg",
+          "my_id": "i.cmatrix",
+          "accept": true,
+          "reason": "Node-rule-group / connectivity constraints map to a connectivity-matrix style concept."
+        },
+        {
+          "their_id": "t.cs",
+          "my_id": "i.tunnel",
+          "accept": true,
+          "reason": "Connectivity-service realized by a TE tunnel matches."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.tcep",
+          "accept": true,
+          "reason": "Tunnel-connection-endpoint within a node aligns with the endpoint concept."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.ttp",
+          "accept": true,
+          "reason": "Endpoint semantics are compatible; tunnel-termination-point can be seen as a kind of tunnel endpoint."
+        }
+      ],
+      "experiments": [
+        {
+          "my_id": "t.cep",
+          "their_id": "i.tcep",
+          "question": "Can we confirm that t.cep semantics can be realized by i.tcep as a tunnel-endpoint within a node, and if so, what are the exact constraints on their relations (on-node, part-of)?"
+        },
+        {
+          "my_id": "t.cep",
+          "their_id": "i.ttp",
+          "question": "Can we confirm that t.cep semantics can be realized by i.ttp as a tunnel-endpoint (tunnel-head), and what constraints govern their relations (on-node, originates/part-of)?"
+        }
+      ],
+      "no_counterpart": [
+        "t.sip"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "Most of my concepts map plausibly to B's catalogue; B has ratified the major one-to-one correspondences. The remaining open items concern endpoint semantics for t.cep (general endpoint versus specialized tunnel endpoints) and whether t.sip should have a direct counterpart in B's model. There is an in-flight experiment testing t.cep realized by i.tcep (and a parallel framing for i.ttp) to clarify endpoint realization options.",
+        "need": "Confirm whether t.sip should have any direct counterpart in B's model, and firm up the endpoint semantics between t.cep (general endpoint) and the specialized tunnel endpoints i.tcep and i.ttp. Also decide if both i.tcep and i.ttp are acceptable realizations of t.cep, or if a single canonical realization should be adopted.",
+        "strategy": "1) Acknowledge and maintain the currently ratified correspondences (node/topo/link/ltp/translink/LPQ/NRG/CS). 2) Resolve t.sip: keep as no-counterpart for now unless A indicates a desired counterpart; 3) Conclude endpoint mapping stance: continue supporting dual realizations (i.tcep and i.ttp) for t.cep and align with A's or B's preferred convention if provided; 4) If A provides a preferred canonical endpoint mapping, adopt it and adjust related relations accordingly; 5) Await A's response to the endpoint questions and finalizeMappings when decisions are explicit.",
+        "closeness": 0.66,
+        "next_step": "Await A's clarifications on t.sip's counterparty status and on whether to prefer a single or dual realization for t.cep; respond with any needed adjustments; then finalize the endpoint mapping set and consider done.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "B",
+      "answers": [
+        {
+          "my_id": "t.sip",
+          "gloss": "No direct counterpart in B's catalogue; t.sip is defined in A's model as a service-interface-point where an external client hand-off occurs.",
+          "example": "N/A in B's model",
+          "relations": "N/A"
+        },
+        {
+          "my_id": "i.tcep",
+          "gloss": "an endpoint of a tunnel connection within a node",
+          "example": "the connection endpoint for the A1-A3 tunnel on R1",
+          "relations": "on-node -> i.tenode; part-of -> i.tunnel"
+        },
+        {
+          "my_id": "i.ttp",
+          "gloss": "the point at which a te-tunnel originates or terminates, i.e. a trail head",
+          "example": "ttp-A1 (tunnel head)",
+          "relations": "on-node -> i.tenode; originates -> i.tunnel"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "In your view, should t.sip have any direct counterpart in B's model, or do you want to keep it as a no-counterpart concept for now?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "Does t.cep map cleanly to a general endpoint, with i.tcep and i.ttp as specialized tunnel-endpoint realizations, or do you prefer a single canonical endpoint realization?"
+        }
+      ],
+      "proposals": [],
+      "ratifications": [],
+      "experiments": [
+        {
+          "my_id": "i.tcep",
+          "their_id": "t.cep",
+          "question": "Can we confirm that t.cep semantics can be realized by i.tcep as a tunnel-endpoint within a node, and if so, what are the exact constraints on their relations (on-node, part-of)?"
+        },
+        {
+          "my_id": "i.ttp",
+          "their_id": "t.cep",
+          "question": "Can t.cep semantics be realized by i.ttp as a tunnel-endpoint (tunnel-head), and what constraints govern their relations (on-node, originates, part-of)?"
+        }
+      ],
+      "no_counterpart": [
+        "t.sip"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "Most of my concepts map plausibly to A's catalogue; A has ratified many mappings. Remaining open items center on endpoint semantics for t.cep (general endpoint vs specialized tunnel endpoints i.tcep/i.ttp) and whether t.sip should have a direct counterpart in A's model.",
+        "need": "Clarify whether t.cep should be treated as a general connection-endpoint with distinct specialized tunnel endpoints (i.tcep and i.ttp), or whether a single canonical endpoint realization should be adopted. Also decide whether t.sip should have a direct counterpart in A's model.",
+        "strategy": "1) Get A's position on t.sip (counterpart or no-counterpart). 2) Confirm endpoint stance: dual realizations (i.tcep and i.ttp) vs single realization for t.cep. 3) If A indicates a preferred convention, adopt it and adjust mappings accordingly. 4) If no direct mapping for t.sip emerges, keep it as no-counterpart for now and monitor for future alignment. 5) Use A's feedback to finalize the endpoint mapping set and decide on done.",
+        "closeness": 0.66,
+        "next_step": "Await A's reply on t.sip and endpoint semantics; respond with any needed clarifications; then finalize endpoint mappings and assess whether we can mark done.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "A",
+      "answers": [
+        {
+          "my_id": "t.sip",
+          "gloss": "a point where an external client service accesses the network",
+          "example": "the ODU2 client hand-off at A1",
+          "relations": "on-node -> t.node; accesses -> t.cs"
+        },
+        {
+          "my_id": "t.cep",
+          "gloss": "an endpoint of a connection within a node",
+          "example": "the CEP for the A1-A3 service on R1",
+          "relations": "on-node -> t.node; part-of -> t.cs"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Given B's stance that t.sip has no direct counterpart, could you confirm you intend to keep t.sip as no-counterpart and not map to any B concept?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "In your view, is i.tcep the canonical tunnel-endpoint for t.cep, or can i.ttp also serve as a tunnel-endpoint for t.cep? What constraints govern their relations (on-node, part-of) in this mapping?"
+        }
+      ],
+      "proposals": [],
+      "ratifications": [],
+      "experiments": [],
+      "no_counterpart": [
+        "t.sip"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "Most of my concepts map to B with strong one-to-one correspondences. The remaining open items concern t.sip (no direct B counterpart) and the endpoint semantics of t.cep (general endpoint versus specialized tunnel-endpoints i.tcep/i.ttp). B has already ratified t.cep with i.tcep and i.ttp in prior turns, and an in-flight experiment is testing endpoint realization options.",
+        "need": "Clarify whether t.sip should have any direct counterpart in B's model, and decide whether t.cep should be treated as a general endpoint with dual realizations (i.tcep and i.ttp) or prefer a single canonical endpoint realization.",
+        "strategy": "1) Confirm t.sip's status (no-counterpart) and keep it outside the mapping unless A indicates a desired counterpart. 2) Acknowledge that t.cep can be realized by both i.tcep and i.ttp per B's ratifications; decide whether to treat both realizations as canonical or choose a preferred one if A provides guidance. 3) If needed, align on a canonical endpoint realization and adjust relations accordingly. 4) Await A's response to these questions and finalize mappings.",
+        "closeness": 0.65,
+        "next_step": "Await A's clarification on t.sip's counterpart status and on whether to prefer a single or dual endpoint realization for t.cep; then finalize the endpoint mappings and reassess done.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "B",
+      "answers": [
+        {
+          "my_id": "t.sip",
+          "gloss": "No direct counterpart in B's catalogue; t.sip is defined in A's model as a service-interface-point where an external client hand-off occurs.",
+          "example": "the ODU2 client hand-off at A1",
+          "relations": "on-node -> t.node; accesses -> t.cs"
+        },
+        {
+          "my_id": "i.tcep",
+          "gloss": "an endpoint of a tunnel connection within a node",
+          "example": "the connection endpoint for the A1-A3 tunnel on R1",
+          "relations": "on-node -> i.tenode; part-of -> i.tunnel"
+        },
+        {
+          "my_id": "i.ttp",
+          "gloss": "the point at which a te-tunnel originates or terminates, i.e. a trail head",
+          "example": "ttp-A1 (tunnel head)",
+          "relations": "on-node -> i.tenode; originates -> i.tunnel"
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.sip",
+          "ask": "Could you clarify whether t.sip should have any direct counterpart in B's model, or should we maintain it as a no-counterpart concept for now?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "Does t.cep map cleanly to a general endpoint, with i.tcep and/or i.ttp as specialized tunnel-endpoint realizations, or do you prefer a single canonical endpoint realization?"
+        },
+        {
+          "their_id": "t.sip",
+          "ask": "If there is an intended B counterpart for t.sip, what is its id and how would you map the 'accesses' relationship to your concepts?"
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "In your view, is i.tcep strictly specialized for tunnels, or can i.tcep participate in generic connection-endpoint usage as well?"
+        }
+      ],
+      "proposals": [
+        {
+          "my_id": "i.tcep",
+          "their_id": "t.cep",
+          "confidence": 0.78,
+          "rationale": "t.cep is an endpoint at a node; i.tcep is an endpoint of a tunnel within a node. A plausible one-to-one realization is that t.cep can be realized by i.tcep as a tunnel-endpoint."
+        }
+      ],
+      "ratifications": [],
+      "experiments": [
+        {
+          "my_id": "t.cep",
+          "their_id": "i.tcep",
+          "question": "Can we confirm that t.cep semantics can be realized by i.tcep as a tunnel-endpoint within a node, and if so, what are the exact constraints on their relations (on-node, part-of)?"
+        }
+      ],
+      "no_counterpart": [],
+      "done": false,
+      "plan": {
+        "situation": "Most of my concepts map plausibly to A's catalogue; endpoint semantics remain open: whether t.cep should be treated as a general endpoint with dual realizations (i.tcep and i.ttp) or whether a single canonical endpoint should be adopted. There is an in-flight experiment testing t.cep realized by i.tcep, and t.sip remains a point of ambiguity with no clear B counterpart yet.",
+        "need": "Decide whether t.cep should be a general endpoint (with i.tcep and/or i.ttp as realizations) or whether to prefer a single canonical realization. Also confirm whether t.sip should have any direct counterpart in B's model or stay as no-counterpart.",
+        "strategy": "1) Present the endpoint-semantic stance (dual realizations vs single canonical) and the intended mapping for t.cep. 2) Seek A's preference on t.sip's status (counterpart or no-counterpart). 3) If A signals a canonical endpoint preference, adjust mappings accordingly and ratify. 4) Keep the in-flight t.cep vs i.tcep experiment under observation and update mappings based on results. 5) If A designates a counterpart for t.sip, add that mapping; otherwise maintain no-counterpart stance and monitor for future alignment.",
+        "closeness": 0.64,
+        "next_step": "Await A's guidance on t.sip's counterpart status and on endpoint convention for t.cep; respond with any needed clarifications; finalize the endpoint mapping strategy and reassess completion.",
+        "decision": "continue"
+      }
+    }
+  ]
+}

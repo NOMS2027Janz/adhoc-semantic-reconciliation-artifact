@@ -1,0 +1,97 @@
+{
+  "trajectories": [
+    {
+      "id": "TM1",
+      "intent_id": "MI1",
+      "policy_id": "premium",
+      "setpiece": true,
+      "initial_realisation": "m1a",
+      "narrative": "A metro business-data service across its life: bought, a provider-side latency degradation self-remediated by moving to the protected path, a consumer five-nines demand that must be referred, and a provider restore to the cheaper direct path once the fault clears.",
+      "hops": [
+        {
+          "hop_id": "h0",
+          "origin": "provider",
+          "kind": "assess",
+          "bounds": {
+            "bandwidth_min": 0.5,
+            "latency_max": 10,
+            "availability_min": 0.999,
+            "protection_required": false
+          },
+          "event": "service in operation; routine assurance reading"
+        },
+        {
+          "hop_id": "h1",
+          "origin": "provider",
+          "kind": "assess",
+          "bounds": {
+            "bandwidth_min": 0.5,
+            "latency_max": 10,
+            "availability_min": 0.999,
+            "protection_required": false
+          },
+          "event": "the direct path's latency has degraded past its bound"
+        },
+        {
+          "hop_id": "h2",
+          "origin": "consumer",
+          "kind": "demand",
+          "bounds": {
+            "bandwidth_min": 0.5,
+            "latency_max": 8,
+            "availability_min": 0.99999,
+            "protection_required": false
+          },
+          "event": "the consumer now requires five-nines availability for a critical window"
+        },
+        {
+          "hop_id": "h3",
+          "origin": "provider",
+          "kind": "restore",
+          "bounds": {
+            "bandwidth_min": 0.5,
+            "latency_max": 10,
+            "availability_min": 0.999,
+            "protection_required": false
+          },
+          "target": "m1a",
+          "event": "the direct-path fault has cleared; the provider offers to move back to the cheaper direct route"
+        }
+      ]
+    },
+    {
+      "id": "TM2",
+      "intent_id": "MI2",
+      "policy_id": "assured",
+      "setpiece": false,
+      "initial_realisation": "m2b",
+      "narrative": "A resilience-first critical service whose latency drifts past its bound and is self-remediated onto the fast protected path.",
+      "hops": [
+        {
+          "hop_id": "h0",
+          "origin": "provider",
+          "kind": "assess",
+          "bounds": {
+            "bandwidth_min": 10,
+            "latency_max": 6,
+            "availability_min": 0.9999,
+            "protection_required": true
+          },
+          "event": "routine assurance; latency sitting near its margin"
+        },
+        {
+          "hop_id": "h1",
+          "origin": "provider",
+          "kind": "assess",
+          "bounds": {
+            "bandwidth_min": 10,
+            "latency_max": 6,
+            "availability_min": 0.9999,
+            "protection_required": true
+          },
+          "event": "latency degrades past the agreed bound; the fast protected path can restore it"
+        }
+      ]
+    }
+  ]
+}

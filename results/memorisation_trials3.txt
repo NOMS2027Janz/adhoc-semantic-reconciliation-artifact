@@ -1,0 +1,11 @@
+
+Memorisation control — single agent, gpt-5.6-sol, 3 trial(s)
+
+  case                       ref  precision  resolved  surv_fc
+  ------------------------------------------------------------
+  recognisable (TAPI/TEAS)   0    1.000      1.000     0.00   
+  recognisable (TAPI/TEAS)   1    1.000      1.000     0.00   
+  relabelled (identity stripped) 0    1.000      0.667     0.00   
+  relabelled (identity stripped) 1    1.000      1.000     0.00   
+
+Compare the two cases row for row: if 'relabelled' tracks 'recognisable', the result is reasoning, not memorised recall of the TAPI/TEAS mapping.

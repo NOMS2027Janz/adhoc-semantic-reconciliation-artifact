@@ -1,0 +1,254 @@
+{
+  "system": "Agent T",
+  "dialect": "Kelvin-TM",
+  "modules": [
+    "kelvin-fabric@2018-12-10 (TR-547)",
+    "kelvin-carriage"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-nano from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_relabel_control, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_relabel_control/model_a*.json.",
+  "concepts": [
+    {
+      "id": "a01",
+      "label": "vertex",
+      "synonyms": [
+        "forwarding realm"
+      ],
+      "kind": "node",
+      "gloss": "A vertex is a node in the topology that functions as a forwarding realm and can host spans within a larger fabric.",
+      "example": "R1",
+      "ref": "r01",
+      "relations": [
+        {
+          "rel": "part-of",
+          "target": "a09"
+        }
+      ],
+      "instances": [
+        "R1",
+        "R2",
+        "R3",
+        "A1",
+        "A2",
+        "A3"
+      ]
+    },
+    {
+      "id": "a02",
+      "label": "span-cap-point",
+      "synonyms": [
+        "owned-vertex-edge-point",
+        "hep"
+      ],
+      "kind": "termination",
+      "gloss": "A span-cap-point is a termination point located on a vertex that marks where a span begins and ends, and terminates the corresponding span.",
+      "example": "hep-R1-R2",
+      "ref": "r02",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "a01"
+        },
+        {
+          "rel": "terminates",
+          "target": "a08"
+        }
+      ],
+      "instances": [
+        "hep-R1-R2",
+        "hep-R2-R3",
+        "hep-A1-R1"
+      ]
+    },
+    {
+      "id": "a03",
+      "label": "shifting-span",
+      "synonyms": [
+        "bridging span"
+      ],
+      "kind": "adaptation",
+      "gloss": "A shifting-span is an adaptation that bridges a span by shifting its position at a vertex and adapts another component within the topology.",
+      "example": "crr4/grd2 bridging at R1",
+      "ref": "r03",
+      "relations": [
+        {
+          "rel": "at-vertex",
+          "target": "a01"
+        },
+        {
+          "rel": "adapts",
+          "target": "a06"
+        }
+      ],
+      "instances": [
+        "crr4/grd2 bridging at R1"
+      ]
+    },
+    {
+      "id": "a04",
+      "label": "offer-gateway-point",
+      "synonyms": [
+        "acp"
+      ],
+      "kind": "access",
+      "gloss": "An offer-gateway-point is an access point on a vertex that provides access to a carriage-offer service.",
+      "example": "acp-A1-grd",
+      "ref": "r05",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "a01"
+        },
+        {
+          "rel": "accesses",
+          "target": "a05"
+        }
+      ],
+      "instances": [
+        "acp-A1-grd",
+        "acp-A3-grd"
+      ]
+    },
+    {
+      "id": "a05",
+      "label": "carriage-offer",
+      "synonyms": [
+        "offer"
+      ],
+      "kind": "service",
+      "gloss": "A carriage-offer is a service offering that uses an access point and is realized by a circuit-end-point across a span within the fabric.",
+      "example": "co-a1a3-grd2 (grd2, A1 to A3)",
+      "ref": "r06",
+      "relations": [
+        {
+          "rel": "uses",
+          "target": "a04"
+        },
+        {
+          "rel": "realized-by",
+          "target": "a10"
+        },
+        {
+          "rel": "over",
+          "target": "a09"
+        }
+      ],
+      "instances": [
+        "co-a1a3-grd2 (grd2, A1 to A3)"
+      ]
+    },
+    {
+      "id": "a06",
+      "label": "tier-stream-qualifier",
+      "synonyms": [
+        "tier qualifier"
+      ],
+      "kind": "multiplex",
+      "gloss": "A tier-stream-qualifier is a multiplex that maps or qualifies a service tier into a stream, thereby linking to an offer.",
+      "example": "grd2 mapped into crr4",
+      "ref": "r07",
+      "relations": [
+        {
+          "rel": "qualifies",
+          "target": "a05"
+        }
+      ],
+      "instances": [
+        "grd2 mapped into crr4"
+      ]
+    },
+    {
+      "id": "a07",
+      "label": "vertex-gate-set",
+      "synonyms": [
+        "gate set"
+      ],
+      "kind": "switching",
+      "gloss": "A vertex-gate-set is a switching construct on a vertex that holds gates enabling path switching.",
+      "example": "R2 cross-switch gate set",
+      "ref": "r08",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "a01"
+        }
+      ],
+      "instances": [
+        "R2 cross-switch gate set"
+      ]
+    },
+    {
+      "id": "a08",
+      "label": "span",
+      "synonyms": [],
+      "kind": "link",
+      "gloss": "A span is a link connecting two vertices, terminated by a span-cap-point.",
+      "example": "span-R1-R2",
+      "ref": "r09",
+      "relations": [
+        {
+          "rel": "between",
+          "target": "a01"
+        },
+        {
+          "rel": "terminated-by",
+          "target": "a02"
+        }
+      ],
+      "instances": [
+        "span-R1-R2",
+        "span-R2-R3",
+        "span-R1-R3",
+        "span-A1-R1"
+      ]
+    },
+    {
+      "id": "a09",
+      "label": "fabric",
+      "synonyms": [
+        "multi-tier fabric"
+      ],
+      "kind": "topology",
+      "gloss": "A fabric is a topology that contains the vertices and spans, representing the overall forwarding realm.",
+      "example": "the zeta-over-optical realm",
+      "ref": "r10",
+      "relations": [
+        {
+          "rel": "contains",
+          "target": "a01"
+        },
+        {
+          "rel": "contains",
+          "target": "a08"
+        }
+      ],
+      "instances": [
+        "the zeta-over-optical realm"
+      ]
+    },
+    {
+      "id": "a10",
+      "label": "circuit-end-point",
+      "synonyms": [
+        "cxp"
+      ],
+      "kind": "endpoint",
+      "gloss": "A circuit-end-point is an endpoint associated with a vertex that is part of a carriage-offer service.",
+      "example": "cxp-a1a3-R1",
+      "ref": "r11",
+      "relations": [
+        {
+          "rel": "on-vertex",
+          "target": "a01"
+        },
+        {
+          "rel": "part-of",
+          "target": "a05"
+        }
+      ],
+      "instances": [
+        "cxp-a1a3-R1",
+        "cxp-a1a3-R3"
+      ]
+    }
+  ]
+}

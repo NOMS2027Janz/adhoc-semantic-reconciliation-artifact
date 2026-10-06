@@ -1,0 +1,115 @@
+{
+  "note": "Two reference arms. 'unit_value_set' pins units, value sets, and the expectation-vs-realisation kind separation; 'invariant' publishes the committed guarantee floor.",
+  "unit_value_set": [
+    {
+      "term": "bandwidth",
+      "kind": "unit",
+      "meaning": "an expectation bound in Gbit/s; realised by a DCI link rate (10G, 25G, 40G, 100G). The committed rate must meet or exceed the bound."
+    },
+    {
+      "term": "latency",
+      "kind": "kind-separation",
+      "meaning": "an expectation 'latency <= X ms' is a BOUND, not a measured value; a telemetry 'latency' reading is a metric. Do not conflate the expectation with the metric."
+    },
+    {
+      "term": "availability",
+      "kind": "value-set",
+      "meaning": "stated in nines; .9999 = four-nines, .99999 = five-nines. A higher requirement is a strictly tighter bound."
+    },
+    {
+      "term": "protection",
+      "kind": "value-set",
+      "meaning": "protection classes: 'none' | '1+1'. 'protection required' is satisfied only by a protected ('1+1') realisation."
+    }
+  ],
+  "invariant": [
+    {
+      "id": "d1a",
+      "pair": "D1",
+      "guaranteed": {
+        "bw_gbps": 100.0,
+        "latency_ms": 20,
+        "availability": 0.9999,
+        "protection": "none",
+        "cost": 200
+      }
+    },
+    {
+      "id": "d1b",
+      "pair": "D1",
+      "guaranteed": {
+        "bw_gbps": 100.0,
+        "latency_ms": 25,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 320
+      }
+    },
+    {
+      "id": "d2a",
+      "pair": "D2",
+      "guaranteed": {
+        "bw_gbps": 40.0,
+        "latency_ms": 10,
+        "availability": 0.9999,
+        "protection": "none",
+        "cost": 120
+      }
+    },
+    {
+      "id": "d2b",
+      "pair": "D2",
+      "guaranteed": {
+        "bw_gbps": 40.0,
+        "latency_ms": 14,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 190
+      }
+    },
+    {
+      "id": "d2c",
+      "pair": "D2",
+      "guaranteed": {
+        "bw_gbps": 40.0,
+        "latency_ms": 12,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 230
+      }
+    },
+    {
+      "id": "d3a",
+      "pair": "D3",
+      "guaranteed": {
+        "bw_gbps": 10.0,
+        "latency_ms": 9,
+        "availability": 0.999,
+        "protection": "none",
+        "cost": 60
+      }
+    },
+    {
+      "id": "d4a",
+      "pair": "D4",
+      "guaranteed": {
+        "bw_gbps": 25.0,
+        "latency_ms": 30,
+        "availability": 0.999,
+        "protection": "none",
+        "cost": 90
+      }
+    },
+    {
+      "id": "d4b",
+      "pair": "D4",
+      "guaranteed": {
+        "bw_gbps": 25.0,
+        "latency_ms": 35,
+        "availability": 0.9999,
+        "protection": "1+1",
+        "cost": 150
+      }
+    }
+  ]
+}

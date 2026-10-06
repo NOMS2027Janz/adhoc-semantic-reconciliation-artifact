@@ -1,0 +1,180 @@
+{
+  "system": "Agent Y — Summit",
+  "dialect": "Summit (bespoke packet-core controller)",
+  "modules": [
+    "summit-userplane",
+    "summit-sessions"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5.6-sol from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case config_xdom_ran, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_xdom_ran/model_b*.json.",
+  "concepts": [
+    {
+      "id": "y.n3",
+      "label": "n3-transport",
+      "synonyms": [
+        "user-plane transport",
+        "core uplink"
+      ],
+      "kind": "transport",
+      "gloss": "A logical user-plane transport connection in the packet core that terminates at a UPF transport endpoint and carries traffic for one or more PDU sessions.",
+      "example": "n3-441 terminates at upf-ep-441 and carries the user-plane packets of PDU session #8830.",
+      "ref": "up-transport",
+      "relations": [
+        {
+          "rel": "terminates-at",
+          "target": "y.upfep"
+        },
+        {
+          "rel": "carries",
+          "target": "y.pdu"
+        }
+      ],
+      "instances": [
+        "n3-441"
+      ]
+    },
+    {
+      "id": "y.upfep",
+      "label": "upf-transport-endpoint",
+      "synonyms": [
+        "user-plane endpoint",
+        "N3 endpoint"
+      ],
+      "kind": "demarcation",
+      "gloss": "The network demarcation point on an N3 transport at which the User Plane Function sends or receives tunneled user-plane traffic.",
+      "example": "upf-ep-441 is the UPF-side endpoint of n3-441.",
+      "ref": "transport-demarc",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "y.n3"
+        }
+      ],
+      "instances": [
+        "upf-ep-441"
+      ]
+    },
+    {
+      "id": "y.dscp",
+      "label": "n3-dscp",
+      "synonyms": [
+        "core marking",
+        "diffserv policy"
+      ],
+      "kind": "qos-marking",
+      "gloss": "The DiffServ code-point marking policy applied to packets on an N3 transport to select per-hop treatment for different traffic classes.",
+      "example": "On n3-441, voice packets are marked EF, selected priority traffic is marked AF41, and other packets receive the default marking.",
+      "ref": "transport-qos",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "y.n3"
+        }
+      ],
+      "instances": [
+        "EF / AF41 / default"
+      ]
+    },
+    {
+      "id": "y.cap",
+      "label": "n3-capacity",
+      "synonyms": [
+        "transport demand"
+      ],
+      "kind": "rate",
+      "gloss": "The required traffic-carrying rate assigned to an N3 transport for capacity planning or provisioning.",
+      "example": "n3-441 has an N3 capacity requirement of 8 Gbit/s.",
+      "ref": "transport-capacity",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "y.n3"
+        }
+      ],
+      "instances": [
+        "8 Gbit/s required"
+      ]
+    },
+    {
+      "id": "y.mtu",
+      "label": "n3-mtu",
+      "synonyms": [
+        "tunnel mtu"
+      ],
+      "kind": "framing",
+      "gloss": "The maximum packet size, in bytes, that an N3 transport can carry without transport-layer fragmentation or rejection.",
+      "example": "n3-441 is configured with an MTU of 1600 bytes so packets no larger than 1600 bytes can traverse it intact.",
+      "ref": "transport-mtu",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "y.n3"
+        }
+      ],
+      "instances": [
+        "MTU 1600"
+      ]
+    },
+    {
+      "id": "y.qosflow",
+      "label": "qos-flow",
+      "synonyms": [
+        "flow"
+      ],
+      "kind": "core-qos",
+      "gloss": "A QoS-specific user-plane flow within a PDU session whose packets share a core-network forwarding and treatment policy.",
+      "example": "PDU session #8830 contains a GBR-voice QoS flow for guaranteed-rate voice traffic and a default QoS flow for remaining traffic.",
+      "ref": "core-qos-flow",
+      "relations": [
+        {
+          "rel": "within",
+          "target": "y.pdu"
+        }
+      ],
+      "instances": [
+        "qos-flow GBR-voice",
+        "qos-flow default"
+      ]
+    },
+    {
+      "id": "y.pdu",
+      "label": "pdu-session",
+      "synonyms": [
+        "session",
+        "data session"
+      ],
+      "kind": "core-state",
+      "gloss": "Packet-core session state representing a subscriber data connection whose user-plane packets are transported over N3 and may be divided into QoS flows.",
+      "example": "PDU session #8830 provides internet data service over n3-441 and contains both GBR-voice and default QoS flows.",
+      "ref": "core-session",
+      "relations": [
+        {
+          "rel": "over",
+          "target": "y.n3"
+        }
+      ],
+      "instances": [
+        "pdu-session #8830 (internet)"
+      ]
+    },
+    {
+      "id": "y.vendor",
+      "label": "summit-tag-9",
+      "synonyms": [
+        "proprietary attr 9"
+      ],
+      "kind": "opaque",
+      "gloss": "An opaque Summit-proprietary attribute numbered 9 that is attached to an N3 transport, with the meaning of its encoded value defined outside this schema.",
+      "example": "n3-441 carries summit-tag-9 with the encoded value 0x4.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on",
+          "target": "y.n3"
+        }
+      ],
+      "instances": [
+        "summit-tag-9=0x4 on n3-441"
+      ]
+    }
+  ]
+}

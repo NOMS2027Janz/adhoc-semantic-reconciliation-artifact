@@ -1,0 +1,124 @@
+{
+  "case": "config_l3vpn",
+  "operational_case": "configuration",
+  "seed": "hand-authored (breadth case: IP/MPLS L3VPN, network-model vs device-config)",
+  "note": "Gold standard DERIVED from model ref bindings by derive_gold.py; do not hand-edit.",
+  "correspondences": [
+    {
+      "a": "n.protocol",
+      "b": "d.protocol",
+      "ref": "ce-pe-protocol"
+    },
+    {
+      "a": "n.ce",
+      "b": "d.ce",
+      "ref": "customer-edge"
+    },
+    {
+      "a": "n.ipconn",
+      "b": "d.ipaddr",
+      "ref": "ip-addressing"
+    },
+    {
+      "a": "n.vpnsvc",
+      "b": "d.ipvpn",
+      "ref": "l3vpn-instance"
+    },
+    {
+      "a": "n.access",
+      "b": "d.ac",
+      "ref": "network-access"
+    },
+    {
+      "a": "n.pe",
+      "b": "d.dev",
+      "ref": "pe-device"
+    },
+    {
+      "a": "n.qos",
+      "b": "d.qospolicy",
+      "ref": "qos-profile"
+    },
+    {
+      "a": "n.rd",
+      "b": "d.rd",
+      "ref": "route-distinguisher"
+    },
+    {
+      "a": "n.rtpolicy",
+      "b": "d.routepolicy",
+      "ref": "route-policy"
+    },
+    {
+      "a": "n.rt",
+      "b": "d.rt",
+      "ref": "route-target"
+    },
+    {
+      "a": "n.vpnnode",
+      "b": "d.vrf",
+      "ref": "vrf"
+    }
+  ],
+  "false_cognates": [
+    {
+      "a": "n.rd",
+      "b": "d.rt",
+      "why": "route-distinguisher vs route-target: both carry 'route-', but an RD makes a VRF's routes unique while an RT controls import/export; distinct concepts, each with its own true partner (n.rd<->d.rd, n.rt<->d.rt)."
+    },
+    {
+      "a": "n.rtpolicy",
+      "b": "d.qospolicy",
+      "why": "routing-policy vs service-policy: both carry 'policy', but a route import/export filter vs a QoS policy-map; n.rtpolicy's true partner is d.routepolicy, d.qospolicy's is n.qos."
+    },
+    {
+      "a": "n.ce",
+      "b": "d.ibgp",
+      "why": "ce-neighbor vs bgp-neighbor: both carry 'neighbor', but a customer-edge peer across an access vs an iBGP session between PEs in the core; n.ce's true partner is d.ce and d.ibgp is a native gap."
+    }
+  ],
+  "residual": {
+    "a_only": [
+      {
+        "id": "n.slareport",
+        "ref": "sla-report",
+        "reason": "native gap (self-extend)"
+      },
+      {
+        "id": "n.vendor",
+        "ref": null,
+        "reason": "opaque (no public meaning)"
+      }
+    ],
+    "b_only": [
+      {
+        "id": "d.ibgp",
+        "ref": "ibgp-session",
+        "reason": "native gap (self-extend)"
+      },
+      {
+        "id": "d.vendor",
+        "ref": null,
+        "reason": "opaque (no public meaning)"
+      }
+    ]
+  },
+  "residual_by_placement": {
+    "both_cognitive": 2,
+    "one_inert": 3,
+    "both_inert": 4
+  },
+  "invariants": [
+    "vrf-isolation",
+    "route-distinguisher-uniqueness",
+    "route-target-import-export",
+    "pe-ce-addressing",
+    "attachment-binding",
+    "routing-protocol-consistency"
+  ],
+  "verification_by_placement": {
+    "both_cognitive": "closed-loop worked exchange, self-certifying",
+    "one_inert": "evidence and round-trip on invariants",
+    "both_inert": "external adjudication or downstream test"
+  }
+}

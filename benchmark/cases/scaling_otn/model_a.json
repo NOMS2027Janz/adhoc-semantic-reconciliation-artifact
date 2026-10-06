@@ -1,0 +1,61 @@
+{
+  "system": "Agent T",
+  "dialect": "ONF TAPI",
+  "note": "Agent T: one representation of the shared OTN network, bound to the reference.",
+  "concepts": [
+    {
+      "id": "a.forwarding",
+      "label": "node",
+      "kind": "concept",
+      "ref": "forwarding-node"
+    },
+    {
+      "id": "a.link",
+      "label": "owned-node-edge-point",
+      "kind": "concept",
+      "ref": "link-termination"
+    },
+    {
+      "id": "a.layer",
+      "label": "transitional-link",
+      "kind": "concept",
+      "ref": "layer-adaptation"
+    },
+    {
+      "id": "a.connection",
+      "label": "connectivity-service",
+      "kind": "concept",
+      "ref": "connection-service"
+    },
+    {
+      "id": "a.multiplex",
+      "label": "layer-protocol-qualifier",
+      "kind": "concept",
+      "ref": "multiplex-structure"
+    },
+    {
+      "id": "a.switching",
+      "label": "node-rule-group",
+      "kind": "concept",
+      "ref": "switching-constraint"
+    },
+    {
+      "id": "a.topo",
+      "label": "link",
+      "kind": "concept",
+      "ref": "topo-link"
+    },
+    {
+      "id": "a.topology",
+      "label": "topology",
+      "kind": "concept",
+      "ref": "topology"
+    },
+    {
+      "id": "a.conn",
+      "label": "connection-end-point",
+      "kind": "concept",
+      "ref": "conn-endpoint"
+    }
+  ]
+}

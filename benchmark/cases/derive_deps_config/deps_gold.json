@@ -1,0 +1,95 @@
+{
+  "case": "derive_deps_config",
+  "note": "Dependency-map gold DERIVED by derive_deps_gold.py (deterministic join over inventory); incident gold via correlate() with that map. Do not hand-edit.",
+  "underlies": {
+    "otu2": [
+      "ip-le3"
+    ],
+    "otu5": [
+      "ip-le7"
+    ],
+    "otu9": [
+      "ip-le9"
+    ],
+    "ip-le3": [
+      "l3vpn-acme"
+    ],
+    "ip-le7": [
+      "evpn-globex"
+    ]
+  },
+  "incidents": {
+    "C1": [
+      {
+        "symptoms": [
+          "s1",
+          "s2",
+          "s3"
+        ],
+        "cause": "s1",
+        "layers": [
+          "ip",
+          "optical",
+          "service"
+        ]
+      },
+      {
+        "symptoms": [
+          "s4"
+        ],
+        "cause": "s4",
+        "layers": [
+          "service"
+        ]
+      }
+    ],
+    "C2": [
+      {
+        "symptoms": [
+          "s1",
+          "s2"
+        ],
+        "cause": "s1",
+        "layers": [
+          "ip",
+          "optical"
+        ]
+      },
+      {
+        "symptoms": [
+          "s3",
+          "s4",
+          "s5"
+        ],
+        "cause": "s3",
+        "layers": [
+          "ip",
+          "optical",
+          "service"
+        ]
+      }
+    ],
+    "C3": [
+      {
+        "symptoms": [
+          "s1",
+          "s2"
+        ],
+        "cause": "s1",
+        "layers": [
+          "ip",
+          "optical"
+        ]
+      },
+      {
+        "symptoms": [
+          "s3"
+        ],
+        "cause": "s3",
+        "layers": [
+          "service"
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "model": "a",
+  "meaning_questions": [
+    {
+      "id": "q_circuit",
+      "concept_id": "m.circuit",
+      "question": "What does this concept denote, in terms a domain engineer would recognise?",
+      "answer_key": "A provisioned transport circuit carrying a client end to end; in the cross-domain picture it is the underlay that a service rides over — not itself the service.",
+      "must_not_confuse_with": []
+    },
+    {
+      "id": "q_grade",
+      "concept_id": "m.grade",
+      "question": "What does 'grade' denote here?",
+      "answer_key": "The transport quality grade of a circuit — its physical protection/quality class in the transport domain. It is NOT a service-level grade or commercial tier.",
+      "must_not_confuse_with": ["c.grade"]
+    },
+    {
+      "id": "q_bearer",
+      "concept_id": "m.bearer",
+      "question": "What does 'bearer' denote here?",
+      "answer_key": "The physical optical bearer (a wavelength on a fiber) on which the circuit is realised.",
+      "must_not_confuse_with": []
+    },
+    {
+      "id": "q_handoff",
+      "concept_id": "m.handoff",
+      "question": "What does 'hand-off' denote here?",
+      "answer_key": "The physical demarcation point where the circuit presents to the client — the attachment point between transport and the client side.",
+      "must_not_confuse_with": []
+    },
+    {
+      "id": "q_protection",
+      "concept_id": "m.protection",
+      "question": "What does 'protection' denote here?",
+      "answer_key": "Protection of the circuit against a failure of the underlying transport (e.g. a redundant path), a resilience property of the circuit.",
+      "must_not_confuse_with": []
+    }
+  ],
+  "use_task": {
+    "goal": "You must stand up a resilient, low-latency transport circuit that presents to a client at a demarcation point and meets a committed payload rate. Using ONLY this model, list the concepts directly relevant to that task and say in one phrase how each is used.",
+    "relevant_ids": ["m.circuit", "m.handoff", "m.rate", "m.latency", "m.protection", "m.bearer"],
+    "irrelevant_ids": ["m.grade"],
+    "answer_key": "m.circuit = the thing being provisioned; m.handoff = where it presents to the client; m.rate = the committed payload rate to meet; m.latency = the delay constraint; m.protection = the resilience requirement; m.bearer = the physical realisation. m.grade is a derived transport quality tag, not an actionable provisioning knob for this task."
+  },
+  "ambiguous_ids": ["m.grade"]
+}

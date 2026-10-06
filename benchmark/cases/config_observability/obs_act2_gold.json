@@ -1,0 +1,100 @@
+{
+  "case": "config_observability",
+  "note": "Act-2 gold DERIVED by derive_observability_gold.py from the oracles; do not hand-edit.",
+  "verdicts": {
+    "A1": {
+      "normal": "act",
+      "maintenance": "suppress",
+      "holiday": "act"
+    },
+    "A2": {
+      "normal": "suppress",
+      "maintenance": "suppress",
+      "holiday": "suppress"
+    },
+    "A3": {
+      "normal": "act",
+      "maintenance": "suppress",
+      "holiday": "act"
+    },
+    "A4": {
+      "normal": "suppress",
+      "maintenance": "suppress",
+      "holiday": "suppress"
+    },
+    "A5": {
+      "normal": "watch",
+      "maintenance": "suppress",
+      "holiday": "suppress"
+    },
+    "A6": {
+      "normal": "watch",
+      "maintenance": "suppress",
+      "holiday": "watch"
+    }
+  },
+  "verdict_varies": [
+    "A1",
+    "A3",
+    "A5",
+    "A6"
+  ],
+  "incidents": {
+    "S1": [
+      {
+        "symptoms": [
+          "s1",
+          "s2"
+        ],
+        "cause": "s1",
+        "layers": [
+          "ip",
+          "optical"
+        ]
+      },
+      {
+        "symptoms": [
+          "s3"
+        ],
+        "cause": "s3",
+        "layers": [
+          "management"
+        ]
+      }
+    ],
+    "S2": [
+      {
+        "symptoms": [
+          "s1"
+        ],
+        "cause": "s1",
+        "layers": [
+          "ip"
+        ]
+      },
+      {
+        "symptoms": [
+          "s2"
+        ],
+        "cause": "s2",
+        "layers": [
+          "ip"
+        ]
+      }
+    ],
+    "S3": [
+      {
+        "symptoms": [
+          "s1",
+          "s2",
+          "s3"
+        ],
+        "cause": "s1",
+        "layers": [
+          "ip",
+          "optical"
+        ]
+      }
+    ]
+  }
+}

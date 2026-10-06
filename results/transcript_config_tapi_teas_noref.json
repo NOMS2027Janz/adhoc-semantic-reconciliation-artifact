@@ -1,0 +1,418 @@
+{
+  "case": "config_tapi_teas",
+  "model": "gpt-5.6-sol",
+  "reference": false,
+  "confirmed": [
+    [
+      "i.cmatrix",
+      "t.nrg"
+    ],
+    [
+      "i.tp",
+      "t.ltp"
+    ],
+    [
+      "i.tcep",
+      "t.cep"
+    ]
+  ],
+  "residual_a": [
+    "t.node",
+    "t.translink",
+    "t.sip",
+    "t.cs",
+    "t.lpq",
+    "t.link",
+    "t.topo"
+  ],
+  "residual_b": [
+    "i.tenode",
+    "i.stp",
+    "i.ttp",
+    "i.tunnel",
+    "i.otnlabel",
+    "i.telink",
+    "i.tetopo"
+  ],
+  "work": {
+    "candidates": 3,
+    "turns": 4,
+    "bilateral_checks": 8
+  },
+  "effort": {
+    "total_tokens": 22576,
+    "reasoning_tokens": 2709,
+    "latency_s": 117.25,
+    "model": "gpt-5.6-sol"
+  },
+  "transcript": [
+    {
+      "from": "A",
+      "answers": [],
+      "questions": [
+        {
+          "their_id": "i.tenode",
+          "ask": "What exactly does a TE node denote? Please give a gloss, example, and its principal relations."
+        },
+        {
+          "their_id": "i.tp",
+          "ask": "Does a termination point specifically denote a node-owned edge point terminating a TE link, or a broader kind of endpoint? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "i.stp",
+          "ask": "What does a supporting TP represent, especially how it models inter-layer adaptation? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "i.ttp",
+          "ask": "What does a tunnel termination point denote, and how does it differ from an ordinary termination point or tunnel connection endpoint? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "i.tunnel",
+          "ask": "Does a TE tunnel denote an externally requested end-to-end connectivity service, an internal realization of one, or something else? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "i.otnlabel",
+          "ask": "What information does an OTN label express? In particular, does it encode multiplexing/layer structure such as ODU2 mapped into OTU4? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "i.cmatrix",
+          "ask": "Does a connectivity matrix express constraints on permitted cross-connects among ports within a node? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "i.telink",
+          "ask": "What precisely is a TE link, including its endpoints and containment relations? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "i.tetopo",
+          "ask": "What precisely is a TE topology, and can it be a single multi-layer domain topology? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "i.tcep",
+          "ask": "What does a tunnel connection endpoint denote, and how is it related to a tunnel and a node? Please give a gloss, example, and relations."
+        }
+      ],
+      "proposals": [],
+      "ratifications": [],
+      "no_counterpart": [],
+      "done": false
+    },
+    {
+      "from": "B",
+      "answers": [
+        {
+          "my_id": "i.tenode",
+          "gloss": "A traffic-engineering node representing a node within one particular layer network.",
+          "example": "ROADM R1 represented in the OTN layer.",
+          "relations": "It is part of i.tetopo; i.tp, i.ttp, i.cmatrix, and i.tcep may be located on it, while i.telink connects it to other TE nodes."
+        },
+        {
+          "my_id": "i.tp",
+          "gloss": "A node-owned edge termination point at which a TE link terminates; it is not a generic service or tunnel endpoint.",
+          "example": "The termination point on R1 facing the R1\u2013R2 TE link.",
+          "relations": "It is on i.tenode and terminates i.telink. Through i.stp, it may be supported by a termination point in a server layer."
+        },
+        {
+          "my_id": "i.stp",
+          "gloss": "The supporting-termination relationship by which a client-layer TP is supported by a server-layer TP, thereby representing inter-layer adaptation.",
+          "example": "An OTN termination point at R1 supported by an optical-layer termination point at R1.",
+          "relations": "It links supporting and supported instances of i.tp across layers; unlike i.tp, it denotes the adaptation/support relationship rather than an ordinary link endpoint."
+        },
+        {
+          "my_id": "i.ttp",
+          "gloss": "The trail-head point at which an end-to-end TE tunnel originates or terminates.",
+          "example": "The A1 trail head of the A1\u2013A3 ODU2 tunnel.",
+          "relations": "It is on i.tenode and originates or terminates i.tunnel. It differs from i.tp, which terminates a TE link, and from i.tcep, which is an endpoint of an internal tunnel connection at a node."
+        },
+        {
+          "my_id": "i.tunnel",
+          "gloss": "An end-to-end traffic-engineered tunnel that realizes connectivity for a service across a TE topology.",
+          "example": "The A1\u2013A3 ODU2 tunnel.",
+          "relations": "It begins and ends at instances of i.ttp, traverses i.tetopo, contains or is realized through i.tcep endpoints, and may be assigned i.otnlabel multiplexing information."
+        },
+        {
+          "my_id": "i.otnlabel",
+          "gloss": "An OTN forwarding or multiplexing label expressing tributary-slot and tributary-port-number structure, including how a lower-rate ODU is multiplexed into a higher-rate container.",
+          "example": "The TS/TPN selection carrying an ODU2 inside an OTU4.",
+          "relations": "It labels i.tunnel with OTN multiplexing information; it is not itself the tunnel or topology."
+        },
+        {
+          "my_id": "i.cmatrix",
+          "gloss": "A node-local matrix specifying which internal connectivity or cross-connect combinations are permitted.",
+          "example": "The connectivity matrix defining allowed cross-connects within R2.",
+          "relations": "It is associated with i.tenode and constrains internal switching among that node's relevant termination or connection points."
+        },
+        {
+          "my_id": "i.telink",
+          "gloss": "A traffic-engineering link connecting TE nodes within one layer network.",
+          "example": "The R1\u2013R2 TE link.",
+          "relations": "It lies within i.tetopo, runs between instances of i.tenode, and is terminated at its ends by instances of i.tp."
+        },
+        {
+          "my_id": "i.tetopo",
+          "gloss": "A traffic-engineering network for a particular layer, containing that layer's TE nodes and TE links; in this model it is per-layer rather than one undifferentiated multi-layer topology.",
+          "example": "The OTN layer network.",
+          "relations": "It contains i.tenode and i.telink and provides the topology over which i.tunnel is routed. Separate layer topologies may be related through supporting TPs."
+        },
+        {
+          "my_id": "i.tcep",
+          "gloss": "An endpoint of a tunnel connection within a node, associated with the tunnel's internal realization.",
+          "example": "The connection endpoint for the A1\u2013A3 tunnel on R1.",
+          "relations": "It is on i.tenode and is part of i.tunnel. Unlike i.ttp, it is an internal connection endpoint and not specifically the end-to-end trail head; unlike i.tp, it does not terminate a TE link."
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "t.node",
+          "ask": "Does this denote a node in a particular layer topology, or a physical/multi-layer aggregate node? Please give its gloss, an example, and principal relations."
+        },
+        {
+          "their_id": "t.ltp",
+          "ask": "Does this specifically terminate a topology link on a node, and can it also participate in inter-layer support? Please give its gloss, example, and relations."
+        },
+        {
+          "their_id": "t.translink",
+          "ask": "Does a transitional link denote an inter-layer adaptation relationship between termination points, or a link-like resource with distinct endpoints? Please give its gloss, example, and relations."
+        },
+        {
+          "their_id": "t.sip",
+          "ask": "What boundary or access function does a service-interface point represent, and how does it relate to services, nodes, and termination points? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "t.cs",
+          "ask": "Does a connectivity service denote an externally requested service, an engineered tunnel realizing one, or both? Please give its gloss, example, and relations."
+        },
+        {
+          "their_id": "t.lpq",
+          "ask": "What information does a layer-protocol qualifier encode, particularly whether it identifies multiplexing structure such as ODU2 in OTU4 or tributary slots? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "t.nrg",
+          "ask": "What does a node-rule group constrain or permit within a node, and is it equivalent to a matrix of allowed internal cross-connects? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "t.link",
+          "ask": "What kind of link does this denote, what are its endpoints, and in what topology is it contained? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "t.topo",
+          "ask": "Is this topology per layer or potentially a multi-layer/domain aggregate, and what does it contain? Please give a gloss, example, and relations."
+        },
+        {
+          "their_id": "t.cep",
+          "ask": "What kind of connection endpoint does this denote, and how is it related to a service, connection, node, SIP, or LTP? Please give a gloss, example, and relations."
+        }
+      ],
+      "proposals": [],
+      "ratifications": [],
+      "no_counterpart": [],
+      "done": false
+    },
+    {
+      "from": "A",
+      "answers": [
+        {
+          "my_id": "t.node",
+          "gloss": "A forwarding node represented in the single multi-layer domain topology, rather than a separate node object restricted to one layer.",
+          "example": "ROADM R1 in the OTN-over-optical topology.",
+          "relations": "It is part of t.topo; t.ltp, t.sip, t.nrg, and t.cep are located on it, t.link connects nodes, and t.translink expresses adaptation at it."
+        },
+        {
+          "my_id": "t.ltp",
+          "gloss": "A node-owned edge point at which a topological link terminates.",
+          "example": "The R1 edge point facing the R1-R2 link.",
+          "relations": "It is on t.node and terminates t.link. Inter-layer adaptation is represented separately by t.translink rather than by an explicit supporting-TP relation on t.ltp."
+        },
+        {
+          "my_id": "t.translink",
+          "gloss": "A link-like adaptation construct expressing transition between layers at a node.",
+          "example": "The OTU4-to-ODU2 adaptation at R1.",
+          "relations": "It is at t.node and adapts the layer or multiplexing structure represented by t.lpq. It is distinct from the ordinary node-to-node topology link t.link; the model does not define it merely as a relationship between two t.ltp instances."
+        },
+        {
+          "my_id": "t.sip",
+          "gloss": "A network-boundary access point through which an external client service accesses the network.",
+          "example": "The ODU2 client hand-off at A1.",
+          "relations": "It is on t.node and provides access to t.cs. It is an external service interface, not a topology-link termination point or an internal connection endpoint."
+        },
+        {
+          "my_id": "t.cs",
+          "gloss": "An externally meaningful end-to-end connectivity service across the network, not merely an engineered tunnel that realizes another service.",
+          "example": "The A1-A3 ODU2 connectivity service.",
+          "relations": "It uses t.sip access points, is realized internally by t.cep endpoints, and runs over t.topo."
+        },
+        {
+          "my_id": "t.lpq",
+          "gloss": "A qualifier describing a signal's layer and multiplexing structure.",
+          "example": "ODU2 mapped into an OTU4 server.",
+          "relations": "It qualifies t.cs and is the structure adapted by t.translink. It captures the multiplexing/layer arrangement, but the model does not specifically define it as a forwarding label or require explicit tributary-slot and tributary-port-number fields."
+        },
+        {
+          "my_id": "t.nrg",
+          "gloss": "A node-local rule group constraining which ports or points may be cross-connected.",
+          "example": "The set of permitted cross-connects within R2.",
+          "relations": "It is associated with t.node and governs allowed internal switching combinations."
+        },
+        {
+          "my_id": "t.link",
+          "gloss": "A topological link between two forwarding nodes in the single multi-layer topology.",
+          "example": "The R1-R2 link.",
+          "relations": "It is contained in t.topo, lies between t.node instances, and is terminated by t.ltp instances."
+        },
+        {
+          "my_id": "t.topo",
+          "gloss": "The single multi-layer topology describing the entire network domain.",
+          "example": "The combined OTN-over-optical domain topology.",
+          "relations": "It contains t.node and t.link and carries t.cs. Unlike a strictly per-layer topology model, its nodes and links coexist in one multi-layer topology."
+        },
+        {
+          "my_id": "t.cep",
+          "gloss": "An endpoint of an internal connection realizing a connectivity service within a node.",
+          "example": "The endpoint for the A1-A3 service on R1.",
+          "relations": "It is on t.node and part of the realization of t.cs. It is neither the external access point t.sip nor the edge point t.ltp that terminates a topology link."
+        }
+      ],
+      "questions": [],
+      "proposals": [
+        {
+          "my_id": "t.node",
+          "their_id": "i.tenode",
+          "confidence": 0.68,
+          "rationale": "Both denote forwarding or TE nodes that own points and are connected by links. The representational scope differs: t.node belongs to one multi-layer topology, whereas i.tenode represents a node in a particular layer network."
+        },
+        {
+          "my_id": "t.ltp",
+          "their_id": "i.tp",
+          "confidence": 0.98,
+          "rationale": "Both specifically denote node-owned edge points terminating topological or TE links."
+        },
+        {
+          "my_id": "t.translink",
+          "their_id": "i.stp",
+          "confidence": 0.78,
+          "rationale": "Both represent inter-layer adaptation or support. The difference is structural: t.translink is modeled as an adaptation link at a node, while i.stp is explicitly a support relationship between client- and server-layer termination points."
+        },
+        {
+          "my_id": "t.lpq",
+          "their_id": "i.otnlabel",
+          "confidence": 0.73,
+          "rationale": "Both express OTN layer and multiplexing structure such as ODU2 carried in OTU4. i.otnlabel is a concrete forwarding/multiplexing label with TS/TPN details, while t.lpq is a more abstract layer-protocol qualifier."
+        },
+        {
+          "my_id": "t.nrg",
+          "their_id": "i.cmatrix",
+          "confidence": 0.96,
+          "rationale": "Both are node-local constructs specifying or constraining permitted internal cross-connect combinations."
+        },
+        {
+          "my_id": "t.link",
+          "their_id": "i.telink",
+          "confidence": 0.84,
+          "rationale": "Both connect nodes and terminate at node-owned termination points. t.link exists in a unified multi-layer topology, while i.telink is scoped to one layer network."
+        },
+        {
+          "my_id": "t.topo",
+          "their_id": "i.tetopo",
+          "confidence": 0.58,
+          "rationale": "Both are topology containers for nodes and links and provide the domain over which connectivity is carried. Their granularity materially differs: t.topo is one multi-layer domain topology, whereas i.tetopo is a separate per-layer TE topology."
+        },
+        {
+          "my_id": "t.cep",
+          "their_id": "i.tcep",
+          "confidence": 0.82,
+          "rationale": "Both denote node-local endpoints of an internal end-to-end connectivity realization and are not link termination points. Their parent constructs differ because t.cep realizes t.cs, while i.tcep belongs to i.tunnel."
+        }
+      ],
+      "ratifications": [],
+      "no_counterpart": [
+        "t.sip",
+        "t.cs"
+      ],
+      "done": true
+    },
+    {
+      "from": "B",
+      "answers": [],
+      "questions": [],
+      "proposals": [
+        {
+          "my_id": "i.tp",
+          "their_id": "t.ltp",
+          "confidence": 0.98,
+          "rationale": "Both denote a node-owned edge termination point at which a topology or TE link terminates."
+        },
+        {
+          "my_id": "i.cmatrix",
+          "their_id": "t.nrg",
+          "confidence": 0.96,
+          "rationale": "Both denote a node-local specification of permitted internal cross-connect or switching combinations."
+        },
+        {
+          "my_id": "i.tcep",
+          "their_id": "t.cep",
+          "confidence": 0.86,
+          "rationale": "Both denote a node-local endpoint of an internal connection used to realize end-to-end connectivity, distinct from an external access point and a topology-link termination point."
+        }
+      ],
+      "ratifications": [
+        {
+          "their_id": "t.node",
+          "my_id": "i.tenode",
+          "accept": false,
+          "reason": "i.tenode is explicitly a node representation within one particular layer network, whereas t.node is a single aggregate forwarding-node representation in a multi-layer topology. They have related roles but do not denote the same modeled entity."
+        },
+        {
+          "their_id": "t.ltp",
+          "my_id": "i.tp",
+          "accept": true,
+          "reason": "Both specifically denote node-owned edge points terminating topology or TE links."
+        },
+        {
+          "their_id": "t.translink",
+          "my_id": "i.stp",
+          "accept": false,
+          "reason": "i.stp denotes an explicit support relationship between client- and server-layer termination points. t.translink is instead a link-like adaptation construct at a node and is expressly not defined merely as that TP-to-TP support relationship."
+        },
+        {
+          "their_id": "t.lpq",
+          "my_id": "i.otnlabel",
+          "accept": false,
+          "reason": "i.otnlabel is a concrete OTN forwarding or multiplexing label expressing tributary-slot and TPN selection. t.lpq is a broader abstract qualifier of layer and multiplexing structure and need not encode those label fields."
+        },
+        {
+          "their_id": "t.nrg",
+          "my_id": "i.cmatrix",
+          "accept": true,
+          "reason": "Both specify the permitted internal cross-connect combinations within a node."
+        },
+        {
+          "their_id": "t.link",
+          "my_id": "i.telink",
+          "accept": false,
+          "reason": "i.telink is necessarily a link within one specific layer network between per-layer TE nodes, while t.link connects aggregate forwarding nodes in a unified multi-layer topology. The scope and endpoint objects differ materially."
+        },
+        {
+          "their_id": "t.topo",
+          "my_id": "i.tetopo",
+          "accept": false,
+          "reason": "i.tetopo is strictly a separate per-layer TE network; t.topo is the single combined multi-layer domain topology. They therefore denote different topology granularities."
+        },
+        {
+          "their_id": "t.cep",
+          "my_id": "i.tcep",
+          "accept": true,
+          "reason": "Both denote a node-local endpoint of an internal connection realizing end-to-end connectivity. The service-versus-tunnel parent terminology reflects the surrounding realization model rather than a different endpoint meaning."
+        }
+      ],
+      "no_counterpart": [
+        "i.tenode",
+        "i.stp",
+        "i.ttp",
+        "i.tunnel",
+        "i.otnlabel",
+        "i.telink",
+        "i.tetopo"
+      ],
+      "done": true
+    }
+  ]
+}

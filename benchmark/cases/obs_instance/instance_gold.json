@@ -1,0 +1,47 @@
+{
+  "case": "obs_instance",
+  "note": "DERIVED inline from _truth.",
+  "correspondences": [
+    {
+      "a": "f.al1",
+      "b": "g.an1",
+      "truth": "c1"
+    },
+    {
+      "a": "f.al2",
+      "b": "g.an2",
+      "truth": "c2"
+    },
+    {
+      "a": "f.al3",
+      "b": "g.an3",
+      "truth": "c3"
+    },
+    {
+      "a": "f.al4",
+      "b": "g.an4",
+      "truth": "c4"
+    }
+  ],
+  "false_cognates": [],
+  "residual": {
+    "a_only": [],
+    "b_only": []
+  },
+  "experiment_only": [
+    "c3",
+    "c4"
+  ],
+  "residual_by_placement": {
+    "both_cognitive": 0,
+    "one_inert": 2,
+    "both_inert": 2
+  },
+  "invariants": [],
+  "invariant_signatures": {},
+  "verification_by_placement": {
+    "both_cognitive": "interrogate the correlation-id",
+    "one_inert": "live side only",
+    "both_inert": "static evidence only"
+  }
+}

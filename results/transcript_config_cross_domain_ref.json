@@ -1,0 +1,308 @@
+{
+  "case": "config_cross_domain",
+  "model": "gpt-5.6-sol",
+  "reference": true,
+  "confirmed": [
+    [
+      "c.attachment",
+      "m.handoff"
+    ],
+    [
+      "c.underlay",
+      "m.circuit"
+    ],
+    [
+      "c.latency",
+      "m.latency"
+    ],
+    [
+      "c.protection",
+      "m.protection"
+    ],
+    [
+      "c.rate",
+      "m.rate"
+    ]
+  ],
+  "residual_a": [
+    "m.grade",
+    "m.bearer"
+  ],
+  "residual_b": [
+    "c.grade",
+    "c.vlan",
+    "c.service"
+  ],
+  "work": {
+    "candidates": 5,
+    "turns": 4,
+    "bilateral_checks": 5
+  },
+  "effort": {
+    "total_tokens": 16148,
+    "reasoning_tokens": 556,
+    "latency_s": 42.84,
+    "model": "gpt-5.6-sol"
+  },
+  "transcript": [
+    {
+      "from": "A",
+      "answers": [],
+      "questions": [
+        {
+          "their_id": "c.underlay",
+          "ask": "What does this underlay-binding denote? Please give its gloss, an example, relations, and shared ref if any; in particular, is it the provisioned transport circuit itself or merely a binding from a service to such a circuit?"
+        },
+        {
+          "their_id": "c.attachment",
+          "ask": "What physical or logical point does attachment denote? Please give its gloss, an example, relations, and shared ref if any."
+        },
+        {
+          "their_id": "c.rate",
+          "ask": "Does this mean committed client/service payload rate, bearer line rate, or another rate? Please give its gloss, an example, relations, and shared ref."
+        },
+        {
+          "their_id": "c.latency",
+          "ask": "Does this denote one-way circuit propagation delay, service latency, or another measurement? Please give its gloss, an example, relations, and shared ref."
+        },
+        {
+          "their_id": "c.protection",
+          "ask": "What failures and object does this protection concern? Please give its gloss, an example, relations, and shared ref."
+        },
+        {
+          "their_id": "c.grade",
+          "ask": "What dimensions define this service class? Please give its gloss, an example, relations, and shared ref, especially whether it denotes physical transport protection/restoration quality."
+        },
+        {
+          "their_id": "c.vlan",
+          "ask": "Please give the gloss, an example, relations, and shared ref for this encapsulation concept so I can determine whether any concept in my transport model corresponds."
+        },
+        {
+          "their_id": "c.service",
+          "ask": "Please give the gloss, an example, relations, and shared ref for this IP-service concept, including how it relates to the underlay and attachment."
+        }
+      ],
+      "proposals": [],
+      "ratifications": [],
+      "no_counterpart": [],
+      "done": false
+    },
+    {
+      "from": "B",
+      "answers": [
+        {
+          "my_id": "c.underlay",
+          "gloss": "The transport circuit that an IP/VPN service is bound to ride over. It denotes the consumed transport-domain circuit in its role as the service underlay, not a separate abstract binding object. Shared ref: transport-underlay.",
+          "example": "Service SVC-42 rides transport underlay U-7.",
+          "relations": "c.underlay carries c.service; conversely c.service rides c.underlay. The circuit is owned by the transport domain and consumed by the service domain."
+        },
+        {
+          "my_id": "c.attachment",
+          "gloss": "The logical customer-site attachment point where the IP service meets the customer router. Shared ref: demarcation.",
+          "example": "att-NY-SVC42 is the New York attachment of SVC-42.",
+          "relations": "It is of c.service and bears c.vlan encapsulation. A service can attach at multiple attachments, such as NY and FRA."
+        },
+        {
+          "my_id": "c.rate",
+          "gloss": "The committed information rate guaranteed for customer service traffic, rather than a bearer line rate. Shared ref: service-rate.",
+          "example": "SVC-42 has a CIR of 5 Gbit/s.",
+          "relations": "It is a rate property of c.service."
+        },
+        {
+          "my_id": "c.latency",
+          "gloss": "The service's latency commitment, represented by a named SLA tier rather than merely a raw propagation measurement. Shared ref: latency-bound.",
+          "example": "SVC-42 has latency tier T2, committing to no more than 8 ms.",
+          "relations": "It is a latency property of c.service."
+        },
+        {
+          "my_id": "c.protection",
+          "gloss": "The service resilience requirement that connectivity survive failure in its transport path. Shared ref: protection-requirement.",
+          "example": "SVC-42 must survive one underlay path failure.",
+          "relations": "It is a protection requirement of c.service and constrains resilience of the transport used by that service."
+        },
+        {
+          "my_id": "c.grade",
+          "gloss": "The IP class of service applied to traffic, defining router scheduling and drop priority; it is not physical transport protection or restoration quality. No shared ref is bound.",
+          "example": "Gold class places SVC-42 traffic into a low-latency queue; other grades include silver and bronze.",
+          "relations": "It is a service-class property of c.service."
+        },
+        {
+          "my_id": "c.vlan",
+          "gloss": "The customer VLAN tag identifying Ethernet/IP traffic at a service attachment. It is a purely IP/Ethernet encapsulation object. No shared ref is bound.",
+          "example": "C-VLAN 100 is used on the New York attachment of SVC-42.",
+          "relations": "c.vlan is on c.attachment, and c.attachment bears c.vlan."
+        },
+        {
+          "my_id": "c.service",
+          "gloss": "The end-to-end IP/VPN service delivered to the customer. It rides a transport underlay but is not itself known as a service object to the transport domain, which sees the circuit. No shared ref is bound.",
+          "example": "SVC-42 is a point-to-point IP service between New York and Frankfurt.",
+          "relations": "It rides c.underlay and attaches at c.attachment; its properties include c.rate, c.latency, c.protection, and c.grade."
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "m.circuit",
+          "ask": "Does this denote the provisioned transport circuit that can serve as an IP service's underlay? Please provide gloss, example, relations, and shared ref."
+        },
+        {
+          "their_id": "m.handoff",
+          "ask": "Does this denote the physical or logical customer demarcation where a client service meets transport, and can it coincide with an IP-service attachment? Please provide gloss, example, relations, and shared ref."
+        },
+        {
+          "their_id": "m.rate",
+          "ask": "Does this denote service/CIR payload rate, transport circuit bandwidth, bearer line rate, or something else? Please provide gloss, example, relations, and shared ref."
+        },
+        {
+          "their_id": "m.latency",
+          "ask": "Does this denote a service SLA latency bound/tier or measured transport propagation latency? Please provide gloss, example, relations, and shared ref."
+        },
+        {
+          "their_id": "m.protection",
+          "ask": "Does this denote a client's resilience requirement, an implemented transport protection mechanism, or another property? Please provide gloss, example, relations, and shared ref."
+        },
+        {
+          "their_id": "m.grade",
+          "ask": "What dimensions define this transport grade, and is it distinct from IP scheduling/drop-priority class of service? Please provide gloss, example, relations, and shared ref."
+        },
+        {
+          "their_id": "m.bearer",
+          "ask": "What object does bearer denote, how does it relate to a circuit and handoff, and what shared ref does it have, if any? Please provide gloss and example."
+        }
+      ],
+      "proposals": [],
+      "ratifications": [],
+      "no_counterpart": [],
+      "done": false
+    },
+    {
+      "from": "A",
+      "answers": [
+        {
+          "my_id": "m.circuit",
+          "gloss": "A provisioned end-to-end transport circuit carrying a client across the optical core; it can serve as an IP service's underlay. Shared ref: transport-underlay.",
+          "example": "CIR-7 runs from the New York hand-off to the Frankfurt hand-off.",
+          "relations": "It presents at m.handoff and is carried on m.bearer."
+        },
+        {
+          "my_id": "m.handoff",
+          "gloss": "The physical client demarcation where a transport circuit presents to customer equipment. It can coincide with the service-domain attachment viewed from the IP side. Shared ref: demarcation.",
+          "example": "The New York hand-off port where CIR-7 meets the customer router.",
+          "relations": "It is an endpoint/demarcation on m.circuit."
+        },
+        {
+          "my_id": "m.rate",
+          "gloss": "The committed client payload rate guaranteed end to end by the circuit, not the optical bearer's line rate. Shared ref: service-rate.",
+          "example": "CIR-7 guarantees 5 Gbit/s of committed payload.",
+          "relations": "It is a rate property of m.circuit."
+        },
+        {
+          "my_id": "m.latency",
+          "gloss": "The circuit's one-way propagation delay, measured in milliseconds and determined by transport path length. Shared ref: latency-bound.",
+          "example": "CIR-7's primary path measures 7.2 ms one way.",
+          "relations": "It is a latency property of m.circuit."
+        },
+        {
+          "my_id": "m.protection",
+          "gloss": "Protection against transport-path failure, implemented by switching the circuit to a diverse path. It is the transport realization of the relevant resilience requirement. Shared ref: protection-requirement.",
+          "example": "CIR-7 uses 1+1 path protection to survive a cut on its primary fiber.",
+          "relations": "It is a protection property of m.circuit."
+        },
+        {
+          "my_id": "m.grade",
+          "gloss": "The circuit's physical transport quality class, chiefly its protection and restoration level; it is distinct from IP scheduling or drop-priority class of service. No shared ref is bound.",
+          "example": "CIR-7 is platinum grade because it is dual-path protected.",
+          "relations": "It is a transport-grade property of m.circuit."
+        },
+        {
+          "my_id": "m.bearer",
+          "gloss": "A transport-internal physical optical bearer, such as a wavelength on fiber, on which circuits are carried. It has no shared ref.",
+          "example": "The 193.1 THz wavelength on the NY\u2013FRA span carries CIR-7.",
+          "relations": "m.bearer carries m.circuit; the circuit, rather than the bearer itself, presents at m.handoff."
+        }
+      ],
+      "questions": [],
+      "proposals": [
+        {
+          "my_id": "m.circuit",
+          "their_id": "c.underlay",
+          "confidence": 1.0,
+          "rationale": "Both denote the consumed provisioned transport circuit, and both are bound to the same shared reference entry, transport-underlay."
+        },
+        {
+          "my_id": "m.handoff",
+          "their_id": "c.attachment",
+          "confidence": 1.0,
+          "rationale": "They are transport- and service-domain views of the customer-facing endpoint/demarcation, and both share the reference demarcation."
+        },
+        {
+          "my_id": "m.rate",
+          "their_id": "c.rate",
+          "confidence": 1.0,
+          "rationale": "Both denote committed customer payload/information rate rather than bearer line rate, and both share the reference service-rate."
+        },
+        {
+          "my_id": "m.latency",
+          "their_id": "c.latency",
+          "confidence": 1.0,
+          "rationale": "Although A represents a measured propagation value and B represents its SLA bound/tier, the common reference latency-bound settles the correspondence."
+        },
+        {
+          "my_id": "m.protection",
+          "their_id": "c.protection",
+          "confidence": 1.0,
+          "rationale": "A describes transport implementation and B the service resilience requirement it realizes; both are explicitly bound to protection-requirement."
+        }
+      ],
+      "ratifications": [],
+      "no_counterpart": [
+        "m.grade",
+        "m.bearer"
+      ],
+      "done": true
+    },
+    {
+      "from": "B",
+      "answers": [],
+      "questions": [],
+      "proposals": [],
+      "ratifications": [
+        {
+          "their_id": "m.circuit",
+          "my_id": "c.underlay",
+          "accept": true,
+          "reason": "Both denote the provisioned transport circuit consumed as the service underlay, and both share ref transport-underlay."
+        },
+        {
+          "their_id": "m.handoff",
+          "my_id": "c.attachment",
+          "accept": true,
+          "reason": "Both denote the customer-facing demarcation viewed from their respective domains, and both share ref demarcation."
+        },
+        {
+          "their_id": "m.rate",
+          "my_id": "c.rate",
+          "accept": true,
+          "reason": "Both denote committed customer payload/service rate rather than bearer line rate, and both share ref service-rate."
+        },
+        {
+          "their_id": "m.latency",
+          "my_id": "c.latency",
+          "accept": true,
+          "reason": "The models represent the latency commitment differently, but the identical shared ref latency-bound settles the correspondence."
+        },
+        {
+          "their_id": "m.protection",
+          "my_id": "c.protection",
+          "accept": true,
+          "reason": "They are the service requirement and transport realization of the same protection concept, and both share ref protection-requirement."
+        }
+      ],
+      "no_counterpart": [
+        "c.grade",
+        "c.vlan",
+        "c.service"
+      ],
+      "done": true
+    }
+  ]
+}

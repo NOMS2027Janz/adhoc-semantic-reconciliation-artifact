@@ -1,0 +1,16 @@
+{
+  "id": "ref.xdom-ran.constructed.v1",
+  "kind": "constructed",
+  "note": "The thin shared reference the two agents construct for the RAN/core transport seam. Identity-only entries for the seam concepts, plus the native-only concepts named apart so the 'session' trap binds correctly. No entry for opaque vendor tags. Crucially, radio-session and core-session are DISTINCT entries, so two concepts both labelled 'session' bind apart rather than merging.",
+  "entries": [
+    {"id": "up-transport", "label": "user-plane transport", "synonyms": ["backhaul-link", "n3-transport", "site uplink"], "class": "transport", "definition": "The user-plane transport connection carrying subscriber traffic between a cell site and the core user-plane function.", "example": "the transport for site NR-441"},
+    {"id": "transport-demarc", "label": "transport demarcation", "synonyms": ["site-gateway", "upf-transport-endpoint", "N3 endpoint"], "class": "demarcation", "definition": "The point where the user-plane transport is handed off between the access and the core; one co-owned demarcation.", "example": "the site-441 hand-off toward the core"},
+    {"id": "transport-qos", "label": "transport QoS marking", "synonyms": ["backhaul-marking", "n3-dscp", "diffserv"], "class": "qos-marking", "definition": "The DiffServ marking honoured on user-plane packets across the transport, mapped from the session's QoS.", "example": "EF for a voice flow"},
+    {"id": "transport-capacity", "label": "transport capacity", "synonyms": ["backhaul-capacity", "n3-capacity"], "class": "rate", "definition": "The committed transport capacity available to subscriber traffic on the connection.", "example": "8 Gbit/s committed at the busy hour"},
+    {"id": "transport-mtu", "label": "transport MTU", "synonyms": ["backhaul-mtu", "n3-mtu"], "class": "framing", "definition": "The MTU on the transport, sized to carry encapsulated user-plane packets without fragmentation.", "example": "1600 bytes for GTP encapsulation"},
+    {"id": "radio-cell", "label": "radio cell", "synonyms": ["cell", "sector"], "class": "radio", "definition": "A coverage area served over the air interface; a radio-internal concept with no transport counterpart.", "example": "cell 441-A"},
+    {"id": "radio-session", "label": "RRC session", "synonyms": ["radio connection"], "class": "radio-state", "definition": "A device's radio-resource-control connection state on the air interface; a radio-internal 'session', unrelated to a core data session.", "example": "the RRC-connected session for a handset in cell 441-A"},
+    {"id": "core-qos-flow", "label": "QoS flow", "synonyms": ["flow"], "class": "core-qos", "definition": "The finest granularity of QoS within a core data session; a core-internal concept with no transport counterpart.", "example": "a guaranteed-bit-rate voice flow"},
+    {"id": "core-session", "label": "PDU session", "synonyms": ["data session"], "class": "core-state", "definition": "A subscriber's end-to-end data connection through the core to a data network; a core-internal 'session', unrelated to a radio connection.", "example": "an internet PDU session"}
+  ]
+}

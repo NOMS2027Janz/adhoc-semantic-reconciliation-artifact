@@ -1,0 +1,243 @@
+{
+  "system": "Agent E",
+  "dialect": "IETF EVPN (RFC 7432 / RFC 8365)",
+  "modules": [
+    "ietf-evpn",
+    "ietf-bgp-l2vpn-evpn"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-nano from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_b side of case config_evpn, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_evpn/model_b*.json.",
+  "concepts": [
+    {
+      "id": "e.evi",
+      "label": "evpn-instance",
+      "synonyms": [
+        "EVI",
+        "MAC-VRF"
+      ],
+      "kind": "service",
+      "gloss": "A logical EVPN service instance (EVI) that defines a MAC-VRF and is realized on a specific attachment circuit.",
+      "example": "EVI-5000 (MAC-VRF ACME)",
+      "ref": "eth-vpn",
+      "relations": [
+        {
+          "rel": "realized-on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "EVI-5000 (MAC-VRF ACME)"
+      ]
+    },
+    {
+      "id": "e.ac",
+      "label": "attachment-circuit",
+      "synonyms": [
+        "AC",
+        "access-interface"
+      ],
+      "kind": "access",
+      "gloss": "The attachment circuit (AC) is the interface that anchors an EVPN MAC-VRF and connects to a customer network.",
+      "example": "AC-PE1",
+      "ref": "uni",
+      "relations": [
+        {
+          "rel": "into",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "AC-PE1",
+        "AC-PE2",
+        "AC-PE3"
+      ]
+    },
+    {
+      "id": "e.access",
+      "label": "vpn-network-access",
+      "synonyms": [
+        "endpoint",
+        "access-endpoint"
+      ],
+      "kind": "endpoint",
+      "gloss": "A VPN network access point (endpoint) that attaches to a particular attachment circuit and provides customer-facing connectivity.",
+      "example": "ep-PE2",
+      "ref": "svc-endpoint",
+      "relations": [
+        {
+          "rel": "at",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "ep-PE1",
+        "ep-PE2",
+        "ep-PE3"
+      ]
+    },
+    {
+      "id": "e.vlan",
+      "label": "bridge-domain",
+      "synonyms": [
+        "bridge-vlan",
+        "vlan"
+      ],
+      "kind": "l2-domain",
+      "gloss": "A bridge domain (L2 domain) belonging to an EVPN instance, representing a specific VLAN within the EVI.",
+      "example": "bd-vlan-200",
+      "ref": "vlan",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "bd-vlan-200"
+      ]
+    },
+    {
+      "id": "e.policer",
+      "label": "ingress-policer",
+      "synonyms": [
+        "rate-limiter"
+      ],
+      "kind": "rate",
+      "gloss": "An ingress policer that enforces rate limits on traffic entering through an attachment circuit.",
+      "example": "policer-200/50",
+      "ref": "bw-profile",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "policer-200/50",
+        "policer-100/0"
+      ]
+    },
+    {
+      "id": "e.tc",
+      "label": "traffic-class",
+      "synonyms": [
+        "forwarding-class",
+        "class"
+      ],
+      "kind": "cos",
+      "gloss": "A traffic class (COS) within an EVPN EVI used to categorize frames (e.g., EF or BE).",
+      "example": "EF-class",
+      "ref": "cos",
+      "relations": [
+        {
+          "rel": "in",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "EF-class",
+        "BE-class"
+      ]
+    },
+    {
+      "id": "e.maclearn",
+      "label": "mac-vrf-learning",
+      "synonyms": [
+        "local MAC learning"
+      ],
+      "kind": "l2-control",
+      "gloss": "Local MAC learning control for the MAC-VRF on an attachment circuit.",
+      "example": "local learning @AC-PE1",
+      "ref": "mac-learning",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "local learning @AC-PE1"
+      ]
+    },
+    {
+      "id": "e.mtu",
+      "label": "interface-mtu",
+      "synonyms": [
+        "MTU"
+      ],
+      "kind": "framing",
+      "gloss": "Interface MTU setting on an attachment circuit, determining the maximum frame size.",
+      "example": "MTU 9100",
+      "ref": "mtu",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "MTU 9100"
+      ]
+    },
+    {
+      "id": "e.esi",
+      "label": "ethernet-segment",
+      "synonyms": [
+        "ESI",
+        "segment"
+      ],
+      "kind": "multihoming",
+      "gloss": "An Ethernet Segment used for multihoming of a MAC-VRF, spanning one or more attachment circuits.",
+      "example": "ESI-0011 (dual-homed)",
+      "ref": "ethernet-segment",
+      "relations": [
+        {
+          "rel": "spans",
+          "target": "e.ac"
+        }
+      ],
+      "instances": [
+        "ESI-0011 (dual-homed)"
+      ]
+    },
+    {
+      "id": "e.macmob",
+      "label": "MAC-mobility",
+      "synonyms": [
+        "MAC-move"
+      ],
+      "kind": "l2-control",
+      "gloss": "MAC mobility control within EVPN to move a MAC address between EVI contexts.",
+      "example": "mobility seq=3 for a moved MAC",
+      "ref": "mac-mobility",
+      "relations": [
+        {
+          "rel": "in",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "mobility seq=3 for a moved MAC"
+      ]
+    },
+    {
+      "id": "e.vendor",
+      "label": "vendor-evi-tag",
+      "synonyms": [
+        "proprietary evi tag"
+      ],
+      "kind": "opaque",
+      "gloss": "An opaque, vendor-specific EVI tag associated with an EVPN instance.",
+      "example": "vendor-evi-tag on EVI-5000",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on",
+          "target": "e.evi"
+        }
+      ],
+      "instances": [
+        "vendor-evi-tag on EVI-5000"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "case": "intent_endpoints",
+  "note": "DERIVED inline by build_intent_case.py from _truth.",
+  "correspondences": [
+    {
+      "a": "o.ep1",
+      "b": "n.uni1",
+      "truth": "u1"
+    },
+    {
+      "a": "o.ep2",
+      "b": "n.uni2",
+      "truth": "u2"
+    },
+    {
+      "a": "o.ep3",
+      "b": "n.uni3",
+      "truth": "u3"
+    },
+    {
+      "a": "o.ep4",
+      "b": "n.uni4",
+      "truth": "u4"
+    },
+    {
+      "a": "o.ep5",
+      "b": "n.uni5",
+      "truth": "u5"
+    }
+  ],
+  "false_cognates": [],
+  "residual": {
+    "a_only": [],
+    "b_only": []
+  },
+  "experiment_only": [
+    "u4",
+    "u5"
+  ],
+  "residual_by_placement": {
+    "both_cognitive": 0,
+    "one_inert": 2,
+    "both_inert": 2
+  },
+  "invariants": [],
+  "invariant_signatures": {},
+  "verification_by_placement": {
+    "both_cognitive": "interrogation of the authoritative fibre-id",
+    "one_inert": "interrogation on the live side only",
+    "both_inert": "static evidence only"
+  }
+}

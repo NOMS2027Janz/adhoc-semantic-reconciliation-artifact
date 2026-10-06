@@ -1,0 +1,531 @@
+{
+  "case": "config_cross_domain",
+  "model": "gpt-5.6-sol",
+  "reference": false,
+  "experiment": true,
+  "disclosure": true,
+  "confirmed": [
+    [
+      "c.underlay",
+      "m.circuit"
+    ],
+    [
+      "c.rate",
+      "m.rate"
+    ],
+    [
+      "c.protection",
+      "m.protection"
+    ]
+  ],
+  "residual_a": [
+    "m.handoff",
+    "m.latency",
+    "m.grade",
+    "m.bearer"
+  ],
+  "residual_b": [
+    "c.attachment",
+    "c.latency",
+    "c.grade",
+    "c.vlan",
+    "c.service"
+  ],
+  "work": {
+    "candidates": 3,
+    "turns": 6,
+    "bilateral_checks": 3,
+    "experiments": 3
+  },
+  "effort": {
+    "total_tokens": 41301,
+    "reasoning_tokens": 1411,
+    "latency_s": 72.96,
+    "model": "gpt-5.6-sol"
+  },
+  "transcript": [
+    {
+      "from": "A",
+      "advertisement": {
+        "system": "Agent X \u2014 Meridian",
+        "dialect": "Meridian (bespoke transport OSS)",
+        "catalogue": [
+          {
+            "id": "m.circuit",
+            "label": "circuit",
+            "kind": "transport-circuit"
+          },
+          {
+            "id": "m.handoff",
+            "label": "hand-off",
+            "kind": "demarcation-point"
+          },
+          {
+            "id": "m.rate",
+            "label": "rate",
+            "kind": "rate"
+          },
+          {
+            "id": "m.latency",
+            "label": "latency",
+            "kind": "latency"
+          },
+          {
+            "id": "m.protection",
+            "label": "protection",
+            "kind": "protection"
+          },
+          {
+            "id": "m.grade",
+            "label": "grade",
+            "kind": "transport-grade"
+          },
+          {
+            "id": "m.bearer",
+            "label": "bearer",
+            "kind": "bearer"
+          }
+        ]
+      }
+    },
+    {
+      "from": "B",
+      "advertisement": {
+        "system": "Agent Y \u2014 Cascade",
+        "dialect": "Cascade (bespoke IP/VPN controller)",
+        "catalogue": [
+          {
+            "id": "c.underlay",
+            "label": "underlay",
+            "kind": "underlay-binding"
+          },
+          {
+            "id": "c.attachment",
+            "label": "attachment",
+            "kind": "attachment-point"
+          },
+          {
+            "id": "c.rate",
+            "label": "rate",
+            "kind": "rate"
+          },
+          {
+            "id": "c.latency",
+            "label": "latency",
+            "kind": "latency"
+          },
+          {
+            "id": "c.protection",
+            "label": "protection",
+            "kind": "protection"
+          },
+          {
+            "id": "c.grade",
+            "label": "grade",
+            "kind": "service-class"
+          },
+          {
+            "id": "c.vlan",
+            "label": "vlan",
+            "kind": "encapsulation"
+          },
+          {
+            "id": "c.service",
+            "label": "service",
+            "kind": "ip-service"
+          }
+        ]
+      }
+    },
+    {
+      "from": "A",
+      "answers": [],
+      "questions": [
+        {
+          "their_id": "c.underlay",
+          "ask": "Please give its gloss, an example, and short relations summary. Does it denote the transport circuit itself, or merely a service-to-circuit binding/reference?"
+        },
+        {
+          "their_id": "c.attachment",
+          "ask": "Please give its gloss, an example, and short relations summary, including whether it is a physical client demarcation or a logical IP/VPN attachment."
+        },
+        {
+          "their_id": "c.rate",
+          "ask": "Please give its gloss, an example, and short relations summary. Is this an end-to-end committed payload rate, an access policer, or another capacity measure?"
+        },
+        {
+          "their_id": "c.latency",
+          "ask": "Please give its gloss, an example, and short relations summary, including whether it is measured or promised, and one-way or round-trip."
+        },
+        {
+          "their_id": "c.protection",
+          "ask": "Please give its gloss, an example, and short relations summary. What failures and layer does it protect against?"
+        },
+        {
+          "their_id": "c.grade",
+          "ask": "Please give its gloss, an example, and short relations summary. Is it a transport restoration/protection class or an IP-service class?"
+        },
+        {
+          "their_id": "c.vlan",
+          "ask": "Please give its gloss, an example, and short relations summary so I can determine whether it corresponds to any Meridian transport concept."
+        },
+        {
+          "their_id": "c.service",
+          "ask": "Please give its gloss, an example, and short relations summary, especially how it relates to underlay, attachment, rate, latency, protection, grade, and VLAN."
+        }
+      ],
+      "proposals": [],
+      "ratifications": [],
+      "experiments": [],
+      "no_counterpart": [],
+      "done": false,
+      "plan": {
+        "situation": "Only the two catalogues have been exchanged. The similarly named rate, latency, protection, and grade concepts may be cross-layer false cognates. Circuit versus underlay and hand-off versus attachment are plausible but semantically ambiguous; bearer has no obvious advertised match. There are no outstanding questions or proposals from B to answer or ratify.",
+        "need": "I most need B's private meanings and relations, because layer, endpoint identity, and whether c.underlay is an object or merely a binding cannot be established from labels and kinds.",
+        "strategy": "I will ask for glosses, examples, and relations for all eight Cascade concepts, emphasizing the distinctions relevant to each candidate. I will defer proposals and decisive experiments until those answers identify the strongest candidates and suspected false cognates, avoiding premature label-based mappings.",
+        "closeness": 0.15,
+        "next_step": "After B answers, I will propose clear semantic correspondences, run decisive experiments on materially uncertain cross-layer pairs, identify Meridian concepts with no counterpart, and address any proposals B makes.",
+        "decision": "continue"
+      }
+    },
+    {
+      "from": "B",
+      "answers": [
+        {
+          "my_id": "c.underlay",
+          "gloss": "The transport circuit that an IP/VPN service is bound to ride over. Cascade consumes it as an externally owned transport-domain resource; the concept denotes that circuit in its role as the service underlay, not a separate packet service.",
+          "example": "SVC-42 rides transport underlay U-7.",
+          "relations": "It carries c.service; conversely, c.service rides it. Its lifecycle and transport realization are owned outside Cascade."
+        },
+        {
+          "my_id": "c.attachment",
+          "gloss": "A logical service attachment where the IP/VPN service meets a customer router at a site; it is not itself the physical transport demarcation.",
+          "example": "att-NY-SVC42 is the New York attachment of SVC-42.",
+          "relations": "It belongs to c.service and bears c.vlan encapsulation. A service can have multiple attachments."
+        },
+        {
+          "my_id": "c.rate",
+          "gloss": "The committed information rate guaranteed end to end to the service's customer traffic, rather than a physical bearer capacity or merely a local access policer setting.",
+          "example": "SVC-42 has a CIR of 5 Gbit/s.",
+          "relations": "It is an attribute of c.service. The service's underlay must have sufficient transport capacity to support it, but c.rate is not the underlay's raw line rate."
+        },
+        {
+          "my_id": "c.latency",
+          "gloss": "A promised service-level latency commitment represented by a named SLA tier, not an observed measurement or raw transport metric. The model does not independently specify whether the threshold is one-way or round-trip; that is defined by the tier policy.",
+          "example": "SVC-42 uses latency tier T2, whose policy threshold is at most 8 ms.",
+          "relations": "It is an SLA attribute of c.service and constrains the transport underlay selected for that service."
+        },
+        {
+          "my_id": "c.protection",
+          "gloss": "The service's resilience requirement that connectivity survive a failure in its transport path. It is expressed at the IP-service intent layer but is expected to be fulfilled by transport diversity or protection below it.",
+          "example": "SVC-42 must remain connected after one underlay path failure.",
+          "relations": "It is an attribute of c.service and constrains how c.underlay is provided. It concerns transport-path failure survivability, not an IP routing protocol object."
+        },
+        {
+          "my_id": "c.grade",
+          "gloss": "The IP class of service applied to customer traffic, governing router scheduling and drop priority; it is not a transport restoration or protection grade.",
+          "example": "SVC-42 uses gold class, mapped to a low-latency router queue.",
+          "relations": "It is an attribute of c.service and affects packet treatment in the IP layer."
+        },
+        {
+          "my_id": "c.vlan",
+          "gloss": "The customer-facing Ethernet VLAN tag that identifies traffic on a service attachment; it is a packet/Ethernet encapsulation object rather than a transport bearer.",
+          "example": "C-VLAN 100 is configured on SVC-42's New York attachment.",
+          "relations": "It is borne on c.attachment. Different service attachments may have their own VLAN identifiers."
+        },
+        {
+          "my_id": "c.service",
+          "gloss": "The end-to-end IP/VPN service delivered to a customer. It rides a transport underlay but is not itself known as a service object in the transport domain, which sees the supporting circuit.",
+          "example": "SVC-42 is a point-to-point IP service from New York to Frankfurt.",
+          "relations": "It rides c.underlay and terminates logically at c.attachment objects. c.rate, c.latency, c.protection, and c.grade are service attributes; c.vlan identifies customer traffic on each attachment."
+        }
+      ],
+      "questions": [
+        {
+          "their_id": "m.circuit",
+          "ask": "Please give its gloss, example, and relations. Is it the transport-domain circuit object itself, and can an external IP/VPN service bind to it as its underlay?"
+        },
+        {
+          "their_id": "m.handoff",
+          "ask": "Please give its gloss, example, and relations. Is it a physical transport/client demarcation, a logical service endpoint, or both?"
+        },
+        {
+          "their_id": "m.rate",
+          "ask": "Please give its gloss, example, and relations. Does it denote circuit payload capacity, committed customer information rate, physical line rate, or another measure?"
+        },
+        {
+          "their_id": "m.latency",
+          "ask": "Please give its gloss, example, and relations, including whether it is a measured transport value or an SLA commitment and whether it is numeric or tiered."
+        },
+        {
+          "their_id": "m.protection",
+          "ask": "Please give its gloss, example, and relations, including the protected layer, failure scope, and whether it describes realized transport behavior or customer service intent."
+        },
+        {
+          "their_id": "m.grade",
+          "ask": "Please give its gloss, example, and relations. What transport property does grade classify, and does it affect restoration, physical quality, or packet scheduling?"
+        },
+        {
+          "their_id": "m.bearer",
+          "ask": "Please give its gloss, example, and relations, especially how it differs from m.circuit and whether it is a physical or logical capacity-carrying resource."
+        }
+      ],
+      "proposals": [],
+      "ratifications": [],
+      "experiments": [
+        {
+          "my_id": "c.underlay",
+          "their_id": "m.circuit",
+          "question": "Does provisioning c.underlay as m.circuit preserve the identity of the externally owned transport circuit, its endpoints and capacity, its connectivity role, and the layer relationship in which the IP/VPN service rides that transport circuit?"
+        }
+      ],
+      "no_counterpart": [
+        "c.vlan",
+        "c.service"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "I have now supplied A with the requested private meanings for all eight Cascade concepts. No proposals require ratification. The strongest apparent correspondence is c.underlay to m.circuit, but the catalogue alone leaves an object-versus-binding ambiguity. The same-name rate, latency, protection, and grade pairs remain potentially cross-layer false cognates, while c.attachment versus m.handoff is also layer-ambiguous. Cascade's c.service and c.vlan appear absent from the transport catalogue.",
+        "need": "I most need to settle whether c.underlay and m.circuit preserve the same transport resource identity and layer role, because that correspondence anchors the service-to-transport relationship for the rest of the reconciliation.",
+        "strategy": "First I answer all of A's questions with layer-specific glosses, examples, and relations. I then ask for the meanings of every Meridian concept because each remains unplaced or potentially ambiguous. I use a decisive experiment on c.underlay versus m.circuit to resolve the central object-versus-binding issue rather than making a surface-label proposal. I identify c.service and c.vlan as currently believed to have no Meridian counterpart, and defer other proposals until A's meanings and the experiment verdict are available.",
+        "closeness": 0.3,
+        "next_step": "On the next turn I will trust the underlay/circuit experiment verdict, compare A's disclosed semantics for the remaining concepts, propose every supported correspondence, test any material endpoint or cross-layer ambiguity, and ratify any proposals A makes.",
+        "decision": "continue"
+      },
+      "experiment_results": [
+        {
+          "a": "m.circuit",
+          "b": "c.underlay",
+          "ok": true,
+          "confirmed": true,
+          "relation": "identity"
+        }
+      ]
+    },
+    {
+      "from": "A",
+      "answers": [
+        {
+          "my_id": "m.circuit",
+          "gloss": "A provisioned transport-domain circuit carrying a client end to end across the optical core. It is the underlay resource on which an external IP/VPN service can ride.",
+          "example": "CIR-7 runs from the New York hand-off to the Frankfurt hand-off and supports an external service.",
+          "relations": "It presents at m.handoff endpoints and is carried on m.bearer resources. The decisive experiment has confirmed identity with c.underlay, including endpoint, capacity, connectivity, and layer role."
+        },
+        {
+          "my_id": "m.handoff",
+          "gloss": "The physical demarcation where a transport circuit presents to client equipment; it is not a logical IP/VPN service attachment.",
+          "example": "The New York hand-off port where CIR-7 meets the customer router.",
+          "relations": "It is a physical endpoint on m.circuit. A logical service attachment may ultimately use equipment at that location, but it is not the same modeled object."
+        },
+        {
+          "my_id": "m.rate",
+          "gloss": "The committed client payload rate that the transport circuit guarantees end to end, excluding the physical bearer's raw line rate.",
+          "example": "CIR-7 guarantees 5 Gbit/s of committed client payload.",
+          "relations": "It is an attribute of m.circuit. It describes circuit-level committed capacity, while m.bearer may have a different and larger optical line rate."
+        },
+        {
+          "my_id": "m.latency",
+          "gloss": "The measured numeric one-way propagation delay of a transport circuit, determined principally by its realized path length; it is not an SLA tier.",
+          "example": "CIR-7's primary path has a measured one-way latency of 7.2 ms.",
+          "relations": "It is a measured attribute of m.circuit and its realized transport path."
+        },
+        {
+          "my_id": "m.protection",
+          "gloss": "Realized transport-layer protection of a circuit against path failures such as a fiber cut or bearer loss, implemented by switching to a diverse path.",
+          "example": "CIR-7 uses 1+1 path protection and switches away from its primary fiber after a cut.",
+          "relations": "It is an attribute of m.circuit and describes actual transport behavior, rather than merely a customer service-layer resilience requirement."
+        },
+        {
+          "my_id": "m.grade",
+          "gloss": "The transport quality grade of a circuit, classifying its physical protection and restoration treatment rather than packet scheduling or drop priority.",
+          "example": "CIR-7 is platinum grade because it is dual-path protected.",
+          "relations": "It is an attribute of m.circuit and summarizes transport protection/restoration class; example values include platinum, gold, and best-effort."
+        },
+        {
+          "my_id": "m.bearer",
+          "gloss": "A physical optical bearer, such as a wavelength on fiber, that carries transport circuits. It is internal to the transport domain and has no direct client-facing service meaning.",
+          "example": "The 193.1 THz wavelength on the New York\u2013Frankfurt span carries CIR-7.",
+          "relations": "It carries m.circuit and supplies physical optical capacity beneath it; it is distinct from the client-facing circuit itself."
+        }
+      ],
+      "questions": [],
+      "proposals": [],
+      "ratifications": [],
+      "experiments": [
+        {
+          "my_id": "m.rate",
+          "their_id": "c.rate",
+          "question": "Does translating the circuit's committed client payload rate to the IP service's committed information rate preserve the owning endpoint/object, guaranteed capacity semantics, and service-to-underlay layer relationship, or can the service rate and supporting circuit rate differ?"
+        },
+        {
+          "my_id": "m.protection",
+          "their_id": "c.protection",
+          "question": "Does translating realized circuit path protection to the service resilience requirement preserve failure scope, connectivity behavior, and layer relationships, or are intent and realized transport protection distinct concepts?"
+        }
+      ],
+      "no_counterpart": [
+        "m.handoff",
+        "m.latency",
+        "m.grade",
+        "m.bearer"
+      ],
+      "done": false,
+      "plan": {
+        "situation": "The decisive experiment has settled m.circuit and c.underlay as the same externally referenced transport circuit. B's answers show that m.handoff versus c.attachment, m.latency versus c.latency, and m.grade versus c.grade are cross-layer false cognates; m.bearer also lacks an advertised Cascade equivalent. The remaining meaningful ambiguities are rate, where both concern committed customer payload but belong to different modeled owners, and protection, where Cascade models service intent while Meridian models realized transport behavior. B has made no proposals requiring ratification.",
+        "need": "I most need to settle rate and protection, because they are the only remaining pairs with substantially overlapping operational meaning yet potentially non-identical ownership and layer semantics.",
+        "strategy": "I first answer all seven outstanding questions with Meridian's glosses, examples, and relations. I recognize the confirmed circuit/underlay identity as settled. I identify the four clearly unmatched Meridian concepts. I then run decisive experiments on rate and protection rather than proposing uncertain cross-layer identities. I ask no further questions because B's disclosures are sufficient to place every advertised Cascade concept.",
+        "closeness": 0.78,
+        "next_step": "I will trust the two experiment verdicts, record confirmed identities or mark refuted Meridian concepts as unmatched, and then close if B has introduced no proposals or new questions.",
+        "decision": "continue"
+      },
+      "experiment_results": [
+        {
+          "a": "m.rate",
+          "b": "c.rate",
+          "ok": true,
+          "confirmed": true,
+          "relation": "identity"
+        },
+        {
+          "a": "m.protection",
+          "b": "c.protection",
+          "ok": true,
+          "confirmed": true,
+          "relation": "identity"
+        }
+      ]
+    },
+    {
+      "from": "B",
+      "answers": [],
+      "questions": [],
+      "proposals": [],
+      "ratifications": [],
+      "experiments": [],
+      "no_counterpart": [
+        "c.attachment",
+        "c.latency",
+        "c.grade",
+        "c.vlan",
+        "c.service"
+      ],
+      "done": true,
+      "plan": {
+        "situation": "All Cascade concepts are now placed. Decisive experiments confirmed c.underlay = m.circuit, c.rate = m.rate, and c.protection = m.protection. The remaining superficially plausible pairs are not identities: c.attachment is a logical IP/VPN attachment while m.handoff is a physical transport demarcation; c.latency is a promised tier while m.latency is a measured numeric one-way delay; and c.grade is packet class of service while m.grade is transport protection/restoration quality. Cascade's c.vlan and c.service also have no Meridian catalogue counterpart. There are no outstanding questions or proposals to answer or ratify.",
+        "need": "Nothing further needs to be learned or settled; all plausible correspondences have either been decisively confirmed or excluded by the disclosed meanings.",
+        "strategy": "I accept the three decisive experiment results as settled identities. I record all five remaining Cascade concepts as having no counterpart, make no duplicate proposals for experimentally settled pairs, and close because no questions, proposals, ratifications, or experiments remain.",
+        "closeness": 1.0,
+        "next_step": "No next step is required.",
+        "decision": "stop"
+      }
+    },
+    {
+      "from": "A",
+      "answers": [],
+      "questions": [],
+      "proposals": [
+        {
+          "my_id": "m.circuit",
+          "their_id": "c.underlay",
+          "confidence": 1.0,
+          "rationale": "The decisive experiment confirmed identity: both denote the same externally owned transport circuit used as the IP/VPN service underlay, preserving endpoints, capacity, connectivity, and layer role."
+        },
+        {
+          "my_id": "m.rate",
+          "their_id": "c.rate",
+          "confidence": 1.0,
+          "rationale": "The decisive experiment confirmed that both denote the end-to-end committed client payload/information rate, rather than optical bearer line rate, with the service-to-underlay relationship preserved."
+        },
+        {
+          "my_id": "m.protection",
+          "their_id": "c.protection",
+          "confidence": 1.0,
+          "rationale": "The decisive experiment confirmed identity across intent and realization views: both denote survivability against transport-path failure through transport diversity or protection, preserving connectivity behavior and layer relationships."
+        }
+      ],
+      "ratifications": [],
+      "experiments": [],
+      "no_counterpart": [
+        "m.handoff",
+        "m.latency",
+        "m.grade",
+        "m.bearer"
+      ],
+      "done": true,
+      "plan": {
+        "situation": "All Meridian concepts are placed. Decisive experiments confirmed m.circuit = c.underlay, m.rate = c.rate, and m.protection = c.protection. The remaining Meridian concepts have no Cascade counterparts: m.handoff is a physical demarcation rather than c.attachment's logical service endpoint; m.latency is a measured numeric one-way delay rather than c.latency's SLA tier; m.grade is a transport restoration/protection class rather than c.grade's packet class of service; and m.bearer is an internal optical wavelength absent from Cascade. There are no outstanding questions or proposals to answer or ratify.",
+        "need": "Nothing further needs to be learned or settled because every plausible correspondence has been decisively confirmed or semantically excluded.",
+        "strategy": "I formally record the three experimentally confirmed correspondences, list the four unmatched Meridian concepts, and close without further questions or experiments.",
+        "closeness": 1.0,
+        "next_step": "No next step is required.",
+        "decision": "stop"
+      }
+    },
+    {
+      "from": "B",
+      "answers": [],
+      "questions": [],
+      "proposals": [],
+      "ratifications": [
+        {
+          "their_id": "m.circuit",
+          "my_id": "c.underlay",
+          "accept": true,
+          "reason": "Accepted. The decisive experiment confirmed that both denote the same transport circuit used as the IP/VPN service underlay, preserving resource identity, endpoints, capacity, connectivity, and layer role."
+        },
+        {
+          "their_id": "m.rate",
+          "my_id": "c.rate",
+          "accept": true,
+          "reason": "Accepted. The decisive experiment confirmed identity of the end-to-end committed client payload/information rate and preserved its relationship to the service and supporting circuit."
+        },
+        {
+          "their_id": "m.protection",
+          "my_id": "c.protection",
+          "accept": true,
+          "reason": "Accepted. The decisive experiment confirmed that the service survivability requirement and transport protection view translate as the same path-failure survivability concept while preserving connectivity and layer relationships."
+        }
+      ],
+      "experiments": [],
+      "no_counterpart": [
+        "c.attachment",
+        "c.latency",
+        "c.grade",
+        "c.vlan",
+        "c.service"
+      ],
+      "done": true,
+      "plan": {
+        "situation": "A has now formally proposed the three correspondences already confirmed by decisive experiments. These proposals are the only outstanding items. The remaining Cascade concepts have been semantically excluded from Meridian counterparts: logical attachment differs from physical hand-off, SLA latency tier differs from measured transport delay, IP class of service differs from transport grade, and neither VLAN nor IP/VPN service appears in Meridian's catalogue.",
+        "need": "I only need to ratify A's three outstanding, experimentally confirmed proposals so the reconciliation is procedurally complete.",
+        "strategy": "I accept each of A's proposals based on its decisive experiment result, retain the five unmatched Cascade concepts, and ask no questions or run further experiments because every concept is placed.",
+        "closeness": 1.0,
+        "next_step": "No next step is required.",
+        "decision": "stop"
+      }
+    }
+  ],
+  "experiment_log": [
+    {
+      "a": "m.circuit",
+      "b": "c.underlay",
+      "ok": true,
+      "confirmed": true,
+      "relation": "identity"
+    },
+    {
+      "a": "m.rate",
+      "b": "c.rate",
+      "ok": true,
+      "confirmed": true,
+      "relation": "identity"
+    },
+    {
+      "a": "m.protection",
+      "b": "c.protection",
+      "ok": true,
+      "confirmed": true,
+      "relation": "identity"
+    }
+  ]
+}

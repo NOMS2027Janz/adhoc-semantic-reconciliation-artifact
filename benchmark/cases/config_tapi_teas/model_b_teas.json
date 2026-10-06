@@ -1,0 +1,28 @@
+{
+  "system": "Agent I",
+  "dialect": "IETF TEAS",
+  "modules": ["ietf-te-topology (RFC 8795 on RFC 8345)", "ietf-otn-topology", "ietf-layer1-types"],
+  "note": "Lifted semantic model, TEAS side. Concepts decompose the same network into per-layer networks. tunnel-termination-point is the false-cognate trap: it shares the '-termination-point' shape with the TAPI link-termination-point but originates a tunnel (a trail head), which its relations and instances make plain even when the gloss is withheld.",
+  "concepts": [
+    {"id": "i.tenode", "label": "te-node", "synonyms": ["node"], "kind": "node", "gloss": "a traffic-engineering node in a per-layer network", "example": "ROADM R1 in the OTN layer", "ref": "forwarding-node",
+     "relations": [{"rel": "part-of", "target": "i.tetopo"}], "instances": ["R1", "R2", "R3", "A1", "A2", "A3"]},
+    {"id": "i.tp", "label": "termination-point", "synonyms": ["te-tp", "link-termination-point"], "kind": "termination", "gloss": "a termination point where a te-link terminates on a node", "example": "the R1 tp toward R2", "ref": "link-termination",
+     "relations": [{"rel": "on-node", "target": "i.tenode"}, {"rel": "terminates", "target": "i.telink"}], "instances": ["tp-R1-R2", "tp-R2-R3", "tp-A1-R1"]},
+    {"id": "i.stp", "label": "supporting-tp", "synonyms": ["supporting termination"], "kind": "adaptation", "gloss": "the supporting relationship of a tp on a server-layer tp", "example": "an OTN tp supported by an optical tp at R1", "ref": "layer-adaptation",
+     "relations": [{"rel": "supports", "target": "i.tp"}], "instances": ["OTN tp over optical tp at R1"]},
+    {"id": "i.ttp", "label": "tunnel-termination-point", "synonyms": ["ttp"], "kind": "termination", "gloss": "the point at which a te-tunnel originates or terminates, i.e. a trail head", "example": "the head of the A1-A3 tunnel at A1", "ref": "trail-termination",
+     "relations": [{"rel": "on-node", "target": "i.tenode"}, {"rel": "originates", "target": "i.tunnel"}], "instances": ["ttp-A1 (tunnel head)", "ttp-A3 (tunnel head)"]},
+    {"id": "i.tunnel", "label": "te-tunnel", "synonyms": ["tunnel"], "kind": "service", "gloss": "an end-to-end traffic-engineered tunnel realising a service", "example": "the A1-A3 ODU2 tunnel", "ref": "connection-service",
+     "relations": [{"rel": "from", "target": "i.ttp"}, {"rel": "over", "target": "i.tetopo"}], "instances": ["tunnel-a1a3-odu2 (ODU2, A1 to A3)"]},
+    {"id": "i.otnlabel", "label": "otn-label", "synonyms": ["tributary-slot", "TS/TPN"], "kind": "multiplex", "gloss": "the OTN label expressing tributary-slot multiplexing structure", "example": "the tributary slots carrying ODU2 in an OTU4", "ref": "multiplex-structure",
+     "relations": [{"rel": "labels", "target": "i.tunnel"}], "instances": ["TS/TPN for ODU2 in OTU4"]},
+    {"id": "i.cmatrix", "label": "connectivity-matrix", "synonyms": ["conn matrix"], "kind": "switching", "gloss": "the matrix of permitted internal connectivity within a node", "example": "permitted connectivity on R2", "ref": "switching-constraint",
+     "relations": [{"rel": "on-node", "target": "i.tenode"}], "instances": ["R2 connectivity matrix"]},
+    {"id": "i.telink", "label": "te-link", "synonyms": ["link"], "kind": "link", "gloss": "a traffic-engineering link between nodes in a layer network", "example": "the R1-R2 te-link", "ref": "topo-link",
+     "relations": [{"rel": "between", "target": "i.tenode"}, {"rel": "terminated-by", "target": "i.tp"}], "instances": ["telink-R1-R2", "telink-R2-R3", "telink-R1-R3", "telink-A1-R1"]},
+    {"id": "i.tetopo", "label": "te-topology", "synonyms": ["network", "per-layer network"], "kind": "topology", "gloss": "a per-layer traffic-engineering network", "example": "the OTN layer network", "ref": "topology",
+     "relations": [{"rel": "contains", "target": "i.tenode"}, {"rel": "contains", "target": "i.telink"}], "instances": ["the OTN layer network"]},
+    {"id": "i.tcep", "label": "tunnel-connection-endpoint", "synonyms": ["connection endpoint"], "kind": "endpoint", "gloss": "an endpoint of a tunnel connection within a node", "example": "the connection endpoint for the A1-A3 tunnel on R1", "ref": "conn-endpoint",
+     "relations": [{"rel": "on-node", "target": "i.tenode"}, {"rel": "part-of", "target": "i.tunnel"}], "instances": ["tcep-a1a3-R1", "tcep-a1a3-R3"]}
+  ]
+}

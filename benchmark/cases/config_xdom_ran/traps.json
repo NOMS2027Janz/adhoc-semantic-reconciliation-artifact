@@ -1,0 +1,15 @@
+{
+  "operational_case": "cross-domain provisioning (no shared standard)",
+  "seed": "hand-authored bespoke cross-domain case: Beacon RAN OSS vs Summit packet-core controller, adjacent mobile domains overlapping only at the user-plane transport seam",
+  "false_cognates": [
+    {"a": "x.rrc", "b": "y.pdu", "why": "both are called a 'session' but denote unrelated things: an RRC session is a device's radio-connection state on the air interface; a PDU session is a subscriber's end-to-end data connection through the core. They share no reference category and must not be corresponded - the cross-domain false cognate the ad-hoc reference is built to pre-empt."}
+  ],
+  "opaque": ["x.vendor", "y.vendor"],
+  "invariants": ["endpoint-identity (the transport demarcation)", "transport-capacity (committed, at the busy hour)", "transport-qos-marking (honoured end to end)", "transport-mtu (no fragmentation of encapsulated packets)", "underlay-binding"],
+  "residual_by_placement": {"both_cognitive": 0, "one_inert": 2, "both_inert": 4},
+  "verification_by_placement": {
+    "both_cognitive": "worked provisioning and read-back: place one session's transport through the exchange and read the N3 back to confirm every pinned requirement is honoured",
+    "one_inert": "provisioning read-back on the live side; pinned-requirement evidence on the inert side",
+    "both_inert": "external adjudication or a downstream provisioning test"
+  }
+}

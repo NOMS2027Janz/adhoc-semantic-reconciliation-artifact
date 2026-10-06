@@ -1,0 +1,224 @@
+{
+  "system": "Agent M",
+  "dialect": "MEF carrier-Ethernet service model",
+  "modules": [
+    "mef-services",
+    "mef-uni",
+    "mef-bwp"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-mini from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_evpn, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_evpn/model_a*.json.",
+  "concepts": [
+    {
+      "id": "m.ethsvc",
+      "label": "ethernet-service",
+      "synonyms": [
+        "EVC",
+        "E-LAN",
+        "ethernet virtual connection"
+      ],
+      "kind": "service",
+      "gloss": "An Ethernet service (EVC / E-LAN) representing a carrier-managed Layer‑2 virtual connection that ties together one or more customer UNIs into a single Ethernet broadcast/multicast domain and carries one or more L2 segments and service attributes across the provider network.",
+      "example": "ACME-ELAN (3 UNIs, any-to-any) is an ethernet-service that interconnects UNI-HQ, UNI-DC and UNI-Branch in an any-to-any E‑LAN so frames on a carried VLAN are delivered between any pair of those UNIs.",
+      "ref": "eth-vpn",
+      "relations": [
+        {
+          "rel": "connects",
+          "target": "m.uni"
+        }
+      ],
+      "instances": [
+        "ACME-ELAN (3 UNIs, any-to-any)"
+      ]
+    },
+    {
+      "id": "m.uni",
+      "label": "UNI",
+      "synonyms": [
+        "user-network-interface"
+      ],
+      "kind": "access",
+      "gloss": "A UNI (User Network Interface) is the customer-facing access attachment point on the provider edge where an Ethernet service terminates and where per‑UNI service parameters (bandwidth profiles, MAC learning, vendor attributes, etc.) are applied.",
+      "example": "UNI-HQ is a UNI instance of the ACME-ELAN service where the provider applies the BWP-200/50 profile, MAC learning policy and any vendor-specific attributes for traffic entering and leaving the customer site.",
+      "ref": "uni",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "m.ethsvc"
+        }
+      ],
+      "instances": [
+        "UNI-HQ",
+        "UNI-DC",
+        "UNI-Branch"
+      ]
+    },
+    {
+      "id": "m.ep",
+      "label": "EVC-endpoint",
+      "synonyms": [
+        "service-endpoint",
+        "EP"
+      ],
+      "kind": "endpoint",
+      "gloss": "An EVC-endpoint (service endpoint) is the logical endpoint of an Ethernet service located at a specific UNI that identifies the attachment/port and role of that UNI within the EVC for forwarding and service mapping purposes.",
+      "example": "EP-HQ is the EVC-endpoint at UNI-HQ representing the ACME-ELAN attachment point used to receive and transmit frames for that service from the HQ site.",
+      "ref": "svc-endpoint",
+      "relations": [
+        {
+          "rel": "at",
+          "target": "m.uni"
+        }
+      ],
+      "instances": [
+        "EP-HQ",
+        "EP-DC",
+        "EP-Branch"
+      ]
+    },
+    {
+      "id": "m.seg",
+      "label": "network-segment",
+      "synonyms": [
+        "vlan-segment",
+        "broadcast segment"
+      ],
+      "kind": "l2-domain",
+      "gloss": "A network-segment is a Layer‑2 broadcast/multicast domain carried by the Ethernet service (typically represented as a CE VLAN or VLAN ID) that groups customer MACs and traffic within the EVC.",
+      "example": "CE-VLAN 200 is a network-segment carried by the ACME-ELAN so that devices tagged with VLAN 200 at UNI-HQ, UNI-DC and UNI-Branch share the same L2 broadcast domain across the service.",
+      "ref": "vlan",
+      "relations": [
+        {
+          "rel": "carried-by",
+          "target": "m.ethsvc"
+        }
+      ],
+      "instances": [
+        "CE-VLAN 200"
+      ]
+    },
+    {
+      "id": "m.bwp",
+      "label": "bandwidth-profile",
+      "synonyms": [
+        "rate-profile",
+        "BWP"
+      ],
+      "kind": "rate",
+      "gloss": "A bandwidth-profile is a rate control profile applied at a UNI that specifies how traffic for the service is policed or shaped (e.g., committed and excess rates) for that attachment point.",
+      "example": "BWP-200/50 applied at UNI-HQ limits the ACME-ELAN traffic from that UNI to a committed rate of 200 (units as defined by the operator) with an excess allowance of 50, thereby controlling the UNI's contribution to the service traffic.",
+      "ref": "bw-profile",
+      "relations": [
+        {
+          "rel": "at",
+          "target": "m.uni"
+        }
+      ],
+      "instances": [
+        "BWP-200/50",
+        "BWP-100/0"
+      ]
+    },
+    {
+      "id": "m.cos",
+      "label": "class-of-service",
+      "synonyms": [
+        "CoS",
+        "service class"
+      ],
+      "kind": "cos",
+      "gloss": "A class-of-service is a service-level traffic treatment designation attached to the Ethernet service that defines priority, queuing and forwarding behavior (for example, real‑time vs best‑effort) for traffic in the EVC.",
+      "example": "CoS-H (real-time) is assigned on the ACME-ELAN to carry voice traffic with higher priority, while CoS-L (best-effort) is used for normal data traffic on the same service.",
+      "ref": "cos",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "m.ethsvc"
+        }
+      ],
+      "instances": [
+        "CoS-H (real-time)",
+        "CoS-L (best-effort)"
+      ]
+    },
+    {
+      "id": "m.maclearn",
+      "label": "MAC-learning",
+      "synonyms": [
+        "source-MAC learning"
+      ],
+      "kind": "l2-control",
+      "gloss": "MAC-learning denotes the source‑MAC learning behavior configured at a UNI that controls whether the provider edge dynamically learns MAC addresses from customer frames to populate forwarding state for the EVC.",
+      "example": "The instance 'dynamic learning @UNI-HQ' indicates MAC-learning is enabled at UNI-HQ so the provider edge will learn EP-HQ's source MACs and use them to forward frames within the ACME-ELAN.",
+      "ref": "mac-learning",
+      "relations": [
+        {
+          "rel": "at",
+          "target": "m.uni"
+        }
+      ],
+      "instances": [
+        "dynamic learning @UNI-HQ"
+      ]
+    },
+    {
+      "id": "m.mtu",
+      "label": "service-mtu",
+      "synonyms": [
+        "MTU"
+      ],
+      "kind": "framing",
+      "gloss": "Service-mtu is the maximum frame payload/packet size allowed across the Ethernet service (the MTU advertised/enforced within the EVC) that determines the largest frame that can be forwarded end‑to‑end by the service.",
+      "example": "MTU 9100 configured on the ACME-ELAN allows jumbo frames up to 9100 bytes to be exchanged between UNI-HQ, UNI-DC and UNI-Branch over that service.",
+      "ref": "mtu",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "m.ethsvc"
+        }
+      ],
+      "instances": [
+        "MTU 9100"
+      ]
+    },
+    {
+      "id": "m.sla",
+      "label": "service-availability",
+      "synonyms": [
+        "availability objective"
+      ],
+      "kind": "assurance",
+      "gloss": "Service-availability is an assurance objective that specifies the target uptime or availability SLO for the Ethernet service (the acceptable percentage of time the EVC must be operational over a measurement period).",
+      "example": "A 99.99% objective for the ACME-ELAN means the provider commits to keeping the EVC available for that percentage of time (roughly allowing about 52.56 minutes of downtime per year).",
+      "ref": "svc-availability",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "m.ethsvc"
+        }
+      ],
+      "instances": [
+        "99.99% objective"
+      ]
+    },
+    {
+      "id": "m.vendor",
+      "label": "x-mef-attr-5",
+      "synonyms": [
+        "proprietary attr 5"
+      ],
+      "kind": "opaque",
+      "gloss": "x-mef-attr-5 is a vendor‑specific (opaque) attribute attached to a UNI used to carry proprietary or implementation‑specific configuration data whose meaning is outside the standard model and interpreted by the vendor's equipment or translator.",
+      "example": "The instance 'x-mef-attr-5=0x3 at UNI-HQ' indicates a vendor-specific flag/value (0x3) has been set on UNI-HQ and must be interpreted by the vendor's device or provisioning adapter when configuring that UNI for the service.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "at",
+          "target": "m.uni"
+        }
+      ],
+      "instances": [
+        "x-mef-attr-5=0x3 at UNI-HQ"
+      ]
+    }
+  ]
+}

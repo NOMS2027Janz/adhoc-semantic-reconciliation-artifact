@@ -1,0 +1,325 @@
+{
+  "model": "gpt-5-nano",
+  "placement": "both_cognitive",
+  "row": {
+    "case": "instance_hard",
+    "model": "gpt-5-nano",
+    "placement": "both_cognitive",
+    "reference_variant": "none",
+    "evidence": "name+key+attrs+rels",
+    "budget": 12,
+    "trial": 0,
+    "submitted": true,
+    "proposed": 11,
+    "precision": 1.0,
+    "recall": 1.0,
+    "surviving_instance_fc": 0,
+    "experiment_only_recall": 1.0,
+    "residual_total": 3,
+    "residual_experiment_only": 0,
+    "residual_native": 3,
+    "confirmed_provision": 2,
+    "refuted_provision": 0,
+    "interrogated": 4,
+    "interrogate_calls": 8,
+    "provision_calls": 2,
+    "turns": 7,
+    "total_tokens": 87047,
+    "reasoning_tokens": 9536,
+    "latency_s": 67.63,
+    "mean_conf_correct": 0.928,
+    "mean_conf_incorrect": "",
+    "surviving_traps": ""
+  },
+  "transcript": [
+    {
+      "step": "prompt",
+      "placement": "both_cognitive",
+      "reference_variant": "none",
+      "evidence": [
+        "attrs",
+        "key",
+        "name",
+        "rels"
+      ]
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.r1",
+        "b_id": "b.roadm1"
+      },
+      "result": {
+        "ok": false,
+        "answer": {},
+        "message": "only services can be provisioned; interrogate devices/sections instead"
+      }
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.r4",
+        "b_id": "b.roadm4"
+      },
+      "result": {
+        "ok": false,
+        "answer": {},
+        "message": "only services can be provisioned; interrogate devices/sections instead"
+      }
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.a1",
+        "b_id": "b.acc1"
+      },
+      "result": {
+        "ok": false,
+        "answer": {},
+        "message": "only services can be provisioned; interrogate devices/sections instead"
+      }
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.a2",
+        "b_id": "b.acc2"
+      },
+      "result": {
+        "ok": false,
+        "answer": {},
+        "message": "only services can be provisioned; interrogate devices/sections instead"
+      }
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.a3",
+        "b_id": "b.acc3"
+      },
+      "result": {
+        "ok": false,
+        "answer": {},
+        "message": "only services can be provisioned; interrogate devices/sections instead"
+      }
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.cs_odu2",
+        "b_id": "b.tunnel1"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "confirmed": true,
+          "invariants_preserved": true
+        },
+        "message": "all invariants preserved in place"
+      }
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.cs_odu0",
+        "b_id": "b.tunnel2"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "confirmed": true,
+          "invariants_preserved": true
+        },
+        "message": "all invariants preserved in place"
+      }
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.omsx",
+        "b_id": "b.msx"
+      },
+      "result": {
+        "ok": false,
+        "answer": {},
+        "message": "only services can be provisioned; interrogate devices/sections instead"
+      }
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.omsy",
+        "b_id": "b.msy"
+      },
+      "result": {
+        "ok": false,
+        "answer": {},
+        "message": "only services can be provisioned; interrogate devices/sections instead"
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "a.r1",
+        "attribute": "serial"
+      },
+      "result": {
+        "ok": true,
+        "answer": {},
+        "message": "no authoritative 'serial' for 'a.r1'"
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "b.roadm1",
+        "attribute": "serial"
+      },
+      "result": {
+        "ok": true,
+        "answer": {},
+        "message": "no authoritative 'serial' for 'b.roadm1'"
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "a.a1",
+        "attribute": "serial"
+      },
+      "result": {
+        "ok": true,
+        "answer": {},
+        "message": "no authoritative 'serial' for 'a.a1'"
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "b.acc1",
+        "attribute": "serial"
+      },
+      "result": {
+        "ok": true,
+        "answer": {},
+        "message": "no authoritative 'serial' for 'b.acc1'"
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "a.r1",
+        "attribute": "fibre_id"
+      },
+      "result": {
+        "ok": true,
+        "answer": {},
+        "message": "no authoritative 'fibre_id' for 'a.r1'"
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "b.roadm1",
+        "attribute": "fibre_id"
+      },
+      "result": {
+        "ok": true,
+        "answer": {},
+        "message": "no authoritative 'fibre_id' for 'b.roadm1'"
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "a.a1",
+        "attribute": "fibre_id"
+      },
+      "result": {
+        "ok": true,
+        "answer": {},
+        "message": "no authoritative 'fibre_id' for 'a.a1'"
+      }
+    },
+    {
+      "step": "interrogate",
+      "args": {
+        "individual_id": "b.acc1",
+        "attribute": "fibre_id"
+      },
+      "result": {
+        "ok": true,
+        "answer": {},
+        "message": "no authoritative 'fibre_id' for 'b.acc1'"
+      }
+    },
+    {
+      "step": "submit",
+      "args": {
+        "correspondences": [
+          {
+            "a_id": "a.r1",
+            "b_id": "b.roadm1",
+            "confidence": 0.98
+          },
+          {
+            "a_id": "a.r2",
+            "b_id": "b.nodeB",
+            "confidence": 0.93
+          },
+          {
+            "a_id": "a.r3",
+            "b_id": "b.nodeC",
+            "confidence": 0.93
+          },
+          {
+            "a_id": "a.r4",
+            "b_id": "b.roadm4",
+            "confidence": 0.93
+          },
+          {
+            "a_id": "a.a1",
+            "b_id": "b.acc1",
+            "confidence": 0.98
+          },
+          {
+            "a_id": "a.a2",
+            "b_id": "b.acc2",
+            "confidence": 0.98
+          },
+          {
+            "a_id": "a.a3",
+            "b_id": "b.acc3",
+            "confidence": 0.98
+          },
+          {
+            "a_id": "a.cs_odu2",
+            "b_id": "b.tunnel1",
+            "confidence": 0.9
+          },
+          {
+            "a_id": "a.cs_odu0",
+            "b_id": "b.tunnel2",
+            "confidence": 0.9
+          },
+          {
+            "a_id": "a.omsx",
+            "b_id": "b.msx",
+            "confidence": 0.85
+          },
+          {
+            "a_id": "a.omsy",
+            "b_id": "b.msy",
+            "confidence": 0.85
+          }
+        ],
+        "residual_a": [
+          "a.svc100"
+        ],
+        "residual_b": [
+          "b.svc100"
+        ]
+      }
+    }
+  ]
+}

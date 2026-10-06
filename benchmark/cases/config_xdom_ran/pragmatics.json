@@ -1,0 +1,9 @@
+{
+  "note": "Pragmatics gold for the RAN/core cross-domain case: the authoritative SOURCE OF TRUTH (realm) for each shared requirement field at the transport seam. X = Beacon (RAN/transport), Y = Summit (packet core), shared = a co-owned demarcation. Semantic correspondence at the seam is necessary but not sufficient; provisioning also requires respecting whose realm owns each field's value, and the characteristic pragmatic error is letting the wrong realm govern.",
+  "fields": [
+    {"id": "transport-capacity", "ref": "transport-capacity", "pins": {"a": "x.cap", "b": "y.cap"}, "authority": "Y", "realm": "core", "why": "the committed capacity is the core's demand, driven by the sessions it places at the site; transport must realise it, but the authoritative required value is the core's, not whatever the backhaul happens to have spare"},
+    {"id": "transport-qos", "ref": "transport-qos", "pins": {"a": "x.dscp", "b": "y.dscp"}, "authority": "Y", "realm": "core", "why": "the marking policy is owned by the core, which maps each session's QoS to a DiffServ class; transport honours the marking but does not decide it"},
+    {"id": "transport-mtu", "ref": "transport-mtu", "pins": {"a": "x.mtu", "b": "y.mtu"}, "authority": "X", "realm": "transport", "why": "the MTU actually available end to end is a physical property of the transport; the core states a minimum for its encapsulation, but the authoritative realised value is the transport side's"},
+    {"id": "transport-demarc", "ref": "transport-demarc", "pins": {"a": "x.sitegw", "b": "y.upfep"}, "authority": "shared", "realm": "both", "why": "the site gateway and the UPF endpoint are two names for one co-owned demarcation; neither side's local naming overrides the other, they must agree it is the same point"}
+  ]
+}

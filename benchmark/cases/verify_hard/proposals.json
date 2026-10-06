@@ -1,0 +1,672 @@
+{
+  "case": "verify_hard",
+  "source": "instance_hard",
+  "note": "Seeded verification set: correct + meaning-visible-wrong + byte-clean-wrong proposals, to measure a verifier's pass-correct/fail-wrong quality by mode.",
+  "invariants": [
+    "endpoint-identity",
+    "connectivity",
+    "capacity",
+    "layer-relationships",
+    "switching-constraints",
+    "odu-multiplexing",
+    "protection-integrity"
+  ],
+  "proposals": [
+    {
+      "id": "a.r1__b.roadm1",
+      "a_id": "a.r1",
+      "b_id": "b.roadm1",
+      "a": {
+        "id": "a.r1",
+        "type": "forwarding-node",
+        "name": "R1",
+        "attrs": {
+          "role": "core",
+          "model": "MX9"
+        },
+        "topology": [
+          {
+            "rel": "adjacent",
+            "target": "a.r2"
+          },
+          {
+            "rel": "adjacent",
+            "target": "a.r3"
+          },
+          {
+            "rel": "adjacent",
+            "target": "a.r4"
+          }
+        ]
+      },
+      "b": {
+        "id": "b.roadm1",
+        "type": "forwarding-node",
+        "name": "roadm-1",
+        "attrs": {
+          "role": "core",
+          "model": "MX9"
+        },
+        "topology": [
+          {
+            "rel": "adjacent",
+            "target": "b.nodeB"
+          },
+          {
+            "rel": "adjacent",
+            "target": "b.nodeC"
+          },
+          {
+            "rel": "adjacent",
+            "target": "b.roadm4"
+          }
+        ]
+      },
+      "truth_pass": true,
+      "byte_roundtrips": true,
+      "byte_clean_records": true,
+      "category": "correct",
+      "probe_available": null
+    },
+    {
+      "id": "a.a1__b.acc1",
+      "a_id": "a.a1",
+      "b_id": "b.acc1",
+      "a": {
+        "id": "a.a1",
+        "type": "client-svc-access",
+        "name": "A1",
+        "attrs": {
+          "tier": "access"
+        },
+        "topology": [
+          {
+            "rel": "homed-on",
+            "target": "a.r1"
+          }
+        ]
+      },
+      "b": {
+        "id": "b.acc1",
+        "type": "client-svc-access",
+        "name": "acc-1",
+        "attrs": {
+          "tier": "access"
+        },
+        "topology": [
+          {
+            "rel": "homed-on",
+            "target": "b.roadm1"
+          }
+        ]
+      },
+      "truth_pass": true,
+      "byte_roundtrips": true,
+      "byte_clean_records": true,
+      "category": "correct",
+      "probe_available": null
+    },
+    {
+      "id": "a.cs_odu2__b.tunnel1",
+      "a_id": "a.cs_odu2",
+      "b_id": "b.tunnel1",
+      "a": {
+        "id": "a.cs_odu2",
+        "type": "connection-service",
+        "name": "cs-a1a3-odu2",
+        "attrs": {
+          "rate": "ODU2"
+        },
+        "topology": [
+          {
+            "rel": "from",
+            "target": "a.a1"
+          },
+          {
+            "rel": "to",
+            "target": "a.a3"
+          }
+        ]
+      },
+      "b": {
+        "id": "b.tunnel1",
+        "type": "connection-service",
+        "name": "tunnel-1",
+        "attrs": {
+          "rate": "ODU2"
+        },
+        "topology": [
+          {
+            "rel": "from",
+            "target": "b.acc1"
+          },
+          {
+            "rel": "to",
+            "target": "b.acc3"
+          }
+        ]
+      },
+      "truth_pass": true,
+      "byte_roundtrips": true,
+      "byte_clean_records": true,
+      "category": "correct",
+      "probe_available": "virtual_provision"
+    },
+    {
+      "id": "a.cs_odu0__b.tunnel2",
+      "a_id": "a.cs_odu0",
+      "b_id": "b.tunnel2",
+      "a": {
+        "id": "a.cs_odu0",
+        "type": "connection-service",
+        "name": "cs-a2a3-odu0",
+        "attrs": {
+          "rate": "ODU0"
+        },
+        "topology": [
+          {
+            "rel": "from",
+            "target": "a.a2"
+          },
+          {
+            "rel": "to",
+            "target": "a.a3"
+          }
+        ]
+      },
+      "b": {
+        "id": "b.tunnel2",
+        "type": "connection-service",
+        "name": "tunnel-2",
+        "attrs": {
+          "rate": "ODU0"
+        },
+        "topology": [
+          {
+            "rel": "from",
+            "target": "b.acc2"
+          },
+          {
+            "rel": "to",
+            "target": "b.acc3"
+          }
+        ]
+      },
+      "truth_pass": true,
+      "byte_roundtrips": true,
+      "byte_clean_records": true,
+      "category": "correct",
+      "probe_available": "virtual_provision"
+    },
+    {
+      "id": "a.r2__b.nodeB",
+      "a_id": "a.r2",
+      "b_id": "b.nodeB",
+      "a": {
+        "id": "a.r2",
+        "type": "forwarding-node",
+        "name": "R2",
+        "attrs": {
+          "role": "core",
+          "model": "MX7"
+        },
+        "topology": [
+          {
+            "rel": "adjacent",
+            "target": "a.r1"
+          },
+          {
+            "rel": "adjacent",
+            "target": "a.r4"
+          }
+        ]
+      },
+      "b": {
+        "id": "b.nodeB",
+        "type": "forwarding-node",
+        "name": "nodeB",
+        "attrs": {
+          "role": "core",
+          "model": "MX7"
+        },
+        "topology": [
+          {
+            "rel": "adjacent",
+            "target": "b.roadm1"
+          },
+          {
+            "rel": "adjacent",
+            "target": "b.roadm4"
+          }
+        ]
+      },
+      "truth_pass": true,
+      "byte_roundtrips": true,
+      "byte_clean_records": true,
+      "category": "correct",
+      "probe_available": "interrogate"
+    },
+    {
+      "id": "a.r3__b.nodeC",
+      "a_id": "a.r3",
+      "b_id": "b.nodeC",
+      "a": {
+        "id": "a.r3",
+        "type": "forwarding-node",
+        "name": "R3",
+        "attrs": {
+          "role": "core",
+          "model": "MX7"
+        },
+        "topology": [
+          {
+            "rel": "adjacent",
+            "target": "a.r1"
+          },
+          {
+            "rel": "adjacent",
+            "target": "a.r4"
+          }
+        ]
+      },
+      "b": {
+        "id": "b.nodeC",
+        "type": "forwarding-node",
+        "name": "nodeC",
+        "attrs": {
+          "role": "core",
+          "model": "MX7"
+        },
+        "topology": [
+          {
+            "rel": "adjacent",
+            "target": "b.roadm1"
+          },
+          {
+            "rel": "adjacent",
+            "target": "b.roadm4"
+          }
+        ]
+      },
+      "truth_pass": true,
+      "byte_roundtrips": true,
+      "byte_clean_records": true,
+      "category": "correct",
+      "probe_available": "interrogate"
+    },
+    {
+      "id": "a.omsx__b.msx",
+      "a_id": "a.omsx",
+      "b_id": "b.msx",
+      "a": {
+        "id": "a.omsx",
+        "type": "optical-mux-section",
+        "name": "oms-x",
+        "attrs": {
+          "span": "short"
+        },
+        "topology": [
+          {
+            "rel": "between",
+            "target": "a.r1"
+          },
+          {
+            "rel": "between",
+            "target": "a.r4"
+          }
+        ]
+      },
+      "b": {
+        "id": "b.msx",
+        "type": "optical-mux-section",
+        "name": "mux-sec-x",
+        "attrs": {
+          "span": "short"
+        },
+        "topology": [
+          {
+            "rel": "between",
+            "target": "b.roadm1"
+          },
+          {
+            "rel": "between",
+            "target": "b.roadm4"
+          }
+        ]
+      },
+      "truth_pass": true,
+      "byte_roundtrips": true,
+      "byte_clean_records": true,
+      "category": "correct",
+      "probe_available": "interrogate"
+    },
+    {
+      "id": "a.omsy__b.msy",
+      "a_id": "a.omsy",
+      "b_id": "b.msy",
+      "a": {
+        "id": "a.omsy",
+        "type": "optical-mux-section",
+        "name": "oms-y",
+        "attrs": {
+          "span": "short"
+        },
+        "topology": [
+          {
+            "rel": "between",
+            "target": "a.r1"
+          },
+          {
+            "rel": "between",
+            "target": "a.r4"
+          }
+        ]
+      },
+      "b": {
+        "id": "b.msy",
+        "type": "optical-mux-section",
+        "name": "mux-sec-y",
+        "attrs": {
+          "span": "short"
+        },
+        "topology": [
+          {
+            "rel": "between",
+            "target": "b.roadm1"
+          },
+          {
+            "rel": "between",
+            "target": "b.roadm4"
+          }
+        ]
+      },
+      "truth_pass": true,
+      "byte_roundtrips": true,
+      "byte_clean_records": true,
+      "category": "correct",
+      "probe_available": "interrogate"
+    },
+    {
+      "id": "a.svc100__b.svc100",
+      "a_id": "a.svc100",
+      "b_id": "b.svc100",
+      "a": {
+        "id": "a.svc100",
+        "type": "connection-service",
+        "name": "svc-100",
+        "attrs": {
+          "rate": "ODU1"
+        },
+        "topology": [
+          {
+            "rel": "from",
+            "target": "a.a1"
+          },
+          {
+            "rel": "to",
+            "target": "a.a2"
+          }
+        ]
+      },
+      "b": {
+        "id": "b.svc100",
+        "type": "connection-service",
+        "name": "svc-100",
+        "attrs": {
+          "rate": "ODU0"
+        },
+        "topology": [
+          {
+            "rel": "from",
+            "target": "b.acc3"
+          },
+          {
+            "rel": "to",
+            "target": "b.acc1"
+          }
+        ]
+      },
+      "truth_pass": false,
+      "byte_roundtrips": true,
+      "byte_clean_records": false,
+      "category": "meaning-visible",
+      "probe_available": "virtual_provision"
+    },
+    {
+      "id": "a.r1__b.r1",
+      "a_id": "a.r1",
+      "b_id": "b.r1",
+      "a": {
+        "id": "a.r1",
+        "type": "forwarding-node",
+        "name": "R1",
+        "attrs": {
+          "role": "core",
+          "model": "MX9"
+        },
+        "topology": [
+          {
+            "rel": "adjacent",
+            "target": "a.r2"
+          },
+          {
+            "rel": "adjacent",
+            "target": "a.r3"
+          },
+          {
+            "rel": "adjacent",
+            "target": "a.r4"
+          }
+        ]
+      },
+      "b": {
+        "id": "b.r1",
+        "type": "forwarding-node",
+        "name": "R1",
+        "attrs": {
+          "role": "core",
+          "model": "MX9"
+        },
+        "topology": [
+          {
+            "rel": "adjacent",
+            "target": "b.roadm4"
+          }
+        ]
+      },
+      "truth_pass": false,
+      "byte_roundtrips": true,
+      "byte_clean_records": false,
+      "category": "meaning-visible",
+      "probe_available": null
+    },
+    {
+      "id": "a.r2__b.nodeC",
+      "a_id": "a.r2",
+      "b_id": "b.nodeC",
+      "a": {
+        "id": "a.r2",
+        "type": "forwarding-node",
+        "name": "R2",
+        "attrs": {
+          "role": "core",
+          "model": "MX7"
+        },
+        "topology": [
+          {
+            "rel": "adjacent",
+            "target": "a.r1"
+          },
+          {
+            "rel": "adjacent",
+            "target": "a.r4"
+          }
+        ]
+      },
+      "b": {
+        "id": "b.nodeC",
+        "type": "forwarding-node",
+        "name": "nodeC",
+        "attrs": {
+          "role": "core",
+          "model": "MX7"
+        },
+        "topology": [
+          {
+            "rel": "adjacent",
+            "target": "b.roadm1"
+          },
+          {
+            "rel": "adjacent",
+            "target": "b.roadm4"
+          }
+        ]
+      },
+      "truth_pass": false,
+      "byte_roundtrips": true,
+      "byte_clean_records": true,
+      "category": "byte-clean",
+      "probe_available": "interrogate"
+    },
+    {
+      "id": "a.r3__b.nodeB",
+      "a_id": "a.r3",
+      "b_id": "b.nodeB",
+      "a": {
+        "id": "a.r3",
+        "type": "forwarding-node",
+        "name": "R3",
+        "attrs": {
+          "role": "core",
+          "model": "MX7"
+        },
+        "topology": [
+          {
+            "rel": "adjacent",
+            "target": "a.r1"
+          },
+          {
+            "rel": "adjacent",
+            "target": "a.r4"
+          }
+        ]
+      },
+      "b": {
+        "id": "b.nodeB",
+        "type": "forwarding-node",
+        "name": "nodeB",
+        "attrs": {
+          "role": "core",
+          "model": "MX7"
+        },
+        "topology": [
+          {
+            "rel": "adjacent",
+            "target": "b.roadm1"
+          },
+          {
+            "rel": "adjacent",
+            "target": "b.roadm4"
+          }
+        ]
+      },
+      "truth_pass": false,
+      "byte_roundtrips": true,
+      "byte_clean_records": true,
+      "category": "byte-clean",
+      "probe_available": "interrogate"
+    },
+    {
+      "id": "a.omsx__b.msy",
+      "a_id": "a.omsx",
+      "b_id": "b.msy",
+      "a": {
+        "id": "a.omsx",
+        "type": "optical-mux-section",
+        "name": "oms-x",
+        "attrs": {
+          "span": "short"
+        },
+        "topology": [
+          {
+            "rel": "between",
+            "target": "a.r1"
+          },
+          {
+            "rel": "between",
+            "target": "a.r4"
+          }
+        ]
+      },
+      "b": {
+        "id": "b.msy",
+        "type": "optical-mux-section",
+        "name": "mux-sec-y",
+        "attrs": {
+          "span": "short"
+        },
+        "topology": [
+          {
+            "rel": "between",
+            "target": "b.roadm1"
+          },
+          {
+            "rel": "between",
+            "target": "b.roadm4"
+          }
+        ]
+      },
+      "truth_pass": false,
+      "byte_roundtrips": true,
+      "byte_clean_records": true,
+      "category": "byte-clean",
+      "probe_available": "interrogate"
+    },
+    {
+      "id": "a.omsy__b.msx",
+      "a_id": "a.omsy",
+      "b_id": "b.msx",
+      "a": {
+        "id": "a.omsy",
+        "type": "optical-mux-section",
+        "name": "oms-y",
+        "attrs": {
+          "span": "short"
+        },
+        "topology": [
+          {
+            "rel": "between",
+            "target": "a.r1"
+          },
+          {
+            "rel": "between",
+            "target": "a.r4"
+          }
+        ]
+      },
+      "b": {
+        "id": "b.msx",
+        "type": "optical-mux-section",
+        "name": "mux-sec-x",
+        "attrs": {
+          "span": "short"
+        },
+        "topology": [
+          {
+            "rel": "between",
+            "target": "b.roadm1"
+          },
+          {
+            "rel": "between",
+            "target": "b.roadm4"
+          }
+        ]
+      },
+      "truth_pass": false,
+      "byte_roundtrips": true,
+      "byte_clean_records": true,
+      "category": "byte-clean",
+      "probe_available": "interrogate"
+    }
+  ]
+}

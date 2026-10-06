@@ -1,0 +1,16 @@
+case,model,trial,authority_accuracy,n_fields,committed_verdict,conflict_flagged,committed_to_transport,demarcation_correct,demarcation_as_conflict,false_conflicts
+config_cross_domain,gpt-5.6-sol,0,1.0,5,conflict,1,0,1,0,0
+config_cross_domain,gpt-5.6-sol,1,1.0,5,conflict,1,0,1,0,0
+config_cross_domain,gpt-5.6-sol,2,1.0,5,conflict,1,0,1,0,0
+config_cross_domain,gpt-5-mini,0,1.0,5,conflict,1,0,1,0,0
+config_cross_domain,gpt-5-mini,1,1.0,5,conflict,1,0,1,0,0
+config_cross_domain,gpt-5-mini,2,1.0,5,conflict,1,0,1,0,0
+config_cross_domain,gpt-5-nano,0,1.0,5,conflict,1,0,1,0,0
+config_cross_domain,gpt-5-nano,1,1.0,5,conflict,1,0,1,0,0
+config_cross_domain,gpt-5-nano,2,1.0,5,conflict,1,0,1,0,0
+config_cross_domain,qwen2.5:7b,0,1.0,5,conflict,1,0,1,0,0
+config_cross_domain,qwen2.5:7b,1,1.0,5,conflict,1,0,1,0,0
+config_cross_domain,qwen2.5:7b,2,1.0,5,conflict,1,0,1,0,0
+config_cross_domain,deepseek-chat,0,1.0,5,conflict,1,0,1,0,0
+config_cross_domain,deepseek-chat,1,1.0,5,conflict,1,0,1,0,0
+config_cross_domain,deepseek-chat,2,1.0,5,conflict,1,0,1,0,0

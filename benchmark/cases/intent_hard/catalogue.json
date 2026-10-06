@@ -1,0 +1,123 @@
+{
+  "system": "Agent N",
+  "dialect": "IETF L1CSM / TE service mapping (OTN/optical)",
+  "realisations": [
+    {
+      "id": "r1a",
+      "pair": "P1",
+      "path": "direct",
+      "capacity": "ODU2",
+      "advertised": {
+        "bw_gbps": 10.0,
+        "latency_ms": 3,
+        "availability": 0.99995,
+        "protection": "none",
+        "cost": 40
+      }
+    },
+    {
+      "id": "r1b",
+      "pair": "P1",
+      "path": "diverse-protected",
+      "capacity": "ODU2",
+      "advertised": {
+        "bw_gbps": 10.0,
+        "latency_ms": 6,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 70
+      }
+    },
+    {
+      "id": "r1c",
+      "pair": "P1",
+      "path": "diverse-fast",
+      "capacity": "ODU2",
+      "advertised": {
+        "bw_gbps": 10.0,
+        "latency_ms": 4,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 85
+      }
+    },
+    {
+      "id": "r2a",
+      "pair": "P2",
+      "path": "direct",
+      "capacity": "ODU0",
+      "advertised": {
+        "bw_gbps": 1.25,
+        "latency_ms": 4,
+        "availability": 0.999,
+        "protection": "none",
+        "cost": 20
+      }
+    },
+    {
+      "id": "r2b",
+      "pair": "P2",
+      "path": "diverse-protected",
+      "capacity": "ODU1",
+      "advertised": {
+        "bw_gbps": 2.5,
+        "latency_ms": 7,
+        "availability": 0.9999,
+        "protection": "1+1",
+        "cost": 45
+      }
+    },
+    {
+      "id": "r3a",
+      "pair": "P3",
+      "path": "direct",
+      "capacity": "ODU1",
+      "advertised": {
+        "bw_gbps": 2.5,
+        "latency_ms": 5,
+        "availability": 0.9995,
+        "protection": "none",
+        "cost": 25
+      }
+    },
+    {
+      "id": "r4a",
+      "pair": "P4",
+      "path": "direct",
+      "capacity": "ODU3",
+      "advertised": {
+        "bw_gbps": 40.0,
+        "latency_ms": 8,
+        "availability": 0.999,
+        "protection": "none",
+        "cost": 60
+      }
+    },
+    {
+      "id": "r4b",
+      "pair": "P4",
+      "path": "diverse-protected",
+      "capacity": "ODU3",
+      "advertised": {
+        "bw_gbps": 40.0,
+        "latency_ms": 12,
+        "availability": 0.99995,
+        "protection": "1+1",
+        "cost": 95
+      }
+    },
+    {
+      "id": "r5a",
+      "pair": "P5",
+      "path": "direct",
+      "capacity": "ODU2",
+      "advertised": {
+        "bw_gbps": 10.0,
+        "latency_ms": 9,
+        "availability": 0.999,
+        "protection": "none",
+        "cost": 35
+      }
+    }
+  ]
+}

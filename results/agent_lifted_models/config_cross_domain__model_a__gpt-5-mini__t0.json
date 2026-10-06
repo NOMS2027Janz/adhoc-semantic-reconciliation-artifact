@@ -1,0 +1,151 @@
+{
+  "system": "Agent X — Meridian",
+  "dialect": "Meridian (bespoke transport OSS)",
+  "modules": [
+    "meridian-circuits",
+    "meridian-bearers"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-mini from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_cross_domain, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_cross_domain/model_a*.json.",
+  "concepts": [
+    {
+      "id": "m.circuit",
+      "label": "circuit",
+      "synonyms": [
+        "bearer circuit"
+      ],
+      "kind": "transport-circuit",
+      "gloss": "A named transport service instance representing an end-to-end bearer-backed connectivity (logical circuit) between network endpoints that presents demarcation hand‑offs and is carried on an underlying bearer resource.",
+      "example": "CIR-7 (NY-FRA): an end-to-end circuit connecting New York and Frankfurt that presents hand-offs ho-NY-CIR7 and ho-FRA-CIR7 and is carried on the bearer 'lambda 193.1THz NY-FRA'.",
+      "ref": "transport-underlay",
+      "relations": [
+        {
+          "rel": "presents-at",
+          "target": "m.handoff"
+        },
+        {
+          "rel": "carried-on",
+          "target": "m.bearer"
+        }
+      ],
+      "instances": [
+        "CIR-7 (NY-FRA)"
+      ]
+    },
+    {
+      "id": "m.handoff",
+      "label": "hand-off",
+      "synonyms": [
+        "circuit hand-off"
+      ],
+      "kind": "demarcation-point",
+      "gloss": "A physical or logical demarcation point where a circuit is presented to a customer/site or to another network element (a circuit hand-off), associated with exactly the circuit it serves.",
+      "example": "ho-NY-CIR7: the hand-off in New York for circuit CIR-7 where the carrier hands traffic to the customer's demarcation port; the record is on-circuit CIR-7.",
+      "ref": "demarcation",
+      "relations": [
+        {
+          "rel": "on-circuit",
+          "target": "m.circuit"
+        }
+      ],
+      "instances": [
+        "ho-NY-CIR7",
+        "ho-FRA-CIR7"
+      ]
+    },
+    {
+      "id": "m.rate",
+      "label": "rate",
+      "synonyms": [],
+      "kind": "rate",
+      "gloss": "The committed data throughput characteristic (bandwidth/SLA) assigned to a circuit, expressed as the guaranteed or negotiated transmission rate.",
+      "example": "5 Gbit/s committed: the CIR-7 service is provisioned with a committed rate of 5 Gbit/s that the network must deliver to the customer under the service agreement.",
+      "ref": "service-rate",
+      "relations": [
+        {
+          "rel": "of-circuit",
+          "target": "m.circuit"
+        }
+      ],
+      "instances": [
+        "5 Gbit/s committed"
+      ]
+    },
+    {
+      "id": "m.latency",
+      "label": "latency",
+      "synonyms": [],
+      "kind": "latency",
+      "gloss": "A latency metric tied to a circuit that specifies measured or guaranteed delay (typically for a given path/role, e.g., primary path) which is used for performance and SLA evaluation.",
+      "example": "7.2 ms (primary path): CIR-7's primary-path latency measurement is 7.2 milliseconds and is the value used to evaluate adherence to the circuit's latency targets.",
+      "ref": "latency-bound",
+      "relations": [
+        {
+          "rel": "of-circuit",
+          "target": "m.circuit"
+        }
+      ],
+      "instances": [
+        "7.2 ms (primary path)"
+      ]
+    },
+    {
+      "id": "m.protection",
+      "label": "protection",
+      "synonyms": [],
+      "kind": "protection",
+      "gloss": "The resilience or redundancy scheme applied to a circuit that defines how traffic is protected against failures (for example path, link, or equipment protection modes).",
+      "example": "1+1 path protection: CIR-7 is provisioned with 1+1 path protection, meaning traffic is sent simultaneously over two disjoint paths so a single path failure does not interrupt the service.",
+      "ref": "protection-requirement",
+      "relations": [
+        {
+          "rel": "of-circuit",
+          "target": "m.circuit"
+        }
+      ],
+      "instances": [
+        "1+1 path protection"
+      ]
+    },
+    {
+      "id": "m.grade",
+      "label": "grade",
+      "synonyms": [],
+      "kind": "transport-grade",
+      "gloss": "A transport-grade classification label assigned to a circuit indicating its service class or priority tier (affecting handling, SLAs and policy), e.g. platinum, gold, best‑effort.",
+      "example": "platinum: CIR-7 may be assigned 'platinum' grade meaning highest-priority handling and stricter SLA targets compared with 'gold' or 'best-effort'.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of-circuit",
+          "target": "m.circuit"
+        }
+      ],
+      "instances": [
+        "platinum",
+        "gold",
+        "best-effort"
+      ]
+    },
+    {
+      "id": "m.bearer",
+      "label": "bearer",
+      "synonyms": [
+        "wavelength",
+        "lambda"
+      ],
+      "kind": "bearer",
+      "gloss": "The underlying physical transport resource (the bearer) such as a wavelength/lambda that actually carries one or more circuits across the optical or transport fabric.",
+      "example": "lambda 193.1THz NY-FRA: the optical bearer spanning NY to FRA that carries CIR-7 (and potentially other circuits) as the physical wavelength resource.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "carries",
+          "target": "m.circuit"
+        }
+      ],
+      "instances": [
+        "lambda 193.1THz NY-FRA"
+      ]
+    }
+  ]
+}

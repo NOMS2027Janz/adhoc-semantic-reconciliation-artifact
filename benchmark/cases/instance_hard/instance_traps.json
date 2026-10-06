@@ -1,0 +1,108 @@
+{
+  "case": "instance_hard",
+  "operational_case": "configuration (instance level)",
+  "seed": "hand-authored populated OTN-over-optical A-box over the reconciled TAPI/TEAS types",
+  "false_cognates": [
+    {
+      "a": "a.r1",
+      "b": "b.r1",
+      "why": "both locally named 'R1', but A's R1 is device e1 (its true partner is roadm-1); B's R1 is a different physical device (e12, a native gap)."
+    },
+    {
+      "a": "a.svc100",
+      "b": "b.svc100",
+      "why": "both locally named 'svc-100', but different services: A1-A2 ODU1 vs A3-A1 ODU0; a virtual provision refutes the merge on the endpoint and capacity invariants."
+    }
+  ],
+  "experiment_only": [
+    "e2",
+    "e3",
+    "e13",
+    "e14"
+  ],
+  "oracle": {
+    "interrogate": {
+      "a.r2": {
+        "serial": "SN-0022"
+      },
+      "b.nodeB": {
+        "serial": "SN-0022"
+      },
+      "a.r3": {
+        "serial": "SN-0033"
+      },
+      "b.nodeC": {
+        "serial": "SN-0033"
+      },
+      "a.omsx": {
+        "fibre_id": "FIB-X7"
+      },
+      "b.msx": {
+        "fibre_id": "FIB-X7"
+      },
+      "a.omsy": {
+        "fibre_id": "FIB-Y9"
+      },
+      "b.msy": {
+        "fibre_id": "FIB-Y9"
+      }
+    },
+    "invariants": {
+      "e8": {
+        "endpoint-identity": [
+          "A1",
+          "A3"
+        ],
+        "capacity": "ODU2",
+        "layer-relationships": "ODU2/OTU4",
+        "odu-multiplexing": "ODU2->OTU4",
+        "switching-constraints": "core-transit",
+        "protection-integrity": "1+1"
+      },
+      "e9": {
+        "endpoint-identity": [
+          "A2",
+          "A3"
+        ],
+        "capacity": "ODU0",
+        "layer-relationships": "ODU0/ODU2",
+        "odu-multiplexing": "ODU0->ODU2",
+        "switching-constraints": "core-transit",
+        "protection-integrity": "none"
+      },
+      "e10": {
+        "endpoint-identity": [
+          "A1",
+          "A2"
+        ],
+        "capacity": "ODU1"
+      },
+      "e11": {
+        "endpoint-identity": [
+          "A3",
+          "A1"
+        ],
+        "capacity": "ODU0"
+      }
+    }
+  },
+  "residual_by_placement": {
+    "both_cognitive": 3,
+    "one_inert": 3,
+    "both_inert": 7
+  },
+  "invariants": [
+    "endpoint-identity",
+    "connectivity",
+    "capacity",
+    "layer-relationships",
+    "switching-constraints",
+    "odu-multiplexing",
+    "protection-integrity"
+  ],
+  "verification_by_placement": {
+    "both_cognitive": "interrogation and virtual provision-and-read-back on either side",
+    "one_inert": "interrogation/manipulation on the live side; invariant reference on the inert side",
+    "both_inert": "static evidence only; propose for external adjudication"
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "system": "Agent F - legacy fault manager",
+  "dialect": "RFC 8632 / syslog / SNMP / X.733 (routing)",
+  "modules": [
+    "x733-probable-cause",
+    "rfc8632-alarms"
+  ],
+  "note": "Lifted legacy model. An alarm is a catch-all, bundling an event, an undesirable state, a fixed severity and a static probable-cause, all hard-coded at emission. ref=null marks a native concept with no shared category.",
+  "concepts": [
+    {
+      "id": "f.node",
+      "label": "managed-object",
+      "synonyms": [
+        "resource",
+        "router",
+        "BGP session"
+      ],
+      "kind": "resource",
+      "gloss": "a managed element the fault manager watches",
+      "example": "router R7; the BGP session to AS64500",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "R7",
+        "bgp-R7-AS64500"
+      ]
+    },
+    {
+      "id": "f.event",
+      "label": "event",
+      "synonyms": [
+        "syslog",
+        "trap"
+      ],
+      "kind": "event",
+      "gloss": "a syslog message or SNMP trap: something happened on a resource at a moment",
+      "example": "a BGP state-change trap on the session at t0",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        }
+      ],
+      "instances": [
+        "trap-bgp-R7-t0"
+      ]
+    },
+    {
+      "id": "f.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "fault alarm",
+        "alarm condition"
+      ],
+      "kind": "alarm",
+      "gloss": "an emitted alarm: an undesirable condition (a state) on a resource that also implies a fault occurrence, carrying a fixed severity and a probable cause; the catch-all that bundles what NMOP separates",
+      "example": "a MAJOR 'session-down' alarm on the BGP session to AS64500",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "f.node"
+        },
+        {
+          "rel": "carries",
+          "target": "f.severity"
+        },
+        {
+          "rel": "carries",
+          "target": "f.probable_cause"
+        }
+      ],
+      "instances": [
+        "alarm-bgp-R7-down"
+      ]
+    },
+    {
+      "id": "f.severity",
+      "label": "severity",
+      "synonyms": [
+        "perceived severity",
+        "alarm level"
+      ],
+      "kind": "severity",
+      "gloss": "the fixed severity label assigned at emission: critical, major, minor or warning - static, not recomputed from context",
+      "example": "MAJOR",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "critical",
+        "major",
+        "minor",
+        "warning"
+      ]
+    },
+    {
+      "id": "f.probable_cause",
+      "label": "probable-cause",
+      "synonyms": [
+        "X.733 cause",
+        "cause code"
+      ],
+      "kind": "cause-code",
+      "gloss": "a static probable-cause code from the X.733 dictionary, fixed at emission - not derived by correlating events",
+      "example": "X.733 'bgpConnectionLost'",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "bgpConnectionLost",
+        "holdTimerExpired"
+      ]
+    },
+    {
+      "id": "f.clear",
+      "label": "clear",
+      "synonyms": [
+        "alarm clear"
+      ],
+      "kind": "clear",
+      "gloss": "a notification that a previously raised alarm condition has cleared",
+      "example": "a clear for alarm-bgp-R7-down",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "clears",
+          "target": "f.alarm"
+        }
+      ],
+      "instances": [
+        "clear-alarm-bgp-R7-down"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "note": "opaque service-order keys binding endpoints across O and N.",
+  "instance": [
+    {
+      "key": "so-501",
+      "type": "client-svc-access",
+      "canonical": "EP-A1"
+    },
+    {
+      "key": "so-502",
+      "type": "client-svc-access",
+      "canonical": "EP-A2"
+    },
+    {
+      "key": "so-503",
+      "type": "client-svc-access",
+      "canonical": "EP-A3"
+    }
+  ],
+  "invariant": []
+}

@@ -1,0 +1,17 @@
+{
+  "id": "ref.rest.adhoc.v1",
+  "kind": "lexical",
+  "reference_type": "ad_hoc_by_example",
+  "note": "An AD-HOC reference constructed between just these two REST interfaces (MEF Sonata product ordering, X; TMF641 service ordering, Y) for just this seam — not adopted from any standard. One entry per shared seam category, each pinned by a canonical example both sides can instantiate. It deliberately does NOT cover either side's native concepts (state, itemTerm, serviceSpecification, supportingService), which is how it pre-empts the surface-identical 'state' false cognate: 'state' fits no entry, so the two states do not correspond. Each definition pins the cross-layer meaning (commercial product vs technical service) so it cannot be silently misread across the seam.",
+  "parties": {
+    "X": "MEF Sonata (buyer/seller product order)",
+    "Y": "TMF641 (intra-operator service order)"
+  },
+  "entries": [
+    {"id": "order-envelope", "label": "order envelope", "synonyms": ["order"], "class": "seam", "definition": "The order container exchanged at the seam: a product order on the buyer/seller side and the service order the operator raises to fulfil it are the same order envelope, seen commercially versus technically.", "example": "product order PO-88 is fulfilled by service order SO-88"},
+    {"id": "orderable-item", "label": "orderable item", "synonyms": ["order item", "line item"], "class": "seam", "definition": "One orderable line carrying an action on a single delivered construct: a product order item and the service order item that realises it are the same orderable line at the seam.", "example": "product item-1 (add EVPL) corresponds to service item-1 (add EVPL service)"},
+    {"id": "delivered-construct", "label": "delivered construct", "synonyms": ["ordered thing"], "class": "seam", "definition": "The construct being delivered at the seam. The commercial PRODUCT ordered and the technical SERVICE that realises it denote the same delivered connectivity, seen commercially versus technically — NOT the product-vs-service distinction of a catalogue.", "example": "the ordered EVPL product is realised by the activated EVPL service"},
+    {"id": "technical-parameters", "label": "technical parameters", "synonyms": ["config", "characteristics"], "class": "seam", "definition": "The technical parameters of the delivered construct, however each side structures them: the MEF product configuration and the TMF service characteristics pin the same bandwidth, class of service and UNI values.", "example": "product config CIR 100M / CoS Gold is the same requirement as service characteristics bandwidth 100M / cos gold"},
+    {"id": "service-site", "label": "service site", "synonyms": ["place", "location", "demarcation"], "class": "seam", "definition": "The geographic site of delivery: the product's related place (the UNI location) and the service's place are the same physical demarcation point.", "example": "UNI at 350 E St is the same site as the service termination at 350 E St"}
+  ]
+}

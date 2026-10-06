@@ -1,0 +1,115 @@
+{
+  "id": "lex.evpn.v1",
+  "kind": "lexical",
+  "note": "Independent EVPN-side lexicon (E1).",
+  "entries": [
+    {
+      "id": "lb.evi",
+      "label": "EVPN Instance (EVI)",
+      "synonyms": [
+        "MAC-VRF",
+        "EVPN service instance"
+      ],
+      "class": "service",
+      "definition": "The EVPN instance realising one Ethernet VPN service (a MAC-VRF).",
+      "example": "EVI 5000 for the ACME service"
+    },
+    {
+      "id": "lb.acif",
+      "label": "Attachment Circuit (AC)",
+      "synonyms": [
+        "AC",
+        "access circuit"
+      ],
+      "class": "access",
+      "definition": "The circuit or interface by which a customer site attaches to a provider-edge router.",
+      "example": "the AC on PE1 for the ACME headquarters"
+    },
+    {
+      "id": "lb.vna",
+      "label": "VPN network access",
+      "synonyms": [
+        "network access point"
+      ],
+      "class": "endpoint",
+      "definition": "The service's access point at one attachment -- the per-AC network access of the VPN.",
+      "example": "the VPN network access at the headquarters site"
+    },
+    {
+      "id": "lb.bd",
+      "label": "bridge domain",
+      "synonyms": [
+        "VLAN",
+        "MAC-VRF bridge table"
+      ],
+      "class": "l2-domain",
+      "definition": "The layer-2 bridge domain (customer VLAN) over which the EVPN forwards; one broadcast domain.",
+      "example": "the bridge-domain for customer VLAN 200"
+    },
+    {
+      "id": "lb.policer",
+      "label": "ingress policer",
+      "synonyms": [
+        "rate limiter",
+        "ingress rate policy"
+      ],
+      "class": "rate",
+      "definition": "The ingress committed/excess rate enforced at the attachment.",
+      "example": "policer at CIR 200 Mbit/s, EIR 50 Mbit/s"
+    },
+    {
+      "id": "lb.tclass",
+      "label": "traffic class",
+      "synonyms": [
+        "forwarding class",
+        "TC"
+      ],
+      "class": "cos",
+      "definition": "The forwarding class applied to frames on the instance.",
+      "example": "the traffic class for the real-time queue"
+    },
+    {
+      "id": "lb.macl",
+      "label": "MAC learning",
+      "synonyms": [
+        "MAC-VRF learning",
+        "local MAC learning"
+      ],
+      "class": "l2-control",
+      "definition": "Learning local customer source-MAC addresses into the MAC-VRF forwarding table; distinct from EVPN MAC mobility.",
+      "example": "local MAC learning on PE1"
+    },
+    {
+      "id": "lb.mtu",
+      "label": "interface MTU",
+      "synonyms": [
+        "L2 MTU"
+      ],
+      "class": "framing",
+      "definition": "The maximum frame size carried on the interface end to end.",
+      "example": "a 9100-byte interface MTU"
+    },
+    {
+      "id": "lb.eseg",
+      "label": "Ethernet Segment (ES)",
+      "synonyms": [
+        "ESI",
+        "multihoming segment"
+      ],
+      "class": "multihoming",
+      "definition": "The set of links by which a multi-homed site attaches to more than one provider-edge router, identified by an ESI; a multi-homing construct, not a broadcast domain.",
+      "example": "the dual-homed site's ESI on PE2 and PE3"
+    },
+    {
+      "id": "lb.macmob",
+      "label": "MAC mobility",
+      "synonyms": [
+        "MAC-move",
+        "EVPN MAC mobility"
+      ],
+      "class": "l2-control",
+      "definition": "The EVPN mechanism handling a customer MAC that relocates between provider-edge routers, using a sequence number; distinct from local MAC learning.",
+      "example": "a sequence bump when a MAC moves from PE1 to PE2"
+    }
+  ]
+}

@@ -1,0 +1,181 @@
+{
+  "system": "Agent X — Beacon",
+  "dialect": "Beacon (bespoke RAN OSS)",
+  "modules": [
+    "beacon-radio",
+    "beacon-backhaul"
+  ],
+  "note": "Agent-produced lift: the gloss and example of each concept were written by gpt-5-mini from that side's schema surface alone (label, synonyms, kind, relations, and instances); the reference binding (ref) and every other field are carried from the source unchanged. This is the model_a side of case config_xdom_ran, trial 0. Compare concept-for-concept against the fixture at benchmark/cases/config_xdom_ran/model_a*.json.",
+  "concepts": [
+    {
+      "id": "x.backhaul",
+      "label": "backhaul-link",
+      "synonyms": [
+        "transport link",
+        "site uplink"
+      ],
+      "kind": "transport",
+      "gloss": "A transport link that terminates at a site gateway and carries aggregated RAN traffic from one or more radio cells toward the core or transport network (the site-level uplink between the cell site and the network).",
+      "example": "bh-441 (site-to-core): the site-to-core transport link that presents at csg-441 and serves radio cells 441-A and 441-B, carrying their user and control traffic to the core.",
+      "ref": "up-transport",
+      "relations": [
+        {
+          "rel": "presents-at",
+          "target": "x.sitegw"
+        },
+        {
+          "rel": "serves",
+          "target": "x.cell"
+        }
+      ],
+      "instances": [
+        "bh-441 (site-to-core)"
+      ]
+    },
+    {
+      "id": "x.sitegw",
+      "label": "site-gateway",
+      "synonyms": [
+        "cell-site gateway",
+        "CSG"
+      ],
+      "kind": "demarcation",
+      "gloss": "The site gateway or demarcation device at a cell site that terminates a backhaul link and provides the boundary/interface between the RAN site and the wider transport/network cloud.",
+      "example": "csg-441: the cell-site gateway at site 441 which the link bh-441 terminates on, exposing the site's RAN-facing interfaces to the transport domain.",
+      "ref": "transport-demarc",
+      "relations": [
+        {
+          "rel": "on-link",
+          "target": "x.backhaul"
+        }
+      ],
+      "instances": [
+        "csg-441"
+      ]
+    },
+    {
+      "id": "x.dscp",
+      "label": "backhaul-marking",
+      "synonyms": [
+        "transport marking",
+        "diffserv"
+      ],
+      "kind": "qos-marking",
+      "gloss": "The DiffServ-based QoS marking profile applied on a backhaul link that classifies packets into transport treatment classes (e.g., EF, AF41, default) for queuing and forwarding across the transport.",
+      "example": "On bh-441 the backhaul-marking 'EF / AF41 / default' maps real-time voice to EF, priority data to AF41 and everything else to the default PHB for that link.",
+      "ref": "transport-qos",
+      "relations": [
+        {
+          "rel": "on-link",
+          "target": "x.backhaul"
+        }
+      ],
+      "instances": [
+        "EF / AF41 / default"
+      ]
+    },
+    {
+      "id": "x.cap",
+      "label": "backhaul-capacity",
+      "synonyms": [
+        "transport capacity"
+      ],
+      "kind": "rate",
+      "gloss": "The provisioned or committed throughput (rate) allocated to a backhaul link, expressing the link's capacity or committed information rate for carrying RAN traffic.",
+      "example": "bh-441 has backhaul-capacity '8 Gbit/s committed', meaning the transport is provisioned to carry up to 8 Gbit/s of committed traffic for the site.",
+      "ref": "transport-capacity",
+      "relations": [
+        {
+          "rel": "of-link",
+          "target": "x.backhaul"
+        }
+      ],
+      "instances": [
+        "8 Gbit/s committed"
+      ]
+    },
+    {
+      "id": "x.mtu",
+      "label": "backhaul-mtu",
+      "synonyms": [
+        "transport mtu"
+      ],
+      "kind": "framing",
+      "gloss": "The maximum transmission unit configured on a backhaul transport link that determines the largest frame/payload size allowed on that link and thus affects framing and fragmentation between site and core.",
+      "example": "bh-441 configured with 'MTU 1600' allows jumbo frames up to 1600 bytes across the site-to-core link terminating at csg-441.",
+      "ref": "transport-mtu",
+      "relations": [
+        {
+          "rel": "of-link",
+          "target": "x.backhaul"
+        }
+      ],
+      "instances": [
+        "MTU 1600"
+      ]
+    },
+    {
+      "id": "x.cell",
+      "label": "radio-cell",
+      "synonyms": [
+        "cell",
+        "sector"
+      ],
+      "kind": "radio",
+      "gloss": "A radio coverage sector or logical cell at a site which is served by a backhaul link and within which radio sessions and UE attachments are established.",
+      "example": "cell 441-A: a radio sector at site 441 served by bh-441 that can host RRC sessions (for example rrc-session #55) and carry subscriber traffic over the backhaul.",
+      "ref": "radio-cell",
+      "relations": [
+        {
+          "rel": "served-by",
+          "target": "x.backhaul"
+        }
+      ],
+      "instances": [
+        "cell 441-A",
+        "cell 441-B"
+      ]
+    },
+    {
+      "id": "x.rrc",
+      "label": "rrc-session",
+      "synonyms": [
+        "session",
+        "radio connection"
+      ],
+      "kind": "radio-state",
+      "gloss": "An individual RRC (radio resource control) session representing a UE's connected radio-layer state and control context within a particular cell.",
+      "example": "rrc-session #55 (cell 441-A): an active RRC connection for a subscriber attached to cell 441-A, mapped to that cell and using the site's backhaul for user-plane traffic.",
+      "ref": "radio-session",
+      "relations": [
+        {
+          "rel": "in",
+          "target": "x.cell"
+        }
+      ],
+      "instances": [
+        "rrc-session #55 (cell 441-A)"
+      ]
+    },
+    {
+      "id": "x.vendor",
+      "label": "beacon-tag-7",
+      "synonyms": [
+        "proprietary attr 7"
+      ],
+      "kind": "opaque",
+      "gloss": "A vendor‑specific opaque attribute (Beacon proprietary tag 7) attached to a backhaul link used to carry implementation-specific metadata or flags that the general model does not interpret.",
+      "example": "beacon-tag-7=0x2 on bh-441: the site gateway csg-441 reports proprietary attribute 7 with value 0x2 for link bh-441, indicating a vendor-defined per-link flag or configuration state.",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "on-link",
+          "target": "x.backhaul"
+        }
+      ],
+      "instances": [
+        "beacon-tag-7=0x2 on bh-441"
+      ]
+    }
+  ]
+}

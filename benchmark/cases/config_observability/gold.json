@@ -1,0 +1,88 @@
+{
+  "case": "config_observability",
+  "operational_case": "observability (legacy fault vs IETF NMOP, no common model)",
+  "seed": "hand-authored, grounded in RFC 9940 and the NMOP anomaly-semantics / incident-yang drafts",
+  "note": "Act-1 schema gold. Correspondences include the one-to-many DECOMPOSITION of the overloaded legacy alarm into its NMOP constituents (alarm-State and fault). The headline false cognate is ONTOLOGICAL: a legacy alarm is not an NMOP anomaly \u2014 an alarm is a declared undesirable State, an anomaly is a deviation that may be benign. Two further pins: a fixed severity is not a dynamic concern score; a static probable-cause is not a correlation-derived cause.",
+  "correspondences": [
+    {
+      "a": "f.node",
+      "b": "g.node",
+      "ref": "node"
+    },
+    {
+      "a": "f.event",
+      "b": "g.event",
+      "ref": "event"
+    },
+    {
+      "a": "f.alarm",
+      "b": "g.alarm",
+      "ref": "alarm-state"
+    },
+    {
+      "a": "f.alarm",
+      "b": "g.fault",
+      "ref": "fault"
+    }
+  ],
+  "false_cognates": [
+    {
+      "a": "f.alarm",
+      "b": "g.anomaly",
+      "why": "the ONTOLOGICAL cognate: a legacy alarm is a declared undesirable STATE; an NMOP anomaly is a DEVIATION that may be benign. Same intuition ('something abnormal'), different kind of thing. Must not be corresponded."
+    },
+    {
+      "a": "f.severity",
+      "b": "g.concern",
+      "why": "a fixed severity label assigned at emission is not the dynamic, context-recomputed concern score of anomaly-semantics."
+    },
+    {
+      "a": "f.probable_cause",
+      "b": "g.cause",
+      "why": "a static X.733 probable-cause code is not a cause derived by correlating events."
+    }
+  ],
+  "residual": {
+    "a_only": [
+      {
+        "id": "f.clear",
+        "ref": null,
+        "closure": "legacy-native alarm-clear"
+      }
+    ],
+    "b_only": [
+      {
+        "id": "g.symptom",
+        "ref": null
+      },
+      {
+        "id": "g.problem",
+        "ref": null
+      },
+      {
+        "id": "g.incident",
+        "ref": null
+      },
+      {
+        "id": "g.confidence",
+        "ref": null
+      }
+    ]
+  },
+  "residual_by_placement": {
+    "both_cognitive": 1,
+    "one_inert": 3,
+    "both_inert": 5
+  },
+  "invariants": [
+    "ontology (state vs deviation)",
+    "severity-vs-concern",
+    "probable-cause-vs-cause",
+    "alarm-decomposition"
+  ],
+  "verification_by_placement": {
+    "both_cognitive": "worked anomaly run and read-back: correlate a live anomaly and confirm the decomposition and pins hold",
+    "one_inert": "worked read-back on the live side; reference pins on the inert side",
+    "both_inert": "external adjudication"
+  }
+}

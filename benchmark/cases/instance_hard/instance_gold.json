@@ -1,0 +1,159 @@
+{
+  "case": "instance_hard",
+  "operational_case": "configuration (instance level)",
+  "seed": "hand-authored populated OTN-over-optical A-box over the reconciled TAPI/TEAS types",
+  "note": "DERIVED from each individual's hidden _truth by derive_instance_gold.py; do not hand-edit.",
+  "correspondences": [
+    {
+      "a": "a.r1",
+      "b": "b.roadm1",
+      "truth": "e1"
+    },
+    {
+      "a": "a.omsx",
+      "b": "b.msx",
+      "truth": "e13"
+    },
+    {
+      "a": "a.omsy",
+      "b": "b.msy",
+      "truth": "e14"
+    },
+    {
+      "a": "a.r2",
+      "b": "b.nodeB",
+      "truth": "e2"
+    },
+    {
+      "a": "a.r3",
+      "b": "b.nodeC",
+      "truth": "e3"
+    },
+    {
+      "a": "a.r4",
+      "b": "b.roadm4",
+      "truth": "e4"
+    },
+    {
+      "a": "a.a1",
+      "b": "b.acc1",
+      "truth": "e5"
+    },
+    {
+      "a": "a.a2",
+      "b": "b.acc2",
+      "truth": "e6"
+    },
+    {
+      "a": "a.a3",
+      "b": "b.acc3",
+      "truth": "e7"
+    },
+    {
+      "a": "a.cs_odu2",
+      "b": "b.tunnel1",
+      "truth": "e8"
+    },
+    {
+      "a": "a.cs_odu0",
+      "b": "b.tunnel2",
+      "truth": "e9"
+    }
+  ],
+  "false_cognates": [
+    {
+      "a": "a.r1",
+      "b": "b.r1",
+      "why": "both locally named 'R1', but A's R1 is device e1 (its true partner is roadm-1); B's R1 is a different physical device (e12, a native gap)."
+    },
+    {
+      "a": "a.svc100",
+      "b": "b.svc100",
+      "why": "both locally named 'svc-100', but different services: A1-A2 ODU1 vs A3-A1 ODU0; a virtual provision refutes the merge on the endpoint and capacity invariants."
+    }
+  ],
+  "residual": {
+    "a_only": [
+      {
+        "id": "a.svc100",
+        "truth": "e10",
+        "reason": "native gap (A-only)"
+      }
+    ],
+    "b_only": [
+      {
+        "id": "b.svc100",
+        "truth": "e11",
+        "reason": "native gap (B-only)"
+      },
+      {
+        "id": "b.r1",
+        "truth": "e12",
+        "reason": "native gap (B-only)"
+      }
+    ]
+  },
+  "experiment_only": [
+    "e2",
+    "e3",
+    "e13",
+    "e14"
+  ],
+  "residual_by_placement": {
+    "both_cognitive": 3,
+    "one_inert": 3,
+    "both_inert": 7
+  },
+  "invariants": [
+    "endpoint-identity",
+    "connectivity",
+    "capacity",
+    "layer-relationships",
+    "switching-constraints",
+    "odu-multiplexing",
+    "protection-integrity"
+  ],
+  "invariant_signatures": {
+    "e8": {
+      "endpoint-identity": [
+        "A1",
+        "A3"
+      ],
+      "capacity": "ODU2",
+      "layer-relationships": "ODU2/OTU4",
+      "odu-multiplexing": "ODU2->OTU4",
+      "switching-constraints": "core-transit",
+      "protection-integrity": "1+1"
+    },
+    "e9": {
+      "endpoint-identity": [
+        "A2",
+        "A3"
+      ],
+      "capacity": "ODU0",
+      "layer-relationships": "ODU0/ODU2",
+      "odu-multiplexing": "ODU0->ODU2",
+      "switching-constraints": "core-transit",
+      "protection-integrity": "none"
+    },
+    "e10": {
+      "endpoint-identity": [
+        "A1",
+        "A2"
+      ],
+      "capacity": "ODU1"
+    },
+    "e11": {
+      "endpoint-identity": [
+        "A3",
+        "A1"
+      ],
+      "capacity": "ODU0"
+    }
+  },
+  "verification_by_placement": {
+    "both_cognitive": "interrogation and virtual provision-and-read-back on either side",
+    "one_inert": "interrogation/manipulation on the live side; invariant reference on the inert side",
+    "both_inert": "static evidence only; propose for external adjudication"
+  }
+}

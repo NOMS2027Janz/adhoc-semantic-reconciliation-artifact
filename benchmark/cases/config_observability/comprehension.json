@@ -1,0 +1,36 @@
+{
+  "model": "a",
+  "meaning_questions": [
+    {"id": "q_node", "concept_id": "f.node",
+     "question": "What does this concept denote, in terms a domain engineer would recognise?",
+     "answer_key": "A managed network element that the fault manager watches (the object alarms are raised against).",
+     "must_not_confuse_with": []},
+    {"id": "q_event", "concept_id": "f.event",
+     "question": "What does 'event' denote here?",
+     "answer_key": "A raw notification — a syslog message or SNMP trap — that something happened on a resource; not yet an alarm.",
+     "must_not_confuse_with": []},
+    {"id": "q_alarm", "concept_id": "f.alarm",
+     "question": "What does 'alarm' denote here?",
+     "answer_key": "An emitted alarm: an undesirable condition (a state) on a resource. It is the raised fault-management alarm, NOT a derived analytics anomaly.",
+     "must_not_confuse_with": ["g.anomaly"]},
+    {"id": "q_severity", "concept_id": "f.severity",
+     "question": "What does 'severity' denote here?",
+     "answer_key": "The fixed severity label assigned to an alarm at emission (critical, major, minor, ...). It is a static emission-time label, NOT a dynamically assessed concern/priority.",
+     "must_not_confuse_with": ["g.concern"]},
+    {"id": "q_pcause", "concept_id": "f.probable_cause",
+     "question": "What does 'probable-cause' denote here?",
+     "answer_key": "A static probable-cause code drawn from the X.733 dictionary, fixed at emission. It is NOT a derived/analysed root cause.",
+     "must_not_confuse_with": ["g.cause"]},
+    {"id": "q_clear", "concept_id": "f.clear",
+     "question": "What does 'clear' denote here?",
+     "answer_key": "A notification that a previously raised alarm condition has cleared (returned to normal).",
+     "must_not_confuse_with": []}
+  ],
+  "use_task": {
+    "goal": "You must detect, classify, and clear a fault condition on a network resource. Using ONLY this model, list the concepts directly relevant and say in one phrase how each is used.",
+    "relevant_ids": ["f.node", "f.event", "f.alarm", "f.severity", "f.probable_cause", "f.clear"],
+    "irrelevant_ids": [],
+    "answer_key": "f.node = the resource watched; f.event = the raw notification; f.alarm = the raised condition; f.severity = its emission-time severity; f.probable_cause = its static X.733 cause code; f.clear = the clearing notification."
+  },
+  "ambiguous_ids": ["f.alarm", "f.severity", "f.probable_cause"]
+}

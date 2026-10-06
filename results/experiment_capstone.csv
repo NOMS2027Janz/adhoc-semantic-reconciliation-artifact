@@ -1,0 +1,25 @@
+case,setting,condition,model,trial,precision,resolved_fraction,surviving_false_cognates,residual,experiments,turns,total_tokens,reasoning_tokens
+config_tapi_teas,1 · configuration (flagship),dialogue,gpt-5.6-sol,0,1.0,0.778,0,6,0,4,19277,1400
+config_tapi_teas,1 · configuration (flagship),experiment,gpt-5.6-sol,0,1.0,1.0,0,2,3,6,31898,1516
+config_tapi_teas,1 · configuration (flagship),reference,gpt-5.6-sol,0,1.0,1.0,0,2,0,4,19354,1160
+config_big_hard,1 · configuration (hard),dialogue,gpt-5.6-sol,0,1.0,0.833,0,11,0,4,27761,1978
+config_big_hard,1 · configuration (hard),experiment,gpt-5.6-sol,0,1.0,1.0,0,7,3,6,44698,2075
+config_big_hard,1 · configuration (hard),reference,gpt-5.6-sol,0,1.0,1.0,0,7,0,4,26478,1327
+config_cross_domain,3 · cross-domain,dialogue,gpt-5.6-sol,0,1.0,0.2,0,13,0,4,15891,714
+config_cross_domain,3 · cross-domain,experiment,gpt-5.6-sol,0,1.0,0.2,0,13,1,4,17611,1170
+config_cross_domain,3 · cross-domain,reference,gpt-5.6-sol,0,1.0,1.0,0,5,0,4,16456,597
+config_observability,4 · observability,dialogue,gpt-5.6-sol,0,1.0,0.25,0,15,0,6,26765,928
+config_observability,4 · observability,experiment,gpt-5.6-sol,0,1.0,0.75,0,11,1,4,17350,994
+config_observability,4 · observability,reference,gpt-5.6-sol,0,1.0,0.75,0,11,0,4,18041,703
+config_tapi_teas,1 · configuration (flagship),dialogue,gpt-5.6-sol,1,1.0,0.333,0,14,0,4,20802,1730
+config_tapi_teas,1 · configuration (flagship),experiment,gpt-5.6-sol,1,1.0,0.889,0,4,2,6,33798,1843
+config_tapi_teas,1 · configuration (flagship),reference,gpt-5.6-sol,1,1.0,1.0,0,2,0,4,20038,572
+config_big_hard,1 · configuration (hard),dialogue,gpt-5.6-sol,1,1.0,0.75,0,13,0,6,43249,3469
+config_big_hard,1 · configuration (hard),experiment,gpt-5.6-sol,1,1.0,1.0,0,7,2,6,41725,2202
+config_big_hard,1 · configuration (hard),reference,gpt-5.6-sol,1,1.0,1.0,0,7,0,4,29660,1197
+config_cross_domain,3 · cross-domain,dialogue,gpt-5.6-sol,1,1.0,0.2,0,13,0,4,16504,856
+config_cross_domain,3 · cross-domain,experiment,gpt-5.6-sol,1,1.0,0.2,0,13,1,4,17463,957
+config_cross_domain,3 · cross-domain,reference,gpt-5.6-sol,1,1.0,1.0,0,5,0,4,17006,636
+config_observability,4 · observability,dialogue,gpt-5.6-sol,1,1.0,0.25,0,15,0,4,16168,679
+config_observability,4 · observability,experiment,gpt-5.6-sol,1,1.0,0.75,0,11,2,6,28562,1788
+config_observability,4 · observability,reference,gpt-5.6-sol,1,1.0,0.5,0,13,0,6,30917,1983

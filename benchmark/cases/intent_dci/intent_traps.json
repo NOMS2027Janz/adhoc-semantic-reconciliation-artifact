@@ -1,0 +1,134 @@
+{
+  "case": "intent_dci",
+  "operational_case": "intent (declarative demand -> concrete realisation, by refinement)",
+  "seed": "hand-authored breadth case: data-centre-interconnect intents x a priced DCI catalogue",
+  "margin": 0.1,
+  "actual_attrs": {
+    "d1a": {
+      "bw_gbps": 100.0,
+      "latency_ms": 20,
+      "availability": 0.9999,
+      "protection": "none",
+      "cost": 200
+    },
+    "d1b": {
+      "bw_gbps": 100.0,
+      "latency_ms": 25,
+      "availability": 0.99999,
+      "protection": "1+1",
+      "cost": 320
+    },
+    "d2a": {
+      "bw_gbps": 40.0,
+      "latency_ms": 10,
+      "availability": 0.9999,
+      "protection": "none",
+      "cost": 120
+    },
+    "d2b": {
+      "bw_gbps": 40.0,
+      "latency_ms": 14,
+      "availability": 0.99999,
+      "protection": "1+1",
+      "cost": 190
+    },
+    "d2c": {
+      "bw_gbps": 40.0,
+      "latency_ms": 12,
+      "availability": 0.99999,
+      "protection": "1+1",
+      "cost": 230
+    },
+    "d3a": {
+      "bw_gbps": 10.0,
+      "latency_ms": 6,
+      "availability": 0.999,
+      "protection": "none",
+      "cost": 60
+    },
+    "d4a": {
+      "bw_gbps": 25.0,
+      "latency_ms": 30,
+      "availability": 0.999,
+      "protection": "none",
+      "cost": 90
+    },
+    "d4b": {
+      "bw_gbps": 25.0,
+      "latency_ms": 35,
+      "availability": 0.9994,
+      "protection": "1+1",
+      "cost": 150
+    }
+  },
+  "operational": {
+    "TD1/h0": {
+      "realisation": "d1a",
+      "reading": {
+        "bw_gbps": 100.0,
+        "latency_ms": 18,
+        "availability": 0.99995,
+        "protection": "none",
+        "cost": 200
+      }
+    },
+    "TD1/h1": {
+      "realisation": "d1a",
+      "reading": {
+        "bw_gbps": 100.0,
+        "latency_ms": 27,
+        "availability": 0.99995,
+        "protection": "none",
+        "cost": 200
+      }
+    },
+    "TD1/h2": {
+      "realisation": "d1b",
+      "reading": {
+        "bw_gbps": 100.0,
+        "latency_ms": 25,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 320
+      }
+    },
+    "TD1/h3": {
+      "realisation": "d1b",
+      "reading": {
+        "bw_gbps": 100.0,
+        "latency_ms": 25,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 320
+      }
+    },
+    "TD2/h0": {
+      "realisation": "d2b",
+      "reading": {
+        "bw_gbps": 40.0,
+        "latency_ms": 13,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 190
+      }
+    },
+    "TD2/h1": {
+      "realisation": "d2b",
+      "reading": {
+        "bw_gbps": 40.0,
+        "latency_ms": 15,
+        "availability": 0.99999,
+        "protection": "1+1",
+        "cost": 190
+      }
+    }
+  },
+  "experiment_only": [
+    "DI5",
+    "DI6"
+  ],
+  "traps_note": {
+    "nature_false_cognate": "an expectation 'latency <= X' vs a measured 'latency' metric must not be conflated",
+    "unit_scale": "bandwidth bounds in Gbit/s vs DCI link rates must be compared correctly"
+  }
+}

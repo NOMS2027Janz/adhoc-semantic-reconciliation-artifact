@@ -1,0 +1,9 @@
+{
+  "false_cognates": [
+    {
+      "a": "s.importrt",
+      "b": "v.imp_policy",
+      "why": "import-route-target vs import-policy: both carry 'import', but a route-target community vs a named routing-policy filter (a leafref). s.importrt's true partner is v.rt_imp; v.imp_policy's standard partner is a native gap."
+    }
+  ]
+}

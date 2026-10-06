@@ -1,0 +1,231 @@
+{
+  "system": "Agent G - NMOP agent",
+  "dialect": "IETF NMOP (RFC 9940 + anomaly-semantics / incident-yang)",
+  "modules": [
+    "rfc9940-anomaly",
+    "nmop-anomaly-semantics",
+    "nmop-incident"
+  ],
+  "note": "Lifted NMOP model, compute/server fault domain. The RFC 9940 ladder separates what the legacy alarm conflates: an anomaly is a DEVIATION that may be benign; a fault is a confirmed occurrence; an alarm is a declared undesirable state; each anomaly carries a dynamic concern and confidence. ref=null marks a native concept with no legacy category.",
+  "concepts": [
+    {
+      "id": "g.node",
+      "label": "resource",
+      "synonyms": [
+        "managed object",
+        "network element"
+      ],
+      "kind": "resource",
+      "gloss": "a managed element under observation",
+      "example": "server node-14; the app container on it",
+      "ref": "node",
+      "relations": [],
+      "instances": [
+        "node-14",
+        "ctr-app-node14"
+      ]
+    },
+    {
+      "id": "g.event",
+      "label": "event",
+      "synonyms": [
+        "notification"
+      ],
+      "kind": "event",
+      "gloss": "a raw event on a resource at a moment, before interpretation",
+      "example": "a threshold-crossing trap for CPU on node-14 at t0",
+      "ref": "event",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "trap-cpu-node14-t0"
+      ]
+    },
+    {
+      "id": "g.anomaly",
+      "label": "anomaly",
+      "synonyms": [
+        "deviation"
+      ],
+      "kind": "anomaly",
+      "gloss": "a deviation from expected behaviour that MAY be benign - not itself an undesirable state",
+      "example": "a rising CPU-saturation trend on node-14 that may be an expected batch job",
+      "ref": "anomaly",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "cpu-node14-rising"
+      ]
+    },
+    {
+      "id": "g.symptom",
+      "label": "symptom",
+      "synonyms": [
+        "manifestation"
+      ],
+      "kind": "symptom",
+      "gloss": "an observable manifestation of an underlying condition; a native NMOP notion",
+      "example": "elevated request latency on the app container (a manifestation)",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "of",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "symptom-1"
+      ]
+    },
+    {
+      "id": "g.fault",
+      "label": "fault",
+      "synonyms": [
+        "failure occurrence"
+      ],
+      "kind": "fault",
+      "gloss": "a confirmed fault occurrence - the thing that has actually gone wrong",
+      "example": "a failed cooling fan on node-14 (a confirmed fault)",
+      "ref": "fault",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "fault-1"
+      ]
+    },
+    {
+      "id": "g.alarm",
+      "label": "alarm",
+      "synonyms": [
+        "alarm state"
+      ],
+      "kind": "alarm",
+      "gloss": "a declared undesirable STATE requiring attention, distinct from the raw deviation",
+      "example": "a CRITICAL 'over-temperature' alarm on node-14",
+      "ref": "alarm-state",
+      "relations": [
+        {
+          "rel": "on",
+          "target": "g.node"
+        }
+      ],
+      "instances": [
+        "alarm-1"
+      ]
+    },
+    {
+      "id": "g.problem",
+      "label": "problem",
+      "synonyms": [
+        "diagnosis"
+      ],
+      "kind": "problem",
+      "gloss": "a diagnosed problem behind one or more faults; a native NMOP notion",
+      "example": "node-14 is thermally throttling under load (a diagnosed problem)",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "explains",
+          "target": "g.fault"
+        }
+      ],
+      "instances": [
+        "problem-1"
+      ]
+    },
+    {
+      "id": "g.cause",
+      "label": "cause",
+      "synonyms": [
+        "root cause"
+      ],
+      "kind": "cause",
+      "gloss": "a cause derived by CORRELATING events and anomalies, not a static code",
+      "example": "a failed fan, derived by correlating the temperature and fan-speed readings",
+      "ref": "cause",
+      "relations": [
+        {
+          "rel": "of",
+          "target": "g.problem"
+        }
+      ],
+      "instances": [
+        "cause-1"
+      ]
+    },
+    {
+      "id": "g.incident",
+      "label": "incident",
+      "synonyms": [
+        "grouping"
+      ],
+      "kind": "incident",
+      "gloss": "an incident grouping related anomalies, faults and alarms; a native NMOP notion",
+      "example": "the node-14 thermal incident grouping the temperature and CPU anomalies",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "groups",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "incident-1"
+      ]
+    },
+    {
+      "id": "g.concern",
+      "label": "concern-score",
+      "synonyms": [
+        "concern"
+      ],
+      "kind": "concern",
+      "gloss": "a dynamic concern score annotating an anomaly, recomputed from context - not a fixed severity",
+      "example": "a concern score of 0.9 for the saturation outside the batch window",
+      "ref": "concern",
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "0.8",
+        "0.9"
+      ]
+    },
+    {
+      "id": "g.confidence",
+      "label": "confidence-score",
+      "synonyms": [
+        "confidence"
+      ],
+      "kind": "confidence",
+      "gloss": "a confidence score on an anomaly's assessment; a native NMOP annotation",
+      "example": "0.7 confidence that the saturation is user-affecting",
+      "ref": null,
+      "relations": [
+        {
+          "rel": "annotates",
+          "target": "g.anomaly"
+        }
+      ],
+      "instances": [
+        "0.6",
+        "0.7"
+      ]
+    }
+  ]
+}

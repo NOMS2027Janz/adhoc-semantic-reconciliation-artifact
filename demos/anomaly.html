@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Anomaly Semantics Reconciliation — legacy fault ↔ IETF NMOP (cognitive agent-to-agent)</title>
+<style>
+  :root{
+    --bg:#0c1018; --panel:#121826; --panel2:#0f1420; --edge:#243049;
+    --ink:#e7edf7; --dim:#8da0bf; --faint:#5d6e8c;
+    --f:#e0a458; --f2:#3a2a12;          /* Agent F — legacy fault */
+    --g:#7aa2ff; --g2:#172447;          /* Agent G — NMOP */
+    --bus:#c9a227; --lex:#b98bd6; --lex2:#2a1c3a; --inc:#ff6fae; --inc2:#3a1428;
+    --think:#9aa7c0; --action:#ffd166; --result:#5fd38d; --warn:#ff8b6b; --plan:#b98bd6;
+    --gold:#ffd166;
+    --crit:#ff5b5b; --major:#ff8b6b; --minor:#ffd166; --warning:#9aa7c0; --clear:#5fd38d;
+    --heavy:#ff8b6b; --med:#ffd166; --cheap:#36c2a8; --mech:#8da0bf;
+    --mono:'SFMono-Regular',Consolas,'Liberation Mono',Menlo,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.45}
+  h1{font-size:17px;margin:0}
+  .sub{color:var(--dim);font-size:12.5px;max-width:1180px}
+  .toolbar{position:sticky;top:0;z-index:100;background:#0c1018;border-bottom:1px solid var(--edge);padding:10px 20px 11px;box-shadow:0 6px 16px rgba(0,0,0,.45)}
+  .tbar-title{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .author{color:var(--bus);font-size:13px;font-weight:600;white-space:nowrap}
+  .author .lbl{color:var(--faint);font-weight:400;font-size:11px;margin-right:5px;text-transform:uppercase;letter-spacing:.5px}
+  .wrap{padding:14px 16px;max-width:1520px;margin:0 auto}
+  .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:10px}
+  button{background:#1b2540;color:var(--ink);border:1px solid var(--edge);border-radius:7px;padding:7px 13px;font-size:13px;cursor:pointer;font-family:var(--sans)}
+  button:hover{background:#243151}
+  button.primary{background:var(--bus);color:#1b1500;border-color:#e2bd3b;font-weight:600}
+  button:disabled{opacity:.4;cursor:default}
+  .speed{color:var(--dim);font-size:12px;margin-left:6px}
+  select{background:#1b2540;color:var(--ink);border:1px solid var(--edge);border-radius:6px;padding:5px 8px}
+  .modewrap{display:inline-flex;align-items:center;gap:8px;margin-left:14px;padding:4px 10px;border:1px solid var(--edge);border-radius:8px;background:#0f1626}
+  .modewrap .ml{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.5px}
+  .toggle-sw{position:relative;width:46px;height:22px;border-radius:12px;background:#33261c;border:1px solid #5a4a2a;cursor:pointer;transition:.2s}
+  .toggle-sw.on{background:var(--lex2);border-color:#5a3d78}
+  .toggle-sw .knob{position:absolute;top:1px;left:1px;width:18px;height:18px;border-radius:50%;background:var(--warn);transition:.2s}
+  .toggle-sw.on .knob{left:25px;background:var(--lex)}
+  .modeval{font-size:12px;font-weight:700;min-width:34px}
+  .modeval.on{color:var(--lex)} .modeval.off{color:var(--warn)}
+
+  .phases{display:flex;gap:5px;flex-wrap:wrap;margin-top:12px}
+  .phase{font-size:11px;padding:4px 9px;border-radius:20px;border:1px solid var(--edge);color:var(--faint);background:#0f1626;white-space:nowrap}
+  .phase.active{color:#1b1500;background:var(--bus);border-color:#e2bd3b;font-weight:600}
+  .phase.done{color:var(--result);border-color:#27543c}
+  .phase.skip{opacity:.4;text-decoration:line-through}
+  .actlab{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);align-self:center;margin:0 2px}
+
+  header{padding:10px 20px;border-bottom:1px solid var(--edge);background:linear-gradient(180deg,#10182a,#0c1018)}
+
+  .stagenote{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(90deg,#16213c,#0f1626);border:1px solid var(--edge);border-left:3px solid var(--bus);border-radius:8px;padding:11px 15px;margin-top:13px}
+  .stagenote .lab{color:var(--bus);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;padding-top:2px;min-width:150px}
+  .stagenote .txt{font-size:12.8px;line-height:1.5;color:#d4deef}
+  .stagenote .txt b{color:#fff}
+  .instr{display:grid;grid-template-columns:200px 1fr 1fr;gap:10px;margin-top:10px}
+  .icard{background:var(--panel);border:1px solid var(--edge);border-radius:8px;padding:9px 12px}
+  .icard .h{font-size:9.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin-bottom:4px}
+  .icard .v{font-size:12px;color:#d4deef;line-height:1.4}
+  .cogrow{display:flex;align-items:center;gap:9px}
+  .cogbadge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;padding:2px 8px;border-radius:10px}
+  .cog-heavy{background:#3a221c;color:var(--heavy)} .cog-med{background:#3a2f12;color:var(--med)}
+  .cog-cheap{background:#0e3a33;color:var(--cheap)} .cog-mech{background:#232b38;color:var(--mech)}
+  .meter{display:inline-flex;gap:3px}
+  .meter i{width:7px;height:13px;border-radius:2px;background:#243049;display:inline-block}
+  .meter i.on.h{background:var(--heavy)} .meter i.on.m{background:var(--med)} .meter i.on.c{background:var(--cheap)}
+  .measure{color:var(--result);font-family:var(--mono);font-size:11.5px}
+
+  .agents{display:grid;grid-template-columns:1fr 0.92fr 1fr;gap:12px;margin-top:14px}
+  .col{background:var(--panel);border:1px solid var(--edge);border-radius:10px;display:flex;flex-direction:column;min-height:300px}
+  .col.f{border-top:3px solid var(--f)}
+  .col.g{border-top:3px solid var(--g)}
+  .col.bus{border-top:3px solid var(--bus)}
+  .col h2{font-size:13px;margin:0;padding:10px 12px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center}
+  .tag{font-size:10.5px;font-weight:400;color:var(--dim)}
+  .log{flex:1;overflow-y:auto;padding:8px 10px;font-family:var(--mono);font-size:11.8px;max-height:330px}
+  .line{margin:0 0 6px;padding-left:15px;position:relative;white-space:pre-wrap;word-break:break-word;animation:fade .35s ease}
+  .line::before{position:absolute;left:0;top:0}
+  .line.think{color:var(--think)} .line.think::before{content:'·';color:var(--faint)}
+  .line.action{color:var(--action)} .line.action::before{content:'▸'}
+  .line.result{color:var(--result)} .line.result::before{content:'✓'}
+  .line.warn{color:var(--warn)} .line.warn::before{content:'!'}
+  .line.plan{color:var(--plan)} .line.plan::before{content:'✎'}
+  .line.replan{color:var(--plan)} .line.replan::before{content:'↻'}
+  @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1}}
+
+  .msg{border:1px solid var(--edge);border-radius:8px;margin:0 0 9px;overflow:hidden;animation:fade .35s ease;background:var(--panel2)}
+  .msg .mh{display:flex;justify-content:space-between;align-items:center;padding:6px 9px;font-size:11px;border-bottom:1px solid var(--edge)}
+  .msg.fromF .mh{background:linear-gradient(90deg,var(--f2),transparent)}
+  .msg.fromG .mh{background:linear-gradient(270deg,var(--g2),transparent)}
+  .msg.fromV .mh{background:linear-gradient(90deg,#2a2140,transparent)}
+  .dir{font-weight:700;letter-spacing:.3px}
+  .dir.f{color:var(--f)} .dir.g{color:var(--g)} .dir.v{color:var(--lex)}
+  .method{color:var(--bus);font-family:var(--mono);font-size:10.5px}
+  .msg .summary{padding:6px 9px;font-size:11.5px;color:var(--ink)}
+  .msg pre{margin:0;padding:8px 9px;background:#0a0e16;border-top:1px solid var(--edge);font-family:var(--mono);font-size:10.3px;color:#bcd0ee;overflow-x:auto;max-height:200px;overflow-y:auto}
+  .msg .toggle{cursor:pointer;color:var(--faint);font-size:10px;padding:4px 9px;user-select:none}
+  .msg .toggle:hover{color:var(--dim)}
+
+  .tabs{margin-top:16px;border:1px solid var(--edge);border-radius:10px;background:var(--panel);overflow:hidden}
+  .tabbar{display:flex;border-bottom:1px solid var(--edge);flex-wrap:wrap}
+  .tabbtn{padding:10px 14px;font-size:12.5px;cursor:pointer;color:var(--dim);border-right:1px solid var(--edge);background:var(--panel2);position:relative}
+  .tabbtn.active{color:var(--ink);background:var(--panel);font-weight:600}
+  .tabbtn .badge{display:inline-block;min-width:16px;text-align:center;background:var(--bus);color:#1b1500;border-radius:9px;font-size:10px;padding:0 5px;margin-left:6px;font-weight:700}
+  .tabpane{display:none;padding:14px 16px;max-height:600px;overflow-y:auto}
+  .tabpane.active{display:block}
+
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--edge);vertical-align:top}
+  th{color:var(--dim);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.4px}
+  .pill{font-size:10px;padding:2px 7px;border-radius:10px;font-weight:600;white-space:nowrap}
+  .pill.decomp{background:#2a1c3a;color:#c9a3e6}
+  .pill.sev{background:#3a2f12;color:#ffd166}
+  .pill.cause{background:#3a1a2a;color:#ff8fb0}
+  .pill.life{background:#13314a;color:#7cc6ff}
+  .conf{font-family:var(--mono);font-size:11px}
+  .conf.hi{color:var(--result)} .conf.med{color:var(--action)} .conf.lo{color:var(--warn)}
+  .muted{color:var(--faint)}
+  .empty{color:var(--faint);font-style:italic;padding:20px;text-align:center}
+  .note{font-size:12px;color:var(--dim);margin-bottom:6px}
+  .okmark{font-family:var(--mono);font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:8px;background:#0e2a1c;color:var(--result)}
+
+  /* severity chips */
+  .sevchip{font-family:var(--mono);font-size:10px;font-weight:700;padding:1px 7px;border-radius:8px;text-transform:uppercase}
+  .sevchip.critical{background:#3a1414;color:var(--crit)} .sevchip.major{background:#3a2016;color:var(--major)}
+  .sevchip.minor{background:#3a2f12;color:var(--minor)} .sevchip.warning{background:#232b38;color:var(--warning)}
+  .sevchip.cleared{background:#0e2a1c;color:var(--clear)}
+  .verdict-chip{font-family:var(--mono);font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px}
+  .vd-act{background:#3a1414;color:var(--crit)} .vd-watch{background:#3a2f12;color:var(--minor)}
+  .vd-benign{background:#0e2a1c;color:var(--clear)} .vd-storm{background:#3a1414;color:var(--crit)}
+
+  /* reference ladder cards */
+  .lexgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:8px}
+  .lexcard{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--faint);border-radius:7px;padding:8px 10px;font-size:11px;opacity:.45;transition:opacity .3s,border-color .3s}
+  .lexcard.agreed{opacity:1;border-left-color:var(--lex)}
+  .lexcard.gap.agreed{border-left-color:var(--f)}
+  .lexcard .lid{font-family:var(--mono);font-size:10.5px;color:var(--lex);font-weight:700}
+  .lexcard .lstep{font-size:8.5px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;float:right;color:var(--faint)}
+  .lexcard.agreed .lstep{color:var(--result)}
+  .lexcard .lnm{font-weight:700;color:var(--ink)}
+  .lexcard .lcls{color:var(--faint);font-style:italic;font-size:10px}
+  .lexcard .lrow{margin-top:3px;color:var(--dim);font-size:10.5px}
+  .lexcard .lk{color:var(--faint);text-transform:uppercase;letter-spacing:.3px;font-size:9px}
+  .bindF{color:var(--f)} .bindG{color:var(--g)} .bindV{color:var(--lex)}
+  .lexcard .gapmark{color:var(--f);font-style:italic}
+
+  .apass{margin-bottom:16px}
+  .apass h3{font-size:12.5px;margin:0 0 8px;color:var(--ink)}
+  .arow{display:grid;grid-template-columns:1fr 220px 1fr;gap:10px;align-items:center;padding:7px 0;border-bottom:1px solid var(--edge)}
+  .aterm{font-family:var(--mono);font-size:11.5px}
+  .aterm.f{color:var(--f);text-align:right} .aterm.g{color:var(--g)}
+  .aterm.struck{text-decoration:line-through;color:var(--faint)}
+  .averd{text-align:center;font-size:10.5px;border-radius:8px;padding:4px 6px;border:1px dashed var(--faint);color:var(--dim)}
+  .averd.cand{border-style:dashed;border-color:#5a4a2a;color:var(--action);background:#221a0c}
+  .averd.hi{border-style:solid;border-color:#27543c;color:var(--result);background:#0e2a1c}
+  .averd.med{border-style:solid;border-color:#4a3f1a;color:var(--action);background:#221c0c}
+  .averd.rej{border-style:solid;border-color:#5a2626;color:var(--warn);background:#2a1414}
+  .averd.gap{border-style:solid;border-color:#5a2640;color:#ff8fb0;background:#2a1420}
+  .averd .vt{font-weight:700;display:block}
+  .averd .vs{font-size:9px;opacity:.8}
+
+  .kgcol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .kgcol h3{font-size:13px;margin:0 0 8px}
+  .kgcol h3.f{color:var(--f)} .kgcol h3.g{color:var(--g)}
+  .kgbox{font-family:var(--mono);font-size:11px;color:#c2d2ee;white-space:pre-wrap;background:#0a0e16;border:1px solid var(--edge);border-radius:8px;padding:11px;min-height:60px}
+  .corefnote{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--lex);border-radius:8px;padding:9px 12px;font-size:11.5px;color:#d4deef;margin-bottom:10px}
+  .pinnote{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--inc);border-radius:8px;padding:9px 12px;font-size:11.5px;color:#d4deef;margin:6px 0 10px}
+
+  .trans-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .trans-grid h3{font-size:13px;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--edge)}
+  .trans-grid h3.f{color:var(--f)} .trans-grid h3.g{color:var(--g)}
+  pre.code{background:#0a0e16;border:1px solid var(--edge);border-radius:8px;padding:11px;font-family:var(--mono);font-size:11px;color:#c7d6f0;overflow-x:auto;white-space:pre}
+
+  /* anomaly / incident */
+  .symcard{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--g);border-radius:9px;padding:10px 12px;margin-bottom:10px}
+  .symcard h4{margin:0 0 5px;font-size:12.5px;color:var(--g)}
+  .symcard .r{font-family:var(--mono);font-size:11px;color:#c2d2ee;margin:2px 0}
+  .symcard .r .k{color:var(--faint)}
+  .inccard{background:var(--inc2);border:1px solid #5a2640;border-left:3px solid var(--inc);border-radius:9px;padding:11px 13px;margin-top:10px}
+  .inccard h4{margin:0 0 4px;font-size:13.5px;color:var(--inc)}
+  .inccard .r{font-family:var(--mono);font-size:11px;color:#f0cfe0;margin:2px 0}
+  .inccard .r .k{color:#b07d94}
+  .stormcard{background:#2a1414;border:1px solid #5a2626;border-left:3px solid var(--crit);border-radius:9px;padding:10px 12px;margin-top:10px}
+  .stormcard h4{margin:0 0 6px;font-size:12.5px;color:var(--crit)}
+  .stormrow{display:flex;justify-content:space-between;gap:10px;font-family:var(--mono);font-size:10.8px;padding:3px 0;border-bottom:1px solid #3a1a1a}
+
+  /* pragmatics matrix */
+  .pragrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+  .prag{background:#0f1626;border:1px solid var(--edge);border-radius:7px;padding:7px 10px}
+  .prag .pl{font-size:9.5px;text-transform:uppercase;letter-spacing:.4px;font-weight:700;margin-bottom:3px}
+  .prag .pv{font-size:11px;color:#d4deef;line-height:1.4}
+  .prag.use{border-left:3px solid var(--gold)} .prag.use .pl{color:var(--gold)}
+  .prag.sig{border-left:3px solid var(--major)} .prag.sig .pl{color:var(--major)}
+  .prag.causal{border-left:3px solid var(--inc)} .prag.causal .pl{color:var(--inc)}
+  .prag.state{border-left:3px solid var(--g)} .prag.state .pl{color:var(--g)}
+  .prag.realm{border-left:3px solid var(--f)} .prag.realm .pl{color:var(--f)}
+  .prag.context{border-left:3px solid var(--lex)} .prag.context .pl{color:var(--lex)}
+  .prag.prov{border-left:3px solid var(--warn)} .prag.prov .pl{color:var(--warn)}
+  .ctxnote{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--lex);border-radius:8px;padding:10px 12px;font-size:11.5px;color:#d4deef;margin-bottom:10px}
+
+  /* ledger */
+  .ledger{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  .ledger .lc{border:1px solid var(--edge);border-radius:9px;overflow:hidden}
+  .ledger .lc.off{border-top:3px solid var(--warn)} .ledger .lc.on{border-top:3px solid var(--lex)}
+  .ledger .lc.active{box-shadow:0 0 0 2px rgba(185,139,214,.4)}
+  .ledger .lch{padding:8px 12px;font-weight:700;font-size:12.5px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center}
+  .ledger .lc.off .lch{background:#2a1414;color:var(--warn)} .ledger .lc.on .lch{background:var(--lex2);color:var(--lex)}
+  .ledger .lr{display:flex;justify-content:space-between;padding:6px 12px;border-bottom:1px solid var(--edge);font-size:11.5px}
+  .ledger .lr .k{color:var(--dim)} .ledger .lr .v{font-family:var(--mono);font-weight:700}
+  .ledger .lr .v.good{color:var(--result)} .ledger .lr .v.bad{color:var(--warn)}
+  .savings{margin-top:12px;background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--result);border-radius:8px;padding:10px 13px;font-size:12px;color:#d4deef}
+
+  /* semantic model */
+  .semhead{font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--faint);margin:14px 0 7px}
+  .semchips{display:flex;gap:6px;flex-wrap:wrap}
+  .semchip{font-family:var(--mono);font-size:10.5px;color:var(--lex);background:var(--lex2);border:1px solid #5a3d78;border-radius:20px;padding:3px 9px}
+  .semchip.gap{color:var(--f);background:var(--f2);border-color:#6a4a1a}
+  .semcard{background:var(--panel2);border:1px solid var(--edge);border-left:3px solid var(--result);border-radius:9px;padding:11px 13px;margin-top:8px}
+  .semcard h4{margin:0 0 3px;font-size:13px;color:var(--result)}
+  .semcard .rel{font-family:var(--mono);font-size:11px;color:#c2d2ee;margin:2px 0}
+  .semcard .rel .k{color:var(--faint)}
+  .semaff{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+  .semaff button:hover{background:#243151;border-color:var(--lex)}
+  #semOut{margin-top:10px;background:#0a0e16;border:1px solid var(--edge);border-radius:8px;padding:11px;font-family:var(--mono);font-size:11px;color:#bcd0ee;white-space:pre-wrap;min-height:30px;display:none}
+  #semOut.show{display:block}
+  #semOut .qa{color:var(--result)}
+  .mtab td.cog span{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;padding:1px 6px;border-radius:8px}
+
+  .topo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .topo .col{min-height:0}
+  .topo svg{width:100%;height:auto;display:block;background:radial-gradient(circle at 50% 35%,#0f1726,#0b0f18)}
+  .legend{display:flex;gap:14px;flex-wrap:wrap;padding:8px 12px;font-size:11px;color:var(--dim);border-top:1px solid var(--edge)}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .sw{width:14px;height:4px;border-radius:2px;display:inline-block}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .foot{color:var(--faint);font-size:11px;margin-top:18px;border-top:1px solid var(--edge);padding-top:12px}
+  .flash{animation:flashglow 1.6s ease}
+  @keyframes flashglow{0%{box-shadow:0 0 0 0 rgba(201,162,39,0)}15%{box-shadow:0 0 0 3px rgba(201,162,39,.75)}55%{box-shadow:0 0 0 3px rgba(201,162,39,.55)}100%{box-shadow:0 0 0 0 rgba(201,162,39,0)}}
+  .col.flashcol{animation:flashcol 1.6s ease}
+  @keyframes flashcol{0%{box-shadow:0 0 0 0 rgba(201,162,39,0)}15%{box-shadow:0 0 0 3px rgba(201,162,39,.8)}100%{box-shadow:0 0 0 0 rgba(201,162,39,0)}}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+  .about{background:var(--panel);border:1px solid var(--edge);border-radius:10px;margin-top:14px;overflow:hidden}
+  .about>h2{font-size:14px;margin:0;padding:11px 14px;border-bottom:1px solid var(--edge);display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,#13203a,transparent)}
+  .about .body{padding:14px 18px;max-width:1200px}
+  .about .body.collapsed{display:none}
+  .about .body p{margin:0 0 10px;font-size:12.5px;line-height:1.55;color:#d4deef}
+  .about .body code{font-family:var(--mono);font-size:11px;color:#bcd0ee;background:#0a0e16;border:1px solid var(--edge);padding:1px 4px;border-radius:3px}
+  .about-toggle{background:#1b2540;color:var(--dim);border:1px solid var(--edge);border-radius:6px;padding:4px 10px;font-size:11.5px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="tbar-title">
+    <h1>Anomaly Semantics Reconciliation — cognitive agent-to-agent live demo</h1>
+    <span class="author"><span class="lbl">demo by</span>Christopher Janz</span>
+  </div>
+  <div class="controls">
+    <button id="play" class="primary">▶ Play</button>
+    <button id="step">Step ▸</button>
+    <button id="reset">⟲ Reset</button>
+    <span class="speed">speed</span>
+    <select id="speed">
+      <option value="1500">slow</option>
+      <option value="850" selected>normal</option>
+      <option value="350">fast</option>
+    </select>
+    <span class="modewrap">
+      <span class="ml">Semantics + pragmatics</span>
+      <span class="toggle-sw on" id="modeSw"><span class="knob"></span></span>
+      <span class="modeval on" id="modeVal">ON</span>
+    </span>
+    <span class="speed" id="counter" style="margin-left:14px"></span>
+  </div>
+  <div class="phases" id="phases"></div>
+</div>
+
+<header>
+  <div class="sub">
+    Two observability systems on one network must share <b>anomaly understanding</b> with no common model.
+    <b style="color:var(--f)">Agent&nbsp;F</b> is a <b>legacy fault manager</b> — RFC&nbsp;8632 alarms, syslog, SNMP traps, a vendor X.733 probable-cause dictionary.
+    <b style="color:var(--g)">Agent&nbsp;G</b> is an <b>IETF NMOP</b> agent — the RFC&nbsp;9940 term ladder, anomaly semantics (concern/confidence, action·reason·trigger), and incident correlation.
+    <b>Act&nbsp;1</b> reconciles their models; <b>Act&nbsp;2</b> runs a live anomaly through and lets <b>pragmatics decide</b>.
+    Toggle <b>semantics + pragmatics ON/OFF</b> to compare with the legacy pipeline.
+  </div>
+</header>
+
+<div class="wrap">
+
+  <div class="about">
+    <h2><span>About this demo — what you're looking at</span>
+        <button class="about-toggle" id="aboutToggle">Hide ▲</button></h2>
+    <div class="body" id="aboutBody">
+      <p>The problem moves from <i>configuration</i> to <i>observability</i>. <b style="color:var(--f)">Agent F</b> is the incumbent world: an alarm is a catch-all — event, state, a fixed severity (critical/major/minor/warning) and a probable-cause code, all bundled and hard-coded at emission (RFC 8632 / syslog / SNMP / X.733). <b style="color:var(--g)">Agent G</b> speaks the new <b>IETF NMOP</b> vocabulary, where <b>RFC 9940</b> separates what legacy collapses — <code>event → anomaly → symptom → fault → alarm(a State) → problem(a State) → cause → incident</code> — and Thomas Graf's <b>anomaly-semantics</b> draft annotates each anomaly with <b>concern</b> and <b>confidence</b> scores, action·reason·trigger, a lifecycle stage, and <b>context</b> (network plane, season, maintenance window).</p>
+      <p><b>Act 1 — reconcile the models.</b> The two agents lift their vocabularies, anchor a shared reference to the RFC 9940 ladder, and <b>pin</b> the dangerous ambiguities: a fixed <b>severity</b> label is not a dynamic <b>concern</b> score; a static <b>probable-cause</b> code is not a <b>cause</b> derived by correlation; and the overloaded legacy <b>alarm</b> must be <b>decomposed</b> into the several NMOP concepts it conflates. The headline false cognate: a legacy <b>alarm</b> is not an <b>anomaly</b> — an alarm is a declared undesirable State; an anomaly is a deviation that may be perfectly benign.</p>
+      <p><b>Act 2 — the anomaly is the trigger, and pragmatics decide.</b> A rising pre-FEC BER anomaly appears on wavelength λ1. Whether it <i>means</i> anything depends not on the data but on its <b>pragmatics</b>: its <b>significance and confidence</b> (act or watch), its <b>context</b> (a planned maintenance window makes the same deviation benign), and its <b>causal role</b> (a symptom, correlated with an IP-layer symptom into one <b>incident</b> with a probable cause — not two uncorrelated pages). Flip the toggle <b>OFF</b> and you get the legacy result: an <b>alarm storm</b>, a false page during maintenance, and no incident. This is the case Thomas Graf and Brad both flagged — in anomalies, <b>pragmatics carry the meaning.</b></p>
+    </div>
+  </div>
+
+  <div class="stagenote">
+    <span class="lab" id="stageLab">Stage</span>
+    <span class="txt" id="stageTxt">Press <b>▶ Play</b> to begin. Act 1 reconciles the two observability models; Act 2 runs a live anomaly through and lets the pragmatics — significance, context, causal role — decide what it means.</span>
+  </div>
+
+  <div class="instr">
+    <div class="icard"><div class="h">Cognition load</div>
+      <div class="cogrow"><span class="cogbadge cog-mech" id="cogBadge">—</span>
+        <span class="meter" id="cogMeter"><i></i><i></i><i></i></span></div></div>
+    <div class="icard"><div class="h">Gap closed by</div><div class="v" id="mechTxt">—</div></div>
+    <div class="icard"><div class="h">Verified by · measure</div><div class="v" id="verifyTxt">—</div>
+      <div class="measure" id="measureTxt" style="margin-top:4px"></div></div>
+  </div>
+
+  <div class="agents" id="agentsRow">
+    <div class="col f">
+      <h2><span>🟠 Agent&nbsp;F — legacy fault manager</span><span class="tag">RFC 8632 · syslog · SNMP · X.733</span></h2>
+      <div class="log" id="logF"></div>
+    </div>
+    <div class="col bus">
+      <h2><span>🟡 A2A message bus</span><span class="tag">TMF Agentic / JSON-RPC</span></h2>
+      <div class="log" id="bus"></div>
+    </div>
+    <div class="col g">
+      <h2><span>🔵 Agent&nbsp;G — IETF NMOP agent</span><span class="tag">RFC 9940 · anomaly-semantics · incident-yang</span></h2>
+      <div class="log" id="logG"></div>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabsBox">
+    <div class="tabbar" id="tabbar">
+      <div class="tabbtn active" data-tab="ref">Reference · RFC 9940 <span class="badge" id="refBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="align">Alignment <span class="badge" id="alignBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="kg">Knowledge graphs &amp; instances</div>
+      <div class="tabbtn" data-tab="pin">Pin semantics <span class="badge" id="pinBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="anom">Anomaly → incident <span class="badge" id="anomBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="prag">Pragmatics · context <span class="badge" id="pragBadge" style="display:none">key</span></div>
+      <div class="tabbtn" data-tab="tr">Exchange mapping <span class="badge" id="trBadge" style="display:none">!</span></div>
+      <div class="tabbtn" data-tab="meas">Measures &amp; cognition <span class="badge" id="measBadge" style="display:none">0</span></div>
+      <div class="tabbtn" data-tab="ledger">Work ledger · storm vs incident</div>
+      <div class="tabbtn" data-tab="semodel">Semantic model <span class="badge" id="semBadge" style="display:none">shelf</span></div>
+    </div>
+
+    <div class="tabpane active" id="pane-ref">
+      <div class="note">A shared reference for observability, <b>anchored to the RFC 9940 term ladder</b> — the standard that separates what legacy conflates. Each category is agreed by a canonical example. Amber entries have <b>no first-class legacy equivalent</b> (the legacy alarm swallows them). <span id="refModeNote"></span></div>
+      <div class="lexgrid" id="lexGrid"></div>
+    </div>
+
+    <div class="tabpane" id="pane-align">
+      <div class="note">Two passes. <b>Pass 1 — label:</b> candidates by name. <b>Pass 2 — gloss + example:</b> the RFC 9940 definitions decide. The dangerous cognate: a legacy <b>alarm</b> label-matches an <b>anomaly</b>, but an alarm is a declared undesirable <i>State</i> and an anomaly is a <i>deviation</i> that may be benign.</div>
+      <div id="alignBody"><div class="empty">No alignment yet — press Play.</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-kg">
+      <div class="note">The lift recovers each implicit model. Legacy has no anomaly / symptom / incident layer; NMOP has the full ladder. Instance co-reference settles which legacy alarm and which NMOP anomaly are about the <b>same underlying condition</b>.</div>
+      <div class="kgcol" style="margin-top:6px">
+        <div><h3 class="f">Agent F — lifted legacy model</h3><div class="kgbox" id="kgF"><span class="muted">— not yet lifted —</span></div></div>
+        <div><h3 class="g">Agent G — lifted NMOP model</h3><div class="kgbox" id="kgG"><span class="muted">— not yet lifted —</span></div></div>
+      </div>
+      <h3 style="font-size:12.5px;color:var(--ink);margin:16px 0 6px">Instance co-reference <span class="muted" style="font-weight:400">— which legacy alarm and which NMOP anomaly are the same underlying condition (resource + time)</span></h3>
+      <div id="corefBody"><div class="empty">Instances co-refer in Act 1, stage 8.</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-pin">
+      <div class="pinnote">The dangerous ambiguities, each <b>pinned to a canonical example</b> so anomaly meaning cannot be misread across the two worlds. These are exactly the places a legacy alarm and an NMOP anomaly quietly disagree.</div>
+      <table style="margin-top:8px"><thead><tr>
+        <th>What</th><th>Legacy (Agent F)</th><th>NMOP (Agent G)</th><th>Ambiguity → pinned meaning</th><th>✓</th>
+      </tr></thead><tbody id="pinBody">
+        <tr><td colspan="5" class="empty">No semantics pinned yet.</td></tr>
+      </tbody></table>
+    </div>
+
+    <div class="tabpane" id="pane-anom">
+      <div class="note">Act 2. A live anomaly is detected, characterised, and — if its pragmatics warrant — promoted to a <b>symptom</b>, correlated with other symptoms into a single <b>incident</b> with a probable <b>cause</b> and a service-impact assessment. With the toggle OFF, the legacy pipeline produces an uncorrelated <b>alarm storm</b> instead.</div>
+      <div id="anomBody"><div class="empty">The anomaly fires in Act 2 (stage 10).</div></div>
+    </div>
+
+    <div class="tabpane" id="pane-prag">
+      <div class="ctxnote"><b>The heart of the anomaly case.</b> An anomaly's meaning is not intrinsic to the data — it depends on its <b>pragmatics</b>. Here the <i>same</i> rising-BER deviation on λ1 is run under different pragmatic contexts, and reaches different verdicts. This is why, in anomalies, pragmatics carry the meaning.</div>
+      <div id="pragBody"><div class="empty">The pragmatics matrix is built in Act 2 (stage 11).</div></div>
+      <div class="semhead" style="margin-top:16px">The anomaly pragmatics — carried as first-class annotations (per RFC 9940 + anomaly-semantics)</div>
+      <div class="pragrid" id="pragCards"></div>
+    </div>
+
+    <div class="tabpane" id="pane-tr">
+      <div class="note">The negotiated artefact: the observability exchange mapping. <b>F→G</b> lifts a legacy alarm/event into its NMOP constituents (event/anomaly + fault + alarm-State), for correlation. <b>G→F</b> projects an NMOP symptom/incident back to a legacy alarm a legacy console can show. Not inverses — legacy is lossy upward.</div>
+      <div class="trans-grid" style="margin-top:8px">
+        <div><h3 class="f">F→G — legacy alarm ▶ NMOP constituents</h3><pre class="code" id="transFG"><span class="muted">— generated after mediation —</span></pre></div>
+        <div><h3 class="g">G→F — NMOP symptom/incident ▶ legacy alarm</h3><pre class="code" id="transGF"><span class="muted">— generated after mediation —</span></pre></div>
+      </div>
+    </div>
+
+    <div class="tabpane" id="pane-meas">
+      <div class="note">The per-stage ledger. Verification here: reference categories agreed <b>by canonical example</b>, semantics pinned <b>by canonical instance</b>, and the exchange validated by a <b>worked anomaly, correlated and read back</b>.</div>
+      <table class="mtab" style="margin-top:8px"><thead><tr>
+        <th>Stage</th><th>Cognition</th><th>Closed by</th><th>Verified by</th><th>Measure</th>
+      </tr></thead><tbody id="measBody">
+        <tr><td colspan="5" class="empty">Fills in as stages complete.</td></tr>
+      </tbody></table>
+    </div>
+
+    <div class="tabpane" id="pane-ledger">
+      <div class="note">The same rising-BER event, both ways. With semantics + pragmatics <b>ON</b>, one anomaly becomes two symptoms and one correlated incident, context suppresses the false alarm, and one page is raised. <b>OFF</b>, the legacy pipeline emits an uncorrelated alarm storm and pages during the maintenance window.</div>
+      <div class="ledger" id="ledgerBody"></div>
+      <div class="savings" id="ledgerSavings"></div>
+    </div>
+
+    <div class="tabpane" id="pane-semodel">
+      <div class="note">The <b>form-independent observability semantic model</b> — the reconciled meaning (RFC 9940 ladder) with the <b>anomaly pragmatics</b> as first-class annotations and provenance. An agent consumes this <b>directly</b>; the legacy alarm and the NMOP anomaly/incident forms are projections of it. Ad hoc for this network, anchored to RFC 9940 — not universal.</div>
+      <div id="semBody"><div class="empty">Assembled at the final stage — press Play, or jump with Step.</div></div>
+    </div>
+  </div>
+
+  <div class="topo" id="topoBox">
+    <div class="col f">
+      <h2><span>Legacy view — alarms on resources</span><span class="tag" id="fStat"></span></h2>
+      <svg id="svgF" viewBox="0 0 520 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="legend">
+        <span><span class="dot" style="background:#ff5b5b"></span>critical</span>
+        <span><span class="dot" style="background:#ff8b6b"></span>major</span>
+        <span><span class="dot" style="background:#ffd166"></span>minor</span>
+        <span><span class="sw" style="background:#36c2a8"></span>service on λ1</span>
+      </div>
+    </div>
+    <div class="col g">
+      <h2><span>NMOP view — anomaly · symptom · incident</span><span class="tag" id="gStat"></span></h2>
+      <svg id="svgG" viewBox="0 0 520 360" xmlns="http://www.w3.org/2000/svg"></svg>
+      <div class="legend">
+        <span><span class="dot" style="background:#7aa2ff"></span>symptom</span>
+        <span><span class="dot" style="background:#ff6fae"></span>incident / cause</span>
+        <span><span class="dot" style="background:#5fd38d"></span>benign (context)</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    Staged demonstration — the conversation is scripted for legibility; a code-backed run is scaffolded separately. Legacy side: RFC 8632 (ietf-alarms), syslog (RFC 5424), SNMP notifications, X.733-derived vendor probable-cause/severity. NMOP side: RFC 9940 (terminology), draft-ietf-nmop-network-anomaly-semantics, draft-ietf-nmop-network-incident-yang, draft-ietf-nmop-network-anomaly-architecture/lifecycle. A2A envelopes follow the TM Forum Agentic (A2A) JSON-RPC <code>message/send</code> shape.
+  </div>
+</div>
+
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+
+/* ===== network substrate (optical + the service on λ1) ===== */
+const POS={A1:[70,60],A2:[450,60],A3:[260,60],R1:[130,270],R2:[390,270],R3:[260,300]};
+const FIBER=[['R1','R2'],['R1','R3'],['R2','R3']];
+const DROP=[['A1','R1'],['A2','R2'],['A3','R3']];
+const SVC={id:'svc0',label:'ODU2 A1↔A2',path:['A1','R1','R2','A2'],lam:'λ1',lamSeg:['R1','R2']};
+
+let state={alarms:[],symptoms:[],incident:null,anomaly:null,benign:false,phaseMode:'idle'};
+
+function el(t,a,c){const e=document.createElementNS('http://www.w3.org/2000/svg',t);for(const k in a)e.setAttribute(k,a[k]);if(c)(Array.isArray(c)?c:[c]).forEach(x=>e.appendChild(x));return e;}
+function line(x1,y1,x2,y2,a){return el('line',Object.assign({x1,y1,x2,y2},a));}
+function txt(x,y,s,a){const t=el('text',Object.assign({x,y},a));t.textContent=s;return t;}
+function path(pts,a){let d='M'+pts[0][0]+' '+pts[0][1];for(let i=1;i<pts.length;i++)d+=' L'+pts[i][0]+' '+pts[i][1];return el('path',Object.assign({d,fill:'none'},a));}
+const SEVCOL={critical:'#ff5b5b',major:'#ff8b6b',minor:'#ffd166',warning:'#9aa7c0'};
+
+function drawBase(svg){
+  FIBER.forEach(([a,b])=>svg.appendChild(line(...POS[a],...POS[b],{stroke:'#5d6e8c','stroke-width':2})));
+  DROP.forEach(([a,b])=>svg.appendChild(line(...POS[a],...POS[b],{stroke:'#5d6e8c','stroke-width':1.4,'stroke-dasharray':'3 3',opacity:.5})));
+  // service on λ1
+  svg.appendChild(path(SVC.path.map(n=>POS[n]),{stroke:'#36c2a8','stroke-width':3,'stroke-linecap':'round',opacity:.85}));
+  const m=POS[SVC.lamSeg[0]],m2=POS[SVC.lamSeg[1]];
+  svg.appendChild(txt((m[0]+m2[0])/2,(m[1]+m2[1])/2-6,SVC.lam,{fill:'#36c2a8','font-size':9,'text-anchor':'middle'}));
+  for(const n in POS){const [x,y]=POS[n];const roadm=n[0]==='R';
+    svg.appendChild(el('circle',{cx:x,cy:y,r:13,fill:roadm?'#16223f':'#12261f',stroke:roadm?'#7aa2ff':'#36c2a8','stroke-width':1.6}));
+    svg.appendChild(txt(x,y+4,n,{fill:'#e7edf7','font-size':11,'font-weight':700,'text-anchor':'middle'}));}
+}
+function renderLegacy(){const svg=$('svgF');svg.innerHTML='';svg.appendChild(txt(260,18,'device / resource alarms',{fill:'#8da0bf','font-size':10,'text-anchor':'middle'}));drawBase(svg);
+  state.alarms.forEach(a=>{const [x,y]=POS[a.node];const c=SEVCOL[a.sev]||'#ffd166';
+    const ring=el('circle',{cx:x,cy:y,r:19,fill:'none',stroke:c,'stroke-width':2.4});ring.style.animation='blink 1.1s infinite';svg.appendChild(ring);
+    svg.appendChild(txt(x,y-24,a.code,{fill:c,'font-size':8,'font-weight':700,'text-anchor':'middle'}));});
+  $('fStat').textContent=state.alarms.length?`${state.alarms.length} alarm(s)`:'no alarms';}
+function renderNmop(){const svg=$('svgG');svg.innerHTML='';svg.appendChild(txt(260,18,'anomaly · symptom · incident',{fill:'#8da0bf','font-size':10,'text-anchor':'middle'}));drawBase(svg);
+  if(state.benign){const m=POS[SVC.lamSeg[0]],m2=POS[SVC.lamSeg[1]];const cx=(m[0]+m2[0])/2,cy=(m[1]+m2[1])/2;
+    svg.appendChild(el('circle',{cx,cy,r:15,fill:'none',stroke:'#5fd38d','stroke-width':2.2}));
+    svg.appendChild(txt(cx,cy-22,'benign · maintenance',{fill:'#5fd38d','font-size':8.5,'font-weight':700,'text-anchor':'middle'}));
+    $('gStat').textContent='benign (context)';return;}
+  // symptoms
+  state.symptoms.forEach(s=>{const [x,y]=POS[s.node];
+    svg.appendChild(el('circle',{cx:x,cy:y,r:17,fill:'none',stroke:'#7aa2ff','stroke-width':2.2}));
+    svg.appendChild(txt(x,y+27,s.label,{fill:'#7aa2ff','font-size':8,'text-anchor':'middle'}));});
+  // incident correlation
+  if(state.incident){const cx=260,cy=175;
+    state.symptoms.forEach(s=>{const [x,y]=POS[s.node];svg.appendChild(line(x,y,cx,cy,{stroke:'#ff6fae','stroke-width':1.4,'stroke-dasharray':'4 3',opacity:.8}));});
+    svg.appendChild(el('circle',{cx,cy,r:24,fill:'#3a1428',stroke:'#ff6fae','stroke-width':2.2}));
+    svg.appendChild(txt(cx,cy-2,'INCIDENT',{fill:'#ff6fae','font-size':9,'font-weight':700,'text-anchor':'middle'}));
+    svg.appendChild(txt(cx,cy+10,'#'+state.incident.id,{fill:'#ff6fae','font-size':8,'text-anchor':'middle'}));
+    svg.appendChild(txt(cx,cy+40,'cause: '+state.incident.cause,{fill:'#f0cfe0','font-size':8.5,'text-anchor':'middle'}));}
+  $('gStat').textContent=state.incident?'1 incident · correlated':(state.symptoms.length?`${state.symptoms.length} symptom(s)`:(state.anomaly?'1 anomaly':'quiet'));}
+function renderTopo(){renderLegacy();renderNmop();}
+
+/* ===== reference — RFC 9940 ladder ===== */
+const LEXICON=[
+ {id:'ref:resource',nm:'Resource',cls:'substrate',def:'the managed thing a characteristic belongs to',ex:'the OTU2 port carrying λ1',f:'managed object / entity',g:'resource'},
+ {id:'ref:event',nm:'Event',cls:'instantaneous',def:'a variation in a value at a distinct moment (period negligible)',ex:'a syslog line at 14:02:11',f:'syslog line / SNMP trap',g:'event'},
+ {id:'ref:anomaly',nm:'Anomaly',cls:'detection',def:'an unusual/unexpected event or pattern deviating from normal — MAY be benign',ex:'pre-FEC BER on λ1 rising above its baseline',f:null,g:'anomaly (concern, confidence)',gap:true},
+ {id:'ref:symptom',nm:'Symptom',cls:'interpretation',def:'an observable taken as an indication of a (potential) problem',ex:'the BER anomaly read as service-affecting',f:null,g:'symptom (action·reason·trigger)',gap:true},
+ {id:'ref:fault',nm:'Fault',cls:'instantaneous',def:'an undesired occurrence at a moment; may indicate a future undesired state',ex:'signal-degrade threshold crossed',f:'alarm-raise event',g:'fault'},
+ {id:'ref:alarm',nm:'Alarm',cls:'State',def:'a persistent undesirable STATE of a resource that requires corrective action',ex:'SD alarm standing on the OTU2 port',f:'alarm (severity, is-cleared)',g:'alarm (as State)'},
+ {id:'ref:problem',nm:'Problem',cls:'State',def:'an undesirable State that may need remedial action — need NOT have a known cause',ex:'the service is degrading',f:null,g:'problem',gap:true},
+ {id:'ref:cause',nm:'Cause',cls:'derived',def:'the events that gave rise to a fault/problem — derived, may be unknown ("Cause", not "root cause")',ex:'optical degradation on λ1',f:'probable-cause code (static)',g:'cause (by correlation)'},
+ {id:'ref:incident',nm:'Incident',cls:'service-level',def:'an undesired service-level occurrence arising from one or more problems (correlated)',ex:'ODU2 A1↔A2 degraded by the λ1 fault',f:null,g:'incident (incident-yang)',gap:true}
+];
+let lexAgreed=0;
+function buildLexGrid(){const g=$('lexGrid');g.innerHTML='';
+  LEXICON.forEach((e,i)=>{const d=document.createElement('div');d.className='lexcard'+(e.gap?' gap':'');d.id='lex'+i;
+    d.innerHTML=`<div><span class="lid">${e.id}</span><span class="lstep" id="step${i}">proposed</span></div><div class="lnm">${e.nm} <span class="lcls">· ${e.cls}</span></div>`+
+      `<div class="lrow" id="def${i}"><span class="lk">RFC 9940 def</span> <span class="muted">— to agree by example —</span></div>`+
+      `<div class="lrow" id="ex${i}"></div>`+
+      `<div class="lrow" id="bind${i}"></div>`;
+    g.appendChild(d);});}
+function constructReference(){lexAgreed=0;
+  LEXICON.forEach((e,i)=>{const d=$('lex'+i);d.classList.add('agreed');
+    $('step'+i).textContent='anchored to RFC 9940';
+    $('def'+i).innerHTML=`<span class="lk">RFC 9940 def</span> ${e.def}`;
+    $('ex'+i).innerHTML=`<span class="lk">canonical ex</span> ${e.ex}`;
+    lexAgreed++;});
+  const b=$('refBadge');b.style.display='inline-block';b.textContent=LEXICON.length;}
+function bindLexicon(){
+  LEXICON.forEach((e,i)=>{let s='';
+    if(e.f)s+=`<span class="bindF">F ${e.f}</span>`; else s+=`<span class="gapmark">F — (no equivalent; the alarm conflates it)</span>`;
+    s+=' · ';
+    s+=`<span class="bindG">G ${e.g}</span>`;
+    $('bind'+i).innerHTML=s;});}
+
+/* ===== alignment ===== */
+const ALIGN_CANDS=[
+ {f:'legacy:syslog/trap',g:'nmop:event',verd:'hi',vt:'closeMatch · hi',vs:'both are instantaneous events'},
+ {f:'legacy:alarm',g:'nmop:alarm (State)',verd:'med',vt:'partial · med',vs:'legacy alarm conflates 5 concepts — decompose'},
+ {f:'legacy:alarm',g:'nmop:anomaly',verd:'rej',vt:'✗ rejected',vs:'a declared undesirable STATE ≠ a deviation that may be benign',falseCognate:true},
+ {f:'legacy:perceived-severity',g:'nmop:concern-score',verd:'gap',vt:'refer to pinning',vs:'fixed catalogue vs dynamic 0–100 score + confidence'},
+ {f:'legacy:probable-cause',g:'nmop:cause',verd:'gap',vt:'refer to pinning',vs:'static code at emission vs derived by correlation, may be unknown'},
+ {f:'—',g:'nmop:symptom / incident',verd:'gap',vt:'scope gap',vs:'legacy has no interpretation or service-level correlation layer'}
+];
+function renderAlign(mode,pass){
+  const body=$('alignBody');let h='';
+  h+='<div class="apass"><h3>Pass 1 · label — candidates by name'+(mode==='with'?' <span class="muted" style="font-weight:400">(grounded in the RFC 9940 ladder)</span>':'')+'</h3>';
+  if(mode==='with'){
+    h+='<div class="corefnote">Anchored to the RFC 9940 ladder, the label pass proposes <b>0 false cognates</b>: legacy <span class="aterm f">alarm</span> is bound to <span class="bindV">ref:alarm (a State)</span>, while <span class="aterm g">anomaly</span> is its own entry — the two are never equated. The overloaded alarm is flagged for <b>decomposition</b>, and severity / probable-cause go to pinning.</div>';
+  } else {
+    ALIGN_CANDS.forEach(c=>{h+=`<div class="arow"><div class="aterm f">${c.f}</div><div class="averd cand"><span class="vt">≈ candidate</span><span class="vs">by label — unconfirmed</span></div><div class="aterm g">${c.g}</div></div>`;});
+  }
+  h+='</div>';
+  if(pass>=2){
+    h+='<div class="apass"><h3>Pass 2 · gloss + example — the RFC 9940 definitions decide</h3>';
+    ALIGN_CANDS.forEach(c=>{const struck=c.verd==='rej'?' struck':'';
+      h+=`<div class="arow"><div class="aterm f${struck}">${c.f}</div><div class="averd ${c.verd}"><span class="vt">${c.vt}</span><span class="vs">${c.vs}</span></div><div class="aterm g${struck}">${c.g}</div></div>`;});
+    h+='<div class="corefnote" style="border-left-color:var(--inc);margin-top:10px">The headline cognate — legacy <b>alarm</b> ≈ NMOP <b>anomaly</b> — is <b>rejected</b>: an alarm is a declared undesirable <i>State</i>; an anomaly is a <i>deviation</i> that may be benign. The overloaded alarm is <b>decomposed</b>; severity and probable-cause are <b>pinned</b>, not renamed.</div>';
+    h+='</div>';
+  }
+  body.innerHTML=h;
+  const b=$('alignBadge');b.style.display='inline-block';b.textContent=(mode==='with'?3:ALIGN_CANDS.length);
+}
+
+/* ===== pin semantics ===== */
+const PINS=[
+ {kind:'decomp',what:'The overloaded "alarm"',f:'one alarm = event + fault + state + severity + probable-cause, bundled',g:'event/anomaly + fault + alarm(State) + (later) problem/cause',amb:'Pinned by example — one "OTU2-SD major, cause=LOS" decomposes into an anomaly (BER deviation), a fault (SD threshold crossed), an alarm-State (SD standing) and a cause-hint (to be re-derived). Legacy conflation is unbundled.',c:'hi'},
+ {kind:'sev',what:'Severity vs concern',f:'perceived-severity ∈ {critical,major,minor,warning} — fixed at emission (X.733)',g:'concern-score 0–100 + confidence-score — dynamic, context-derived',amb:'Pinned: major ≈ concern 60–80 AT high confidence, but context can raise or lower it — NOT an equivalence, a context-sensitive mapping. A fixed label is not a dynamic score.',c:'hi'},
+ {kind:'cause',what:'Probable-cause vs cause',f:'probable-cause code, assigned at emission, static',g:'cause derived by correlation; may be unknown; "Cause" not "root cause"',amb:'Pinned: the legacy probable-cause is a HINT, not the cause. The NMOP cause emerges from correlating symptoms across layers, may differ from the hint, and may be unknown for a real problem.',c:'hi'},
+ {kind:'life',what:'Lifecycle',f:'is-cleared + operator-state {none,ack,closed,shelved}',g:'machine {raised,updated,cleared} + operator {acknowledged,diagnosed,resolved} + stage {detection,validation,refinement}',amb:'Pinned mapping: legacy is-cleared ↔ machine cleared; operator ack/closed ↔ acknowledged/resolved; but NMOP adds a detection→validation→refinement stage legacy has no notion of.',c:'hi'}
+];
+function revealPin(idx){const tb=$('pinBody');if(tb.querySelector('.empty'))tb.innerHTML='';
+  const x=PINS[idx];const nm={decomp:'decompose',sev:'severity',cause:'cause',life:'lifecycle'}[x.kind];
+  const tr=document.createElement('tr');tr.style.animation='fade .4s ease';
+  tr.innerHTML=`<td><span class="pill ${x.kind}">${nm}</span><div style="margin-top:3px;font-weight:600">${x.what}</div></td><td><code>${x.f}</code></td><td><code>${x.g}</code></td><td>${x.amb}</td><td><span class="okmark">pinned</span></td>`;
+  tb.appendChild(tr);const b=$('pinBadge');b.style.display='inline-block';b.textContent=tb.querySelectorAll('tr').length;}
+
+/* ===== instance co-reference ===== */
+const COREF=[
+ {el:'OTU2 port R1 (λ1 line)',f:'alarm otu2-sd @ R1/3-1 (major)',g:'anomaly ber-high @ resource R1 λ1',ev:'same resource key R1/3-1 + timestamp window',c:'hi'},
+ {el:'ODU2 service A1↔A2',f:'client-signal-fail @ A2 (major)',g:'symptom packet-errors @ service svc0',ev:'topology: svc0 rides λ1; same 30 s window',c:'hi'}
+];
+function renderCoref(){const b=$('corefBody');
+  let h='<div class="corefnote">Type alignment settled which <b>kinds</b> correspond; this settles which <b>individuals</b> are about the same underlying condition — a legacy alarm and an NMOP anomaly, matched by resource key and time window, then by topology.</div>';
+  h+='<table><thead><tr><th>Underlying condition</th><th>Legacy handle</th><th>NMOP handle</th><th>Matched on</th><th>Conf.</th></tr></thead><tbody>';
+  COREF.forEach(r=>{h+=`<tr><td><b>${r.el}</b></td><td><code>${r.f}</code></td><td><code>${r.g}</code></td><td>${r.ev}</td><td class="conf ${r.c}">HIGH</td></tr>`;});
+  h+='</tbody></table>';b.innerHTML=h;}
+
+/* ===== exchange mapping ===== */
+const TRANS_FG=`F→G   (legacy alarm ▶ NMOP constituents)   v1 · lossy-upward, enriched by correlation
+DECOMPOSE  (via RFC 9940 ladder)
+  syslog / SNMP trap        → event
+  alarm-raise               → fault (occurrence) + alarm (State)
+  (detected deviation)      → anomaly            [G detects; F cannot]
+  perceived-severity {c/m/n/w} → concern-score + confidence   [pinned mapping]
+  probable-cause code       → cause HINT (re-derived by correlation, may change)
+LIFECYCLE
+  is-cleared / operator-state → machine {raised..cleared} + operator {ack..resolved} + stage
+CORRELATION (G only)
+  anomaly → symptom → incident (+ probable cause, service impact)`;
+const TRANS_GF=`G→F   (NMOP symptom / incident ▶ legacy alarm)   v1 · project to a legacy console
+PROJECT
+  incident (probable cause)  → one summary alarm (severity = f(concern,confidence))
+  symptom                    → alarm on the affected resource
+  concern + confidence       → perceived-severity (nearest legacy label)
+  cause (derived)            → probable-cause code (nearest dictionary entry)
+LOSS ON PROJECTION
+  context (maintenance/season), stage, confidence, correlation → dropped
+  (a legacy console cannot represent them — they stay in the semantic model)`;
+function revealMappings(){$('transFG').textContent=TRANS_FG;$('transGF').textContent=TRANS_GF;
+  const b=$('trBadge');b.style.display='inline-block';b.textContent='✓';b.style.background='var(--result)';b.style.color='#06210f';}
+
+/* ===== Act 2 — anomaly / incident ===== */
+function renderAnom(){const b=$('anomBody');let h='';
+  if(state.anomaly){const a=state.anomaly;
+    h+=`<div class="symcard"><h4>Anomaly detected — ${a.title}</h4>`+
+       `<div class="r"><span class="k">resource:</span> ${a.resource}</div>`+
+       `<div class="r"><span class="k">action · reason · trigger:</span> ${a.art}</div>`+
+       `<div class="r"><span class="k">concern:</span> ${a.concern}/100 &nbsp; <span class="k">confidence:</span> ${a.confidence} &nbsp; <span class="k">plane:</span> ${a.plane}</div>`+
+       `<div class="r"><span class="k">stage:</span> ${a.stage}</div></div>`;}
+  if(MODE==='without'){
+    h+=`<div class="stormcard"><h4>⚠ Legacy pipeline — uncorrelated alarm storm</h4>`;
+    state.alarms.forEach(al=>{h+=`<div class="stormrow"><span>${al.code} @ ${al.node}</span><span><span class="sevchip ${al.sev}">${al.sev}</span> cause=${al.cause}</span></div>`;});
+    h+=`<div style="margin-top:8px;font-size:11px;color:#f0b0b0">${state.alarms.length} separate alarms · ${state.alarms.length} pages · no correlation · static probable-cause per alarm · a page is raised even inside the maintenance window.</div></div>`;
+    b.innerHTML=h;const bd=$('anomBadge');bd.style.display='inline-block';bd.textContent=state.alarms.length;return;}
+  if(state.symptoms.length){
+    h+='<div class="semhead">Symptoms (interpreted from anomalies)</div>';
+    state.symptoms.forEach(s=>{h+=`<div class="symcard"><h4>Symptom — ${s.title}</h4><div class="r"><span class="k">on:</span> ${s.on}</div><div class="r"><span class="k">reads as:</span> ${s.reads}</div></div>`;});
+  }
+  if(state.incident){const I=state.incident;
+    h+=`<div class="inccard"><h4>Incident #${I.id} — ${I.title}</h4>`+
+       `<div class="r"><span class="k">correlates:</span> ${I.correlates}</div>`+
+       `<div class="r"><span class="k">probable cause:</span> ${I.cause}</div>`+
+       `<div class="r"><span class="k">service impact:</span> ${I.impact}</div>`+
+       `<div class="r"><span class="k">machine lifecycle:</span> ${I.machine} &nbsp; <span class="k">operator:</span> ${I.operator}</div>`+
+       `<div class="r"><span class="k">pages raised:</span> 1 (on the incident, not the symptoms)</div></div>`;}
+  b.innerHTML=h||'<div class="empty">The anomaly fires in Act 2 (stage 10).</div>';
+  const bd=$('anomBadge');bd.style.display='inline-block';bd.textContent=(state.incident?'1':(state.symptoms.length||'0'));}
+
+/* ===== pragmatics matrix ===== */
+const PRAG_MATRIX=[
+ {ctx:'Normal ops',concern:'82',conf:'0.91',stage:'confirmed',verdict:'ACT',vc:'vd-act',why:'high concern + confidence, no benign context → symptom → correlate → incident + page'},
+ {ctx:'Inside a maintenance window (change-id active)',concern:'82',conf:'0.91',stage:'discarded',verdict:'BENIGN',vc:'vd-benign',why:'same deviation, but expected during the planned change → annotated benign → no symptom, no incident, no page'},
+ {ctx:'Holiday season (Season classifier)',concern:'41',conf:'0.72',stage:'problem-potential',verdict:'WATCH',vc:'vd-watch',why:'the same value is a smaller outlier against holiday baseline → validate, do not page yet'},
+ {ctx:'Low detector confidence',concern:'80',conf:'0.38',stage:'validation',verdict:'WATCH',vc:'vd-watch',why:'high concern but low confidence → hold in validation, corroborate before acting'},
+ {ctx:'Legacy pipeline (pragmatics OFF)',concern:'—',conf:'—',stage:'n/a',verdict:'STORM',vc:'vd-storm',why:'no context, no confidence, fixed severity → fires regardless; pages during maintenance; no correlation'}
+];
+function renderPragMatrix(){const b=$('pragBody');
+  let h='<table style="margin-top:4px"><thead><tr><th>Pragmatic context (same λ1 BER deviation)</th><th>Concern</th><th>Confidence</th><th>Lifecycle</th><th>Verdict</th><th>Why</th></tr></thead><tbody>';
+  PRAG_MATRIX.forEach(r=>{h+=`<tr><td><b>${r.ctx}</b></td><td class="conf">${r.concern}</td><td class="conf">${r.conf}</td><td><span class="pill life">${r.stage}</span></td><td><span class="verdict-chip ${r.vc}">${r.verdict}</span></td><td style="font-size:11px">${r.why}</td></tr>`;});
+  h+='</tbody></table>';
+  b.innerHTML=h;const bd=$('pragBadge');bd.style.display='inline-block';bd.textContent='key';}
+const PRAG_CARDS=[
+ ['use','Use · purpose','What the observation is FOR — detect, interpret, or act. The same anomaly is background noise to a capacity planner and a page to an on-call engineer.'],
+ ['sig','Significance · concern + confidence','Concern score (0–100) = how much it matters; confidence = how sure the detector is. Together they gate act-vs-watch — not a fixed severity label.'],
+ ['causal','Causal role · symptom / cause / incident','Is this the deviation, an indication of a problem, or the correlated cause? Page on the incident and its cause, not on every symptom.'],
+ ['state','State · lifecycle','detection → validation → refinement; problem-potential → confirmed; machine (raised/cleared) and operator (ack/resolved) lifecycles run in parallel.'],
+ ['realm','Realm · resource vs service','RFC 9940: a redundant link failing is a Fault to the resource but a Problem only if it degrades the service. Whose problem it is decides who must act.'],
+ ['context','Context · maintenance / season / plane','The decisive one. A maintenance-window change-id, a workday-vs-holiday season, the network plane — the same telemetry means different things by context.'],
+ ['prov','Provenance · detector + annotator','Which method detected it (outlier / knowledge / ML), which agent annotated it, and when — the meta band carried on every fact.']
+];
+function renderPragCards(){const b=$('pragCards');b.innerHTML=PRAG_CARDS.map(([c,l,v])=>`<div class="prag ${c}"><div class="pl">${l}</div><div class="pv">${v}</div></div>`).join('');}
+
+/* ===== work ledger ===== */
+const LEDGER={
+  without:{alarms:'5 · uncorrelated',pages:'5',corr:'none (operator correlates by hand)',ctx:'ignored — pages during maintenance',cause:'static probable-cause per alarm (may mislead)',mttr:'high'},
+  with:{alarms:'1 anomaly → 2 symptoms',pages:'1 (on the incident)',corr:'1 incident, probable cause derived',ctx:'applied — benign case suppressed',cause:'derived by cross-layer correlation',mttr:'low'}
+};
+function renderLedger(mode){const b=$('ledgerBody');
+  const row=(k,v,cls)=>`<div class="lr"><span class="k">${k}</span><span class="v ${cls||''}">${v}</span></div>`;
+  const col=(id,d,active)=>`<div class="lc ${id} ${active?'active':''}"><div class="lch"><span>Semantics + pragmatics ${id==='on'?'ON':'OFF'}</span>${active?'<span style="font-size:10px">▶ active</span>':''}</div>`+
+    row('Signals emitted',d.alarms,id==='on'?'good':'bad')+
+    row('Pages raised',d.pages,id==='on'?'good':'bad')+
+    row('Correlation',d.corr,id==='on'?'good':'bad')+
+    row('Context handling',d.ctx,id==='on'?'good':'bad')+
+    row('Cause',d.cause)+
+    row('Time to resolve',d.mttr,id==='on'?'good':'bad')+'</div>';
+  b.innerHTML=col('off',LEDGER.without,mode==='without')+col('on',LEDGER.with,mode==='with');
+  $('ledgerSavings').innerHTML='<b>What pragmatics buy:</b> meaning. The <i>same</i> rising-BER telemetry is an alarm storm and a false maintenance-window page in the legacy pipeline, and a single correlated incident with a derived cause — or a correctly suppressed benign event — once the anomaly carries its pragmatics: significance and confidence (act vs watch), context (maintenance / season), and causal role (correlate symptoms into one incident). The reconciliation is what lets a legacy alarm and an NMOP anomaly be understood as the same condition in the first place.';
+}
+
+/* ===== semantic model ===== */
+const SEM_TYPES=['resource','event','anomaly','symptom','fault','alarm','problem','cause','incident'];
+const SEM_GAP=['anomaly','symptom','problem','incident'];
+const SEM={
+  id:'inc:2231', label:'Incident #2231 — ODU2 A1↔A2 degraded by optical λ1 fault',
+  rels:[['type','incident (ref) — arises from one problem'],
+        ['symptoms','ber-high @ R1 λ1 (optical) + packet-errors @ svc0 (service)'],
+        ['probable cause','optical degradation on λ1 (derived by correlation)'],
+        ['service impact','ODU2 A1↔A2 — errored seconds rising'],
+        ['legacy view','projects to 1 summary alarm (major) + the source alarms'],
+        ['lifecycle','machine: raised · operator: acknowledged']],
+  prag:{
+    use:'A basis for action, not just a record: it tells an operator (or an agent) what to do and what not to page on. Same telemetry, different use, different meaning.',
+    sig:'Concern 82/100 at confidence 0.91 → act. Below threshold, or low confidence, it would be watch-only. Significance is dynamic, not a fixed label.',
+    causal:'The BER anomaly is a symptom, not the incident; the incident carries the probable cause. Page once, on the cause — not on each symptom.',
+    state:'Machine lifecycle raised→cleared runs independently of the operator lifecycle ack→diagnosed→resolved; the detection→validation→refinement stage records how settled the finding is.',
+    realm:'Optical resource realm (the λ1 fault) vs service realm (the ODU2 degradation). A fault to the resource; a problem to the service. Ownership decides who acts.',
+    context:'Decisive: outside a maintenance window and against a workday baseline this is a real incident; inside a change-id window the identical deviation is annotated benign and never paged.',
+    prov:'Detected by outlier + knowledge-based detection on YANG-Push telemetry; annotated by Agent G; every fact carries who/when. Legacy probable-cause retained as a hint.'
+  }
+};
+function renderSemodel(){const b=$('semBody');let h='';
+  h+='<div class="semhead">Types — the RFC 9940 ladder (amber = no first-class legacy equivalent)</div><div class="semchips">';
+  SEM_TYPES.forEach(t=>{const gap=SEM_GAP.includes(t);h+=`<span class="semchip${gap?' gap':''}">ref:${t}</span>`;});
+  h+='</div>';
+  h+='<div class="semhead">Instance — keyed on resource + time, correlated across layers</div>';
+  const s=SEM;h+=`<div class="semcard"><h4>${s.label}</h4>`;
+  s.rels.forEach(([k,v])=>{h+=`<div class="rel"><span class="k">${k}:</span> ${v}</div>`;});
+  h+='<div class="semhead" style="margin-top:11px">Anomaly pragmatics — carried as first-class annotations (they carry this case)</div>';
+  const P=s.prag;const pc=(cls,lab,val)=>`<div class="prag ${cls}"><div class="pl">${lab}</div><div class="pv">${val}</div></div>`;
+  h+='<div class="pragrid">'+
+     pc('use','Use · purpose',P.use)+pc('sig','Significance · concern+confidence',P.sig)+
+     pc('causal','Causal role · symptom/cause',P.causal)+pc('state','State · lifecycle',P.state)+
+     pc('realm','Realm · resource vs service',P.realm)+pc('context','Context · maintenance/season',P.context)+
+     pc('prov','Provenance · detector+annotator',P.prov)+'</div></div>';
+  h+='<div class="semaff">'+
+     '<button onclick="semProject(\'legacy\')">Project → legacy alarm</button>'+
+     '<button onclick="semProject(\'nmop\')">Project → NMOP</button>'+
+     '<button onclick="semAgentQuery()">Agent query</button></div><div id="semOut"></div>';
+  b.innerHTML=h;const bd=$('semBadge');bd.style.display='inline-block';}
+function semShow(t){const o=$('semOut');o.classList.add('show');o.innerHTML=t;}
+function semProject(w){
+  if(w==='legacy') semShow('project → legacy (RFC 8632 alarm a legacy console can show)\n\nalarm otu2-sd @ resource R1/3-1\n  perceived-severity: major        (from concern 82 @ conf 0.91)\n  probable-cause: signal-degrade   (from derived cause: optical λ1)\n  is-cleared: false\n  alarm-text: "ODU2 A1-A2 degraded; correlated incident 2231"\n\n<span class="qa">Lossy: context, confidence, stage and the correlation are dropped — a legacy console cannot hold them; they remain in the semantic model.</span>');
+  else if(w==='nmop') semShow('project → NMOP (anomaly-semantics + incident-yang)\n\nincident 2231\n  problem: service-degradation svc0\n  symptom ber-high { resource R1 λ1 ; action increased-errors ; reason signal-degrade ; trigger optical-layer ; concern 82 ; confidence 0.91 ; plane forwarding }\n  symptom pkt-errors { resource svc0 ; ... }\n  probable-cause: optical-degradation@λ1\n  context { maintenance: none ; season: workday }\n\n<span class="qa">Same meaning, full fidelity — the pragmatics are first-class here.</span>');
+  else semShow('');
+}
+function semAgentQuery(){
+  semShow('agent query (read directly from the model, no translator)\n\nQ: Is this rising BER on λ1 actionable right now?\nA: Yes — concern 82 at confidence 0.91, no maintenance window, workday baseline → problem-confirmed. It is a symptom of incident 2231.\n\nQ: How many pages should this raise?\nA: One — on incident 2231 and its probable cause (optical λ1). The optical and service symptoms are correlated, not paged separately.\n\nQ: Would it be actionable during a planned change on λ1?\nA: No — the identical deviation inside a maintenance-window change-id is annotated benign and not paged. The meaning depends on the context, not the data.\n\n<span class="qa">The agent consumes the pragmatics directly; neither legacy nor NMOP form was parsed.</span>');
+}
+
+/* ===== A2A envelopes ===== */
+function env(id,from,intent,text,data){return {jsonrpc:"2.0",id:String(id),method:"message/send",
+  params:{message:{role:"agent",messageId:"m-"+id,contextId:"anomaly-reconciliation",
+    metadata:{"a2a-profile":"TMF-Agentic-A2A-Telecom",sender:from,intent},
+    parts:[{kind:"text",text},...(data?[{kind:"data",data}]:[])]}}};}
+function addMsg(m){const box=$('bus');const cls=m.from==='F'?'fromF':m.from==='G'?'fromG':'fromV';
+  const d=document.createElement('div');d.className='msg '+cls;
+  const arrow=m.from==='F'?'Agent F ──▶ Agent G':m.from==='G'?'Agent G ──▶ Agent F':((m.who||'Agent')+' ──▶ all');
+  const dcls=m.from==='F'?'f':m.from==='G'?'g':'v';
+  const json=JSON.stringify(m.body,null,2);
+  d.innerHTML=`<div class="mh"><span class="dir ${dcls}">${arrow}</span><span class="method">${m.body.params.message.metadata.intent}</span></div>`+
+    `<div class="summary">${m.summary}</div><div class="toggle">▸ show A2A envelope</div><pre style="display:none"></pre>`;
+  d.querySelector('pre').textContent=json;
+  const tg=d.querySelector('.toggle'),pre=d.querySelector('pre');
+  tg.onclick=()=>{const open=pre.style.display!=='none';pre.style.display=open?'none':'block';tg.textContent=(open?'▸ show':'▾ hide')+' A2A envelope';};
+  box.appendChild(d);box.scrollTop=box.scrollHeight;}
+
+/* ===== phases + meta ===== */
+const PHASES=['Scenario','Plan','Lift','Reference · RFC 9940','Bind','Align · label','Align · gloss+ex','Pin semantics','Instance co-ref','Construct mapping','Live anomaly','Pragmatics · context','Correlate → incident','Storm vs incident','Semantic model'];
+const ACTS={0:'Act 1 · reconcile the models',9:'Act 2 · anomaly as trigger'};
+const META=[
+ {cog:'mech',mech:'agents agree the method; two observability worlds, neither merged',verify:'—',measure:''},
+ {cog:'heavy',mech:'plan with no common model: lift, anchor a reference to RFC 9940, pin the ambiguities, then run a live anomaly and let pragmatics decide',verify:'each step\'s expected outcome stated in advance',measure:'planned steps: 8'},
+ {cog:'heavy',mech:'recover each implicit model — legacy alarms/traps/dictionary vs NMOP anomaly/symptom/incident + semantics',verify:'lift-fidelity round-trip per model; no single standard spans both',measure:'F 6 / G 9 concepts · legacy has no anomaly layer'},
+ {cog:'heavy',mech:'anchor a shared reference to the RFC 9940 term ladder; agree each category by a canonical example',verify:'each category agreed only when both instantiate the same example',measure:'9 categories · 4 with no legacy equivalent'},
+ {cog:'med',mech:'each binds its terms to the ladder; the legacy alarm is flagged as conflating several',verify:'binding checked against the RFC 9940 definition + example',measure:m=>m==='with'?'G binds 9/9 · F binds 5/9 (4 gaps)':'skipped — no reference'},
+ {cog:'cheap',mech:'propose candidate correspondences on names alone',verify:'none yet — candidates unconfirmed',measure:m=>m==='with'?'3 candidates (grounded by ladder)':'6 candidates · incl. alarm≈anomaly cognate'},
+ {cog:'med',mech:'confirm / reject / refer-to-pinning by the RFC 9940 definitions',verify:'alarm≈anomaly killed (a State is not a deviation)',measure:m=>m==='with'?'confirmed by ladder':'confirmed 1 · rejected 1 · to-pin 2 · gap 1'},
+ {cog:'heavy',mech:'pin the ambiguities: decompose the alarm; severity↔concern+confidence; probable-cause↔derived cause; lifecycle',verify:'both agents instantiate the same canonical instance and agree',measure:'4 semantics pinned · 0 residual ambiguity'},
+ {cog:'med',mech:'co-refer a legacy alarm and an NMOP anomaly to the same underlying condition',verify:'resource key + time window, then topology',measure:'2 conditions co-referred'},
+ {cog:'mech',mech:'generate the observability exchange mapping (F→G decompose; G→F project)',verify:'generation (validated by a worked anomaly next)',measure:'F→G + G→F mappings emitted'},
+ {cog:'med',mech:'a live anomaly appears — rising pre-FEC BER on λ1; legacy fires alarms, NMOP detects one scored anomaly',verify:'detection recorded with concern, confidence, action·reason·trigger',measure:m=>m==='with'?'1 anomaly · concern 82 · confidence 0.91':'5 raw alarms (storm)'},
+ {cog:'heavy',mech:'apply the pragmatics — significance, confidence, and above all context (maintenance / season) — to decide what the anomaly MEANS',verify:'the same deviation reaches different verdicts under different contexts',measure:'ACT / WATCH / BENIGN by context · maintenance suppresses'},
+ {cog:'med',mech:'promote to a symptom; correlate with the service-layer symptom into one incident with a probable cause',verify:'correlation by topology; service impact assessed; one page not many',measure:m=>m==='with'?'2 symptoms → 1 incident · cause derived · 1 page':'no correlation · 5 pages'},
+ {cog:'cheap',mech:'compare the two pipelines on the same event',verify:'—',measure:'ON: 1 incident, context-aware · OFF: 5-alarm storm, false maintenance page'},
+ {cog:'med',mech:'assemble the form-independent observability semantic model (RFC 9940 + pragmatics), with provenance',verify:'project to legacy / NMOP and read back; answer agent queries directly',measure:'1 shelf model · 7 pragmatic annotations · projects to both forms'}
+];
+const PHASE_NOTES=[
+ ["Stage 0 · Scenario","Two observability worlds on one network. <b>Agent F</b> is legacy fault management (RFC 8632 / syslog / SNMP / X.733). <b>Agent G</b> is IETF NMOP (RFC 9940 ladder, anomaly semantics, incident correlation). They must share <b>anomaly understanding</b> with no common model — and neither is merged."],
+ ["Stage 1 · Plan","<b>Planning is cognition.</b> With no common model, the plan: lift both; anchor a shared reference to the <b>RFC 9940</b> ladder; pin the ambiguities (severity, cause, the overloaded alarm); co-refer instances; then run a live anomaly and let <b>pragmatics</b> decide its meaning."],
+ ["Stage 2 · Lift","Each agent recovers the model its data implies. Legacy: alarms, traps, a probable-cause dictionary — <b>no anomaly, symptom or incident layer</b>. NMOP: the full ladder plus semantic metadata. Verified by a lift-fidelity round-trip. Open <b>Knowledge graphs</b>."],
+ ["Stage 3 · Reference · RFC 9940","Anchor a shared reference to the <b>RFC 9940 term ladder</b> — event, anomaly, symptom, fault, alarm(a State), problem(a State), cause, incident — the standard that separates what legacy conflates. Agreed by canonical example. Open <b>Reference</b>."],
+ ["Stage 4 · Bind","Each binds its terms to the ladder. NMOP maps near-identically; the <b>legacy alarm</b> binds to <b>ref:alarm (a State)</b> but is flagged as <b>conflating</b> event, fault, severity and cause — to be decomposed."],
+ ["Stage 5 · Align · label","Cheap candidates by name. Grounded by the ladder this is small; <b>without</b> it, the label pass proposes six — including the dangerous <b>alarm ≈ anomaly</b> cognate. Open <b>Alignment</b>."],
+ ["Stage 6 · Align · gloss + example","The RFC 9940 definitions decide. <b>alarm ≈ anomaly is rejected</b> — a declared undesirable State is not a deviation that may be benign. Severity and probable-cause are <b>referred to pinning</b>."],
+ ["Stage 7 · Pin semantics","The dangerous ambiguities, pinned to canonical examples: <b>decompose</b> the overloaded alarm; <b>severity ↔ concern + confidence</b>; <b>probable-cause ↔ derived cause</b>; and the two <b>lifecycles</b>. Open <b>Pin semantics</b>."],
+ ["Stage 8 · Instance co-reference","Which individual legacy alarm and which NMOP anomaly are about the <b>same underlying condition</b> — matched by resource key, time window, then topology. Open <b>Knowledge graphs &amp; instances</b>."],
+ ["Stage 9 · Construct mapping","Generate the observability exchange mapping — F→G decomposes a legacy alarm into NMOP constituents; G→F projects an NMOP incident back to a legacy alarm (lossy upward). Open <b>Exchange mapping</b>."],
+ ["Stage 10 · Live anomaly","<b>Act 2.</b> A rising pre-FEC BER anomaly appears on λ1. NMOP detects <b>one</b> scored anomaly (concern 82, confidence 0.91, action·reason·trigger); legacy fires a spray of device alarms. Open <b>Anomaly → incident</b>."],
+ ["Stage 11 · Pragmatics · context","<b>Pragmatics decide the meaning.</b> The same deviation is run under different contexts — normal ops, a maintenance window, a holiday season, low confidence — and reaches different verdicts: ACT, WATCH, or BENIGN. A maintenance-window change-id makes it benign. Open <b>Pragmatics</b>."],
+ ["Stage 12 · Correlate → incident","The BER anomaly becomes a <b>symptom</b>, correlated with the service-layer symptom into <b>one incident</b> with a probable <b>cause</b> (optical λ1) and a service-impact assessment — one page, not many. Open <b>Anomaly → incident</b>."],
+ ["Stage 13 · Storm vs incident","The same event, both pipelines. Semantics + pragmatics <b>ON</b>: one correlated incident, context-aware, one page. <b>OFF</b>: a five-alarm storm and a false page during the maintenance window. Open <b>Work ledger</b>."],
+ ["Stage 14 · Semantic model","The observability artefact on the <b>shelf</b>: the RFC 9940-anchored meaning with the <b>anomaly pragmatics</b> — significance, causal role, lifecycle, realm, and above all context — as first-class annotations, plus provenance. An agent consumes it directly; both forms are projections. Open <b>Semantic model</b>."]
+];
+
+/* ===== live-anomaly data ===== */
+const ANOMALY={title:'pre-FEC BER rising on λ1',resource:'R1/3-1 · OTU2 line · λ1',art:'action=increased-errors · reason=signal-degrade · trigger=optical-layer',concern:'82',confidence:'0.91',plane:'forwarding',stage:'detection → validation → confirmed'};
+const STORM_ALARMS=[
+ {node:'R1',code:'OTU2-SD',sev:'major',cause:'signal-degrade'},
+ {node:'R1',code:'PRE-FEC-BER-HIGH',sev:'minor',cause:'threshold-crossed'},
+ {node:'R2',code:'OTU2-SD',sev:'major',cause:'signal-degrade'},
+ {node:'A2',code:'CLIENT-SIGNAL-FAIL',sev:'major',cause:'downstream'},
+ {node:'A1',code:'ODU2-DEG',sev:'minor',cause:'errored-seconds'}
+];
+const SYMPTOMS=[
+ {node:'R1',title:'optical BER (forwarding plane)',on:'resource R1 λ1',reads:'signal-degrade on the OTU2 line — service-affecting',label:'sym: ber-high'},
+ {node:'A2',title:'service packet-errors (service)',on:'ODU2 svc0 A1↔A2',reads:'errored seconds rising on the client service',label:'sym: pkt-errors'}
+];
+const INCIDENT={id:'2231',title:'ODU2 A1↔A2 degraded',correlates:'ber-high @ R1 λ1  +  pkt-errors @ svc0',cause:'optical degradation on λ1',impact:'ODU2 A1↔A2 — errored seconds rising, still up',machine:'raised',operator:'acknowledged'};
+
+/* ===== the scripted timeline ===== */
+const KG_F=`Legacy fault (bespoke + standard)
+ ├─ alarm  (RFC 8632)
+ │   ├─ resource + alarm-type-id + qualifier
+ │   ├─ perceived-severity {crit,major,minor,warning}
+ │   ├─ is-cleared · operator-state
+ │   └─ probable-cause  (X.733 dictionary, static)
+ ├─ syslog line (RFC 5424)         ← event, no state
+ └─ SNMP trap  (notification)      ← event, no correlation
+    · no anomaly / symptom / incident layer`;
+const KG_G=`IETF NMOP
+ ├─ anomaly (concern, confidence)          [RFC 9940 + anomaly-semantics]
+ │   └─ action · reason · trigger · plane · season
+ ├─ symptom  → problem
+ ├─ fault · alarm (a State)
+ ├─ cause    (derived by correlation)
+ ├─ incident (incident-yang)               ← correlated, service-level
+ │   └─ machine + operator lifecycles
+ └─ context: maintenance change-id · season`;
+
+const STEPS=[
+/* 0 scenario */
+{p:0,f:['think','Boot. Legacy fault manager: I emit alarms (RFC 8632), syslog and SNMP traps, each with a fixed severity and a probable-cause code from my vendor dictionary. No anomaly concept — an alarm is my everything.']},
+{p:0,g:['think','Boot. IETF NMOP agent: I detect anomalies (scored by concern and confidence), interpret them as symptoms, correlate into incidents, and carry semantic metadata and context (RFC 9940 + anomaly-semantics + incident-yang).']},
+{p:0,g:['action','Goal: share anomaly understanding across our two worlds with no common model, so a legacy alarm and a detected anomaly can be reconciled — and so pragmatics, not raw data, decide what an anomaly means.'],
+  msg:{from:'G',intent:'session-open',summary:'Open a session; reconcile observability by conversation, anchored to RFC 9940; no merged schema.',body:env(101,'Agent-G','session-open','Opening a session. Our observability models differ deeply — yours alarm-centric, mine anomaly/symptom/incident. Propose we anchor a shared reference to the RFC 9940 term ladder and pin the ambiguities, without merging schemas.',{anchor:'RFC 9940'})}},
+{p:0,f:['action','Agreed. My alarm bundles several of your concepts; we will not merge models, we will decompose and map, and pin what a term really means.'],
+  msg:{from:'F',intent:'session-ack',summary:'Acknowledge; the legacy alarm conflates several NMOP concepts — decompose, do not merge.',body:env(102,'Agent-F','session-ack','Acknowledged. My alarm conflates event, fault, state, severity and probable-cause. We decompose against your ladder and pin each meaning; no merge.',{ack:true})}},
+/* 1 plan */
+{p:1,g:['plan','Planning: (1) lift both models; (2) anchor a reference to the RFC 9940 ladder; (3) bind; (4) align, then (5) PIN the ambiguities — severity vs concern, probable-cause vs derived cause, decompose the alarm; (6) co-refer instances; (7) run a live anomaly and let pragmatics decide; (8) correlate to an incident.'],
+  msg:{from:'G',intent:'method-proposal',summary:'Propose: lift, reference (RFC 9940), bind, align, pin, co-refer, live anomaly, correlate.',body:env(103,'Agent-G','method-proposal','Method: lift; anchor reference to RFC 9940; bind; align; pin severity/cause/alarm-decomposition; co-refer; then Act 2 — a live anomaly, pragmatics decide, correlate to an incident.',{steps:['lift','reference','bind','align','pin','coref','anomaly','correlate']})}},
+{p:1,f:['plan','Same shape. I will treat a term as agreed only when we instantiate the same example, and I will show what my legacy pipeline does with the same event, for contrast.'],
+  msg:{from:'F',intent:'method-ack',summary:'Agree; will contrast the legacy pipeline on the same event.',body:env(104,'Agent-F','method-ack','Agreed. Category agreed only on a shared example. I will also run my raw legacy pipeline on the live event so the difference is visible.',{ack:true})}},
+{p:1,g:['plan','Semantics + pragmatics ON — we build the shared reference, pin meanings, and apply context so the anomaly is understood correctly.'],mode:'with'},
+{p:1,g:['plan','Semantics + pragmatics OFF — no reconciliation, no NMOP pragmatics: the legacy pipeline alone. Expect an alarm storm and a false page in the maintenance window.'],mode:'without'},
+/* 2 lift */
+{p:2,f:['action','Lifting my model: alarms with fixed severities and probable-cause codes, syslog, traps. No anomaly, symptom or incident — those simply do not exist in my world.'],kg:{side:'f',html:KG_F},
+  msg:{from:'F',intent:'model-disclosure',summary:'Disclose the legacy fault model (RFC 8632 + syslog + SNMP + X.733).',body:env(105,'Agent-F','model-disclosure','My model: alarm(resource, alarm-type, perceived-severity, is-cleared, probable-cause) + syslog + traps. No anomaly/symptom/incident layer.',{framework:'RFC 8632 / X.733'})}},
+{p:2,f:['result','Lift-fidelity round-trip clean. 6 concepts — but I flag: my "alarm" is doing the work of several of yours.']},
+{p:2,g:['action','Lifting mine: anomaly (concern, confidence), symptom, fault, alarm-as-State, problem, cause, incident, plus context metadata. Recognising RFC 9940 and the anomaly-semantics draft.'],kg:{side:'g',html:KG_G},
+  msg:{from:'G',intent:'model-disclosure',summary:'Disclose the NMOP model (RFC 9940 ladder + anomaly-semantics + incident-yang).',body:env(106,'Agent-G','model-disclosure','My model: the RFC 9940 ladder with anomaly concern/confidence, action·reason·trigger, lifecycle stages, incident correlation, and context (maintenance, season, plane).',{framework:'IETF NMOP'})}},
+{p:2,g:['result','Lift-fidelity round-trip clean. 9 concepts distilled.']},
+/* 3 reference */
+{p:3,g:['action','Anchoring a shared reference to the RFC 9940 term ladder — the standard that separates what your alarm conflates. Agreeing each category by a canonical example.'],mode:'with',lexbuild:true},
+{p:3,f:['result','Agreed against RFC 9940. Four categories — anomaly, symptom, problem, incident — I simply do not have; my alarm has been standing in for them. Those are gaps I must decompose or defer to you.'],mode:'with'},
+{p:3,msg:{from:'G',intent:'reference-anchored',summary:'Shared reference anchored to the RFC 9940 ladder — 9 categories, 4 with no legacy equivalent.',body:env(1,'Agent-G','reference-anchored','Reference anchored to RFC 9940: resource, event, anomaly, symptom, fault, alarm(State), problem(State), cause, incident. Four have no first-class legacy equivalent.',{categories:9,gaps:4})},mode:'with'},
+{p:3,g:['warn','Semantics + pragmatics OFF — no reference is built. Proceeding with the legacy pipeline alone.'],mode:'without'},
+/* 4 bind */
+{p:4,f:['action','Binding my terms to the ladder. syslog/trap → event; alarm-raise → fault; alarm → alarm(State) — but flagged: my one alarm conflates event, fault, severity and cause.'],mode:'with',lexbind:true},
+{p:4,g:['result','I bind near-identically to the ladder. The decomposition of your alarm and the severity/cause ambiguities go to pinning.'],mode:'with'},
+/* 5 align label */
+{p:5,g:['action','Alignment, pass 1 — label. Proposing candidates on names alone.'],align:{pass:1}},
+{p:5,f:['think','Grounded by the ladder, the label pass has little to add — and it does not equate my alarm with your anomaly.'],mode:'with'},
+{p:5,f:['think','Label matching over-proposes. Six candidates — and the trap: my "alarm" label-matches your "anomaly", though they are nothing alike.'],mode:'without'},
+/* 6 align gloss */
+{p:6,g:['action','Pass 2 — gloss + example. Deciding each by the RFC 9940 definition.'],align:{pass:2}},
+{p:6,g:['result','syslog/trap ↔ event confirmed. alarm ↔ alarm(State) partial — decompose.'],mode:'without'},
+{p:6,g:['replan','alarm ≈ anomaly REJECTED — an alarm is a declared undesirable STATE; an anomaly is a deviation that may be benign. Re-plan: severity and probable-cause are ambiguities to pin, not renames; symptom/incident have no legacy source.'],mode:'without'},
+{p:6,f:['result','Under the ladder these were settled at bind time; the alarm≈anomaly trap never arose. The ambiguities go to pinning.'],mode:'with'},
+/* 7 pin */
+{p:7,g:['action','Pinning the semantics — the places our worlds quietly disagree. First: decompose the overloaded alarm.'],pins:[0]},
+{p:7,g:['action','Severity vs concern; probable-cause vs derived cause.'],pins:[1,2]},
+{p:7,f:['result','Pinned by example. My fixed severity is not your dynamic concern+confidence; my probable-cause is a hint, not your correlated cause. Lifecycles mapped, with your detection→validation→refinement stage added.'],pins:[3]},
+/* 8 coref */
+{p:8,g:['action','Type meaning is pinned. Now which individual legacy alarm and which NMOP anomaly are the same underlying condition — from evidence.'],coref:true},
+{p:8,f:['result','Two conditions co-referred: my OTU2-SD alarm ↔ your ber-high anomaly (same resource, same window); my client-signal-fail ↔ your service packet-errors symptom (topology: the service rides λ1).']},
+/* 9 construct */
+{p:9,g:['action','Enough is pinned. Generating the observability exchange mapping.'],trans:true},
+{p:9,f:['result','Both directions emitted. F→G decomposes a legacy alarm into your constituents for correlation; G→F projects your incident back to one legacy alarm my console can show — lossy upward, but faithful to what legacy can hold.']},
+{p:9,msg:{from:'G',intent:'mapping-agreement',summary:'Observability exchange mapping agreed — F→G decompose, G→F project; v1.',body:env(2,'Agent-G','mapping-agreement','Mediation complete. 9 reference categories, 4 semantics pinned, 2 co-references. Mapping decomposes legacy alarms upward and projects incidents downward, validated by a worked anomaly.',{artefact:'mapping-pair@v1'})}},
+/* 10 live anomaly */
+{p:10,g:['action','Act 2. A live anomaly: pre-FEC BER on λ1 rising above baseline. Detecting and scoring it — one anomaly, concern 82, confidence 0.91, action·reason·trigger.'],anomaly:ANOMALY,setSym:'anomaly'},
+{p:10,f:['warn','My pipeline fires: OTU2-SD (R1, major), pre-FEC-BER-high (R1, minor), OTU2-SD (R2, major), client-signal-fail (A2, major), ODU2-deg (A1, minor). Five alarms, each with a fixed severity and a static probable-cause.'],setAlarms:'storm'},
+{p:10,g:['result','You emit five device alarms for one condition. I hold one scored anomaly — and whether it MEANS anything is not in the data. It is in the pragmatics.'],mode:'with'},
+{p:10,f:['result','With semantics OFF, those five alarms are the whole story — five pages, no correlation, and a page even if λ1 is under maintenance.'],mode:'without'},
+/* 11 pragmatics */
+{p:11,g:['action','Applying the pragmatics. The SAME deviation, under different contexts, means different things — significance, confidence, and above all context decide.'],pragmatics:true},
+{p:11,g:['result','Normal ops, concern 82 at confidence 0.91 → ACT. But inside a maintenance-window change-id the identical deviation is annotated BENIGN — discarded, no page. On a holiday baseline it is a smaller outlier → WATCH. At low confidence → WATCH. Pragmatics carry the meaning.'],mode:'with'},
+{p:11,f:['warn','My pipeline has none of this — no context, no confidence, a fixed severity. It fires the same regardless, and pages during the maintenance window. A false page my operators learn to ignore.'],mode:'without'},
+/* 12 correlate */
+{p:12,g:['action','This one is real (normal ops, high concern and confidence). Promoting the anomaly to a symptom, and correlating with the service-layer symptom.'],setSym:'symptoms'},
+{p:12,g:['result','Two symptoms — optical BER on λ1 and packet-errors on the service that rides it — correlate by topology into ONE incident, probable cause = optical degradation on λ1, service impact assessed. One page, on the incident and its cause.'],incident:INCIDENT,mode:'with'},
+{p:12,f:['result','My side would have paged five times, on five uncorrelated alarms, with static probable-causes that point at symptoms, not the cause. No incident, no service-level view.'],mode:'without'},
+/* 13 ledger */
+{p:13,g:['action','The same rising-BER event, both pipelines side by side.'],ledger:true},
+{p:13,g:['result','ON: one anomaly → two symptoms → one incident, context-aware, one page, cause derived. OFF: a five-alarm storm, a false maintenance-window page, no correlation. The reconciliation is what let a legacy alarm and an NMOP anomaly be the same condition at all.']},
+/* 14 semantic model */
+{p:14,g:['think','Everything we reconciled is meaning — the anomaly, its interpretation, its context, its cause — lifted clear of both forms. We keep it: the observability semantic model.']},
+{p:14,g:['action','Assembling the form-independent observability semantic model — the RFC 9940 ladder with the anomaly pragmatics as first-class annotations, and provenance on every fact.'],semodel:true},
+{p:14,f:['result','My legacy alarm is one projection of it — lossy, but everything my console can show. The context, confidence, stage and correlation it cannot hold stay in the model.']},
+{p:14,g:['result','Pragmatics carried as first-class annotations: use, significance (concern+confidence), causal role (symptom/cause), lifecycle, realm (resource vs service), context (maintenance/season), and provenance. A reasoning agent consumes it directly. Ad hoc, anchored to RFC 9940 — not universal.']}
+];
+
+/* ===== player ===== */
+let MODE='with', cursor=0, playing=false, timer=null, activeSteps=[];
+function stepsForMode(){return STEPS.filter(s=>!s.mode||s.mode===MODE);}
+
+function setPhase(p){
+  PHASES.forEach((_,i)=>{const e=$('ph'+i);if(!e)return;
+    let c='phase'+(i<p?' done':i===p?' active':'');
+    if((i===3||i===4)&&MODE==='without')c+=' skip';
+    e.className=c;});
+  const n=PHASE_NOTES[p];if(n){$('stageLab').innerHTML=n[0].split(' · ')[0];$('stageTxt').innerHTML=n[1];}
+  const m=META[p];if(m){
+    $('cogBadge').className='cogbadge '+{heavy:'cog-heavy',med:'cog-med',cheap:'cog-cheap',mech:'cog-mech'}[m.cog];
+    $('cogBadge').textContent={heavy:'Heavy',med:'Medium',cheap:'Cheap',mech:'Mechanical'}[m.cog];
+    const lvl={heavy:3,med:2,cheap:1,mech:0}[m.cog];const kind={heavy:'h',med:'m',cheap:'c',mech:'c'}[m.cog];
+    $('cogMeter').innerHTML=[0,1,2].map(i=>`<i class="${i<lvl?'on '+kind:''}"></i>`).join('');
+    $('mechTxt').textContent=m.mech;$('verifyTxt').textContent=m.verify;
+    $('measureTxt').textContent=typeof m.measure==='function'?m.measure(MODE):m.measure;
+  }
+}
+function addLine(where,kind,text){const box=$(where);const d=document.createElement('div');d.className='line '+kind;d.textContent=text;box.appendChild(d);box.scrollTop=box.scrollHeight;}
+let measuresLogged={};
+function logMeasureFor(p){ if(measuresLogged[p]||p===0)return; measuresLogged[p]=true;
+  const m=META[p];const meas=typeof m.measure==='function'?m.measure(MODE):m.measure;
+  const tb=$('measBody');if(tb.querySelector('.empty'))tb.innerHTML='';
+  const tr=document.createElement('tr');
+  const bg={heavy:'#3a221c',med:'#3a2f12',cheap:'#0e3a33',mech:'#232b38'}[m.cog],fg={heavy:'#ff8b6b',med:'#ffd166',cheap:'#36c2a8',mech:'#8da0bf'}[m.cog];
+  tr.innerHTML=`<td><b>${p} · ${PHASES[p]}</b></td><td class="cog"><span style="background:${bg};color:${fg}">${ {heavy:'Heavy',med:'Medium',cheap:'Cheap',mech:'Mechanical'}[m.cog] }</span></td><td>${m.mech}</td><td>${m.verify}</td><td class="measure">${meas||'—'}</td>`;
+  tb.appendChild(tr);const b=$('measBadge');b.style.display='inline-block';b.textContent=tb.querySelectorAll('tr').length;}
+function pulse(){['svgF','svgG'].forEach(id=>{const e=$(id);e.style.transition='filter .15s';e.style.filter='brightness(1.5)';setTimeout(()=>e.style.filter='',260);});}
+function updateCounter(){$('counter').textContent=`step ${Math.min(cursor,activeSteps.length)} / ${activeSteps.length} · ${MODE==='with'?'ON':'OFF'}`;}
+
+function activateTab(name){document.querySelectorAll('.tabbtn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tabpane').forEach(x=>x.classList.remove('active'));
+  const btn=document.querySelector('.tabbtn[data-tab="'+name+'"]');if(btn)btn.classList.add('active');const pane=$('pane-'+name);if(pane)pane.classList.add('active');}
+function flashEl(el,cls){cls=cls||'flash';if(!el)return;el.classList.remove(cls);void el.offsetWidth;el.classList.add(cls);setTimeout(()=>el.classList.remove(cls),1700);}
+function focusForStep(s){
+  let tab=null,target=null,col=null;
+  if(s.semodel) tab='semodel';
+  else if(s.pragmatics) tab='prag';
+  else if(s.incident||s.setSym||s.anomaly) tab='anom';
+  else if(s.setAlarms) target=$('topoBox');
+  else if(s.ledger) tab='ledger';
+  else if(s.trans) tab='tr';
+  else if(s.coref) tab='kg';
+  else if(s.pins) tab='pin';
+  else if(s.align) tab='align';
+  else if(s.lexbuild||s.lexbind) tab='ref';
+  else if(s.kg) tab='kg';
+  else if(s.msg){ target=$('agentsRow'); col=$('bus').closest('.col'); }
+  else { target=$('agentsRow'); col = s.f?$('logF').closest('.col') : s.g?$('logG').closest('.col') : s.v?$('bus').closest('.col') : null; }
+  if(tab){ activateTab(tab); target=$('tabsBox'); }
+  if(target&&target.scrollIntoView) target.scrollIntoView({behavior:'smooth',block:'center'});
+  if(col) flashEl(col,'flashcol'); else flashEl(target,'flash');
+}
+
+function applyStep(s){
+  setPhase(s.p);
+  if(s.f)addLine('logF',s.f[0],s.f[1]);
+  if(s.g)addLine('logG',s.g[0],s.g[1]);
+  if(s.v)addLine('bus','plan','Agent · '+s.v[1]);
+  if(s.msg)addMsg(s.msg);
+  if(s.lexbuild)constructReference();
+  if(s.lexbind)bindLexicon();
+  if(s.align)renderAlign(MODE,s.align.pass);
+  if(s.pins)s.pins.forEach(revealPin);
+  if(s.kg)$(s.kg.side==='f'?'kgF':'kgG').textContent=s.kg.html;
+  if(s.coref)renderCoref();
+  if(s.trans)revealMappings();
+  if(s.anomaly)state.anomaly=s.anomaly;
+  if(s.setAlarms==='storm')state.alarms=STORM_ALARMS.slice();
+  if(s.setSym==='anomaly'){/* anomaly detected, no symptoms yet */}
+  if(s.setSym==='symptoms')state.symptoms=SYMPTOMS.slice();
+  if(s.incident)state.incident=s.incident;
+  if(s.pragmatics){renderPragMatrix();renderPragCards();}
+  if(s.ledger)renderLedger(MODE);
+  if(s.semodel)renderSemodel();
+  if(s.anomaly||s.setSym||s.incident||s.setAlarms){renderAnom();renderTopo();pulse();}
+  logMeasureFor(s.p);
+  updateCounter();
+  focusForStep(s);
+}
+function step(){if(cursor>=activeSteps.length){stop();return;}applyStep(activeSteps[cursor]);cursor++;
+  if(cursor>=activeSteps.length){setPhase(PHASES.length-1);renderLedger(MODE);$('play').disabled=true;$('step').disabled=true;stop();}}
+function play(){if(playing){stop();return;}playing=true;$('play').textContent='⏸ Pause';
+  const tick=()=>{if(!playing)return;step();if(cursor<activeSteps.length)timer=setTimeout(tick,+$('speed').value);else stop();};tick();}
+function stop(){playing=false;clearTimeout(timer);$('play').textContent='▶ Play';}
+
+function buildPhases(){const c=$('phases');c.innerHTML='';PHASES.forEach((p,i)=>{
+  if(ACTS[i]){const a=document.createElement('div');a.className='actlab';a.textContent='▸ '+ACTS[i];c.appendChild(a);}
+  const d=document.createElement('div');d.className='phase';d.id='ph'+i;d.textContent=i+'. '+p;c.appendChild(d);});}
+function reset(){stop();cursor=0;measuresLogged={};lexAgreed=0;
+  state={alarms:[],symptoms:[],incident:null,anomaly:null,benign:false,phaseMode:'idle'};
+  activeSteps=stepsForMode();
+  ['logF','logG','bus'].forEach(id=>$(id).innerHTML='');
+  buildLexGrid();$('refBadge').style.display='none';
+  $('alignBody').innerHTML='<div class="empty">No alignment yet — press Play.</div>';$('alignBadge').style.display='none';
+  $('pinBody').innerHTML='<tr><td colspan="5" class="empty">No semantics pinned yet.</td></tr>';$('pinBadge').style.display='none';
+  $('anomBody').innerHTML='<div class="empty">The anomaly fires in Act 2 (stage 10).</div>';$('anomBadge').style.display='none';
+  $('pragBody').innerHTML='<div class="empty">The pragmatics matrix is built in Act 2 (stage 11).</div>';$('pragCards').innerHTML='';$('pragBadge').style.display='none';
+  $('transFG').innerHTML='<span class="muted">— generated after mediation —</span>';$('transGF').innerHTML='<span class="muted">— generated after mediation —</span>';$('trBadge').style.display='none';
+  $('semBody').innerHTML='<div class="empty">Assembled at the final stage — press Play, or jump with Step.</div>';$('semBadge').style.display='none';
+  $('measBody').innerHTML='<tr><td colspan="5" class="empty">Fills in as stages complete.</td></tr>';$('measBadge').style.display='none';
+  $('kgF').innerHTML='<span class="muted">— not yet lifted —</span>';$('kgG').innerHTML='<span class="muted">— not yet lifted —</span>';
+  $('corefBody').innerHTML='<div class="empty">Instances co-refer in Act 1, stage 8.</div>';
+  $('refModeNote').innerHTML=MODE==='with'?'':'<b style="color:var(--warn)">Semantics OFF: no reference is built; the legacy pipeline runs alone.</b>';
+  renderLedger(MODE);
+  $('play').disabled=false;$('step').disabled=false;
+  buildPhases();setPhase(0);renderTopo();updateCounter();
+}
+function setMode(on){MODE=on?'with':'without';
+  $('modeSw').className='toggle-sw'+(on?' on':'');
+  $('modeVal').className='modeval'+(on?' on':' off');$('modeVal').textContent=on?'ON':'OFF';reset();}
+
+$('tabbar').addEventListener('click',e=>{const b=e.target.closest('.tabbtn');if(!b)return;
+  document.querySelectorAll('.tabbtn').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tabpane').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');$('pane-'+b.dataset.tab).classList.add('active');});
+$('play').onclick=play;$('step').onclick=()=>{stop();step();};$('reset').onclick=reset;
+$('modeSw').onclick=()=>setMode(MODE!=='with');
+$('aboutToggle').onclick=()=>{const b=$('aboutBody');const c=b.classList.toggle('collapsed');$('aboutToggle').textContent=c?'Show ▼':'Hide ▲';};
+
+(function(){const q=new URLSearchParams(location.search);
+  if(q.get('mode')==='without'){MODE='without';$('modeSw').className='toggle-sw';$('modeVal').className='modeval off';$('modeVal').textContent='OFF';}
+  reset();
+  const a=parseInt(q.get('auto'),10);if(a>0){for(let k=0;k<a&&cursor<activeSteps.length;k++)step();}
+})();
+</script>
+</body>
+</html>

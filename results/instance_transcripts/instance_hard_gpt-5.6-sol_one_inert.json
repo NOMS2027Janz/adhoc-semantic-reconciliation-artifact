@@ -1,0 +1,164 @@
+{
+  "model": "gpt-5.6-sol",
+  "placement": "one_inert",
+  "row": {
+    "case": "instance_hard",
+    "model": "gpt-5.6-sol",
+    "placement": "one_inert",
+    "reference_variant": "none",
+    "evidence": "name+key+attrs+rels",
+    "budget": 12,
+    "trial": 0,
+    "submitted": true,
+    "proposed": 7,
+    "precision": 1.0,
+    "recall": 0.636,
+    "surviving_instance_fc": 0,
+    "experiment_only_recall": 0.0,
+    "residual_total": 11,
+    "residual_experiment_only": 4,
+    "residual_native": 3,
+    "confirmed_provision": 2,
+    "refuted_provision": 1,
+    "interrogated": 0,
+    "interrogate_calls": 0,
+    "provision_calls": 3,
+    "turns": 2,
+    "total_tokens": 6987,
+    "reasoning_tokens": 253,
+    "latency_s": 11.59,
+    "mean_conf_correct": 1.0,
+    "mean_conf_incorrect": "",
+    "surviving_traps": ""
+  },
+  "transcript": [
+    {
+      "step": "prompt",
+      "placement": "one_inert",
+      "reference_variant": "none",
+      "evidence": [
+        "attrs",
+        "key",
+        "name",
+        "rels"
+      ]
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.cs_odu2",
+        "b_id": "b.tunnel1"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "confirmed": true,
+          "invariants_preserved": true
+        },
+        "message": "all invariants preserved in place"
+      }
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.cs_odu0",
+        "b_id": "b.tunnel2"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "confirmed": true,
+          "invariants_preserved": true
+        },
+        "message": "all invariants preserved in place"
+      }
+    },
+    {
+      "step": "virtual_provision",
+      "args": {
+        "a_id": "a.svc100",
+        "b_id": "b.svc100"
+      },
+      "result": {
+        "ok": true,
+        "answer": {
+          "confirmed": false,
+          "diverging_invariants": {
+            "capacity": {
+              "A": "ODU1",
+              "B": "ODU0"
+            },
+            "endpoint-identity": {
+              "A": [
+                "A1",
+                "A2"
+              ],
+              "B": [
+                "A3",
+                "A1"
+              ]
+            }
+          }
+        },
+        "message": "invariants diverge: the two are not the same service"
+      }
+    },
+    {
+      "step": "submit",
+      "args": {
+        "correspondences": [
+          {
+            "a_id": "a.r1",
+            "b_id": "b.roadm1",
+            "confidence": 1
+          },
+          {
+            "a_id": "a.r4",
+            "b_id": "b.roadm4",
+            "confidence": 1
+          },
+          {
+            "a_id": "a.a1",
+            "b_id": "b.acc1",
+            "confidence": 1
+          },
+          {
+            "a_id": "a.a2",
+            "b_id": "b.acc2",
+            "confidence": 1
+          },
+          {
+            "a_id": "a.a3",
+            "b_id": "b.acc3",
+            "confidence": 1
+          },
+          {
+            "a_id": "a.cs_odu2",
+            "b_id": "b.tunnel1",
+            "confidence": 1
+          },
+          {
+            "a_id": "a.cs_odu0",
+            "b_id": "b.tunnel2",
+            "confidence": 1
+          }
+        ],
+        "residual_a": [
+          "a.r2",
+          "a.r3",
+          "a.omsx",
+          "a.omsy",
+          "a.svc100"
+        ],
+        "residual_b": [
+          "b.nodeB",
+          "b.nodeC",
+          "b.msx",
+          "b.msy",
+          "b.svc100",
+          "b.r1"
+        ]
+      }
+    }
+  ]
+}

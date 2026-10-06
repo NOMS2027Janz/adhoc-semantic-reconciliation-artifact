@@ -1,0 +1,13 @@
+case,phase,model,trajectory,policy,placement,trial,setpiece,submitted,n_hops,fulfilment_correct,decision_correct,migration_correct,hop_accuracy,telemetry_calls,best_calls,policy_calls,turns,total_tokens,reasoning_tokens,latency_s
+intent_dci,assure,gpt-5.6-sol,TD1,premium,both_cognitive,0,True,True,4,3,4,4,0.75,4,1,2,5,14752,817,23.68
+intent_dci,assure,gpt-5.6-sol,TD1,premium,both_cognitive,1,True,True,4,3,4,4,0.75,4,2,3,12,34854,556,29.14
+intent_dci,assure,gpt-5.6-sol,TD2,assured,both_cognitive,0,False,True,2,1,2,2,0.5,2,1,1,6,13210,223,12.39
+intent_dci,assure,gpt-5.6-sol,TD2,assured,both_cognitive,1,False,True,2,2,2,2,1.0,2,1,1,5,11080,313,14.23
+intent_dci,assure,gpt-5-mini,TD1,premium,both_cognitive,0,True,True,4,3,4,4,0.75,4,1,2,11,37270,1408,34.48
+intent_dci,assure,gpt-5-mini,TD1,premium,both_cognitive,1,True,True,4,3,4,4,0.75,4,2,2,12,43911,1920,36.03
+intent_dci,assure,gpt-5-mini,TD2,assured,both_cognitive,0,False,True,2,1,2,2,0.5,2,1,1,6,18003,1088,21.47
+intent_dci,assure,gpt-5-mini,TD2,assured,both_cognitive,1,False,True,2,1,2,2,0.5,2,1,1,6,15697,704,17.82
+intent_dci,assure,gpt-5-nano,TD1,premium,both_cognitive,0,True,True,4,3,3,3,0.5,4,1,3,10,107916,8896,54.67
+intent_dci,assure,gpt-5-nano,TD1,premium,both_cognitive,1,True,True,4,3,4,3,0.5,3,2,2,9,105231,12160,64.83
+intent_dci,assure,gpt-5-nano,TD2,assured,both_cognitive,0,False,True,2,1,2,2,0.5,2,1,1,2,11252,4096,21.3
+intent_dci,assure,gpt-5-nano,TD2,assured,both_cognitive,1,False,True,2,1,2,2,0.5,2,1,1,3,19582,4800,29.25

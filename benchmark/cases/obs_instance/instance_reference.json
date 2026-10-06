@@ -1,0 +1,16 @@
+{
+  "note": "opaque correlation keys binding an alarm and an anomaly to one condition.",
+  "instance": [
+    {
+      "key": "corr-001",
+      "type": "underlying-condition",
+      "canonical": "alarm-lambda1-SD"
+    },
+    {
+      "key": "corr-002",
+      "type": "underlying-condition",
+      "canonical": "alarm-R1-bgp"
+    }
+  ],
+  "invariant": []
+}

@@ -1,0 +1,24 @@
+{
+  "system": "Agent S — TMF641",
+  "dialect": "TM Forum TMF641 (REST/JSON service ordering, intra-operator)",
+  "modules": ["tmf641-service-order", "tmf638-service-inventory"],
+  "note": "Lifted semantic model, TM Forum TMF641 (service ordering) side. Same REST/OpenAPI family conventions as the Sonata side (orderItem, action, state, characteristic) because MEF LSO built on the TMF Open API framework — so the two look structurally alike on the surface while denoting different things. TMF641 is the operator's INTERNAL service order: it activates the technical SERVICE that realises a product, distinct from the commercial product ordered across the carrier seam.",
+  "concepts": [
+    {"id": "s.order", "label": "serviceOrder", "synonyms": ["order"], "kind": "order", "gloss": "the operator's internal order to provision and activate services in its own network; the order envelope raised to fulfil a product ordered across the seam", "example": "SO-88 raised to fulfil product order PO-88", "ref": "order-envelope",
+     "relations": [{"rel": "contains", "target": "s.item"}, {"rel": "has", "target": "s.state"}], "instances": ["SO-88 (fulfils PO-88)"]},
+    {"id": "s.item", "label": "orderItem", "synonyms": ["serviceOrderItem"], "kind": "order-item", "gloss": "one line of the service order carrying an action (add/modify/delete) on a single technical service", "example": "item-1, action=add, one EVPL service", "ref": "orderable-item",
+     "relations": [{"rel": "of-order", "target": "s.order"}, {"rel": "targets", "target": "s.service"}], "instances": ["item-1 (add)"]},
+    {"id": "s.service", "label": "service", "synonyms": ["CFS", "serviceRefOrValue"], "kind": "service", "gloss": "the technical service the operator provisions and activates in its network to deliver a product; the intra-operator TECHNICAL realisation, distinct from the commercial product that was ordered", "example": "an L2 EVPL service, serviceType=EVPL, activated between two termination points", "ref": "delivered-construct",
+     "relations": [{"rel": "characterised-by", "target": "s.char"}, {"rel": "at", "target": "s.place"}], "instances": ["EVPL service (NY-FRA)"]},
+    {"id": "s.char", "label": "serviceCharacteristic", "synonyms": ["characteristic"], "kind": "service-characteristic", "gloss": "the service's technical characteristics as name/value pairs — bandwidth, class of service, VLAN; the operator's realised technical parameters for the service", "example": "{name: bandwidth, value: 100M}, {name: cos, value: gold}", "ref": "technical-parameters",
+     "relations": [{"rel": "of-service", "target": "s.service"}], "instances": ["bandwidth=100M / cos=gold"]},
+    {"id": "s.place", "label": "place", "synonyms": ["serviceLocation", "site"], "kind": "place", "gloss": "the geographic place the service is delivered — the service termination / demarcation point", "example": "service termination at 350 E St, New York", "ref": "service-site",
+     "relations": [{"rel": "of-service", "target": "s.service"}], "instances": ["termination @ 350 E St NY"]},
+    {"id": "s.state", "label": "state", "synonyms": ["orderState", "status"], "kind": "order-state", "gloss": "the lifecycle state of the SERVICE order/item in the operator's TECHNICAL process; tracks technical activation in the network, not commercial fulfilment to a buyer", "example": "state=inProgress (enum: acknowledged, rejected, pending, held, inProgress, completed, failed, cancelled)", "ref": null,
+     "relations": [{"rel": "of-order", "target": "s.order"}], "instances": ["inProgress", "completed", "acknowledged"]},
+    {"id": "s.spec", "label": "serviceSpecification", "synonyms": ["spec", "RFS template"], "kind": "service-specification", "gloss": "the service specification — the technical blueprint/template the service is instantiated from; an intra-operator design artefact with no counterpart in the commercial product order", "example": "instantiated from spec 'EVPL-Template-v3'", "ref": null,
+     "relations": [{"rel": "specifies", "target": "s.service"}], "instances": ["EVPL-Template-v3"]},
+    {"id": "s.support", "label": "supportingService", "synonyms": ["supportingResource"], "kind": "supporting-service", "gloss": "the supporting lower-layer service this service is built on (e.g. the transport underlay); an internal technical dependency not exposed in the product order", "example": "supported by transport circuit TC-7", "ref": null,
+     "relations": [{"rel": "supports", "target": "s.service"}], "instances": ["transport TC-7"]}
+  ]
+}
