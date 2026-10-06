@@ -6,7 +6,7 @@ occasion, with no model agreed in advance. It contains everything needed to repr
 its results, the benchmark and its validated keys, a non-cognitive baseline, and the instrumented
 cognition traces, together with the code that produces them.
 
-Archived at Zenodo: **DOI 10.5281/zenodo.XXXXXXXX** *(to be finalized)*.
+Archived at Zenodo: **DOI [10.5281/zenodo.23187404](https://doi.org/10.5281/zenodo.23187404)**.
 
 ## Companion papers
 

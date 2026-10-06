@@ -8,8 +8,8 @@ authors:
   - family-names: Peters
     given-names: Bradley
 year: 2026
-doi: 10.5281/zenodo.XXXXXXXX
-url: "https://doi.org/10.5281/zenodo.XXXXXXXX"
+doi: 10.5281/zenodo.23187404
+url: "https://doi.org/10.5281/zenodo.23187404"
 license: Apache-2.0
 references:
   - type: report
